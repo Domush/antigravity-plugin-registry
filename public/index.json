@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-27T08:54:02.450Z",
+  "crawlerVersion": "1.0.0",
+  "scannerVersion": "1.1.0",
+  "totalPlugins": 1,
+  "marketplaceClient": {
+    "latestVersion": "1.1.0",
+    "minSupportedVersion": "1.0.0",
+    "releaseUrl": "https://github.com/Domush/antigravity-community-marketplace/releases/latest",
+    "notes": "Adds Enable/Disable toggles and OS runtime pre-flight checks."
+  },
+  "plugins": [
+    {
+      "id": "Domush/antigravity-plugin-token-tracker",
+      "name": "Token Tracker",
+      "pluginName": "token-tracker",
+      "summary": "Hybrid telemetry tracker for Antigravity: context window usage, prompt caching efficiency, context compaction countdown, and 5h/weekly quota monitoring.",
+      "author": {
+        "login": "Domush",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
+        "url": "https://github.com/Domush"
+      },
+      "repoUrl": "https://github.com/Domush/antigravity-plugin-token-tracker",
+      "license": "MIT",
+      "version": "1.1.1",
+      "minAppVersion": null,
+      "release": {
+        "ref": "main",
+        "sha": "b70715b53df47902b96eadd528ddef01b2419f2f",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-token-tracker/tarball/b70715b53df47902b96eadd528ddef01b2419f2f",
+        "contentTreeSha256": "92afd30b23b94c60adeb24bba76cb29750ea86da5cdee1a266d43863e80ea58e",
+        "archiveBytes": 147077,
+        "publishedAt": "2026-11-27T08:42:44Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "mcp_stdio",
+          "rules"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "antigravity-plugin",
+        "antigravity-plugins",
+        "context-management",
+        "context-window",
+        "token-usage",
+        "tokens"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-27T08:43:13Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.1.0",
+        "scannedAt": "2026-11-27T08:54:02.445Z",
+        "capabilities": [
+          "credential_access",
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "network_outbound",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 2,
+          "high": 2,
+          "medium": 17,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/Domush/antigravity-plugin-token-tracker.json"
+    }
+  ]
+}
