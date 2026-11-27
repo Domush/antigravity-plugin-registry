@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { resolveIconRelPath } from "./icon-resolver.mjs";
 
 const SEMVER_RE = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
 
@@ -28,6 +29,15 @@ export async function fileExists(filePath) {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function readOptionalUtf8(filePath) {
+  try {
+    return await fs.readFile(filePath, "utf8");
+  } catch (err) {
+    if (err.code === "ENOENT" || err.code === "EISDIR") return "";
+    throw new Error(`Failed reading ${path.basename(filePath)}: ${err.message}`, { cause: err });
   }
 }
 
@@ -382,7 +392,7 @@ export async function validateAndParsePlugin(
   const uiSlots = new Set();
   for (const f of files) {
     if (!/\.(json|js|mjs|cjs|ts)$/i.test(f) || f.startsWith("node_modules/")) continue;
-    const text = await fs.readFile(path.join(sandboxDir, ...f.split("/")), "utf8").catch(() => "");
+    const text = await readOptionalUtf8(path.join(sandboxDir, ...f.split("/")));
     if (text.includes("com.google.antigravity/ui")) {
       if (text.includes("global")) uiSlots.add("global");
       if (text.includes("aux_pane")) uiSlots.add("aux_pane");
@@ -428,12 +438,15 @@ export async function validateAndParsePlugin(
     readmeMarkdown = rawReadme.slice(0, maxReadmeBytes);
   }
 
+  const iconPath = resolveIconRelPath(manifest, files, manifestPath);
+
   return {
     valid: true,
     manifestPath,
     manifest,
     pluginName,
     displayName,
+    iconPath,
     mcpServers: mcp.servers,
     hooks,
     skills,

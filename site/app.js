@@ -9,6 +9,7 @@ import {
   renderCard,
   renderDrawerContent,
   renderStats,
+  swapBrokenIcon,
 } from "./render.js";
 
 // ---------------------------------------------------------------------------
@@ -300,12 +301,19 @@ function bindEvents() {
     applyTheme(next);
   });
 
-  // Delegated grid & drawer actions
-  document.getElementById("plugin-grid").addEventListener("click", (e) => {
+  // Delegated grid & drawer actions + CSP-safe image error fallbacks
+  const gridEl = document.getElementById("plugin-grid");
+  const drawerEl = document.getElementById("detail-drawer");
+  gridEl.addEventListener("error", swapBrokenIcon, true);
+  drawerEl.addEventListener("error", swapBrokenIcon, true);
+
+  gridEl.addEventListener("click", (e) => {
     const el = e.target.closest("[data-open-plugin], [data-bookmark], [data-copy]");
     if (!el) return;
     if (el.dataset.openPlugin) {
-      openDrawer(el.dataset.openPlugin);
+      const requestedTab = el.dataset.openTab;
+      const tab = requestedTab === "audit" || requestedTab === "readme" ? requestedTab : "install";
+      openDrawer(el.dataset.openPlugin, { tab });
     } else if (el.dataset.bookmark) {
       const id = el.dataset.bookmark;
       if (state.bookmarks.has(id)) state.bookmarks.delete(id);
@@ -318,7 +326,7 @@ function bindEvents() {
   });
 
   document.getElementById("drawer-backdrop").addEventListener("click", closeDrawer);
-  document.getElementById("detail-drawer").addEventListener("click", (e) => {
+  drawerEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
     if (btn.hasAttribute("data-close-drawer")) {

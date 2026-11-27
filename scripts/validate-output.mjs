@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import path from "node:path";
+import { validatePinnedIconUrl } from "./lib/icon-resolver.mjs";
 import {
   collectAllFiles,
   DETAIL_PATH_RE,
@@ -121,6 +122,10 @@ async function validateIndex(v, { blockedRepos, blockedShas }) {
 
     v.assertString(file, `${ctx}.name`, p.name);
     v.assertString(file, `${ctx}.summary`, p.summary, { allowEmpty: true });
+    if (p.iconUrl !== undefined && p.iconUrl !== null) {
+      const iconErr = validatePinnedIconUrl(p.iconUrl, p.id, p.release?.sha);
+      if (iconErr) v.error(file, `${ctx}.iconUrl`, iconErr);
+    }
     v.assertHttpsUrl(file, `${ctx}.repoUrl`, p.repoUrl, { prefix: "https://github.com/" });
     v.assertString(file, `${ctx}.license`, p.license);
 

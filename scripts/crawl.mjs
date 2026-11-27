@@ -11,6 +11,7 @@ import {
 } from "./lib/archive.mjs";
 import { resolveClientRelease } from "./lib/client-release.mjs";
 import { createGitHubClient } from "./lib/github-client.mjs";
+import { buildPinnedIconUrl } from "./lib/icon-resolver.mjs";
 import { fileExists, validateAndParsePlugin } from "./lib/plugin-parser.mjs";
 import { scanPluginSecurity } from "./security-scanner.mjs";
 
@@ -27,7 +28,7 @@ const CONFIG = {
   summaryPath: (process.env.CRAWL_SUMMARY_PATH || "").trim(),
   topic: "agy-plugin",
   crawlerVersion: "1.0.0",
-  scannerVersion: "1.1.0",
+  scannerVersion: "1.2.0",
   schemaVersion: 1,
   maxArchiveBytes: Number(process.env.MAX_ARCHIVE_BYTES || 25 * 1024 * 1024), // 25 MB compressed
   maxUncompressedBytes: 50 * 1024 * 1024, // 50 MB uncompressed
@@ -276,11 +277,14 @@ async function main() {
               ? "2.34.0"
               : null;
 
+        const iconUrl = buildPinnedIconUrl(id, target.sha, parsed.iconPath);
+
         const indexEntry = {
           id,
           name: parsed.displayName,
           pluginName: parsed.pluginName,
           summary: rawSummary.slice(0, 240),
+          ...(iconUrl ? { iconUrl } : {}),
           author: {
             login: repo.owner.login,
             avatarUrl: repo.owner.avatar_url,

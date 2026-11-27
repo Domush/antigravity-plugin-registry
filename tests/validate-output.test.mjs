@@ -223,14 +223,48 @@ describe("scripts/validate-output.mjs — end-to-end pass and fail gates", () =>
     return { indexDoc, detailDoc, detailRelPath };
   }
 
-  it("exits 0 on a valid generated registry", async () => {
+  it("exits 0 on a valid generated registry (including optional HTTPS iconUrl)", async () => {
     await withTempDir(async (tmp) => {
       const publicDir = path.join(tmp, "public");
-      await buildValidPublicRegistry(publicDir);
+      const { indexDoc } = await buildValidPublicRegistry(publicDir);
+
+      // Verify optional HTTPS iconUrl passes validation
+      indexDoc.plugins[0].iconUrl = `https://raw.githubusercontent.com/${indexDoc.plugins[0].id}/${indexDoc.plugins[0].release.sha}/icon.svg`;
+      await fs.writeFile(path.join(publicDir, "index.json"), JSON.stringify(indexDoc, null, 2));
 
       const res = await runValidateOutput(publicDir);
       assert.equal(res.code, 0, `Expected pass, got stderr:\n${res.stderr}`);
       assert.match(res.stdout, /PASSED: 1 plugin\(s\)/);
+    });
+  });
+
+  it("rejects insecure, unpinned, off-origin, empty, query/fragment, traversal, and non-image iconUrl values", async () => {
+    await withTempDir(async (tmp) => {
+      const publicDir = path.join(tmp, "public");
+      const { indexDoc } = await buildValidPublicRegistry(publicDir);
+      const { id } = indexDoc.plugins[0];
+      const { sha } = indexDoc.plugins[0].release;
+
+      const badIconUrls = [
+        ["http://raw.githubusercontent.com/" + `${id}/${sha}/icon.svg`, /iconUrl must pin exact repo and commit SHA/],
+        ["https://evil.example/pixel.png", /iconUrl must pin exact repo and commit SHA/],
+        [`https://raw.githubusercontent.com/${id}/main/icon.svg`, /iconUrl must pin exact repo and commit SHA/],
+        [`https://raw.githubusercontent.com/${id}/${sha}/`, /iconUrl contains empty path or disallowed characters/],
+        [`https://raw.githubusercontent.com/${id}/${sha}/icon.svg?t=1`, /iconUrl contains empty path or disallowed characters/],
+        [`https://raw.githubusercontent.com/${id}/${sha}/icon.svg#frag`, /iconUrl contains empty path or disallowed characters/],
+        [`https://raw.githubusercontent.com/${id}/${sha}/../secret.png`, /iconUrl contains invalid path segment/],
+        [`https://raw.githubusercontent.com/${id}/${sha}/%2e%2e/secret.png`, /iconUrl contains unsafe decoded path segment/],
+        [`https://raw.githubusercontent.com/${id}/${sha}/README.md`, /iconUrl must target a supported image/],
+      ];
+
+      for (const [badUrl, expectedErr] of badIconUrls) {
+        indexDoc.plugins[0].iconUrl = badUrl;
+        await fs.writeFile(path.join(publicDir, "index.json"), JSON.stringify(indexDoc, null, 2));
+
+        const res = await runValidateOutput(publicDir);
+        assert.equal(res.code, 1, `Expected failure for iconUrl: ${badUrl}`);
+        assert.match(res.stderr, expectedErr, `Unexpected error for iconUrl ${badUrl}:\n${res.stderr}`);
+      }
     });
   });
 

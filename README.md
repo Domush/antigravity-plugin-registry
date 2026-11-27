@@ -30,6 +30,7 @@ Include `.antigravity-plugin/plugin.json` (takes precedence) or a root `plugin.j
 | `version` | Yes | Valid SemVer string (for example `1.2.0`) |
 | `displayName` | No | Human-friendly catalog title (defaults to `name`) |
 | `description` | No | Short summary shown in catalog cards |
+| `icon` | No | Relative image path (`.svg`, `.png`, `.webp`, `.jpg`, or `.jpeg`); otherwise `.antigravity-plugin/icon.svg`, `.antigravity-plugin/icon.png`, `icon.svg`, `icon.png`, `logo.svg`, `logo.png`, `assets/icon.svg`, or `assets/icon.png` is used if present |
 | `minAppVersion` | No | Valid SemVer string (defaults to `2.34.0` when sidebar UI is detected) |
 | `category` / `categories` | No | String or array of category slugs |
 | `keywords` | No | Array of search tags |

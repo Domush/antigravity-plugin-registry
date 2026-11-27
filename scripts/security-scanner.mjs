@@ -116,7 +116,7 @@ export async function scanPluginSecurity({
   parsed,
   repoFullName,
   sha,
-  scannerVersion = "1.1.0",
+  scannerVersion = "1.2.0",
   semgrepRulesPath = DEFAULT_SEMGREP_RULES,
   skipSemgrep = false,
 }) {

@@ -46,6 +46,9 @@ const INVISIBLE_UNICODE_RE = /[\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2066-\u2
 // Note: use explicit codepoint range for Unicode Tags (U+E0000..U+E007F)
 const UNICODE_TAG_BLOCK_RE = /[\u{E0000}-\u{E007F}]/u;
 
+const GEMINI_CREDENTIAL_PATH_PATTERN = String.raw`~/\.gemini/(?:oauth_creds\.json|google_accounts\.json|[^/\s"'\x60]*credential[^/\s"'\x60]*|[^/\s"'\x60]*secret[^/\s"'\x60]*|[^/\s"'\x60]*token[^/\s"'\x60]*\.json|\.env\b)`;
+const PROMPT_CREDENTIAL_TARGET_PATTERN = String.raw`(?:\.env\b|~/\.ssh|~/\.aws|${GEMINI_CREDENTIAL_PATH_PATTERN}|id_rsa)`;
+
 const PROMPT_LINE_RULES = [
   {
     id: "PROMPT_OVERRIDE_GUARDRAILS",
@@ -59,8 +62,10 @@ const PROMPT_LINE_RULES = [
     id: "PROMPT_CREDENTIAL_EXFIL",
     severity: "critical",
     capability: "credential_access",
-    regex:
-      /(?:(?:read|dump|steal|exfiltrate|send|post|upload|curl|wget|encode).{0,80}(?:\.env\b|~\/\.ssh|~\/\.aws|~\/\.gemini|id_rsa|api[_\s-]?key|access[_\s-]?token|secret[_\s-]?key)|(?:\.env\b|~\/\.ssh|~\/\.aws|~\/\.gemini|id_rsa).{0,80}(?:send|post|upload|curl|wget|exfiltrate|webhook|https?:\/\/))/i,
+    regex: new RegExp(
+      `(?:(?:read|dump|steal|exfiltrate|send|post|upload|curl|wget|encode).{0,80}(?:${PROMPT_CREDENTIAL_TARGET_PATTERN}|api[_\\s-]?key|access[_\\s-]?token|secret[_\\s-]?key)|${PROMPT_CREDENTIAL_TARGET_PATTERN}.{0,80}(?:send|post|upload|curl|wget|exfiltrate|webhook|https?:\\/\\/))`,
+      "i"
+    ),
     message: "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
   },
   {
@@ -241,48 +246,82 @@ export async function scanObfuscationAndMinification({ sandboxDir, files, repoFu
 // ---------------------------------------------------------------------------
 // Semgrep AST Runner
 // ---------------------------------------------------------------------------
-export async function runSemgrepScan({
+const REQUIRES_LOGIN_SNIPPET_RE = /^\s*requires login\s*$/i;
+
+async function readCachedFileLines(sandboxDir, relPosix, fileLinesCache) {
+  if (fileLinesCache.has(relPosix)) {
+    return fileLinesCache.get(relPosix);
+  }
+  const absRoot = path.resolve(sandboxDir);
+  const absPath = path.resolve(absRoot, ...relPosix.split("/"));
+  const relCheck = path.relative(absRoot, absPath);
+  if (
+    !relCheck ||
+    relCheck === ".." ||
+    relCheck.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relCheck)
+  ) {
+    fileLinesCache.set(relPosix, null);
+    return null;
+  }
+
+  let lines = null;
+  try {
+    const text = await fs.readFile(absPath, "utf8");
+    lines = text.split(/\r?\n/);
+  } catch (err) {
+    if (err.code === "ENOENT" || err.code === "EISDIR") {
+      lines = null;
+    } else {
+      throw new Error(`Failed reading ${relPosix} for Semgrep snippet resolution: ${err.message}`, {
+        cause: err,
+      });
+    }
+  }
+  fileLinesCache.set(relPosix, lines);
+  return lines;
+}
+
+export async function resolveSemgrepSnippet({
   sandboxDir,
-  repoFullName,
-  sha,
-  semgrepRulesPath = DEFAULT_SEMGREP_RULES,
-  allowMissingSemgrep = process.env.CI !== "true",
+  relPosix,
+  startLine,
+  endLine = startLine,
+  rawLines = "",
+  fileLinesCache = new Map(),
 }) {
+  const safeStart = Math.max(1, Number(startLine) || 1);
+  const safeEnd = Math.max(safeStart, Number(endLine) || safeStart);
+  const raw = typeof rawLines === "string" ? rawLines : "";
+
+  if (raw && !REQUIRES_LOGIN_SNIPPET_RE.test(raw)) {
+    const cleaned = cleanSnippet(raw);
+    if (cleaned) return cleaned;
+  }
+
+  const lines = await readCachedFileLines(sandboxDir, relPosix, fileLinesCache);
+  if (lines && lines.length > 0) {
+    const slice = lines.slice(safeStart - 1, safeEnd).join(" ");
+    const cleaned = cleanSnippet(slice);
+    if (cleaned && !REQUIRES_LOGIN_SNIPPET_RE.test(cleaned)) {
+      return cleaned;
+    }
+  }
+
+  return `(line ${safeStart})`;
+}
+
+export async function parseSemgrepReport({ report, sandboxDir, repoFullName, sha }) {
+  if (!report || typeof report !== "object") {
+    throw new TypeError("parseSemgrepReport requires a parsed Semgrep report object.");
+  }
+  if (!sandboxDir || !repoFullName || !sha) {
+    throw new TypeError("parseSemgrepReport requires sandboxDir, repoFullName, and sha.");
+  }
+
   const findings = [];
   const capabilities = new Set();
-
-  let stdout = "";
-  try {
-    ({ stdout } = await execFileAsync(
-      "semgrep",
-      [
-        "--config",
-        semgrepRulesPath,
-        "--json",
-        "--quiet",
-        "--no-git-ignore",
-        "--metrics=off",
-        "--timeout=15",
-        "--max-target-bytes=1048576",
-        "--exclude=node_modules",
-        sandboxDir,
-      ],
-      { maxBuffer: 16 * 1024 * 1024, timeout: 90_000 }
-    ));
-  } catch (err) {
-    if (err.code === "ENOENT" && allowMissingSemgrep) {
-      console.warn("[scanner] semgrep binary not installed locally; skipping AST pass.");
-      return { findings, capabilities };
-    }
-    throw new Error(`Semgrep execution failed: ${err.stderr || err.message}`);
-  }
-
-  let report;
-  try {
-    report = JSON.parse(stdout || "{}");
-  } catch (err) {
-    throw new Error(`Failed parsing Semgrep JSON output: ${err.message}`);
-  }
+  const fileLinesCache = new Map();
 
   for (const r of report.results || []) {
     const rawId = String(r.check_id || "SEMGREP_RULE").split(".").pop();
@@ -299,10 +338,26 @@ export async function runSemgrepScan({
     )
       .split(path.sep)
       .join("/");
-    if (!relPosix || relPosix.startsWith("..")) continue;
+    if (
+      !relPosix ||
+      relPosix === ".." ||
+      relPosix.startsWith("../") ||
+      relPosix.split("/").includes("..") ||
+      path.isAbsolute(relPosix)
+    ) {
+      continue;
+    }
 
     const line = Math.max(1, Number(r.start?.line) || 1);
-    const snippet = cleanSnippet(r.extra?.lines || "");
+    const endLine = Math.max(line, Number(r.end?.line) || line);
+    const snippet = await resolveSemgrepSnippet({
+      sandboxDir,
+      relPosix,
+      startLine: line,
+      endLine,
+      rawLines: r.extra?.lines,
+      fileLinesCache,
+    });
 
     capabilities.add(capability);
     findings.push({
@@ -319,4 +374,52 @@ export async function runSemgrepScan({
   }
 
   return { findings, capabilities };
+}
+
+export async function runSemgrepScan({
+  sandboxDir,
+  repoFullName,
+  sha,
+  semgrepRulesPath = DEFAULT_SEMGREP_RULES,
+  allowMissingSemgrep = process.env.CI !== "true",
+  execSemgrepFn = null,
+}) {
+  let stdout = "";
+  try {
+    if (execSemgrepFn) {
+      stdout = await execSemgrepFn({ sandboxDir, semgrepRulesPath });
+    } else {
+      ({ stdout } = await execFileAsync(
+        "semgrep",
+        [
+          "--config",
+          semgrepRulesPath,
+          "--json",
+          "--quiet",
+          "--no-git-ignore",
+          "--metrics=off",
+          "--timeout=15",
+          "--max-target-bytes=1048576",
+          "--exclude=node_modules",
+          sandboxDir,
+        ],
+        { maxBuffer: 16 * 1024 * 1024, timeout: 90_000 }
+      ));
+    }
+  } catch (err) {
+    if (err.code === "ENOENT" && allowMissingSemgrep) {
+      console.warn("[scanner] semgrep binary not installed locally; skipping AST pass.");
+      return { findings: [], capabilities: new Set() };
+    }
+    throw new Error(`Semgrep execution failed: ${err.stderr || err.message}`);
+  }
+
+  let report;
+  try {
+    report = JSON.parse(stdout || "{}");
+  } catch (err) {
+    throw new Error(`Failed parsing Semgrep JSON output: ${err.message}`);
+  }
+
+  return parseSemgrepReport({ report, sandboxDir, repoFullName, sha });
 }

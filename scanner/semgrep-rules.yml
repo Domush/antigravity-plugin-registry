@@ -5,11 +5,23 @@ rules:
   - id: CODE_CREDENTIAL_PATH
     languages: [javascript, typescript, python]
     severity: ERROR
-    message: References sensitive credential or key storage paths (~/.ssh, ~/.aws, ~/.gemini, ~/.kube, or .npmrc).
+    message: References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).
     metadata:
       agySeverity: critical
       capability: credential_access
-    pattern-regex: '(?i)(?:~/|\$HOME/|%USERPROFILE%[\\/]|["''`])(?:\.ssh/|\.aws/credentials|\.gemini/|\.kube/config|\.npmrc|\.netrc|/etc/shadow|id_rsa|id_ed25519)'
+    pattern-regex: '(?i)(?:~/|\$HOME/|%USERPROFILE%[\\/]|["''`])(?:\.ssh/|\.aws/credentials|\.gemini[\\/](?:oauth_creds\.json|google_accounts\.json|[^/\\\s"''`]*credential[^/\\\s"''`]*|[^/\\\s"''`]*secret[^/\\\s"''`]*|[^/\\\s"''`]*token[^/\\\s"''`]*\.json|\.env)|\.kube/config|\.npmrc|\.netrc|/etc/shadow|id_rsa|id_ed25519)'
+
+  # ---------------------------------------------------------------------------
+  # Informational: Non-Credential ~/.gemini Data & Config Access
+  # ---------------------------------------------------------------------------
+  - id: CODE_GEMINI_DATA_ACCESS
+    languages: [javascript, typescript, python]
+    severity: INFO
+    message: Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).
+    metadata:
+      agySeverity: low
+      capability: accesses_gemini_dir
+    pattern-regex: '(?i)(?:~/|\$HOME/|%USERPROFILE%[\\/]|["''`])\.gemini[\\/]'
 
   # ---------------------------------------------------------------------------
   # High: Process Spawning & Dynamic Code Execution
