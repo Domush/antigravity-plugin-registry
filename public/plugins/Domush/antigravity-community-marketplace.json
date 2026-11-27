@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "Domush/antigravity-community-marketplace",
-  "sha": "d5d92d1f7cc53ba1316296c327aad9f67fecb250",
+  "sha": "02ae0050a8f65a360451c9b8a9aecaa24d590a9c",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T10:32:55.961Z",
+  "scannedAt": "2026-11-27T10:59:44.424Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "agy-community-marketplace",
     "displayName": "agy-community-marketplace",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -43,7 +43,7 @@
     "oauthProviders": []
   },
   "readmeMarkdown": "# Antigravity Community Plugin Marketplace\n\n> **Browse, security-audit, install, and update community-made Google Antigravity App plugins directly from the Antigravity sidebar—backed by a public, Ed25519-signed registry.**\n\n[![npm version](https://img.shields.io/npm/v/antigravity-community-marketplace.svg)](https://www.npmjs.com/package/antigravity-community-marketplace)\n[![Public Registry](https://img.shields.io/badge/Registry-domush.github.io-10b981?style=flat&logo=github)](https://domush.github.io/antigravity-plugin-registry/)\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![Antigravity App Compatible](https://img.shields.io/badge/Antigravity%20App-Native%20Plugin-6366f1.svg)]()\n\n> **Disclaimer:** This is an independent community project and is not affiliated with or endorsed by Google. Always review audit findings before installing elevated or high-risk plugins.\n\n---\n\n## Requirements\n\n* **Antigravity App:** v2.34.0 or newer (required for MCP App sidebar UIs)\n* **Node.js:** v22 or newer available on `PATH`\n\n---\n\n## Quick Install (10 Seconds)\n\nInstall directly into Google Antigravity using `npx`:\n\n```bash\n# Global install (available across all Antigravity workspaces)\nnpx antigravity-community-marketplace install\n\n# Or per-project install (scoped to the current workspace only)\nnpx antigravity-community-marketplace install --workspace\n```\n\nRestart or reload the **Google Antigravity App**, and **Community Plugins** appears immediately in your sidebar (installed into `~/.gemini/config/plugins/agy-community-marketplace`, or `.agents/plugins/agy-community-marketplace` for workspace installs).\n\n### Uninstall\n\n```bash\n# Remove global install\nnpx antigravity-community-marketplace uninstall\n\n# Or remove per-project workspace install\nnpx antigravity-community-marketplace uninstall --workspace\n```\n\n### Manual Install\n\n1. Download and extract the latest release archive into your global plugins folder:\n   * **macOS / Linux:** `~/.gemini/config/plugins/agy-community-marketplace/`\n   * **Windows:** `%USERPROFILE%\\.gemini\\config\\plugins\\agy-community-marketplace\\`\n2. Reload or restart the Antigravity App.\n\n---\n\n## Opening the Marketplace\n\nClick **Community Plugins** under **Plugins** in the Antigravity App left sidebar (or open it in the side panel via the `open_marketplace` tool). You can also browse the catalog in any browser at `https://domush.github.io/antigravity-plugin-registry/`.\n\n---\n\n## Key Features\n\n* **Global & Project Installs:** Install plugins globally (`~/.gemini/config/plugins/`) or scoped to the active project (`.agents/plugins/`).\n* **Non-Destructive Enable / Disable:** Pause any installed plugin without deleting its files or local settings; disabled plugins move to a sibling `plugins-disabled/` folder and stop triggering collision warnings.\n* **Manual Plugin Detection & Adoption:** Automatically recognizes plugins you installed manually via exact tree hash or `.git/config` origin so you can track updates and denylist alerts, with opt-in adoption for name-only matches.\n* **Search, Filters & Organization:** Filter by category, surface (`Sidebar UI`, `Prompt/Rules Only`, `Local MCP`, `Shell Hooks`), maximum risk tier, and credential requirements; favorite or hide plugins across sessions.\n\n---\n\n## Security Guarantees\n\nEvery plugin in the registry is scanned by an automated, open-source GitHub Actions pipeline before publication, and the client enforces five local safeguards:\n\n1. **Ed25519-Signed Registry & Rollback Protection:** `index.json` and `denylist.json` are signed with Ed25519. The client verifies signatures against a pinned public key and blocks replay of older signed catalogs or denylists.\n2. **Immutable SHA Pinning + `contentTreeSha256`:** Plugins are never downloaded from mutable branches (`main`). Every install fetches the exact audited commit archive, blocks symlinks and zip-slip paths, and verifies the deterministic SHA-256 hash of the extracted file tree before moving files into your plugins directory.\n3. **Emergency Denylist Kill-Switch:** Revoked repositories or compromised commit SHAs are checked live before every install and surfaced as red uninstall alerts if already installed.\n4. **LLM Isolation:** Mutating tools (install, update, toggle, uninstall) are marked `visibility: [\"app\"]` so AI agents and untrusted prompts cannot invoke them—only your clicks in the sidebar UI can modify plugins.\n5. **Code, Hook & Prompt-Injection Auditing:** Plugins are scanned with Semgrep AST rules, lifecycle hook checks, unpinned `npx`/`uvx` runtime checks, and Markdown prompt-injection heuristics (`SKILL.md`, `agents/*.md`, `rules/*.md`). Every finding links directly to the exact file and line number on GitHub.\n\n---\n\n## Permission Diffs & Pre-Flight Checks\n\n* **Mandatory Audit Gate:** Clicking **Update**, or installing any elevated/high-risk or credential-requiring plugin, opens the **Security Audit Drawer** before anything is downloaded.\n* **Permission Escalation Diffs:** On updates, the drawer compares your installed version's capabilities against the new version and highlights newly added permissions (such as a new `Shell Lifecycle Hook` or `Unpinned Remote Package`) in red.\n* **OS & Runtime Pre-Flight:** Before installing, the client checks your local `PATH` for required MCP/hook runtimes (`node`, `python3`, `uvx`, `docker`, `pwsh`) and warns if a shell hook uses POSIX-only syntax on Windows or Windows-only syntax on macOS/Linux.\n* **Live Collision Detection:** Warns if a plugin registers a `/slash` command, namespaced MCP server, or custom agent that conflicts with an active local plugin.\n\n---\n\n## Troubleshooting\n\n* **Installed or toggled plugin doesn't appear yet:** Antigravity loads MCP servers and lifecycle hooks on startup. Reload or restart the Antigravity App whenever the amber reload banner appears.\n* **\"Select an active project path\" on Project install:** When opened from the global sidebar, Antigravity may not attach a workspace root automatically. Click **Edit** in the top-right **Project** pill to enter your project's absolute path.\n* **\"Untrusted signing keyId\" or \"Marketplace Update Available\" (Red Banner):** The registry rotated its signing key or bumped the minimum supported schema. Update `agy-community-marketplace` to the latest release.\n* **\"Integrity mismatch\" on install:** The downloaded archive did not match the audited `contentTreeSha256`. Your existing installation is left untouched; click **Check Updates** and retry, or report the plugin if the error persists.\n* **Missing runtime warning in Pre-Flight:** Install the flagged binary (e.g., `uv` or `python3`), ensure it is on your system `PATH`, and restart the Antigravity App so the local MCP server picks up the updated environment.\n\n---\n\n## Submitting or Reporting a Plugin\n\n* **Submit / Refresh a Plugin:** Tag your public GitHub repository with `agy-plugin` and open a submission issue on [`antigravity-plugin-registry`](https://github.com/Domush/antigravity-plugin-registry) for immediate indexing.\n* **Report a Malicious Plugin:** Click **Report** inside any plugin's detail drawer to open a pre-filled issue with the pinned commit SHA.\n",
-  "latestReleaseNotes": "- **Collapsible Compact Filter Bar:** Moves category, surface, risk, credential, and sort controls into an expandable filter drawer with an active filter count badge and quick reset.\n- **Plugin Icons & Monogram Fallbacks:** Displays plugin and author icons across cards and drawer headers with clean monogram fallbacks.\n- **Rendered Markdown & Details Navigation:** Adds formatted README & Release Notes rendering, explicit Details and Audit buttons, hover tooltips, and expandable card descriptions.\n- **Clearer Security & Version Awareness:** Suppresses false hook-event collisions, explains capabilities clearly, and shows Local Ahead badges plus downgrade warnings instead of backwards updates.",
+  "latestReleaseNotes": "- **Instant README Rendering:** Replaced nested Markdown regexes with a linear-time parser so complex READMEs with badge rows and nested parentheses render instantaneously.\\n- **Consistent Nested Formatting:** Preserves inline code blocks and emphasis cleanly inside links, badges, and nested labels.\\n- **Reliable Detail Drawer Loading:** Added monotonic request-sequence tracking and rendering error isolation so rapid tab or plugin switches always show clean, up-to-date content.",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -63,7 +63,7 @@
         "file": "server/lib/cli.mjs",
         "line": 206,
         "snippet": "? spawnSync(process.execPath, [npmCli, ...npmArgs], spawnOpts)",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/cli.mjs#L206"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/cli.mjs#L206"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -74,7 +74,7 @@
         "file": "server/lib/cli.mjs",
         "line": 207,
         "snippet": ": spawnSync(process.platform === \"win32\" ? \"npm.cmd\" : \"npm\", npmArgs, { ...spawnOpts, shell: process.platform === \"win32\", });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/cli.mjs#L207"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/cli.mjs#L207"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -85,7 +85,7 @@
         "file": "server/lib/semver.mjs",
         "line": 10,
         "snippet": "const match = /^v?(\\d+)\\.(\\d+)\\.(\\d+)(?:-([0-9A-Za-z.-]+))?(?:\\+[0-9A-Za-z.-]+)?$/i.exec(trimmed);",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/semver.mjs#L10"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/semver.mjs#L10"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -96,7 +96,7 @@
         "file": "server/lib/catalog.mjs",
         "line": 190,
         "snippet": "await fs.writeFile(tmpPath, buf);",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/catalog.mjs#L190"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/catalog.mjs#L190"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -107,7 +107,7 @@
         "file": "server/lib/catalog.mjs",
         "line": 225,
         "snippet": "const res = await fetch(url, { headers, signal: controller.signal });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/catalog.mjs#L225"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/catalog.mjs#L225"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -118,7 +118,7 @@
         "file": "server/lib/cli-sync.mjs",
         "line": 54,
         "snippet": "fsOps.unlinkSync(normalizedPath);",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/cli-sync.mjs#L54"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/cli-sync.mjs#L54"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -129,7 +129,7 @@
         "file": "server/lib/cli-sync.mjs",
         "line": 72,
         "snippet": "fsOps.rmSync(normalizedPath, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/cli-sync.mjs#L72"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/cli-sync.mjs#L72"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -140,7 +140,7 @@
         "file": "server/lib/installer.mjs",
         "line": 126,
         "snippet": "const res = await fetch(tarballUrl, { headers: { \"User-Agent\": USER_AGENT }, redirect: \"follow\", signal: controller.signal, });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L126"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L126"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -151,7 +151,7 @@
         "file": "server/lib/installer.mjs",
         "line": 191,
         "snippet": "await pipeline(stream, uncompressedGuard, createWriteStream(dest, { flags: \"wx\" }));",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L191"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L191"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -162,7 +162,7 @@
         "file": "server/lib/installer.mjs",
         "line": 228,
         "snippet": "await fs.rm(srcDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L228"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L228"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -173,7 +173,7 @@
         "file": "server/lib/installer.mjs",
         "line": 230,
         "snippet": "if (hadExisting) await fs.rm(backupDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L230"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L230"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -184,7 +184,7 @@
         "file": "server/lib/installer.mjs",
         "line": 234,
         "snippet": "await fs.rm(destDir, { recursive: true, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L234"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L234"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -195,7 +195,7 @@
         "file": "server/lib/installer.mjs",
         "line": 298,
         "snippet": "await fs.rm(staleDisabledDir, { recursive: true, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L298"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L298"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -206,7 +206,7 @@
         "file": "server/lib/installer.mjs",
         "line": 301,
         "snippet": "await fs.rm(legacyBackupDir, { recursive: true, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L301"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L301"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -217,7 +217,7 @@
         "file": "server/lib/installer.mjs",
         "line": 308,
         "snippet": "await fs.rm(stageDir, { recursive: true, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L308"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L308"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -228,7 +228,7 @@
         "file": "server/lib/installer.mjs",
         "line": 351,
         "snippet": "await fs.rm(targetDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/installer.mjs#L351"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/installer.mjs#L351"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -239,7 +239,7 @@
         "file": "server/lib/store.mjs",
         "line": 53,
         "snippet": "await fs.writeFile(tmpPath, payload, \"utf8\");",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/store.mjs#L53"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/store.mjs#L53"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -250,7 +250,7 @@
         "file": "server/lib/cli.mjs",
         "line": 245,
         "snippet": "--global, -g Install globally in ~/.gemini/config/plugins/${PLUGIN_DIR_NAME} (default)",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/server/lib/cli.mjs#L245"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/server/lib/cli.mjs#L245"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -261,11 +261,24 @@
         "file": "ui/src/security-meta.js",
         "line": 36,
         "snippet": "accesses_gemini_dir: \"Reads or writes files under ~/.gemini/ (normal for Antigravity telemetry/config plugins).\",",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/d5d92d1f7cc53ba1316296c327aad9f67fecb250/ui/src/security-meta.js#L36"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-community-marketplace/blob/02ae0050a8f65a360451c9b8a9aecaa24d590a9c/ui/src/security-meta.js#L36"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.0.4",
+      "sha": "02ae0050a8f65a360451c9b8a9aecaa24d590a9c",
+      "scannedAt": "2026-11-27T10:59:44.424Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.0.3",
       "sha": "d5d92d1f7cc53ba1316296c327aad9f67fecb250",

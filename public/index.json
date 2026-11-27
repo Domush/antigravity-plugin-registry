@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-27T10:41:11.341Z",
+  "generatedAt": "2026-11-27T11:00:08.143Z",
   "crawlerVersion": "1.0.0",
   "scannerVersion": "1.2.0",
   "totalPlugins": 12,
   "marketplaceClient": {
-    "latestVersion": "1.0.3",
+    "latestVersion": "1.0.4",
     "minSupportedVersion": "1.0.0",
-    "releaseUrl": "https://github.com/Domush/antigravity-community-marketplace/releases/tag/v1.0.3",
-    "notes": "Collapsible Compact Filter Bar: Moves category, surface, risk, credential, and sort controls into an expandable filter drawer with an active filter count badge and quick reset. Plugin Icons & Monogram Fallbacks: Displays plugin and..."
+    "releaseUrl": "https://github.com/Domush/antigravity-community-marketplace/releases/tag/v1.0.4",
+    "notes": "Instant README Rendering: Replaced nested Markdown regexes with a linear-time parser so complex READMEs with badge rows and nested parentheses render instantaneously.\\n- Consistent Nested Formatting: Preserves inline code blocks and..."
   },
   "plugins": [
     {
@@ -419,15 +419,15 @@
       },
       "repoUrl": "https://github.com/Domush/antigravity-community-marketplace",
       "license": "MIT",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.0.3",
-        "sha": "d5d92d1f7cc53ba1316296c327aad9f67fecb250",
-        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-community-marketplace/tarball/d5d92d1f7cc53ba1316296c327aad9f67fecb250",
-        "contentTreeSha256": "75b15a00cf1b1b032e576b1cc9803d128d2e54586318a5940250904cc0efed60",
-        "archiveBytes": 1987525,
-        "publishedAt": "2026-11-27T10:32:30Z"
+        "ref": "v1.0.4",
+        "sha": "02ae0050a8f65a360451c9b8a9aecaa24d590a9c",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-community-marketplace/tarball/02ae0050a8f65a360451c9b8a9aecaa24d590a9c",
+        "contentTreeSha256": "f09647f93c3f807c78e6a57ab462c2f692d81d66f82476eeeeb5dff4a3aeffd6",
+        "archiveBytes": 1993414,
+        "publishedAt": "2026-11-27T10:59:14Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -459,12 +459,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T10:32:14Z"
+        "pushedAt": "2026-11-27T10:59:14Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T10:32:55.961Z",
+        "scannedAt": "2026-11-27T10:59:44.424Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",

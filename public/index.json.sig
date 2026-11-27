@@ -3,7 +3,7 @@
   "alg": "Ed25519",
   "keyId": "39619f51b6d74dfa",
   "file": "index.json",
-  "signedAt": "2026-11-27T10:41:11.454Z",
-  "sha256": "7184d62b956a563093163317a02378c61b4830d1ee2b6508204563c92950a413",
-  "signature": "KApBCemFo/oVOozJfyz0NvxNcuv7U16u3xaEBmunUQX0I5BPi3a6dWKmuqtWDWPzfL3tKLcbhyDl8Xm0Zs54BA=="
+  "signedAt": "2026-11-27T11:00:08.262Z",
+  "sha256": "ac929bf1db20b004a0384971aec49671f04b706e3df41f577bbc3fe80a12983d",
+  "signature": "GEMlZZBXElvtHKSi/VDtgq5LIUwrw1bl9lkUwy+Z4cyYV6BOqK1GUDpTPwsyt5KzUQV2s13NvahvzE+6LawNBQ=="
 }
