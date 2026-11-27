@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "id": "sametozbalkan/antigravity-context-inspector",
+  "sha": "2bec35aedeb06060862acf7b138c72c80c8578ca",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:26.528Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-inspector",
+    "displayName": "Context Inspector",
+    "version": "1.2.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/logo.svg\" alt=\"Context Inspector logo\" width=\"76\" height=\"76\" />\n</p>\n\n<h1 align=\"center\">Antigravity Context Inspector</h1>\n\n<p align=\"center\">\n  A minimalist, live <strong>Context Window &amp; Subagent Inspector</strong> side panel for the <strong>Antigravity 2.0</strong> desktop app.\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/sametozbalkan/antigravity-context-inspector/actions/workflows/ci.yml\">\n    <img src=\"https://github.com/sametozbalkan/antigravity-context-inspector/actions/workflows/ci.yml/badge.svg\" alt=\"CI\" />\n  </a>\n  <a href=\"LICENSE\">\n    <img src=\"https://img.shields.io/badge/license-MIT-blue.svg\" alt=\"MIT License\" />\n  </a>\n  <img src=\"https://img.shields.io/badge/dependencies-zero-22c55e.svg\" alt=\"Zero Dependencies\" />\n  <img src=\"https://img.shields.io/badge/Antigravity-2.0%20Desktop-6366f1.svg\" alt=\"Antigravity 2.0 Desktop\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"docs/img/preview.png\" alt=\"Context Inspector in Dark Mode and Light Mode with Sparkline, MCP Server Breakdown, Swarm Workers, and Settings\" width=\"860\" />\n</p>\n\n<details align=\"center\">\n  <summary><strong>Watch interactive walkthrough (Sparkline · MCP Servers · Settings · Swarm)</strong></summary>\n  <br />\n  <img src=\"docs/img/demo.gif\" alt=\"Interactive walkthrough of Context Inspector v1.1.0\" width=\"440\" />\n</details>\n\n---\n\n## Highlights\n\n- **Exact token accounting — not character guesses.** Reads the actual `ContextWindowMetadata` breakdown and prompt payload stored in `~/.gemini/antigravity/conversations/<id>.db` (read-only), paired with live model limits from Antigravity’s model catalog. Zero extra LLM tokens consumed.\n- **Turn-by-turn growth sparkline.** Crisp 44px SVG sparkline right below the context bar shows token growth across turns with per-turn markers, compaction drops, labeled budget thresholds, and effortless full-card hover telemetry.\n- **Native window &amp; request trim budget.** Shows both the model’s native context capacity (e.g. `1M`) and Antigravity’s per-request compaction/trim budget (e.g. `512k`, `256k`, or `128k`) — switchable as the primary meter via `⚙` Settings.\n- **Prompt cache drop alert &amp; session summary.** Flags unexpected prompt cache drops (`Cache 18% ↓`) in amber when caching was previously active, and expands a 1-line session summary (`turns · avg cache · total out · thinking`) on click.\n- **Minimalist single-page overview with MCP server breakdown &amp; inline peek.** Click any category to rank items by token cost, drill into **MCP servers** (`github`, `supabase`, …) before inspecting individual tool schemas, and peek or copy exact payloads sent to the model.\n- **Subagent &amp; Swarm Worker monitoring.** Automatically detects both `invoke_subagent` subagents and **Swarm workers** (`members.json`), displaying live status, token usage, and full `← Main` / `Open ↗` drill-down.\n- **Configurable `/compact` control &amp; persisted `⚙` settings.** Configure compact threshold (`50%`, `60%`, `75%`, `Off`), primary meter (`Native` / `Budget`), and compact action (`Send /compact` with two-step confirmation or 1-click `Copy only`) — persisted outside iframe storage in `settings.json`.\n- **Native Dark &amp; Light mode.** Syncs automatically with Antigravity’s live theme variables via the sidecar preload bridge.\n- **Zero external dependencies.** Runs entirely on Antigravity’s bundled Node.js runtime using built-in modules (`node:sqlite`, `node:crypto`, `node:fs`) — no Python required, no `npm install`, no build step.\n\n---\n\n## Requirements\n\n- **Antigravity 2.0 Desktop** (no Python or external runtime needed)\n\n---\n\n## Installation\n\n### Option 1 — One-line installer (recommended)\n\n**Windows (PowerShell):**\n```powershell\nirm https://raw.githubusercontent.com/sametozbalkan/antigravity-context-inspector/main/scripts/install.ps1 | iex\n```\n\n**macOS / Linux:**\n```bash\ncurl -fsSL https://raw.githubusercontent.com/sametozbalkan/antigravity-context-inspector/main/scripts/install.sh | bash\n```\n\n### Option 2 — `git clone`\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/sametozbalkan/antigravity-context-inspector.git \"$HOME\\.gemini\\config\\plugins\\context-inspector\"\n```\n\n**macOS / Linux:**\n```bash\ngit clone https://github.com/sametozbalkan/antigravity-context-inspector.git ~/.gemini/config/plugins/context-inspector\n```\n\n### Enable the side panel\n\n1. Open **Antigravity → Customizations → Installed** and make sure **Context Inspector** is enabled (restart Antigravity if it does not appear immediately).\n2. Open any conversation and select **Context Inspector** from the right-hand side panel **`+`** menu.\n\n---\n\n## Updating\n\nContext Inspector supports three ways to stay up to date:\n\n1. **In-panel update notification:** The sidecar checks GitHub Releases quietly in the background (cached every 12 hours). When a newer version is published, a subtle `vX.Y.Z available` pill appears in the footer:\n   - If installed via `git`, click **Update now** to run `git pull --ff-only` explicitly, then toggle the plugin off and on in Customizations.\n   - You can also copy the update command or open the GitHub Release notes without modifying files automatically.\n2. **Manual `git pull`:**\n   ```bash\n   git -C ~/.gemini/config/plugins/context-inspector pull --ff-only\n   ```\n3. **Re-run the one-line installer:** Running `install.ps1` / `install.sh` again updates an existing installation in place.\n\n---\n\n## Native Context vs. Request Budget\n\nModels like Gemini expose a **1M-token native context window**, while Antigravity applies a smaller per-request **trim / compaction budget** (for example `512k`, `256k`, or `128k` depending on the model) to keep latency low and prevent long-turn context degradation.\n\n- The large top bar shows usage against the model’s **native window**.\n- The **Budget** row shows usage against Antigravity’s **active trim threshold** — the point where older history starts getting compacted or trimmed.\n- The **Compact** button appears when usage reaches **60%** of the active budget (or 60% of the native window when no separate budget applies).\n\n---\n\n## Architecture\n\n```text\nantigravity-context-inspector/\n├── plugin.json                        # Antigravity plugin manifest\n├── assets/logo.svg                    # Plugin icon\n├── scripts/\n│   ├── install.ps1                    # Windows PowerShell installer/updater\n│   └── install.sh                     # macOS / Linux installer/updater\n├── sidecars/inspector/\n│   ├── sidecar.json                   # Registers AUX_PANE side panel\n│   ├── package.json\n│   ├── main.mjs                       # Sidecar HTTP server, in-process snapshot cache, mtime-cached static assets, model catalog, update check\n│   ├── inspector.mjs                  # Standalone Node.js CLI entrypoint\n│   ├── lib/\n│   │   ├── protobuf.mjs               # Minimal zero-copy wire decoder (BigInt + Uint8Array.subarray)\n│   │   ├── accounting.mjs             # Read-only node:sqlite loader, token breakdown, checkpoints, file detection\n│   │   ├── subagents.mjs              # Subagent & Swarm worker discovery and stats\n│   │   ├── content.mjs                # System sections, tool schemas, active messages\n│   │   ├── snapshot.mjs               # Snapshot assembler, CLI text formatter & SHA-1 fingerprinting\n│   │   └── server_utils.mjs           # Pure server helpers (light report index, workspace URI validation, settings, semver)\n│   └── public/\n│       ├── index.html                 # HTML shell (loads classic /app.js)\n│       ├── styles.css                 # Theme-aware minimalist CSS\n│       ├── app.js                     # Panel state, API polling, delegated click handling\n│       └── js/\n│           ├── utils.js               # Formatting, escaping, clipboard & path helpers\n│           ├── sparkline.js           # Turn-by-turn SVG sparkline & hover telemetry\n│           └── views.js               # Pure HTML template renderers\n└── tests/\n    ├── helpers.mjs                    # Shared synthetic protobuf & SQLite test builders\n    └── *.test.mjs                     # Modular node:test suites (protobuf, accounting, subagents, content, CLI, server helpers, frontend)\n```\n\n### How it works\n\n1. The panel receives the active conversation ID and workspace URIs from Antigravity’s `/preload.js` bridge and polls `/api/report` every 3 seconds while visible.\n2. `main.mjs` fingerprints the conversation’s `.db` and `-wal` files (plus Swarm `members.json` and any discovered subagent databases) and only invokes `buildSnapshot()` in-process when something actually changed.\n3. All database connections open strictly read-only via Node’s built-in `node:sqlite` (`DatabaseSync` with `{ readOnly: true }`). Full item payloads are served instantly from the backend’s in-memory LRU cache via `/api/item` when you click to inspect a row.\n\n---\n\n## CLI Usage & Testing\n\nThe Node.js parser also works standalone from the command line (Node.js 22.16+ / 24+):\n\n```bash\n# Latest Antigravity Desktop conversation\nnode sidecars/inspector/inspector.mjs\n\n# Specific conversation ID as structured JSON\nnode sidecars/inspector/inspector.mjs --conversation-id <uuid> --json\n\n# Arbitrary SQLite conversation database\nnode sidecars/inspector/inspector.mjs --db /path/to/<uuid>.db\n```\n\nRun the zero-dependency test suite:\n\n```bash\nnode --test tests/*.test.mjs\n```\n\n---\n\n## License\n\n[MIT](LICENSE) © 2026 [Samet Ozbalkan](https://github.com/sametozbalkan)\n",
+  "latestReleaseNotes": "### Fixed\n- **Breakdown & drill-down alignment:** Grouped conversation messages by the same step-type category as the row totals (`category` field + `categoryItems()` in `public/js/views.js`), fixing `SYSTEM_MESSAGE` and `ERROR_MESSAGE` items (which reach the model with `role=user`) previously inflating *User messages* and leaving *System messages* empty.\n- **Unknown breakdown groups:** Treated unknown `ContextWindowMetadata` group types (such as `0` \"Unspecified\", which carries the `Identity` section) as *System prompt* in both accounting and content parsing instead of dropping them from `used_tokens`.\n- **Chat label parsing:** Added support for `Message <n> (CHAT_MESSAGE_SOURCE_*)` chat breakdown labels and counted unknown step type names as tools rather than falling back to proportional scaling for the entire message list.\n- **Windows path shortening & deduplication:** Matched drive-letter home directories case-insensitively in `shortenPath()` and deduplicated detected file lists (`skill_files`, `artifact_files`, `knowledge_files`) by shortened path instead of raw URI.\n\n### Changed\n- **Testable server utilities (`lib/server_utils.mjs`):** Extracted pure helpers (`buildLightReport`, `workspacePath`, settings sanitization, and `compareSemver`) from `main.mjs` into `sidecars/inspector/lib/server_utils.mjs` (no `sidecar_sdk` dependency) and expanded the test suite to 41 tests.\n- **Housekeeping:** Removed the leftover `sidecars/inspector/lib/__init__.py` and Python `.gitignore` entries, and documented Node.js `22.16+` as the standalone CLI requirement in `README.md`.\r\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/accounting.mjs",
+        "line": 378,
+        "snippet": "const m = MESSAGE_LABEL_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/accounting.mjs#L378"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/accounting.mjs",
+        "line": 776,
+        "snippet": "db.exec('BEGIN');",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/accounting.mjs#L776"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/accounting.mjs",
+        "line": 827,
+        "snippet": "db.exec('ROLLBACK');",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/accounting.mjs#L827"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/content.mjs",
+        "line": 86,
+        "snippet": "while ((m = re.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/content.mjs#L86"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/subagents.mjs",
+        "line": 119,
+        "snippet": "con.exec('BEGIN');",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/subagents.mjs#L119"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/subagents.mjs",
+        "line": 192,
+        "snippet": "con.exec('ROLLBACK');",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/subagents.mjs#L192"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/lib/subagents.mjs",
+        "line": 360,
+        "snippet": "const m = uuidSearchRe.exec(cidRaw);",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/lib/subagents.mjs#L360"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/inspector/main.mjs",
+        "line": 75,
+        "snippet": "execFile( cmd, args, { cwd, timeout, maxBuffer: 64 * 1024 * 1024, env, windowsHide: true, }, (err, stdout, stderr) => { if (err) reject(new Error((stderr || err.message || String(e",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/main.mjs#L75"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/inspector/main.mjs",
+        "line": 58,
+        "snippet": "writeFileSync(tmpPath, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/main.mjs#L58"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/inspector/main.mjs",
+        "line": 62,
+        "snippet": "unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/main.mjs#L62"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/inspector/main.mjs",
+        "line": 128,
+        "snippet": "const req = https.get( urlStr, { headers: { 'User-Agent': 'antigravity-context-inspector', Accept: 'application/vnd.github+json', }, timeout, }, (res) => readJsonResponse(req, res,",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/main.mjs#L128"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/inspector/inspector.mjs",
+        "line": 5,
+        "snippet": "* Reads ~/.gemini/antigravity/conversations/<uuid>.db (read-only) and outputs",
+        "githubBlobUrl": "https://github.com/sametozbalkan/antigravity-context-inspector/blob/2bec35aedeb06060862acf7b138c72c80c8578ca/sidecars/inspector/inspector.mjs#L5"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.2.1",
+      "sha": "2bec35aedeb06060862acf7b138c72c80c8578ca",
+      "scannedAt": "2026-11-27T18:19:26.528Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

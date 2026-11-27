@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "id": "TouristicAsp44/Arma3-SQF-review",
+  "sha": "2240d485436c998e45c979295f83c5414bd03e2e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:11.504Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "arma3-sqf-review",
+    "displayName": "Arma 3 SQF Review",
+    "version": "2.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "arma3-sqf-review",
+        "slashCommand": "/arma3-sqf-review",
+        "description": "Orquesta desarrollo y auditoría SQF de Arma 3 en servidor dedicado: CfgRemoteExec, init.sqf, remoteExec, publicVariable, JIP, HC, rendimiento, sqflint y documentación. Escala automáticamente en Micro, Estándar o Completo. Activar en scripts",
+        "disableModelInvocation": false,
+        "file": "skills/arma3-sqf-review/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "README",
+        "description": "",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/README.md"
+      },
+      {
+        "name": "sqf-architect",
+        "description": "Diseña el plan de desarrollo de un sistema SQF para Arma 3 antes de escribir código — módulos, contrato de interfaces, CfgRemoteExec, estado compartido, JIP y orden de init. Solo diseño; no escribe código de implementación.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-architect.md"
+      },
+      {
+        "name": "sqf-best-practices-reviewer",
+        "description": "Revisor semántico de buenas prácticas SQF — evaluación perezosa, nomenclatura, params tipados, compileFinal, micro-optimizaciones y scope cuando sqflint no está disponible. No ejecuta el linter ni revisa red/locality.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-best-practices-reviewer.md"
+      },
+      {
+        "name": "sqf-claim-verifier",
+        "description": "Verifica cada afirmación técnica que el plugin hace sobre SQF contra fuentes primarias oficiales (réplica local a3ref y Bohemia Interactive Community Wiki - BIKI), registrando URL, commit SHA dinámico, revid y nivel de confianza.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-claim-verifier.md"
+      },
+      {
+        "name": "sqf-developer",
+        "description": "Implementa un módulo SQF de Arma 3 según el contrato de interfaces y el estándar del equipo; si detecta inviabilidad técnica, solicita formalmente ajuste al orquestador. Escribe únicamente los archivos asignados.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-developer.md"
+      },
+      {
+        "name": "sqf-doc-writer",
+        "description": "Redacta la guía de uso de un script o sistema SQF de Arma 3 terminado — instalación, configuración, API, uso desde el editor, comportamiento multijugador y solución de problemas. Solo documenta lo que el código hace.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-doc-writer.md"
+      },
+      {
+        "name": "sqf-innovator",
+        "description": "Propone mecánicas viables para Arma 3 en servidor dedicado, filtrando por impacto de red, coste por frame, persistencia JIP e invariantes de multijugador antes de presentarlas. Separa ideas de implementaciones verificadas.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-innovator.md"
+      },
+      {
+        "name": "sqf-locality-auditor",
+        "description": "Audita locality y compatibilidad multijugador de SQF para Arma 3 — remoteExec, JIP, publicVariable, CfgRemoteExec, Headless Client, ownership y softlocks. Usa los hechos de wiki y de configuración que recibe.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-locality-auditor.md"
+      },
+      {
+        "name": "sqf-mission-config-auditor",
+        "description": "Extrae y audita los hechos de configuración de un proyecto de Arma 3 (misión o addon: description.ext o config.cpp, CfgPatches, CfgRemoteExec, CfgFunctions, orden de init, slots de HC) para alimentar a architect, developer, locality-auditor",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-mission-config-auditor.md"
+      },
+      {
+        "name": "sqf-performance-auditor",
+        "description": "Audita el coste en ejecución de código SQF para Arma 3 — carga del scheduler, bucles y handlers por frame, saturación de red, escaneos globales costosos, estructuras de datos, fugas de scripts/EH/grupos/objetos y reparto servidor/HC. Entreg",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-performance-auditor.md"
+      },
+      {
+        "name": "sqf-static-analyzer",
+        "description": "Ejecuta análisis estático determinístico de SQF con sqflint mediante sqf_orchestrator.py --root <raíz> --lint (sintaxis, variables no privadas). Complementa a los revisores semánticos; no inventa reglas.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-static-analyzer.md"
+      },
+      {
+        "name": "sqf-test-plan-generator",
+        "description": "Convierte los riesgos detectados por la revisión estática de SQF en un plan de prueba manual concreto para servidor dedicado, JIP y headless client. No revisa código ni lo modifica.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sqf-test-plan-generator.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/arma3-sqf-review"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "README",
+      "sqf-architect",
+      "sqf-best-practices-reviewer",
+      "sqf-claim-verifier",
+      "sqf-developer",
+      "sqf-doc-writer",
+      "sqf-innovator",
+      "sqf-locality-auditor",
+      "sqf-mission-config-auditor",
+      "sqf-performance-auditor",
+      "sqf-static-analyzer",
+      "sqf-test-plan-generator"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Arma 3 SQF Review Plugin\n\n<p align=\"center\">\n  <img src=\"assets/logo.png\" alt=\"Arma 3 SQF Review Logo\" width=\"180\">\n</p>\n\n<p align=\"center\">\n  <strong>Equipo de agentes de IA y arnés determinista para desarrollo, auditoría de localidad multijugador, rendimiento y mejores prácticas en scripts SQF de Arma 3.</strong>\n</p>\n\n<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/Python-3.11+-blue.svg\" alt=\"Python 3.11+\">\n  <img src=\"https://img.shields.io/badge/Version-2.0.0-informational.svg\" alt=\"Version 2.0.0\">\n  <img src=\"https://img.shields.io/badge/Tests-103%20passing-brightgreen.svg\" alt=\"Tests\">\n  <img src=\"https://img.shields.io/badge/License-MIT-yellow.svg\" alt=\"License: MIT\">\n  <img src=\"https://img.shields.io/badge/Arma%203-Vanilla%20%7C%20CBA%20%7C%20ACE3-orange.svg\" alt=\"Arma 3\">\n</p>\n\n---\n\n## 🎯 Descripción General\n\n`arma3-sqf-review` es un plugin avanzado para el entorno **Antigravity** diseñado específicamente para creadores de misiones y desarrolladores de mods/addons en **Arma 3**.\n\nDesarrollar para Arma 3 en servidores dedicados (`Arma3Server`) presenta desafíos técnicos únicos: localidad de argumentos y efectos (`AL`/`AG`/`EL`/`EG`), jugadores que se unen en progreso (`JIP`), suspensión en contextos no programados (*unscheduled*), orden de inicialización y sincronización de red vía `remoteExec` y `publicVariable`. \n\nEste plugin implementa un **equipo colegiado de 11 subagentes especializados** guiados por un motor determinista en Python, asegurando que el código producido o auditado sea robusto, eficiente, respetuoso del scheduler y libre de fugas de variables o bloqueos de inicialización.\n\n---\n\n## 🏛️ Arquitectura de Ejecución\n\nEl plugin opera bajo el principio **\"El script es la puerta, la prosa es el flujo\"**:\n- **La prosa (`SKILL.md`)** gobierna el flujo conversacional y el ciclo de corrección entre subagentes (máximo 3 iteraciones).\n- **El script Python (`sqf_orchestrator.py`)** actúa como puerta de calidad determinista e inmutable: clasifica modos de proyecto, normaliza severidades del linter y aborta formalmente si persisten defectos bloqueantes tras 3 ciclos (Puerta de Calidad T09).\n\n```\n                               ┌─────────────────────────────┐\n                               │   Usuario / Orquestador     │\n                               └──────────────┬──────────────┘\n                                              │ Triage (--mode-query)\n                     ┌────────────────────────┴────────────────────────┐\n                     ▼                                                 ▼\n             Modo Micro (1 archivo)                         Modos Estándar / Completo\n                     │                                                 │\n        ┌────────────┴────────────┐                    ┌───────────────┴───────────────┐\n        ▼                         ▼                    ▼               ▼               ▼\nsqf-static-analyzer      sqf-best-practices      sqf-architect   sqf-developer   sqf-locality\n   (run_sqflint)              reviewer               (diseño)      (por módulo)      auditor\n        │                         │                    │               │               │\n        └────────────┬────────────┘                    └───────────────┼───────────────┘\n                     │                                                 │\n                     ▼                                                 ▼\n        ┌─────────────────────────┐                    ┌───────────────────────────────┐\n        │   Ciclo de Corrección   │                    │   Oleada de Revisión + Gate   │\n        │   (Máximo 3 pasadas)    │                    │  (Locality + Perf + Syntax)   │\n        └────────────┬────────────┘                    └───────────────┬───────────────┘\n                     │                                                 │\n                     └────────────────────────┬────────────────────────┘\n                                              ▼\n                                 Puerta de Calidad Final\n                             (Informe estructurado PASA / NO)\n```\n\n---\n\n## 🤖 El Equipo de Subagentes (11 Especialistas)\n\n| Agente | Rol | Responsabilidad | Tier |\n|---|---|---|---|\n| `sqf-architect` | Arquitectura | Contrato de interfaces públicas, mapa de máquinas (servidor/cliente/HC) y configuración de `CfgRemoteExec`. | `pro` |\n| `sqf-developer` | Desarrollador | Implementación estricta de módulos SQF según el contrato, con archivos disjuntos. | `pro` |\n| `sqf-locality-auditor` | Red y Locality | Invariantes de servidor dedicado, flags `remoteExec`, persistencia JIP, compatibilidad Headless Client y prevención de softlocks. | `pro` |\n| `sqf-innovator` | Innovación | Propone mecánicas viables aplicando filtros de ancho de banda, presupuesto por frame y persistencia. | `pro` |\n| `sqf-static-analyzer` | Análisis Estático | Ejecución determinista de `sqflint` vía envoltorio normalizador. | `flash` |\n| `sqf-best-practices-reviewer` | Buenas Prácticas | Evaluación perezosa, scope local (`private`), nomenclatura y micro-optimizaciones. | `flash` |\n| `sqf-performance-auditor` | Rendimiento | Carga del scheduler, optimización de bucles por frame (PFH vs EachFrame), escaneos globales y plan de medición. | `flash` |\n| `sqf-mission-config-auditor` | Configuración | Extracción y validación de hechos de `description.ext` o `config.cpp`, `CfgPatches` y whitelists. | `flash` |\n| `sqf-claim-verifier` | Verificación Wiki *(mantenimiento)* | Auditoría de la capa declarativa del plugin contra la réplica oficial BIKI (`a3ref`) y extracción de SHA en runtime (fuera del flujo de usuario). | `flash` |\n| `sqf-test-plan-generator` | Plan de Pruebas | Generación de planes de prueba manuales específicos para servidor dedicado y clientes tardíos (JIP). | `flash` |\n| `sqf-doc-writer` | Documentación | Redacción de guías de uso completas del sistema implementado (instalación, API y multijugador). | `flash` |\n\n---\n\n## 🚦 Modos de Operación\n\nEl modo de revisión se determina determinísticamente mediante el análisis del inventario de código:\n\n1. **Micro**:\n   - **Criterio**: Exactamente 1 archivo `.sqf`, $\\le 50$ líneas, sin archivos de ciclo de vida (`init*.sqf`, `description.ext`) ni primitivas de red.\n   - **Flujo**: Rápido (1–2 agentes), análisis estático con `sqflint`, verificación de invariantes de servidor dedicado y entrega sin burocracia.\n2. **Estándar**:\n   - **Criterio**: 2 a 3 archivos, o $> 50$ líneas, o presencia de primitivas de red (`remoteExec`, `publicVariable`).\n   - **Flujo**: Auditoría de red, análisis de rendimiento, revisión semántica y plan de pruebas.\n3. **Completo**:\n   - **Criterio**: $\\ge 4$ archivos, $\\ge 3$ módulos, JIP, Headless Client, persistencia o encargo explícito de auditoría integral.\n   - **Flujo**: Ciclo completo con diseño de interfaces (`sqf-architect`), desarrollo modular en paralelo y suite documental.\n\n---\n\n## 🛠️ Herramientas de Línea de Comandos (CLI)\n\nEl plugin incluye utilidades CLI deterministas ejecutables de forma independiente:\n\n### 1. Consulta Determinista de Modo (`--mode-query`)\nCalcula el modo de revisión analizando los archivos del proyecto:\n```bash\npython skills/arma3-sqf-review/scripts/sqf_orchestrator.py --root <raíz_del_proyecto> --mode-query\n```\n\n### 2. Análisis Estático con Severidades Normalizadas (`--lint`)\nEjecuta el análisis estático unificado (eleva advertencias de fugas de scope a `BLOQUEANTE`):\n```bash\npython skills/arma3-sqf-review/scripts/sqf_orchestrator.py --root <raíz_del_proyecto> --lint\n```\n*(o sobre un archivo específico: `python skills/arma3-sqf-review/scripts/sqf_orchestrator.py <archivo.sqf> --lint`)*\n\n### 3. Modo Forzado (`--mode`)\nPermite fijar un modo explícito desactivando el re-escalado automático:\n```bash\npython skills/arma3-sqf-review/scripts/sqf_orchestrator.py --root <raíz> --mode Micro --lint\n```\n\n---\n\n## 📦 Instalación y Requisitos\n\n### Requisitos Previos\n- **Python**: 3.11 o superior.\n- **Antigravity** o **Gemini CLI**.\n- *(Opcional pero muy recomendado)* **`sqflint`**: Linter nativo de SQF en Python. Puede instalarse como extra del paquete mediante `pip install .[linter]` (o directamente con `pip install \"sqflint>=0.3.2\"`).\n\n### Instalación en Antigravity\nClona o copia el repositorio dentro del directorio de plugins de Antigravity:\n\n```bash\ngit clone https://github.com/TouristicAsp44/Arma3-SQF-review.git ~/.gemini/config/plugins/arma3-sqf-review\n```\n\n### Configuración de la Réplica Offline BIKI (Opcional)\nPara validar comandos y funciones offline con exactitud criptográfica, el plugin soporta tanto los datos JSON de un catálogo `a3ref` como un índice compilado **SQLite/FTS5** de consulta rápida:\n\n```bash\n# Variables de entorno opcionales para localizar la réplica offline:\nexport SQF_WIKI_DB_PATH=\"<ruta/hacia/arma3_wiki.db>\"      # Índice SQLite/FTS5 (prioritario)\nexport SQF_WIKI_DATA_PATH=\"<ruta/hacia/a3ref/data>\"       # Directorio JSON de a3ref\nexport A3REF_WIKI_PATH=\"<ruta/hacia/a3ref/data>\"          # Alias compatible con sincronización\n```\n\nPara construir el índice SQLite/FTS5 a partir de los JSON de `a3ref` (sin dependencias externas, solo `stdlib`):\n```bash\npython skills/arma3-sqf-review/scripts/wiki_db_builder.py build --data <ruta/hacia/a3ref/data> --out <ruta/hacia/arma3_wiki.db>\n```\n\n*Si la réplica SQLite/JSON no está presente en ninguna ruta configurada ni descubierta automáticamente, `sqf_wiki_reader.py` entra en modo degradado explícito **`SIN_REPLICA`** con fallback controlado a [`skills/arma3-sqf-review/references/wiki-cache.md`](skills/arma3-sqf-review/references/wiki-cache.md), marcando como `NO VERIFICADO` cualquier comando fuera de la caché con honestidad técnica.*\n\n---\n\n## 🧪 Arnés de Pruebas\n\nEl repositorio cuenta con **103 pruebas automatizadas** (unitarias, de integración, gates estructurales y 12 escenarios golden P0 en `evals/goldens/`) cubriendo los **6 módulos productivos** (`sqf_models`, `sqf_orchestrator`, `sqf_wiki_reader`, `sync_wiki_cache`, `run_sqflint`, `wiki_db_builder`):\n\n```bash\npython -m pytest tests/ -v\n```\n\n---\n\n## 📄 Autor y Licencia\n\nDesarrollado y mantenido por **TouristicAsp44** ([@TouristicAsp44](https://github.com/TouristicAsp44)).\n\nEste proyecto está distribuido bajo los términos de la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/run_sqflint.py",
+        "line": 157,
+        "snippet": "res = subprocess.run( cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding=\"utf-8\", errors=\"replace\", env=sub_env, check=False, timeout=30, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/run_sqflint.py#L157"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 287,
+        "snippet": "proc = subprocess.run( cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding=\"utf-8\", errors=\"replace\", env=env, timeout=timeout, check=False, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L287"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 664,
+        "snippet": "proc = subprocess.run( cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding=\"utf-8\", errors=\"replace\", env=env, timeout=timeout, check=False, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L664"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 343,
+        "snippet": "res = subprocess.run( [\"git\", \"-C\", str(target_dir), \"rev-parse\", \"HEAD\"], capture_output=True, text=True, check=False, timeout=5, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L343"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 933,
+        "snippet": "res_stat = subprocess.run( [\"git\", \"-C\", str(r), \"status\", \"--porcelain\"], capture_output=True, text=True, check=False, timeout=30, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L933"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 945,
+        "snippet": "res_pull = subprocess.run( [\"git\", \"-C\", str(r), \"pull\", \"--ff-only\"], capture_output=True, text=True, check=False, timeout=30, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L945"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 189,
+        "snippet": "res = subprocess.run( [\"git\", \"-C\", str(target_dir), \"rev-parse\", \"HEAD\"], capture_output=True, text=True, check=False, timeout=5, )",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L189"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/run_sqflint.py",
+        "line": 129,
+        "snippet": "with open(f, \"r\", encoding=\"utf-8\", errors=\"replace\") as sqf_file:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/run_sqflint.py#L129"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 67,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L67"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 277,
+        "snippet": "with open(temp_sqf_path, \"w\", encoding=\"utf-8\") as tf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L277"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 306,
+        "snippet": "os.remove(temp_sqf_path)",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L306"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 327,
+        "snippet": "with open(resolved_notes_file, \"w\", encoding=\"utf-8\") as nf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L327"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 337,
+        "snippet": "with open(resolved_state_file, \"w\", encoding=\"utf-8\") as sf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L337"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 345,
+        "snippet": "with open(resolved_state_file, \"w\", encoding=\"utf-8\") as sf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L345"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 354,
+        "snippet": "with open(resolved_state_file, \"w\", encoding=\"utf-8\") as sf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L354"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 366,
+        "snippet": "with open(resolved_failed_file, \"w\", encoding=\"utf-8\") as ff:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L366"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 372,
+        "snippet": "os.remove(resolved_state_file)",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L372"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 381,
+        "snippet": "with open(resolved_state_file, \"w\", encoding=\"utf-8\") as sf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L381"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 399,
+        "snippet": "with open(resolved_notes_file, \"r\", encoding=\"utf-8\") as nf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L399"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 464,
+        "snippet": "with open(input_file_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L464"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 473,
+        "snippet": "with open(resolved_state_file, \"r\", encoding=\"utf-8\") as sf:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L473"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_orchestrator.py",
+        "line": 531,
+        "snippet": "with open(resolved, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_orchestrator.py#L531"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 404,
+        "snippet": "with open(target, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L404"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 422,
+        "snippet": "with open(target, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L422"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 446,
+        "snippet": "with open(target, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L446"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 479,
+        "snippet": "with open(target, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L479"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sqf_wiki_reader.py",
+        "line": 810,
+        "snippet": "with open(target, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sqf_wiki_reader.py#L810"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/sync_wiki_cache.py",
+        "line": 211,
+        "snippet": "tmp_path.write_text(\"\\n\".join(new_lines) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/sync_wiki_cache.py#L211"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 392,
+        "snippet": "with open(commands_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L392"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 454,
+        "snippet": "with open(functions_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L454"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 515,
+        "snippet": "with open(topics_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L515"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 564,
+        "snippet": "with open(syntax_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L564"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 603,
+        "snippet": "with open(index_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L603"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 864,
+        "snippet": "with open(cmd_file, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L864"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 883,
+        "snippet": "with open(fn_file, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L883"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 898,
+        "snippet": "with open(top_file, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L898"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 908,
+        "snippet": "with open(syn_file, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L908"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/arma3-sqf-review/scripts/wiki_db_builder.py",
+        "line": 918,
+        "snippet": "with open(idx_file, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/skills/arma3-sqf-review/scripts/wiki_db_builder.py#L918"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/sqf-claim-verifier.md",
+        "line": 18,
+        "snippet": "1. **Prioridad de la Réplica Local Primaria (`a3ref`) y `HECHOS WIKI`**: La fuente primaria y obligatoria de verdad para la API de Arma 3 es la base de conocimiento estructurada `a",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/agents/sqf-claim-verifier.md#L18"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/sqf-claim-verifier.md",
+        "line": 19,
+        "snippet": "2. **Procedencia Dinámica Obligatoria**: Todo veredicto emitido debe incorporar obligatoriamente el commit SHA dinámico obtenido en tiempo de ejecución (`python sqf_wiki_reader.py ",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/agents/sqf-claim-verifier.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/sqf-static-analyzer.md",
+        "line": 22,
+        "snippet": "`python skills/arma3-sqf-review/scripts/sqf_orchestrator.py --root <raíz> --lint`",
+        "githubBlobUrl": "https://github.com/TouristicAsp44/Arma3-SQF-review/blob/2240d485436c998e45c979295f83c5414bd03e2e/agents/sqf-static-analyzer.md#L22"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.0.0",
+      "sha": "2240d485436c998e45c979295f83c5414bd03e2e",
+      "scannedAt": "2026-11-27T18:18:11.504Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

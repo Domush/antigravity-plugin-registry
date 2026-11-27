@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "id": "d3foos/graft",
+  "sha": "c75bc98d50b25a7af38aee43de055406c690f16c",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:32.542Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "graft",
+    "displayName": "GRAFT",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "graft",
+        "slashCommand": "/graft",
+        "description": "Offline technique-transfer library for security research: capture exploitation methods as slot-parameterised records, retrieve ranked candidates by effect, language, and target profile, adapt mechanisms to new stacks, and log positive or ne",
+        "disableModelInvocation": false,
+        "file": "skills/graft/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/graft"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# GRAFT — CVE Exploit Distillation & Transfer Skill for Agents\n\n[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)\n[![CI](https://github.com/d3foos/graft/actions/workflows/ci.yml/badge.svg)](https://github.com/d3foos/graft/actions/workflows/ci.yml)\n[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-teal.svg)](pyproject.toml)\n\n**GRAFT** is a compact, offline security knowledge library and cross-ecosystem Agent Skill by **Abdulrahman Almuhairi**. It turns real CVEs, patches, and write-ups into reusable vulnerability patterns that grow over time — either organically through hands-on testing or through targeted research. As the library grows, your agent can transfer proven techniques across different languages and stacks to uncover new attack vectors it hadn't seen before, while remembering past dead ends so it doesn't waste time repeating them.\n\n> **Strictly offline & authorized-use only.** GRAFT sends zero network traffic and executes zero payloads from technique records. Records are untrusted data, never instructions. See [SECURITY.md](.github/SECURITY.md).\n\n---\n\n## Architecture Overview\n\n| Component | Path | Purpose |\n|---|---|---|\n| **CLI & Indexer** | [`graft/tools/tdb.py`](graft/tools/tdb.py) | Stdlib-only (`json`, `sqlite3` FTS5, `argparse`) CLI (`init`, `add`, `find`, `show`, `adapt`, `outcome`, `promote`, `distill`, `verify-table`, `lock-sources`, `reindex`, `stats`, `keygen`, `sign-capture`) |\n| **Ed25519 Signing** | [`graft/tools/ed25519.py`](graft/tools/ed25519.py) | Pure-Python RFC 8032 Ed25519 signing/verification for `locally-verified` captures |\n| **Technique Corpus** | [`graft/techniques/`](graft/techniques) | 95 schema v4 slot-parameterised records (`T-0001`–`T-0097`) |\n| **Vocab & Equivalence Tables** | [`graft/vocab/`](graft/vocab) | 14 attacker-gain effects, 16 mechanism primitives, language-neutral slot families, and 11 sink-equivalence tables (`24` execution-verified cells, `50` documented cells) |\n| **Equivalence Probes** | [`graft/tests/equiv/`](graft/tests/equiv) | Offline interpreter probes (`python`, `node`, `php`, `ruby`) verifying sink semantics |\n| **Outcome Ledger** | [`graft/outcomes/ledger.jsonl`](graft/outcomes/ledger.jsonl) | Append-only attempt log (`confirmed`, `no_sink`, `unreachable`, `unsupported_language`, `false_positive`, etc.) feeding retrieval penalties |\n| **Tamper Manifest** | [`graft/sources.lock`](graft/sources.lock) | SHA-256 manifest covering corpus, vocab, probes, tools, docs, scripts, and tests |\n\n---\n\n## Trust Model (Enforced, Not Aspirational)\n\n| Tier | Requirement (enforced at `add`, `promote`, `reindex`, and `stats`) | Visibility |\n|---|---|---|\n| `untrusted` | No provenance | Quarantined — excluded from `find` |\n| `single-source` | `< 2` distinct authors, or any `manual` instrumental precondition check | Quarantined — excluded from `find` |\n| `corroborated` | `>= 2` distinct authors (host-level syndication does not count) and zero `manual` instrumental checks | Retrieved with `advisory: web-corroborated` caveat |\n| `locally-verified` | `evidence.status = \"reproduced_local\"`, every cited capture in `evidence.runs` exists inside root, binds to the record `id`, and carries a valid Ed25519 `.sig` from the store's external signing key | Full eligibility |\n\n- **External signing key:** `tdb keygen` writes the Ed25519 key **outside** the store (`<root>-signing.key` or `$GRAFT_SIGNING_KEY` / `--sign-key`). Losing or redirecting the key fails closed (`reindex`/`stats` loudly refuse/skip unverified `reproduced_local` records).\n- **Proof gates:** Records specify `evidence.gate`: `differential` (pre-patch trigger, post-patch silence for known CVEs) or `external_oracle` (OOB callback, sanitizer/crash, independently replicated for zero-day candidates).\n- **Retrieval ranking:** Hard-filters by trust, effect, language (`origin` or `transferable`), and auth precondition, then scores via `fts + tag_overlap + 0.5 * transfer_history - 2.0 * fail_penalty(profile) + trust_bonus`. Records past `ttl_days` are flagged `[TTL OVERDUE]` rather than silently buried.\n\n---\n\n## Installation\n\n### 1. Open Agent Skills (`npx skills add`)\n```sh\nnpx skills add d3foos/graft --skill graft\n```\n> **Note:** Standalone skill managers copy only `skills/graft/SKILL.md`. Clone this repository once and set `GRAFT_ROOT=/path/to/graft` (or use the self-contained installers below) so `tdb` has the local corpus and equivalence tables.\n\n### 2. Antigravity Plugin\nClone the repository into your Antigravity plugins directory (or build `dist/graft-antigravity-plugin.zip` via `python graft/scripts/build-bundles.py`):\n```sh\ngit clone https://github.com/d3foos/graft.git ~/.gemini/config/plugins/graft\npython3 ~/.gemini/config/plugins/graft/graft/tools/tdb.py init\npython3 ~/.gemini/config/plugins/graft/graft/tools/tdb.py reindex\n```\nOr run the cross-platform self-contained installer:\n```sh\n# macOS / Linux\n./graft/scripts/install.sh --target antigravity\n```\n```powershell\n# Windows PowerShell\n.\\graft\\scripts\\install.ps1 -Target antigravity\n```\n\n### 3. Claude Code (CLI) & Claude Desktop\n**Claude Code Marketplace / CLI:**\n```text\n/plugin marketplace add d3foos/graft\n/plugin install graft@graft\n```\nOr load a local clone directly with `claude --plugin-dir /path/to/graft`, or install as a self-contained skill via `./graft/scripts/install.sh --target claude` (`.\\graft\\scripts\\install.ps1 -Target claude` on Windows).\n\n**Claude Desktop (GUI Upload):**\n1. Build the self-contained Desktop skill ZIP:\n   ```sh\n   python graft/scripts/build-bundles.py\n   ```\n2. Upload `dist/graft-claude-desktop-skill.zip` under **Customize → Skills → + → Upload a skill** (ensure Code execution is enabled in Settings).\n\n### 4. OpenAI Codex (CLI & Desktop App)\nRepository checkouts automatically expose `.agents/skills/graft/SKILL.md`, `.agents/skills/graft/agents/openai.yaml`, and root [`AGENTS.md`](AGENTS.md).\n\nTo install globally (`~/.codex/skills/graft`) or build a self-contained Codex ZIP (`dist/graft-codex-skill.zip`):\n```sh\n./graft/scripts/install.sh --target codex        # macOS / Linux\n```\n```powershell\n.\\graft\\scripts\\install.ps1 -Target codex        # Windows PowerShell\n```\n```sh\npython graft/scripts/build-bundles.py            # builds dist/graft-codex-skill.zip\n```\n\n### 5. Python CLI (`pip` / `uvx`) & Direct Usage\nZero runtime dependencies — works directly from a clone or installed via PEP 621 `pyproject.toml`:\n```sh\ngit clone https://github.com/d3foos/graft.git\ncd graft\npython graft/tools/tdb.py init\npython graft/tools/tdb.py reindex\npython graft/tools/tdb.py stats --strict\npython graft/tools/tdb.py verify-table\npython graft/tools/tdb.py lock-sources --verify\n```\nOptional editable/global CLI entrypoint (`graft-tdb` / `tdb`):\n```sh\npip install .\nexport GRAFT_ROOT=/path/to/graft/graft  # Windows PowerShell: $env:GRAFT_ROOT = \"C:\\path\\to\\graft\\graft\"\ngraft-tdb find --effect EXEC --lang php\n```\n\n---\n\n## Quick CLI Reference\n\n```sh\npython graft/tools/tdb.py find --effect EXEC --lang php --profile php8.2/laravel --limit 10\npython graft/tools/tdb.py find --cwe CWE-502\npython graft/tools/tdb.py show T-0007\npython graft/tools/tdb.py adapt T-0007 --target /path/to/src --lang java\npython graft/tools/tdb.py outcome T-0007 --verdict no_sink --target-profile java/spring --oracle static --cost-min 6\npython graft/tools/tdb.py keygen                                # writes ../graft-signing.key outside store\npython graft/tools/tdb.py sign-capture outcomes/capture.json    # Ed25519 sign local evidence capture\npython graft/tools/tdb.py distill --from advisory.txt --author \"Researcher\" --title \"Mechanism summary\"\npython graft/tools/tdb.py verify-table                          # use --strict to fail on missing optional runtimes\npython graft/tools/tdb.py lock-sources --verify                 # SHA-256 tamper-evidence check\npython graft/tests/run_tests.py                                 # run full 125-test unit + packaging suite\n```\n\n---\n\n## License & Attribution\n\nLicensed under the **GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`)**.\nSee [LICENSE](LICENSE) for the full official text and [NOTICE](NOTICE) for copyright and third-party citation terms.\n\nCopyright (c) 2026 **Abdulrahman Almuhairi**.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "graft/scripts/build-bundles.py",
+        "line": 49,
+        "snippet": "r = subprocess.run( [sys.executable, str(stage_root / \"tools\" / \"tdb.py\"), \"--root\", str(stage_root), \"lock-sources\"], capture_output=True, text=True, encoding=\"utf-8\", errors=\"rep",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/scripts/build-bundles.py#L49"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "graft/tools/tdb.py",
+        "line": 1119,
+        "snippet": "r = subprocess.run([resolved_interp, str(test)], capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\", env=env, timeout=30)",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L1119"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/scripts/build-bundles.py",
+        "line": 39,
+        "snippet": "(dst / \"outcomes\" / \"ledger.jsonl\").write_bytes(b\"\")",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/scripts/build-bundles.py#L39"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/scripts/build-bundles.py",
+        "line": 41,
+        "snippet": "(dst / \"sources\" / \".gitkeep\").write_bytes(b\"\")",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/scripts/build-bundles.py#L41"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/tools/tdb.py",
+        "line": 477,
+        "snippet": "keyfile.write_text(json.dumps({\"alg\": \"ed25519\", \"priv\": seed.hex(), \"pub\": pub.hex(), \"key_id\": key_id_for(pub), \"created\": now_utc(), \"tool\": \"graft tdb keygen\"}, indent=2) + \"\\n",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L477"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/tools/tdb.py",
+        "line": 516,
+        "snippet": "sig_path.write_text(json.dumps({\"alg\": \"ed25519\", \"key_id\": key_id_for(pub), \"sig\": sig.hex(), \"msg_sha256\": hashlib.sha256(data).hexdigest(), \"ts\": now_utc()}, indent=2) + \"\\n\", e",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L516"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/tools/tdb.py",
+        "line": 722,
+        "snippet": "canon.write_text(json.dumps(rec, indent=2) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L722"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/tools/tdb.py",
+        "line": 1081,
+        "snippet": "f.write_text(json.dumps(rec, indent=2) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L1081"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/tools/tdb.py",
+        "line": 1174,
+        "snippet": "lock.write_text(json.dumps({\"generated\": now_utc(), \"files\": files}, indent=2, sort_keys=True) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L1174"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "graft/tools/tdb.py",
+        "line": 1303,
+        "snippet": "dpath.write_text(json.dumps(draft, indent=2) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/graft/tools/tdb.py#L1303"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/graft/SKILL.md",
+        "line": 24,
+        "snippet": "- **Claude Code plugin:** `python3 \"${CLAUDE_PLUGIN_ROOT}/graft/tools/tdb.py\" --root \"${CLAUDE_PLUGIN_ROOT}/graft\" <cmd>`",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/skills/graft/SKILL.md#L24"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/graft/SKILL.md",
+        "line": 25,
+        "snippet": "- **Self-contained bundle (`install.sh` / `install.ps1` / Desktop `.zip`):** `tools/tdb.py` sits inside this skill directory (`python <SKILL_DIR>/tools/tdb.py <cmd>`, or `python3` ",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/skills/graft/SKILL.md#L25"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/graft/SKILL.md",
+        "line": 26,
+        "snippet": "- **Full repository checkout / workspace plugin:** run `python graft/tools/tdb.py <cmd>` from the repository root (`tdb.py` auto-resolves `--root` from `$GRAFT_ROOT`, its parent `g",
+        "githubBlobUrl": "https://github.com/d3foos/graft/blob/c75bc98d50b25a7af38aee43de055406c690f16c/skills/graft/SKILL.md#L26"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "c75bc98d50b25a7af38aee43de055406c690f16c",
+      "scannedAt": "2026-11-27T18:15:32.542Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

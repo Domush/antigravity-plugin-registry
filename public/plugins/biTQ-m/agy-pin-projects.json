@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "id": "biTQ-m/agy-pin-projects",
+  "sha": "64bb41cd6f194c702717a841136c119bd1dd5683",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:01.269Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-pin-projects",
+    "displayName": "Project Pinboard",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "pin-projects",
+        "slashCommand": "/pin-projects",
+        "description": "Open and manage the Project Pinboard (`agy-pin-projects`) side panel to pin favorite Antigravity projects, organize projects into collapsible groups/folders, customize project icons (built-in SVG vectors, Emoji/monogram, uploaded SVG/PNG im",
+        "disableModelInvocation": false,
+        "file": "skills/pin-projects/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/pin-projects"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Project Pinboard (`agy-pin-projects`)\n\n专为 **Antigravity 2.0 Desktop** 打造的**置顶项目启动台与自定义项目图标插件**（同时注册右侧辅助栏 `AUX_PANE` 与左侧导航栏 `SIDEBAR` 视图），弥补原生侧边栏缺少独立 `Pinned Projects` 置顶区与个性化项目图标的痛点。\n\n## 核心特性\n\n1. **置顶高频项目、可视化项目分组 & 跨组拖拽排序**\n   - 自动扫描 Antigravity 本地会话库（只读 `conversation_summaries.db`）聚合所有工作区项目，并支持手动添加尚未产生对话的本地目录。\n   - **可视化项目分组（Groups）**：支持自定义分组名称、Emoji 图标与主题色，提供分组独立折叠/展开、上下调序、顶部胶囊快速过滤以及「按分组折叠 / 全局平铺」一键切换。\n   - **跨组拖拽归类**：直接将任意项目卡片拖入目标分组（或通过卡片快捷文件夹菜单一键移入 / 新建分组），顺序持久锁定，绝不随其他项目的消息刷新而乱跳。\n   - 支持 **紧凑列表（List）** 与 **Launchpad 磁贴宫格（Grid）** 双视图切换。\n\n2. **四合一自定义项目图标工坊（Custom Icon Studio）**\n   - **32 款内置开发矢量图标**：涵盖 AI、插件、终端、分支、容器、数据库、云服务等高清 SVG 图标。\n   - **Emoji 与字母徽章**：内置快捷 Emoji 面板，同时支持输入任意 Emoji 或 1～3 位缩写徽章（如 `AGY`、`API`、`FE`）。\n   - **本地图片上传 / `⌘V` 剪贴板粘贴 / SVG 源码直贴**：支持拖入或粘贴 `.svg`、`.png`、`.jpg`、`.webp`、`.gif`、`.ico` 图标，持久保存在 `~/.gemini/antigravity/plugin_data/agy-pin-projects/icons/`。\n   - **仓库自带 Logo 自动嗅探**：自动检测项目目录下的 `plugin.json` `logo`、`assets/logo.svg`、`assets/icon.png`、`public/favicon.svg` 等图标文件，搭配 **磨砂柔光（Soft）**、**实心渐变（Solid）**、**无框原图（Raw）** 三种底板质感与 10 套主题色 + 自定义取色器。\n\n3. **毫秒级会话切换 & AI Skill 双向联动**\n   - 点击项目卡片即刻通过官方 `window.sidecar.ui.toggleConversation`（`<5ms`）切入该项目最近活跃会话，或展开抽屉任选历史对话、一键在 Finder 中打开目录。\n   - 内置 `pin-projects` Skill 与 `scripts/pinboard-cli.mjs`，在对话中直接说 *“把当前项目置顶并换成火箭图标”* 即可实时同步面板。\n\n## 快速安装\n\n```bash\ngit clone https://github.com/biTQ-m/agy-pin-projects.git\ncd agy-pin-projects\nchmod +x ./install.sh && ./install.sh\n```\n\n## 运行测试\n\n```bash\nnode --test tests/pinboard.test.mjs\n```\n\n## License\n\n[MIT](./LICENSE) © [biTQ-m](https://github.com/biTQ-m)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/pinboard/main.mjs",
+        "line": 397,
+        "snippet": "const child = spawn('/usr/bin/open', args, { detached: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/main.mjs#L397"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/pinboard/scanner.mjs",
+        "line": 248,
+        "snippet": "const m = /title:\\s*\"((?:\\\\.|[^\"\\\\])*)\"/.exec(txt);",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/scanner.mjs#L248"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/pinboard/scanner.mjs",
+        "line": 449,
+        "snippet": "const stdout = execFileSync('/usr/bin/python3', ['-c', PY_SUMMARIES_QUERY, this.summariesDbPath], { encoding: 'utf8', timeout: 2500, maxBuffer: 8 * 1024 * 1024, });",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/scanner.mjs#L449"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/pinboard/store.mjs",
+        "line": 770,
+        "snippet": "const match = /^data:image\\/([a-zA-Z0-9+.-]+);base64,([A-Za-z0-9+/=\\s]+)$/.exec( String(dataUrl || '').trim(), );",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/store.mjs#L770"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/pinboard/web/app.js",
+        "line": 245,
+        "snippet": "const m = /^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(hex || '');",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/web/app.js#L245"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/pinboard/store.mjs",
+        "line": 85,
+        "snippet": "writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/store.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/pinboard/store.mjs",
+        "line": 766,
+        "snippet": "writeFileSync(join(this.iconsDir, fileName), cleaned, 'utf8');",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/store.mjs#L766"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/pinboard/store.mjs",
+        "line": 794,
+        "snippet": "writeFileSync(join(this.iconsDir, fileName), buf);",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/store.mjs#L794"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/pinboard/store.mjs",
+        "line": 802,
+        "snippet": "rmSync(join(this.iconsDir, f), { force: true });",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/store.mjs#L802"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/pinboard/store.mjs",
+        "line": 814,
+        "snippet": "rmSync(join(this.iconsDir, safe), { force: true });",
+        "githubBlobUrl": "https://github.com/biTQ-m/agy-pin-projects/blob/64bb41cd6f194c702717a841136c119bd1dd5683/sidecars/pinboard/store.mjs#L814"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "64bb41cd6f194c702717a841136c119bd1dd5683",
+      "scannedAt": "2026-11-27T18:16:01.269Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "id": "ytsu-ki/better-view",
+  "sha": "523e5ee0747f42cf720a870a7872aef5b62af69c",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:42.999Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "better-view",
+    "displayName": "Better View",
+    "version": "0.7.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "view",
+        "runtimeName": "better-view_view",
+        "transport": "stdio",
+        "command": "/bin/sh",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/run.sh"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "better-view_view"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Better View\n\nEnglish | [简体中文](README.zh-CN.md)\n\nA sidebar for Google Antigravity showing what your agents are doing, their progress, and whether anything is stuck—with a full Teamwork run, quota, and context on one screen.\n\n> Unofficial plugin, not affiliated with Google.\n\n<img src=\"assets/screenshot-en.png\" width=\"380\" alt=\"Better View in the side pane: quota rings, context bar, alerts, checklist, and Teamwork diagram\">\n\n## Features\n\n- **Aurora Glass UI & state-gated Gemini cosmic aura.** Tonal glass cards replace rigid table dividers, with a pure-CSS Gemini nebula and subtle vector starfield that blooms cleanly on active/completion transitions and drops to zero animations (`0 rAF`) when idle, alerting, hidden, or under `prefers-reduced-motion`. Dual rings and context bars patch DOM nodes in place for smooth transitions.\n- **Concentric dual quota rings (Outer = Weekly, Inner = 5h).** Shows **Gemini** and **Claude** side-by-side with outer weekly and inner 5h rings, always-visible percentages, and reset-countdown tooltips (Orchestrator aliases merge cleanly into Gemini — no bogus \"Shared\" pool).\n- **Context health & bottom-left quick `/compact`.** Tracks the active auto-compaction ceiling (`512k`/`256k`, not nominal `1M`), segmented by system prompt, tools, and messages, with compaction count and cache hit %. Includes a bottom-left **Compact** button (2-click safety confirm, disabled while busy; sends `/compact` in MCP App or copies to clipboard in standalone mode).\n- **Auto-open for new & existing chats + reliable focus sync.** Uses a once-per-conversation `PreInvocation` hook and eager `open` tool registration (`BETTER_VIEW_AUTO_OPEN=0` disables it), plus same-millisecond `last_user_view_time` tie-breaking so switching conversations follows accurately (especially with **Pin Tab**).\n- **Thinking effort guard.** Highlights the active model & effort (`⚡ Neon (xhigh)`) and warns if effort jumped above your recent baseline after a restart or project switch.\n- **Stall & runaway-loop detection.** Checks every conversation every 2 seconds, attaching evidence, a suggestion, and thresholds learned from your history:\n\n  | Verdict | When |\n  |---|---|\n  | Needs you | Agent asked a question, or Antigravity awaits approval |\n  | Slower than usual | Command or model call is much slower than your norm |\n  | Looks stuck | Far slower than usual, or idle for 1 min after an error |\n  | Runaway | Repetitive identical tool loop or 2.5M+ token burn in one open turn |\n  | Stopped, unfinished | Antigravity went idle before the turn finished |\n  | Service exited | Background service stopped while an agent was working |\n\n  Manual stops and `/compact` do not trigger alerts. Multiple alerts collapse into a stack (top 1 expanded) so the team diagram stays above the fold.\n- **Lightweight MCP App actions.** Send `\"continue\"`, attach diagnostic context to your next prompt, start a fresh handoff chat (two-click confirm), or click a file step in the activity log to open it in the side pane.\n- **Teamwork diagram & master progress.** Compact expandable progress bar plus one-screen topology; finished groups collapse automatically.\n- **Native-icon macOS notifications.** `install-plugin.sh` compiles a lightweight `BetterViewNotify.app` (`UNUserNotificationCenter` with Better View's app icon; clicking a notification activates Antigravity, falling back to `osascript` if absent). Fires on *Needs you*, *Looks stuck*, *Runaway*, *Stopped, unfinished*, and 3+ min completions.\n- **Clean activity log.** Steps across all agents, newest first; consecutive reads fold into one row, and `update_focus`/`update_steps` meta-tools are filtered out.\n- **Bilingual.** Follows Antigravity's language, with a top-right **中/EN** toggle.\n\n> Skips redraws when idle and pauses updates while selecting text, so commands and errors are easy to copy.\n\n## Requirements\n\n- macOS (notifications use `osascript`)\n- Antigravity 2.35+ (tested on 2.35.2)\n- Node.js 22+ (auto-detected via `PATH`, Homebrew, Volta, nvm; override with `BETTER_VIEW_NODE`)\n\n## Install\n\n```bash\ngit clone https://github.com/ytsu-ki/better-view.git\ncd better-view && sh scripts/install-plugin.sh\n```\n\nValidates via `agy plugin validate --strict` (if found) and installs to `~/.gemini/config/plugins/better-view`. Restart Antigravity (or refresh the `better-view_view` MCP server) after installing or updating.\n\n- **Open:** Auto-opens in the side pane on the first tool-calling turn of a multi-step session, or manually from the side pane **+** menu (or **Overview ▸ Extensions**) → **Better View**.\n- **Uninstall:** Remove `~/.gemini/config/plugins/better-view` and restart Antigravity.\n- **Browser mode:** Run `npm start` to open the panel at http://127.0.0.1:47321/.\n\n## Settings\n\nSet via environment variables (under `env` in `mcp.json` / `mcp_config.json` for the plugin):\n\n| Variable | Effect |\n|---|---|\n| `BETTER_VIEW_AUTO_OPEN` | `0` disables auto-open on new sessions |\n| `BETTER_VIEW_NOTIFY` | `0` disables notifications |\n| `BETTER_VIEW_LANG` | `zh` or `en` (overrides **中/EN** button) |\n| `BETTER_VIEW_NODE` | Custom `node` path |\n| `BETTER_VIEW_PORT` | `npm start` port (default `47321`) |\n| `BETTER_VIEW_AG_DIR` | Antigravity data dir (default `~/.gemini/antigravity`) |\n\n## Privacy & Data\n\nRead-only toward Antigravity; nothing leaves your machine.\n\n- **Reads:** `~/.gemini/antigravity/brain/` (transcripts, `task.md`), `annotations/` (titles), `conversations/<id>.db` (context breakdown, read-only), and Antigravity's local language server on `127.0.0.1` (status, quota, live context).\n- **Writes:** `~/.cache/better-view/` (language, learned limits, notification process) and `~/Library/Logs/better-view/mcp.log` (start/stop and method names only, no content).\n- **Listens:** `127.0.0.1` only.\n\nRuns in the side pane as a pure MCP App (with standalone browser mode via `npm start`).\n\n## Development\n\n```bash\nnpm test\n```\n\nSimulate a Teamwork run (one stalled worker, one slow) at http://127.0.0.1:47403/:\n\n```bash\nnode test/sim-team.mjs /tmp/bv-team-sim\n```\n\n> Deletes and recreates the target folder—use a temp path. Design notes (in Chinese): [DESIGN.md](DESIGN.md).\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/lib/checklist.mjs",
+        "line": 11,
+        "snippet": "const m = ITEM.exec(line);",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/checklist.mjs#L11"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/lib/hublog.mjs",
+        "line": 19,
+        "snippet": "const m = LINE_RE.exec(line);",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/hublog.mjs#L19"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/lib/i18n.mjs",
+        "line": 26,
+        "snippet": "const out = execFileSync('/usr/bin/defaults', ['read', '-g', 'AppleLanguages'], { encoding: 'utf8', timeout: 2000 });",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/i18n.mjs#L26"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 36,
+        "snippet": "appendFileSync(LOG_FILE, line);",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/mcp/server.mjs#L36"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/ls_call.py",
+        "line": 42,
+        "snippet": "with urllib.request.urlopen(req, timeout=10) as r:",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/scripts/ls_call.py#L42"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/sample_teamwork.py",
+        "line": 34,
+        "snippet": "(SAMPLES / \".gitignore\").write_text(\"*\\n\")",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/scripts/sample_teamwork.py#L34"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/sample_teamwork.py",
+        "line": 35,
+        "snippet": "MARKER.write_text(str(time.time()))",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/scripts/sample_teamwork.py#L35"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/sample_teamwork.py",
+        "line": 111,
+        "snippet": "(out / \"STRUCTURE.md\").write_text(\"\\n\".join(lines) + \"\\n\")",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/scripts/sample_teamwork.py#L111"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/lib/hub.mjs",
+        "line": 48,
+        "snippet": "const res = await fetch(`${ep.base}/${SERVICE}/${method}`, { method: 'POST', headers: headers(ep, 'application/json'), body: JSON.stringify(body), signal: AbortSignal.timeout(timeo",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/hub.mjs#L48"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/lib/hub.mjs",
+        "line": 86,
+        "snippet": "const res = await fetch(`${ep.base}/${SERVICE}/${method}`, { method: 'POST', headers: headers(ep, 'application/connect+json'), body: encodeEnvelope(body), signal, });",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/hub.mjs#L86"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/lib/i18n.mjs",
+        "line": 56,
+        "snippet": "writeFileSync(file, JSON.stringify(prefs, null, 2));",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/i18n.mjs#L56"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/lib/notify.mjs",
+        "line": 48,
+        "snippet": "writeFileSync(tmp, JSON.stringify({ pid, at: now }));",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/notify.mjs#L48"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/lib/store.mjs",
+        "line": 31,
+        "snippet": "try { mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, JSON.stringify(Object.fromEntries(map), null, 1)); } catch { /* cache only */ }",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/store.mjs#L31"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ui/app.js",
+        "line": 360,
+        "snippet": "const res = await fetch('api/lang', { method: 'POST', headers, body: JSON.stringify({ lang }) });",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/ui/app.js#L360"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ui/app.js",
+        "line": 554,
+        "snippet": "if (!TOKEN && want) fetch(`api/state?focus=${encodeURIComponent(want)}`, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).then((s) => s && received(s)).catch(() => {});",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/ui/app.js#L554"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ui/app.js",
+        "line": 1562,
+        "snippet": "const res = await fetch(`api/state${q}`, { headers: { 'X-Sidecar-Token': TOKEN }, cache: 'no-store' });",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/ui/app.js#L1562"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/ls_call.py",
+        "line": 20,
+        "snippet": "for f in sorted(glob.glob(os.path.expanduser(\"~/.gemini/antigravity/daemon/hub_*.json\")), key=os.path.getmtime, reverse=True):",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/scripts/ls_call.py#L20"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/panel/lib/ctxdb.mjs",
+        "line": 3,
+        "snippet": "// Every conversation has a SQLite store, ~/.gemini/antigravity/conversations/<id>.db. Its gen_metadata table",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/ctxdb.mjs#L3"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/panel/lib/hublog.mjs",
+        "line": 1,
+        "snippet": "// Tails the Antigravity hub log (~/.gemini/antigravity/cli.log -> log/cli-<ts>.log, glog format) for",
+        "githubBlobUrl": "https://github.com/ytsu-ki/better-view/blob/523e5ee0747f42cf720a870a7872aef5b62af69c/sidecars/panel/lib/hublog.mjs#L1"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.7.0",
+      "sha": "523e5ee0747f42cf720a870a7872aef5b62af69c",
+      "scannedAt": "2026-11-27T18:14:42.999Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

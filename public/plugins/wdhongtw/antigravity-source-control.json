@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "id": "wdhongtw/antigravity-source-control",
+  "sha": "f993a560723f6e56621e88b37f9c5490e6bd904d",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:54.032Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "source-control",
+    "displayName": "Source Control",
+    "version": "0.2.1",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "git",
+        "runtimeName": "source-control_git",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/git_mcp.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "source-control",
+        "slashCommand": "/source-control",
+        "description": "Manage session Git repositories and worktrees, cite clickable logical diffs in chat and Markdown artifacts (`sidecar://source-control/git_ui/?...`), and inspect expanded diff context using the Source Control AuxPane UI and `git_*` MCP tools",
+        "disableModelInvocation": false,
+        "file": "skills/source-control/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/source-control"
+    ],
+    "mcpServerNames": [
+      "source-control_git"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Source Control (`source-control`)\n\nIDE-style Git Source Control & Worktree Inspector UI plugin and MCP toolset\n(`git_*`). Combines the unified root registration model of `file-explorer` with\na full IDE Source Control staging/commit workflow and the multi-mode diff &\ncommit stack inspector from `worktree-inspector`.\n\n## Key Features\n\n- **Unified Repository & Worktree Selector**:\n  - Automatically populates top clickable repository/worktree rows from:\n    1. **Session Workspaces** (from MCP `_meta['antigravity.google/workspace_paths']` or\n       `agentapi get-conversation-metadata`)\n    2. **Project Folders** (`~/.gemini/config/projects/<project_id>.json`\n       `projectResources` & `environments`)\n    3. **Session MCP Registered Repositories & Worktrees** (`git_register` /\n       `git_unregister` persisted in `${PLUGIN_DATA}/sessions/<conversation_id>.json`)\n- **Per-Chat Session Repository Tracking (`git_*` MCP Tools)**:\n  - `git_register`: Register an additional Git repository or worktree for the\n    current conversation (`path`, optional `base_ref`, optional `label`).\n  - `git_unregister`: Remove a repository or worktree from the session's Source\n    Control root list without modifying files on disk.\n  - `git_list`: List all Git repositories and worktrees tracked in the current\n    session.\n  - `git_diff_context`: Resolve a logical diff anchor URI\n    (`sidecar://source-control/git_ui/?...` or\n    `git-diff://<repo>.local/<rev>/<file>`) or explicit\n    `repo`/`rev`/`file`/`lines` parameters into line-numbered diff hunks,\n    surrounding file lines, the exact raw `git` command, and a clickable\n    `sidecar://source-control/git_ui/?...` Markdown pill.\n- **Clickable Logical Diff Mentions & Inline Diff Review Commenting**:\n  - Cite logical diffs in chat and Markdown artifacts as\n    ``[`<file>` (<rev> · <lines>)](sidecar://source-control/git_ui/?repo=<repo>&rev=<rev>&file=<file>&lines=<lines>&auto_open=false)``\n    to jump directly into the Source Control AuxPane at the target repository,\n    diff mode/commit, file, and highlighted line range (with automatic\n    collapsed-gap expansion).\n  - Select single or multi-line ranges in the diff table to **Send to Chat**\n    immediately or **+ Add to Batch** in the Review Batch bar/modal (with an\n    optional overall summary note), posting a structured Markdown code review\n    message with clickable `sidecar://source-control/git_ui/?...` diff pills and\n    unified `diff` blocks directly to the active conversation via `agentapi`, or\n    click **🔗 Link** / **🔗 Copy Pill** to copy a clickable diff pill.\n- **IDE Source Control Workflow (Stage, Unstage, Discard, Commit)**:\n  - Inspect **Staged Changes** (`Index`) and **Changes** (`Working Tree` +\n    `Untracked`) in a collapsible Source Control tree.\n  - Stage or unstage individual files or all files with one click.\n  - Discard uncommitted file changes or untracked files with an inline\n    confirmation prompt bar.\n  - Author commit messages (`Ctrl+Enter` / `Cmd+Enter`) and create or `--amend`\n    commits directly from the panel.\n- **Multi-Mode Unified Diff & Stacked Commit Inspector**:\n  - **Working Tree**: All uncommitted changes (`HEAD` + untracked files).\n  - **Staged**: Index changes (`git diff --cached`).\n  - **Unstaged**: Unstaged working tree changes + untracked files.\n  - **All vs Base**: Full branch diff against `merge-base(HEAD, base_ref)`\n    (committed + uncommitted changes).\n  - **Commits**: Stacked commits ahead of `base_ref` (or recent commit log on\n    base branches) with clickable per-commit diff filtering.\n  - **Interactive Context Expansion**: Adjust surrounding diff context (`-U`) or\n    expand hidden lines (`+10 ↑`, `+10 ↓`, `All`) inline between hunks, and open\n    any file in the native AuxPane File Preview (`tabType: 'fileView'`).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git_service.mjs",
+        "line": 656,
+        "snippet": "const m = /^diff --git a\\/(.+?) b\\/(.+)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L656"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git_service.mjs",
+        "line": 709,
+        "snippet": "const hm = /^@@ -(\\d+)(?:,(\\d+))? \\+(\\d+)(?:,(\\d+))? @@(.*)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L709"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git_service.mjs",
+        "line": 1575,
+        "snippet": "const commitPrefixMatch = /^commit-([0-9a-f]{6,40})$/i.exec(rawToken);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L1575"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git_service.mjs",
+        "line": 1635,
+        "snippet": "/^([+-])?[Ll]?(\\d+)(?:\\s*(?:-[+-]?[Ll]?|\\.\\.)(\\d+))?$/.exec(cleaned);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L1635"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git_service.mjs",
+        "line": 1679,
+        "snippet": "const mdMatch = /^\\[[^\\]]*\\]\\(([^)]+)\\)$/.exec(input);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L1679"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git_service.mjs",
+        "line": 1733,
+        "snippet": "/^(?:git-diff:\\/\\/|file:\\/\\/\\/git-diff\\/)([^/?#]+)\\/([^/?#]+)\\/([^?#]+)(?:\\?([^#]*))?(?:#(.*))?$/i.exec( uriStr );",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L1733"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/session_repos.mjs",
+        "line": 437,
+        "snippet": "const match = GIT_TOOL_RE.exec(rawName);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/session_repos.mjs#L437"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/session_repos.mjs",
+        "line": 483,
+        "snippet": "/--cli\\s+(?:[a-z0-9_]*_)?((?:git|worktree)_(?:register|unregister|list))\\s+'([^']+)'/.exec( cmdLine );",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/session_repos.mjs#L483"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "mcp/git_mcp.mjs",
+        "line": 177,
+        "snippet": "/(?:^|_)(git_(?:register|unregister|list|diff_context))$/.exec( rawToolName );",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/mcp/git_mcp.mjs#L177"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/git_ui/app.js",
+        "line": 736,
+        "snippet": "const commitMatch = /^commit-([0-9a-f]{6,40})$/i.exec(rawToken);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/sidecars/git_ui/app.js#L736"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/git_ui/app.js",
+        "line": 785,
+        "snippet": "/^([+-])?[Ll]?(\\d+)(?:\\s*(?:-[+-]?[Ll]?|\\.\\.|–)(\\d+))?$/.exec(cleaned);",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/sidecars/git_ui/app.js#L785"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/git_service.mjs",
+        "line": 1466,
+        "snippet": "rmSync(item.target, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/git_service.mjs#L1466"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/session_repos.mjs",
+        "line": 125,
+        "snippet": "writeFileSync(tmpFile, `${JSON.stringify(payload, null, 2)}\\n`, 'utf-8');",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/session_repos.mjs#L125"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/git_ui/app.js",
+        "line": 139,
+        "snippet": "const res = await fetch(url, { method: 'GET', headers });",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/sidecars/git_ui/app.js#L139"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/git_ui/app.js",
+        "line": 150,
+        "snippet": "const res = await fetch(path, { method: 'POST', headers, body: JSON.stringify(body), });",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/sidecars/git_ui/app.js#L150"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/session_repos.mjs",
+        "line": 7,
+        "snippet": "* 2. Project folder resources (`~/.gemini/config/projects/<project_id>.json`)",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/session_repos.mjs#L7"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/session_repos.mjs",
+        "line": 307,
+        "snippet": "* Reads associated folders for a project (`~/.gemini/config/projects/<projectId>.json`).",
+        "githubBlobUrl": "https://github.com/wdhongtw/antigravity-source-control/blob/f993a560723f6e56621e88b37f9c5490e6bd904d/lib/session_repos.mjs#L307"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.1",
+      "sha": "f993a560723f6e56621e88b37f9c5490e6bd904d",
+      "scannedAt": "2026-11-27T18:16:54.032Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

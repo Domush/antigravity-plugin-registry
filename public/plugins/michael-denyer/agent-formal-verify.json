@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "id": "michael-denyer/agent-formal-verify",
+  "sha": "ec910aa88d4863468e4385b5f297ced5a3b91df9",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:19.282Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "agent-formal-verify",
+    "displayName": "Agent formal verify",
+    "version": "0.4.14",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "formal-verify",
+        "slashCommand": "/formal-verify",
+        "description": "Model-check thread protocols with TLA+ and TLC, prove sequential invariants with Lean 4, and check bounded Rust functions with Kani. Map counter-examples to source locations, reproductions and fixes, and keep the models in CI. Bring existin",
+        "disableModelInvocation": false,
+        "file": "skills/formal-verify/SKILL.md"
+      },
+      {
+        "name": "setup",
+        "slashCommand": "/setup",
+        "description": "Prepare all shared tools for the agent-formal-verify plugin: Java, Python, TLC, elan, Lean, Rust and Kani. Use for initial installation, missing prerequisites, or /agent-formal-verify:setup.",
+        "disableModelInvocation": false,
+        "file": "skills/setup/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/formal-verify",
+      "/setup"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Agent formal verify\n\n![Agent formal verify: model protocols with TLA+ and TLC, prove invariants with Lean 4, and check bounded Rust with Kani.](assets/formal-verify-header.png)\n\n<!-- Proportional badge widths use 93.25%; nine equal gaps fill the remaining 6.75%. Keep the row contiguous to avoid extra whitespace. -->\n<p>\n<a href=\"https://github.com/michael-denyer/agent-formal-verify/actions/workflows/ci.yml\"><img src=\"https://github.com/michael-denyer/agent-formal-verify/actions/workflows/ci.yml/badge.svg\" alt=\"CI\" width=\"8.91%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"CHANGES.md\"><img src=\"https://img.shields.io/github/package-json/v/michael-denyer/agent-formal-verify?color=0969DA\" alt=\"Version\" width=\"9.5%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-GPL--3.0--only-6B7280\" alt=\"License: GPL-3.0-only\" width=\"12.87%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"#claude-code\"><img src=\"https://img.shields.io/badge/Claude%20Code-plugin-D97757\" alt=\"Claude Code plugin\" width=\"12.07%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"#codex\"><img src=\"https://img.shields.io/badge/Codex-plugin-10A37F\" alt=\"Codex plugin\" width=\"8.71%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"#pi\"><img src=\"https://img.shields.io/badge/Pi-package-7C3AED\" alt=\"Pi package\" width=\"7.33%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"#opencode\"><img src=\"https://img.shields.io/badge/OpenCode-plugin-211E1E\" alt=\"OpenCode plugin\" width=\"10.89%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"https://github.com/tlaplus/tlaplus\"><img src=\"https://img.shields.io/badge/TLA%2B-TLC-2E6DB4\" alt=\"TLA+ and TLC\" width=\"6.93%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"https://lean-lang.org\"><img src=\"https://img.shields.io/badge/Lean%204-proofs-0F9D9A\" alt=\"Lean 4\" width=\"9.11%\"><img src=\"assets/badge-gap.svg\" alt=\"\" width=\"0.75%\"></a><a href=\"https://github.com/model-checking/kani\"><img src=\"https://img.shields.io/badge/Kani-Rust-B7410E\" alt=\"Kani\" width=\"6.93%\"></a>\n</p>\n\nA skill for Claude Code, Codex, Pi, OpenCode and Antigravity that implements the targeted formal-verification method [recently promoted by Boris Cherny](https://x.com/bcherny/status/2102543349102338309). The agent models selected parts of your code, checks their properties, maps counter-examples to source lines, and helps reproduce and fix reachable bugs.\n\nIt uses TLA+ and TLC for thread interleavings, shutdown and resource ownership, and Lean 4 for arithmetic, bounds and sequential state transitions. A protocol that depends on arithmetic can use both. For Rust functions with bounded inputs and loops, Kani checks the production code for overflow, invalid memory access, panics and broken invariants.\n\n## Install\n\n### Claude Code\n\nRun in Claude Code:\n\n```text\n/plugin marketplace add michael-denyer/agent-formal-verify\n/plugin install agent-formal-verify@agent-formal-verify\n```\n\n### Codex\n\nRun in your terminal:\n\n```shell\ncodex plugin marketplace add michael-denyer/agent-formal-verify\ncodex plugin add agent-formal-verify@agent-formal-verify\n```\n\n### Pi\n\nRun in your terminal:\n\n```shell\npi install npm:agent-formal-verify\n```\n\nTo install from Git instead, use `pi install git:github.com/michael-denyer/agent-formal-verify`.\n\n### OpenCode\n\nOpenCode 2.2 or later. Run in your terminal:\n\n```shell\nopencode plugin add agent-formal-verify\n```\n\nTo install from Git instead, use `opencode plugin add 'git+https://github.com/michael-denyer/agent-formal-verify.git'`.\n\n### Antigravity\n\nClone or check out the repository, then run in your terminal:\n\n```shell\nagy plugin install /absolute/path/to/agent-formal-verify\n```\n\nRun `setup` once to prepare the shared Java, Python, TLC, elan, Lean, Rust and Kani tools. In Claude Code, use `/agent-formal-verify:setup`. In Codex, request the plugin's `setup` skill. In Pi, use `/skill:setup`. In OpenCode or Antigravity, request the `setup` skill. It reuses installed prerequisites and needs no target repository.\n\nFor local checkouts and skills-only installs, see [shared installation](docs/reference.md#shared-installation).\n\n## Getting started\n\n```text\nUse formal-verify to check this queue's shutdown protocol and window arithmetic.\n```\n\nIn Claude Code, use `/agent-formal-verify:formal-verify`. In Codex, type `$formal-verify` or request the plugin's `formal-verify` skill. In Pi, use `/skill:formal-verify`. In OpenCode or Antigravity, request the `formal-verify` skill.\n\n## How it works\n\n![Recheck existing models against source changes. Use TLA+ and TLC for thread protocols, Lean 4 for arithmetic and state invariants, and Kani for bounded Rust functions. Rerun checks and mutations, compare recorded guarantees, and trace failures back to code. Report assumptions, bounds and recheck commands. Production fixes are by request and model CI is optional.](assets/formal-verify-overview-v4.png)\n\n1. **Choose what to check.** If the repository already has models, the agent reads the source changes since each model was last checked, reruns its checks and mutations, and records what it promises before editing it. For new targets, it builds a TLA+ or Lean model or writes a Kani harness that calls the production Rust function.\n2. **Test the guarantees.** The agent reruns the checks itself, tests each property against deliberate mistakes, and compares existing guarantees with the record. Past bug fixes supply mutations where practical. You can also request an independent review of the properties against the code.\n3. **Follow failures back to the code.** The agent maps each counter-example to source lines, checks whether shipped settings can reach it, and tries to reproduce it. It reports a proposed fix and changes production code only if you ask. It gives you commands to rerun the checks and adds them to CI if you request it or the repository already runs models there.\n\nA passing check establishes its stated properties under its assumptions and bounds. Reports must identify omitted constraints and unfinished proofs. See [scope and evidence](docs/reference.md#scope-and-evidence).\n\n## Details\n\n- [Skills and slash commands](docs/reference.md#skills-and-slash-commands)\n- [Shared installation](docs/reference.md#shared-installation)\n- [Runtime setup and tool pins](docs/reference.md#runtime-setup-and-tool-pins)\n- [Plugin updates](docs/reference.md#plugin-updates)\n- [Verification workflow](skills/formal-verify/SKILL.md)\n- [Release history](CHANGES.md)\n- [Agent instructions](AGENTS.md)\n\n## Data handling\n\nThe plugin configures no MCP servers or hooks, requires no credentials and has no telemetry. Its OpenCode entry point, `opencode.mjs`, reads and registers the bundled skills without running commands or making network requests. The agent sends selected source excerpts, models and results to its model provider. Verification runs locally. Setup verifies a TLC JAR you obtain from the pinned TLA+ release and uses elan to install a missing Lean toolchain. The Kani helpers use the pinned installation you prepare through Cargo. See [tool setup](skills/formal-verify/references/setup.md).\n\n## Contributing\n\nBug reports, documentation fixes and runtime improvements are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for development checks and pull requests.\n\n## License\n\nCopyright (c) 2026 Michael Denyer. Licensed under the [GNU General Public License, version 3](LICENSE), SPDX identifier `GPL-3.0-only`.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/formal-verify/scripts/processes.py",
+        "line": 80,
+        "snippet": "process = subprocess.Popen([\"ps\", \"-A\", \"-o\", columns], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/processes.py#L80"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/formal-verify/scripts/processes.py",
+        "line": 213,
+        "snippet": "process = subprocess.Popen(command, **kwargs)",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/processes.py#L213"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/formal-verify/scripts/storage.py",
+        "line": 130,
+        "snippet": "done = subprocess.run([\"df\", \"-lkP\"], capture_output=True, text=True, check=False)",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/storage.py#L130"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/formal-verify/scripts/sync.py",
+        "line": 101,
+        "snippet": "done = subprocess.run([\"git\", \"-C\", str(root), *arguments], capture_output=True, text=True, check=False)",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/sync.py#L101"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/lean.py",
+        "line": 349,
+        "snippet": "module_list.write_text(\"\".join(name + \"\\n\" for name in modules), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/lean.py#L349"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/lean.py",
+        "line": 422,
+        "snippet": "replay_list.write_text(\"\".join(module + \"\\n\" for module in sorted(replayed)), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/lean.py#L422"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/lean_mutations.py",
+        "line": 192,
+        "snippet": "copy.write_text(mutation.source, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/lean_mutations.py#L192"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/mutate.py",
+        "line": 183,
+        "snippet": "(copy / model.relative_to(project)).write_text(mutation.source, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/mutate.py#L183"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 225,
+        "snippet": "(directory / \"MC.cfg\").write_text(config, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L225"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 525,
+        "snippet": "dest.write_text(source, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L525"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 527,
+        "snippet": "dest.write_bytes(module.read_bytes())",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L527"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 539,
+        "snippet": "shutil.rmtree(directory / \"states\", ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L539"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 544,
+        "snippet": "(directory / f\"{wrapper}.tla\").write_text(f\"---- MODULE {wrapper} ----\\nEXTENDS {name}\\n{invariant} == ~{operator}\\n====\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L544"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 556,
+        "snippet": "shutil.rmtree(directory, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L556"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 9,
+        "snippet": "- `bash tests/models.sh` runs the bundled examples and their mutations through TLC, Lean and Kani. CI runs it as the `models` job.",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/AGENTS.md#L9"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/formal-verify/SKILL.md",
+        "line": 28,
+        "snippet": "For each model, run `python3 <skill-dir>/scripts/sync.py <model files> --source <file> ... --name <name> ...` with the source files and the covered functions and shared variables t",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L28"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/formal-verify/SKILL.md",
+        "line": 56,
+        "snippet": "- When a target needs Kani, run `bash <skill-dir>/scripts/setup.sh rust`. Before any agent starts, declare `cfg(kani)` in each target crate's `Cargo.toml`, a moved harness's produc",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L56"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/formal-verify/SKILL.md",
+        "line": 57,
+        "snippet": "- When a target needs TLA+, run `bash <skill-dir>/scripts/setup.sh tla`.",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L57"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/formal-verify/SKILL.md",
+        "line": 58,
+        "snippet": "- When a target needs Lean, every Lean model in the repository shares one Lake project. If the repository has none, copy `lakefile.toml`, `lake-manifest.json` and `lean-toolchain` ",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L58"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/formal-verify/SKILL.md",
+        "line": 76,
+        "snippet": "Run every existing model's checker and mutations once, before any agent changes a model, and record the results. Then record what the models specify with `python3 <skill-dir>/scrip",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L76"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/formal-verify/SKILL.md",
+        "line": 92,
+        "snippet": "When the agents have reported, delete each moved harness's old file, and its crate, workspace entry and CI steps once they hold nothing else. Then rerun every check in this thread:",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L92"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.4.14",
+      "sha": "ec910aa88d4863468e4385b5f297ced5a3b91df9",
+      "scannedAt": "2026-11-27T18:13:19.282Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

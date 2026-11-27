@@ -1,0 +1,1821 @@
+{
+  "schemaVersion": 1,
+  "id": "jmxt3/astack",
+  "sha": "d95354253fed961c3b503df07796a3e8774fd430",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:02.628Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "astack",
+    "displayName": "AStack",
+    "version": "0.4.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "trust",
+        "runtimeName": "astack_trust",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/mcp/server.mjs",
+          "--data-dir",
+          "${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "astack-receipt-ledger",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command|invoke_subagent|run_workflow|call_mcp_tool|mcp_.*",
+        "type": "command",
+        "command": "node ./scripts/hooks/receipt-ledger.mjs",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "astack-irreversible-guard",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "node ./scripts/hooks/irreversible-guard.mjs",
+        "prompt": null,
+        "timeout": 10
+      },
+      {
+        "group": "astack-secret-guard",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command",
+        "type": "command",
+        "command": "node ./scripts/hooks/secret-guard.mjs",
+        "prompt": null,
+        "timeout": 10
+      },
+      {
+        "group": "astack-evidence-gate",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "run_command|call_mcp_tool|mcp_.*",
+        "type": "command",
+        "command": "node ./scripts/hooks/evidence-gate.mjs",
+        "prompt": null,
+        "timeout": 10
+      },
+      {
+        "group": "astack-boundary-guard",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "node ./scripts/hooks/boundary-guard.mjs",
+        "prompt": null,
+        "timeout": 10
+      },
+      {
+        "group": "astack-round-limiter",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "node ./scripts/hooks/round-limiter.mjs",
+        "prompt": null,
+        "timeout": 10
+      },
+      {
+        "group": "astack-trust-gate",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command|call_mcp_tool|mcp_.*",
+        "type": "command",
+        "command": "node ./scripts/hooks/trust-gate.mjs",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "architect",
+        "slashCommand": "/architect",
+        "description": "Explore an engineering or API design across competing candidate architectures in parallel, screen for Ousterhout design red flags, synthesize one coherent winner via /arena, and hand off a type sketch + rationale before implementation. Use ",
+        "disableModelInvocation": false,
+        "file": "skills/architect/SKILL.md"
+      },
+      {
+        "name": "arena",
+        "slashCommand": "/arena",
+        "description": "Competitive multi-approach / multi-model bakeoff: spin up independent candidate implementations or architectures in isolated workspaces, pit them against the same empirical proof and red-flag screen, pick one winner, graft concrete strength",
+        "disableModelInvocation": false,
+        "file": "skills/arena/SKILL.md"
+      },
+      {
+        "name": "astack-help",
+        "slashCommand": "/astack-help",
+        "description": "Guides users through AStack setup, /astack-mode, Antigravity Subagents, /boost, /swarm, /teamwork, and picking the right skill, playbook, or principle. Invoke with /astack-help and a question.",
+        "disableModelInvocation": false,
+        "file": "skills/astack-help/SKILL.md"
+      },
+      {
+        "name": "astack-mode",
+        "slashCommand": "/astack-mode",
+        "description": "Verification-first engineering mode for Google Antigravity: concise replies, deliberate Antigravity Subagents and Swarms, unslopped prose, simple code, and empirically proven work. Use for /astack-mode or requests to prove changes before re",
+        "disableModelInvocation": true,
+        "file": "skills/astack-mode/SKILL.md"
+      },
+      {
+        "name": "audit-architecture",
+        "slashCommand": "/audit-architecture",
+        "description": "Scan the repository for .agents/boundaries.json violations, Ousterhout shallow modules, and stale workaround examples agents might copy, then grill refactoring candidates into vertical slices. Use for /audit-architecture.",
+        "disableModelInvocation": true,
+        "file": "skills/audit-architecture/SKILL.md"
+      },
+      {
+        "name": "automate-me",
+        "slashCommand": "/automate-me",
+        "description": "Use for \\\"automate me\\\", \\\"create/update/refresh my -mode skill\\\", \\\"turn/capture my preferences or working style into a skill\\\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill using AStack skill-au",
+        "disableModelInvocation": true,
+        "file": "skills/automate-me/SKILL.md"
+      },
+      {
+        "name": "beast-mode",
+        "slashCommand": "/beast-mode",
+        "description": "Autonomous earned-trust engineering loop across Plan, Build, Pre-PR Check, and Ship stages on enrolled git repositories. Layers /goal and /astack-mode over residual-risk scoring, Intent Cards, per-category trust ceilings, and live Timeline ",
+        "disableModelInvocation": true,
+        "file": "skills/beast-mode/SKILL.md"
+      },
+      {
+        "name": "benchmark-checklist",
+        "slashCommand": "/benchmark-checklist",
+        "description": "Vet a perf measurement (limiter, tuning, limits, errors, repeatability, relevance, and whether the work happened) before you report or act on it. Use when you run a benchmark or report a speedup or regression you measured.",
+        "disableModelInvocation": false,
+        "file": "skills/benchmark-checklist/SKILL.md"
+      },
+      {
+        "name": "blast-radius",
+        "slashCommand": "/blast-radius",
+        "description": "Find what a change could break somewhere else before it ships, beyond the diff, and prove the one fact it's safe because of by running real code instead of writing it up. Use for 'blast radius of X', 'what could this break', or reviewing a ",
+        "disableModelInvocation": false,
+        "file": "skills/blast-radius/SKILL.md"
+      },
+      {
+        "name": "bro",
+        "slashCommand": "/bro",
+        "description": "Restate the last message in plain human language, with no jargon.",
+        "disableModelInvocation": true,
+        "file": "skills/bro/SKILL.md"
+      },
+      {
+        "name": "control-cli",
+        "slashCommand": "/control-cli",
+        "description": "Antigravity CLI, TUI & Service Control Glass: verify CLIs, scripts, workers, daemons, and HTTP/RPC APIs against real processes, temp workspaces, exit codes, stdio transcripts, and persisted side effects with isolated ports and strict daemon",
+        "disableModelInvocation": false,
+        "file": "skills/control-cli/SKILL.md"
+      },
+      {
+        "name": "control-ui",
+        "slashCommand": "/control-ui",
+        "description": "Antigravity UI Control Glass: drive live web and desktop/Electron interfaces like a real user via /browser (built-in browser on App v2.30.0+ or Chrome DevTools MCP v144+), collect DOM/network/trace evidence, and clean up started daemons cle",
+        "disableModelInvocation": false,
+        "file": "skills/control-ui/SKILL.md"
+      },
+      {
+        "name": "correct",
+        "slashCommand": "/correct",
+        "description": "Find the mistakes agents keep repeating in this repo and make each one impossible. Try architecture first, then types, then a lint whose error names the fix, then a test, and write docs last. Prove each check fails on a real past mistake. R",
+        "disableModelInvocation": false,
+        "file": "skills/correct/SKILL.md"
+      },
+      {
+        "name": "create-formal-verification-skill",
+        "slashCommand": "/create-formal-verification-skill",
+        "description": "Generate a project-local skill that formally verifies the code where a bug costs the most and tests reach the least, in any language, with whichever verification tool fits. Use for /create-formal-verification-skill, \\\"model-check this race\\",
+        "disableModelInvocation": false,
+        "file": "skills/create-formal-verification-skill/SKILL.md"
+      },
+      {
+        "name": "create-verification-skill",
+        "slashCommand": "/create-verification-skill",
+        "description": "Generate a project-local verification skill that drives your app the way a user does across any language, framework, or platform. Use for /create-verification-skill, \\\"make a control skill for this repo\\\", or when a project has no scripted ",
+        "disableModelInvocation": false,
+        "file": "skills/create-verification-skill/SKILL.md"
+      },
+      {
+        "name": "design-audit",
+        "slashCommand": "/design-audit",
+        "description": "Empirical UX, accessibility, responsive layout, and interface state audit for new or updated web and Electron UIs using /browser and Chrome DevTools MCP. Use for /design-audit when there is no visual-parity baseline yet.",
+        "disableModelInvocation": true,
+        "file": "skills/design-audit/SKILL.md"
+      },
+      {
+        "name": "deslop",
+        "slashCommand": "/deslop",
+        "description": "Pre-commit anti-slop cleanup pass: inspect the entire branch diff, strip unnecessary helpers, defensive fallbacks, dead compatibility layers, justificatory comments, and scope creep, then re-verify everything cleanly after the final edit.",
+        "disableModelInvocation": false,
+        "file": "skills/deslop/SKILL.md"
+      },
+      {
+        "name": "fanout",
+        "slashCommand": "/fanout",
+        "description": "Lightweight N-way parallel subagent execution via Antigravity invoke_subagent for fast read-only sweeps, parallel fixes across disjoint files, and multi-perspective checks. Use /fanout for focused concurrent subagents; graduate to native An",
+        "disableModelInvocation": false,
+        "file": "skills/fanout/SKILL.md"
+      },
+      {
+        "name": "figure-it-out",
+        "slashCommand": "/figure-it-out",
+        "description": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it",
+        "disableModelInvocation": false,
+        "file": "skills/figure-it-out/SKILL.md"
+      },
+      {
+        "name": "how",
+        "slashCommand": "/how",
+        "description": "Use for \\\"how does X work\\\", code walkthroughs before changing something, and placement / ownership / layering questions (\\\"where should this live\\\", \\\"which package owns this\\\", \\\"is this the right layer\\\"). Explains subsystem architecture",
+        "disableModelInvocation": false,
+        "file": "skills/how/SKILL.md"
+      },
+      {
+        "name": "in-your-own-words",
+        "slashCommand": "/in-your-own-words",
+        "description": "Restate in your own words what you think the user's goals are and what problem they're trying to solve. Use for /in-your-own-words.",
+        "disableModelInvocation": true,
+        "file": "skills/in-your-own-words/SKILL.md"
+      },
+      {
+        "name": "interrogate",
+        "slashCommand": "/interrogate",
+        "description": "Adversarial multi-agent code and design review: give a change and its intent to independent adversaries in isolated workspaces, require each finding to be proven with a run against real code, rerun every finding in the parent to verify, and",
+        "disableModelInvocation": false,
+        "file": "skills/interrogate/SKILL.md"
+      },
+      {
+        "name": "ketchup-video",
+        "slashCommand": "/ketchup-video",
+        "description": "Catch the user up like /ketchup, with a short subtitled video of slides for what happened and the waiting calls as text under it. Use for /ketchup-video.",
+        "disableModelInvocation": true,
+        "file": "skills/ketchup-video/SKILL.md"
+      },
+      {
+        "name": "ketchup",
+        "slashCommand": "/ketchup",
+        "description": "Catch the user up on what changed in this chat since their last message, in plain words and small visuals. List every item waiting on them with what they need to decide it from the reply alone. Use for /ketchup.",
+        "disableModelInvocation": true,
+        "file": "skills/ketchup/SKILL.md"
+      },
+      {
+        "name": "maintain-formal-verification-skill",
+        "slashCommand": "/maintain-formal-verification-skill",
+        "description": "Bring a project's formal verification back in line with the code after the code changes: find the commits that touched verified code, update the model, harness, or properties to describe the code as it is now, rerun, and say whether each fa",
+        "disableModelInvocation": false,
+        "file": "skills/maintain-formal-verification-skill/SKILL.md"
+      },
+      {
+        "name": "maintain-verification-skill",
+        "slashCommand": "/maintain-verification-skill",
+        "description": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \\\"aud",
+        "disableModelInvocation": false,
+        "file": "skills/maintain-verification-skill/SKILL.md"
+      },
+      {
+        "name": "make-bot-ui",
+        "slashCommand": "/make-bot-ui",
+        "description": "Use when building a custom UI (page, dashboard, buttons) that should wake an Antigravity automation or local agent webhook runner, when the user must configure a webhook sender key safely via env/credentials, or when exposing that UI on Tai",
+        "disableModelInvocation": false,
+        "file": "skills/make-bot-ui/SKILL.md"
+      },
+      {
+        "name": "no-comments",
+        "slashCommand": "/no-comments",
+        "description": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
+        "disableModelInvocation": false,
+        "file": "skills/no-comments/SKILL.md"
+      },
+      {
+        "name": "pre-pr",
+        "slashCommand": "/pre-pr",
+        "description": "Compile a visual Markdown, Mermaid, and carousel Pre-PR proof dossier with Blast-Radius Risk Tiers (0-3), commentable screenshot artifacts, and an isolated read-only pr-verifier pass capped at 3 rounds before opening or updating a PR. Use f",
+        "disableModelInvocation": true,
+        "file": "skills/pre-pr/SKILL.md"
+      },
+      {
+        "name": "principle-attack-the-premise",
+        "slashCommand": "/principle-attack-the-premise",
+        "description": "Apply when two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-attack-the-premise/SKILL.md"
+      },
+      {
+        "name": "principle-boundary-discipline",
+        "slashCommand": "/principle-boundary-discipline",
+        "description": "Apply when wiring validation, error handling, or framework adapters. Concentrate guards at system boundaries (CLI, config, network, external APIs); trust internal types and keep business logic in pure functions.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-boundary-discipline/SKILL.md"
+      },
+      {
+        "name": "principle-build-the-lever",
+        "slashCommand": "/principle-build-the-lever",
+        "description": "Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the arti",
+        "disableModelInvocation": true,
+        "file": "skills/principle-build-the-lever/SKILL.md"
+      },
+      {
+        "name": "principle-encode-lessons-in-structure",
+        "slashCommand": "/principle-encode-lessons-in-structure",
+        "description": "Apply when you catch yourself writing the same instruction a second time, or notice a recurring correction. Encode the rule as a lint, metadata flag, runtime check, or script instead of more text.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-encode-lessons-in-structure/SKILL.md"
+      },
+      {
+        "name": "principle-exhaust-the-design-space",
+        "slashCommand": "/principle-exhaust-the-design-space",
+        "description": "Apply when facing a novel UI interaction or architectural decision with no precedent in the codebase. Build 2-3 competing prototypes and compare side by side before committing.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-exhaust-the-design-space/SKILL.md"
+      },
+      {
+        "name": "principle-experience-first",
+        "slashCommand": "/principle-experience-first",
+        "description": "Apply when product, UX, or feature-scope tradeoffs come up. Choose user delight over implementation convenience; ship fewer polished features over more rough ones.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-experience-first/SKILL.md"
+      },
+      {
+        "name": "principle-explain-the-number",
+        "slashCommand": "/principle-explain-the-number",
+        "description": "Apply before you measure, and before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work y",
+        "disableModelInvocation": true,
+        "file": "skills/principle-explain-the-number/SKILL.md"
+      },
+      {
+        "name": "principle-fix-root-causes",
+        "slashCommand": "/principle-fix-root-causes",
+        "description": "Apply when debugging. Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-fix-root-causes/SKILL.md"
+      },
+      {
+        "name": "principle-foundational-thinking",
+        "slashCommand": "/principle-foundational-thinking",
+        "description": "Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-foundational-thinking/SKILL.md"
+      },
+      {
+        "name": "principle-guard-the-context-window",
+        "slashCommand": "/principle-guard-the-context-window",
+        "description": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-guard-the-context-window/SKILL.md"
+      },
+      {
+        "name": "principle-laziness-protocol",
+        "slashCommand": "/principle-laziness-protocol",
+        "description": "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-laziness-protocol/SKILL.md"
+      },
+      {
+        "name": "principle-make-operations-idempotent",
+        "slashCommand": "/principle-make-operations-idempotent",
+        "description": "Apply when designing commands, lifecycle steps, or processing loops that run amid crashes, restarts, and retries. Converge to the same end state regardless of partial prior runs.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-make-operations-idempotent/SKILL.md"
+      },
+      {
+        "name": "principle-migrate-callers-then-delete-legacy-apis",
+        "slashCommand": "/principle-migrate-callers-then-delete-legacy-apis",
+        "description": "Apply when introducing a new internal API while old callers still exist. Migrate callers and delete the old API in the same wave instead of preserving compatibility layers.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md"
+      },
+      {
+        "name": "principle-minimize-reader-load",
+        "slashCommand": "/principle-minimize-reader-load",
+        "description": "Apply when reviewing or shaping code that's hard to trace. Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-minimize-reader-load/SKILL.md"
+      },
+      {
+        "name": "principle-model-the-domain",
+        "slashCommand": "/principle-model-the-domain",
+        "description": "Apply when writing stateful logic, or when code branches a lot or repeats a shape assumption across files.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-model-the-domain/SKILL.md"
+      },
+      {
+        "name": "principle-never-block-on-the-human",
+        "slashCommand": "/principle-never-block-on-the-human",
+        "description": "Apply when tempted to ask 'should I do X?' on reversible work.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-never-block-on-the-human/SKILL.md"
+      },
+      {
+        "name": "principle-outcome-oriented-execution",
+        "slashCommand": "/principle-outcome-oriented-execution",
+        "description": "Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-outcome-oriented-execution/SKILL.md"
+      },
+      {
+        "name": "principle-prove-it-works",
+        "slashCommand": "/principle-prove-it-works",
+        "description": "Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'",
+        "disableModelInvocation": true,
+        "file": "skills/principle-prove-it-works/SKILL.md"
+      },
+      {
+        "name": "principle-redesign-from-first-principles",
+        "slashCommand": "/principle-redesign-from-first-principles",
+        "description": "Apply when integrating a new requirement into an existing design.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-redesign-from-first-principles/SKILL.md"
+      },
+      {
+        "name": "principle-separate-before-serializing-shared-state",
+        "slashCommand": "/principle-separate-before-serializing-shared-state",
+        "description": "Apply when concurrent actors might write to the same file, branch, key, or state object. Eliminate the sharing first; serialize structurally only when one shared writer is a real invariant.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-separate-before-serializing-shared-state/SKILL.md"
+      },
+      {
+        "name": "principle-sequence-verifiable-units",
+        "slashCommand": "/principle-sequence-verifiable-units",
+        "description": "Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence prove",
+        "disableModelInvocation": true,
+        "file": "skills/principle-sequence-verifiable-units/SKILL.md"
+      },
+      {
+        "name": "principle-subtract-before-you-add",
+        "slashCommand": "/principle-subtract-before-you-add",
+        "description": "Apply when sequencing an addition, refactor, or rewrite. Remove dead code, redundant validators, and stub references first, then build on the simpler base.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-subtract-before-you-add/SKILL.md"
+      },
+      {
+        "name": "principle-test-behavior-not-implementation",
+        "slashCommand": "/principle-test-behavior-not-implementation",
+        "description": "Apply when you write, change, or keep a test. Assert what the code's users can observe, so that the test fails when that behavior breaks and keeps passing when only the internals change.",
+        "disableModelInvocation": true,
+        "file": "skills/principle-test-behavior-not-implementation/SKILL.md"
+      },
+      {
+        "name": "principle-type-system-discipline",
+        "slashCommand": "/principle-type-system-discipline",
+        "description": "Apply when designing types, reviewing a function signature, or writing code in any statically-typed language. Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from a",
+        "disableModelInvocation": true,
+        "file": "skills/principle-type-system-discipline/SKILL.md"
+      },
+      {
+        "name": "recall",
+        "slashCommand": "/recall",
+        "description": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what ha",
+        "disableModelInvocation": false,
+        "file": "skills/recall/SKILL.md"
+      },
+      {
+        "name": "reflect",
+        "slashCommand": "/reflect",
+        "description": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
+        "disableModelInvocation": true,
+        "file": "skills/reflect/SKILL.md"
+      },
+      {
+        "name": "security-audit",
+        "slashCommand": "/security-audit",
+        "description": "Coverage-led security guidance, PR-diff boundary checks, and 6-phase vulnerability audits for codebases, APIs, CLIs, libraries, AI/LLM tools, and daemons. Use for security audits, threat models, vulnerability hunting, or PR security reviews",
+        "disableModelInvocation": false,
+        "file": "skills/security-audit/SKILL.md"
+      },
+      {
+        "name": "setup-astack",
+        "slashCommand": "/setup-astack",
+        "description": "Onboard a repository to AStack: scaffold runtime verification skills (verify-<app>), optional formal TLA+ specs, and opt-in safety hooks while respecting Antigravity's native UI model picker and Orchestrator. Use for /setup-astack or initia",
+        "disableModelInvocation": true,
+        "file": "skills/setup-astack/SKILL.md"
+      },
+      {
+        "name": "sharpen",
+        "slashCommand": "/sharpen",
+        "description": "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.",
+        "disableModelInvocation": true,
+        "file": "skills/sharpen/SKILL.md"
+      },
+      {
+        "name": "show-me-your-work",
+        "slashCommand": "/show-me-your-work",
+        "description": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-",
+        "disableModelInvocation": false,
+        "file": "skills/show-me-your-work/SKILL.md"
+      },
+      {
+        "name": "statechart",
+        "slashCommand": "/statechart",
+        "description": "Check a TLA+ model of a system that moves between states, such as a product flow, a protocol, or a service, and draw it as a Mermaid statechart. The report gives the shortest path to each state that breaks a rule. Use for /statechart, or to",
+        "disableModelInvocation": false,
+        "file": "skills/statechart/SKILL.md"
+      },
+      {
+        "name": "tdd",
+        "slashCommand": "/tdd",
+        "description": "Use only when the user explicitly asks for TDD, a failing test, or a regression test, OR when the bug has an obvious cheap local test target. Skip when the test path is unclear, expensive, integration-heavy, or not requested.",
+        "disableModelInvocation": false,
+        "file": "skills/tdd/SKILL.md"
+      },
+      {
+        "name": "teach",
+        "slashCommand": "/teach",
+        "description": "Explain a body of work plainly so a person actually understands it. Runs the `how` and `why` skills and weaves what they find into one clear explanation. Use for 'teach me this', 'help me really understand X', 'explain this change or subsys",
+        "disableModelInvocation": false,
+        "file": "skills/teach/SKILL.md"
+      },
+      {
+        "name": "technical-writing",
+        "slashCommand": "/technical-writing",
+        "description": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit ",
+        "disableModelInvocation": false,
+        "file": "skills/technical-writing/SKILL.md"
+      },
+      {
+        "name": "typescript-best-practices",
+        "slashCommand": "/typescript-best-practices",
+        "description": "TypeScript best practices. Use when reading or editing any .ts or .tsx file.",
+        "disableModelInvocation": false,
+        "file": "skills/typescript-best-practices/SKILL.md"
+      },
+      {
+        "name": "unslop",
+        "slashCommand": "/unslop",
+        "description": "Cut AI tells from any writing.",
+        "disableModelInvocation": false,
+        "file": "skills/unslop/SKILL.md"
+      },
+      {
+        "name": "why",
+        "slashCommand": "/why",
+        "description": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-t",
+        "disableModelInvocation": false,
+        "file": "skills/why/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "astack-agent",
+        "description": "Delegate role profile for code-writing and helper tasks spawned via `invoke_subagent` or `/swarm` during an `/astack-mode` run. Use for delegates, never as the orchestrator of `/astack-mode` itself. Spawn a fresh delegate for each distinct ",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/astack-agent.md"
+      },
+      {
+        "name": "astack-engineer",
+        "description": "Primary verification-first AStack engineering agent for Google Antigravity App and CLI (`agy --agent astack-engineer`). Boots directly into AStack's 6-stage pipeline rail, native-commands-first routing, and empirical Control Glass verificat",
+        "mainAgent": true,
+        "subagent": false,
+        "file": "agents/astack-engineer.md"
+      },
+      {
+        "name": "comment-sicko",
+        "description": "Deranged comment-hater persona that savors deleting narration/workaround comments and flags workaround code `MUST KILL` for structural cleanup. Spawned via `invoke_subagent`, `define_subagent`, or as a `/swarm` `@comment-sicko` verifier dur",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/comment-sicko.md"
+      },
+      {
+        "name": "pr-verifier",
+        "description": "Isolated read-only fresh-context PR verifier subagent. Inspects branch diffs against base-branch REVIEW.md, reruns verification commands inside sandbox without editing repository files, classifies verified findings as important, nit, or pre",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/pr-verifier.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/architect",
+      "/arena",
+      "/astack-help",
+      "/astack-mode",
+      "/audit-architecture",
+      "/automate-me",
+      "/beast-mode",
+      "/benchmark-checklist",
+      "/blast-radius",
+      "/bro",
+      "/control-cli",
+      "/control-ui",
+      "/correct",
+      "/create-formal-verification-skill",
+      "/create-verification-skill",
+      "/design-audit",
+      "/deslop",
+      "/fanout",
+      "/figure-it-out",
+      "/how",
+      "/in-your-own-words",
+      "/interrogate",
+      "/ketchup",
+      "/ketchup-video",
+      "/maintain-formal-verification-skill",
+      "/maintain-verification-skill",
+      "/make-bot-ui",
+      "/no-comments",
+      "/pre-pr",
+      "/principle-attack-the-premise",
+      "/principle-boundary-discipline",
+      "/principle-build-the-lever",
+      "/principle-encode-lessons-in-structure",
+      "/principle-exhaust-the-design-space",
+      "/principle-experience-first",
+      "/principle-explain-the-number",
+      "/principle-fix-root-causes",
+      "/principle-foundational-thinking",
+      "/principle-guard-the-context-window",
+      "/principle-laziness-protocol",
+      "/principle-make-operations-idempotent",
+      "/principle-migrate-callers-then-delete-legacy-apis",
+      "/principle-minimize-reader-load",
+      "/principle-model-the-domain",
+      "/principle-never-block-on-the-human",
+      "/principle-outcome-oriented-execution",
+      "/principle-prove-it-works",
+      "/principle-redesign-from-first-principles",
+      "/principle-separate-before-serializing-shared-state",
+      "/principle-sequence-verifiable-units",
+      "/principle-subtract-before-you-add",
+      "/principle-test-behavior-not-implementation",
+      "/principle-type-system-discipline",
+      "/recall",
+      "/reflect",
+      "/security-audit",
+      "/setup-astack",
+      "/sharpen",
+      "/show-me-your-work",
+      "/statechart",
+      "/tdd",
+      "/teach",
+      "/technical-writing",
+      "/typescript-best-practices",
+      "/unslop",
+      "/why"
+    ],
+    "mcpServerNames": [
+      "astack_trust"
+    ],
+    "agentNames": [
+      "astack-agent",
+      "astack-engineer",
+      "comment-sicko",
+      "pr-verifier"
+    ],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "PreToolUse",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AStack: Make AI agents prove their work on your running app\n\n> **Don't trust the agent. Trust the evidence.**\n\n<p align=\"center\">\n  <img src=\"./assets/banner_ASCII%20terminal@1x.png\" alt=\"AStack: Make AI agents prove their work on your running app in Google Antigravity\" width=\"100%\">\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/jmxt3/astack/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/github/actions/workflow/status/jmxt3/astack/ci.yml?branch=main&style=flat-square&label=ci\" alt=\"CI status\"></a>\n  <a href=\"./plugin.json\"><img src=\"https://img.shields.io/badge/plugin-v0.4.0-38BDF8?style=flat-square\" alt=\"Plugin v0.4.0\"></a>\n  <a href=\"https://antigravity.google\"><img src=\"https://img.shields.io/badge/platform-Google%20Antigravity-6366F1?style=flat-square\" alt=\"Platform: Google Antigravity\"></a>\n  <a href=\"https://nodejs.org\"><img src=\"https://img.shields.io/badge/node-%3E%3D22.6-339933?style=flat-square&logo=node.js&logoColor=white\" alt=\"Node.js >= 22.6\"></a>\n  <a href=\"https://www.typescriptlang.org\"><img src=\"https://img.shields.io/badge/stack-ESM%20%2B%20TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white\" alt=\"Stack: ESM + TypeScript\"></a>\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-22C55E?style=flat-square\" alt=\"License: MIT\"></a>\n</p>\n\nAStack is a Google Antigravity plugin that makes AI agents verify their work on your running app before reporting done. Give [`/astack-mode`](./skills/astack-mode/SKILL.md) a goal, and it selects the right playbook, cleans the diff, and checks behavior in your live browser or terminal. It runs locally with zero external npm dependencies, sends no telemetry, and works with whatever model you pick in Antigravity.\n\nfork it. improve it. make it yours. PRs are welcome!\n\n<p align=\"center\">\n  <a href=\"#why-astack\">Why AStack</a> ·\n  <a href=\"#install\">Install</a> ·\n  <a href=\"#quick-start\">Quick start</a> ·\n  <a href=\"#documentation\">Documentation</a> ·\n  <a href=\"#security-and-privacy\">Security and privacy</a> ·\n  <a href=\"./CREDITS.md\">Credits</a> ·\n  <a href=\"./CONTRIBUTING.md\">Contributing</a> ·\n  <a href=\"./SECURITY.md\">Security</a>\n</p>\n\n## Why AStack\n\nAgents write code fast, and reviewing code nobody ran is slow. With AStack, two commands put live testing on the agent so you review captured evidence instead of guesses.\n\n```mermaid\nflowchart LR\n    Setup[\"`**1. Once per repo**\nRun /setup-astack`\"]\n    Goal[\"`**2. State your goal**\nRun /astack-mode\n(add /plan to review first)`\"]\n    Auto[\"`**3. AStack runs automatically**\nReads code · Writes & cleans diff\nTests your live app in browser or CLI`\"]\n    Done[\"`**4. Review with proof**\nVerified local commits\n+ captured output`\"]\n\n    Setup --> Goal --> Auto --> Done\n\n    classDef userStep fill:#111827,stroke:#38bdf8,stroke-width:1.5px,color:#f9fafb\n    classDef autoStep fill:#111827,stroke:#eab308,stroke-width:2px,color:#f9fafb\n    classDef doneStep fill:#111827,stroke:#22c55e,stroke-width:2px,color:#f9fafb\n    class Setup,Goal userStep\n    class Auto autoStep\n    class Done doneStep\n```\n\nUse AStack for nontrivial features, root-cause bug fixes, refactors, and PR reviews. For a one-line edit, ask the agent directly.\n\n## Install\n\nRequires **Google Antigravity** and **Node.js `>= 22.6`** (`22.18+` or `23.6+` for unflagged TypeScript type stripping). Install **Java** only if you run live TLA+ model checking via `/statechart`.\n\n```bash\nagy plugin install https://github.com/jmxt3/astack\nagy plugin list --json\n```\n\nTo install from a local clone instead, run `agy plugin install .` inside the repository. On Windows, if updating while Antigravity is running fails with `Access is denied`, run `agy plugin uninstall astack` first and reinstall.\n\n## Quick start\n\n1. **Initialize verification once per repo.** Run [`/setup-astack`](./skills/setup-astack/SKILL.md) inside Antigravity and pick the recommended option. It scaffolds `.agents/skills/verify-<app>/` so future runs know how to boot and verify your app.\n2. **Run a task with `/astack-mode`.** Describe what you want and how to verify it. Put `/plan` in front whenever you want to approve `implementation_plan.md` before any files change, or `/plan /grill-me` when requirements are still rough.\n\n   ```text\n   /astack-mode clicking Save twice on the profile form creates duplicate records. reproduce it in the browser first, fix the root cause, and prove double-clicking saves only once.\n   ```\n\n   ```text\n   /plan /astack-mode add rate limiting to the login endpoint\n   ```\n\n3. **Ask `/astack-help` when unsure.** It recommends the right skill and returns a copy-ready prompt without editing files.\n\n   ```text\n   /astack-help which skill should I use to review this branch before opening a PR?\n   ```\n\nEnable the optional [`AStack`](./sidecars/astack_timeline/sidecar.json) Timeline sidecar under **Extensions** in Google Antigravity for visual stage tracking and click-to-copy commands.\n\n## Documentation\n\n| Document | Covers |\n|---|---|\n| [AStack User Guide](./docs/user-guide.md) | Quickstart, plan-first approval workflow, and daily habits |\n| [Agent Command Timeline](./docs/agent-timeline.md) | Complete chronological catalog of all skills, playbooks, hooks, and native commands |\n| [Hands-On Daily Tutorials](./docs/tutorials/README.md) | End-to-end walkthroughs from tickets and setup to audits and PR reviews |\n| [The AStack Guide](./docs/guide/README.md) | 10-chapter course including the [24 engineering principles](./docs/guide/08-principles.md) |\n| [Architecture and Swarm](./docs/architecture-and-swarm.md) | Enforcement layers, Orchestrator routing, `astack_trust` MCP server, hooks, and Swarm |\n| [Automation Templates](./docs/automations/beacon/README.md) | Opt-in outer-loop templates for `beacon`, [PR triage](./docs/automations/pr-triage/README.md), and [weekly `/correct`](./docs/automations/weekly-correct/README.md) |\n\n## Security and privacy\n\nAStack runs locally with zero external npm dependencies, no hosted servers, no telemetry, and no stored credentials. [`hooks.json`](./hooks.json) enables `3` passive observe-only hooks by default and keeps all `7` blocking safety gates disabled until you opt in. To report a vulnerability, follow [SECURITY.md](./SECURITY.md).\n\n## Credits and license\n\nAStack adapts ideas from Lauren Tan's [`pstack`](https://github.com/cursor/plugins/tree/main/pstack), Garry Tan's [`gstack`](https://github.com/garrytan/gstack), and Cloudflare's [`security-audit-skill`](https://github.com/cloudflare/security-audit-skill). Read [CREDITS.md](./CREDITS.md) for full attribution.\n\nTo contribute, read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Code of Conduct](./CODE_OF_CONDUCT.md), or [open an issue](https://github.com/jmxt3/astack/issues/new/choose).\n\n[João Machete](https://github.com/jmxt3) maintains AStack under the [MIT License](./LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "credential_access",
+      "dynamic_code_exec",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/make-bot-ui/SKILL.md",
+        "line": 26,
+        "snippet": "1. Generate or copy a strong random sender key on the host (e.g., into `.env.local` with `0600` permissions or OS keychain / secret manager — gitignored and never tracked).",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/make-bot-ui/SKILL.md#L26"
+      },
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/make-bot-ui/SKILL.md",
+        "line": 28,
+        "snippet": "3. The user must **never** paste the sender key or bearer token into chat. Instruct them to set the environment variable locally (e.g., `$env:BOT_UI_SENDER_KEY` or `.env.local`) or",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/make-bot-ui/SKILL.md#L28"
+      },
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "skills/make-bot-ui/SKILL.md",
+        "line": 62,
+        "snippet": "If Tailscale is not installed, install it using the platform's official installer (on Linux: `curl -fsSL https://tailscale.com/install.sh | sudo sh`; on Windows/macOS: direct the u",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/make-bot-ui/SKILL.md#L62"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": ".agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs",
+        "line": 27,
+        "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"ignore\"], }).trim();",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": ".agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs",
+        "line": 138,
+        "snippet": "while ((m = tokenRe.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L138"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-receipt-ledger\" executes a shell command on PostToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command|invoke_subagent|run_workflow|call_mcp_tool|mcp_.*).",
+        "file": "hooks.json",
+        "line": 10,
+        "snippet": "node ./scripts/hooks/receipt-ledger.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L10"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-irreversible-guard\" executes a shell command on PreToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 45,
+        "snippet": "node ./scripts/hooks/irreversible-guard.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L45"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-secret-guard\" executes a shell command on PreToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command).",
+        "file": "hooks.json",
+        "line": 60,
+        "snippet": "node ./scripts/hooks/secret-guard.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L60"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-evidence-gate\" executes a shell command on PreToolUse (matcher: run_command|call_mcp_tool|mcp_.*).",
+        "file": "hooks.json",
+        "line": 85,
+        "snippet": "node ./scripts/hooks/evidence-gate.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L85"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-boundary-guard\" executes a shell command on PreToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content).",
+        "file": "hooks.json",
+        "line": 100,
+        "snippet": "node ./scripts/hooks/boundary-guard.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L100"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-round-limiter\" executes a shell command on PreToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content).",
+        "file": "hooks.json",
+        "line": 115,
+        "snippet": "node ./scripts/hooks/round-limiter.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L115"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"astack-trust-gate\" executes a shell command on PreToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command|call_mcp_tool|mcp_.*).",
+        "file": "hooks.json",
+        "line": 130,
+        "snippet": "node ./scripts/hooks/trust-gate.mjs",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L130"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/eval/eval.test.mjs",
+        "line": 140,
+        "snippet": "const res = spawnSync(process.execPath, [evalCli, flag], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/eval.test.mjs#L140"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/eval/eval.test.mjs",
+        "line": 144,
+        "snippet": "const jsonRun = spawnSync(process.execPath, [evalCli, \"--json\"], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/eval.test.mjs#L144"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/eval/eval.test.mjs",
+        "line": 148,
+        "snippet": "const replayRun = spawnSync(process.execPath, [evalCli, \"--replay\", \"--json\"], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/eval.test.mjs#L148"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/eval/incident-replay.mjs",
+        "line": 90,
+        "snippet": "const stdout = execFileSync( \"agy\", [ \"-p\", buildVerifierPrompt(diff), \"--output-format\", \"json\", \"--json-schema\", schemaPath, \"--print-timeout\", \"10m\", \"--sandbox\", \"--agent\", age",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/incident-replay.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/eval/incident-replay.mjs",
+        "line": 130,
+        "snippet": "const stdout = execFileSync( \"agy\", [ \"--input-format\", \"stream-json\", \"--output-format\", \"stream-json\", \"--json-schema\", schemaPath, \"--print-timeout\", \"10m\", \"--sandbox\", \"--agen",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/incident-replay.mjs#L130"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/eval/risk-backtest.mjs",
+        "line": 27,
+        "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/risk-backtest.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/trust/internal/dossier.mjs",
+        "line": 45,
+        "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/dossier.mjs#L45"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/trust/internal/dossier.mjs",
+        "line": 58,
+        "snippet": "const res = spawnSync(\"git\", [\"patch-id\", \"--stable\"], { cwd, input: diffText, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/dossier.mjs#L58"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/trust/internal/ledger.mjs",
+        "line": 853,
+        "snippet": "status = execFileSync(\"git\", [\"status\", \"--porcelain\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/ledger.mjs#L853"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/trust/internal/policy.mjs",
+        "line": 313,
+        "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/policy.mjs#L313"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/trust/internal/policy.mjs",
+        "line": 1703,
+        "snippet": "while ((m = importRegex.exec(stripped)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/policy.mjs#L1703"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/trust/internal/pr-proof.mjs",
+        "line": 141,
+        "snippet": "const remote = execFileSync(\"git\", [\"remote\", \"get-url\", \"origin\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"pipe\"], }).trim();",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/pr-proof.mjs#L141"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/upstream-watch.mjs",
+        "line": 24,
+        "snippet": "return execFileSync(\"git\", args, { encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/upstream-watch.mjs#L24"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-astack.mjs",
+        "line": 128,
+        "snippet": "while ((match = mdRegex.exec(withoutCode)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L128"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-astack.mjs",
+        "line": 132,
+        "snippet": "while ((match = htmlRegex.exec(withoutCode)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L132"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-astack.mjs",
+        "line": 455,
+        "snippet": "while ((m = slashTokenRe.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L455"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-astack.mjs",
+        "line": 563,
+        "snippet": "while ((m = spec.regex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L563"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-astack.mjs",
+        "line": 1021,
+        "snippet": "while ((principleMatch = PRINCIPLE_REF_REGEX.exec(sanitizedForLeakCheck)) !== null) {",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L1021"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-astack.mjs",
+        "line": 1039,
+        "snippet": "const stdout = execFileSync(\"agy\", [\"plugin\", \"validate\", \"--strict\", \"--json\", rootDir], { encoding: \"utf8\", });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L1039"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/main.mjs",
+        "line": 96,
+        "snippet": "execFile(cmd, args, { encoding: \"utf8\", timeout: 4000 }, (err, stdout) => { if (err) { return resolve({ ok: false, payload: null, workspaceDir: \"\", emptyWorkspace: false }); } try ",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/main.mjs#L96"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/main.mjs",
+        "line": 372,
+        "snippet": "execFile( \"gh\", [\"pr\", \"list\", \"--state\", \"all\", \"--limit\", \"40\", \"--json\", \"number,title,state,url\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 4000 }, (err, stdout) => { if",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/main.mjs#L372"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 23,
+        "snippet": "const res = spawnSync(process.execPath, [MAIN_PATH, flag], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 421,
+        "snippet": "const child = spawn(process.execPath, [MAIN_PATH, \"--port\", \"0\", \"--standalone\", \"--allow-fixture-ids\", \"--brain-dir\", brainDir], { env, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L421"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 637,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L637"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 638,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L638"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 639,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L639"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 644,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L644"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 645,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L645"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 646,
+        "snippet": "const headSha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: enrolledRepo, encoding: \"utf8\" }).trim();",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L646"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 833,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L833"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 834,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L834"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 835,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L835"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 837,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L837"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 838,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L838"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1211,
+        "snippet": "vm.runInNewContext(appJs, sandbox, { filename: \"app.js\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1211"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1421,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1421"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1422,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1422"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1423,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1423"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1428,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1428"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1429,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1429"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline-engine.mjs",
+        "line": 574,
+        "snippet": "const out = execFileSync(\"git\", [\"log\", \"-n\", \"80\", \"--format=%s\", targetRef], { cwd: workspaceDir, encoding: \"utf8\", timeout: 1500, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline-engine.mjs#L574"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2844,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2844"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2845,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2845"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2846,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2846"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2848,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2848"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2849,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2849"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2859,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2859"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2860,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2860"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2871,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2871"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2872,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"raise ceiling\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2872"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/check-plan.test.ts",
+        "line": 59,
+        "snippet": "const result = spawnSync(\"node\", [checker, file], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/check-plan.test.ts#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/check-plan.test.ts",
+        "line": 126,
+        "snippet": "const help = spawnSync(\"node\", [checker, \"--help\"], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/check-plan.test.ts#L126"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/check-plan.test.ts",
+        "line": 134,
+        "snippet": "const jsonRes = spawnSync(\"node\", [checker, \"--json\", file], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/check-plan.test.ts#L134"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 252,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: dir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L252"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 253,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@t.com\"], { cwd: dir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L253"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 254,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"Tester\"], { cwd: dir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L254"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 269,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: dir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L269"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 270,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: dir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L270"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 271,
+        "snippet": "const headSha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: dir, encoding: \"utf8\" }).trim();",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L271"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 521,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: unregDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L521"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 522,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@t.com\"], { cwd: unregDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L522"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 523,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"Tester\"], { cwd: unregDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L523"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 525,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: unregDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L525"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 526,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: unregDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L526"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
+        "line": 782,
+        "snippet": "execFileSync(\"git\", [\"remote\", \"add\", \"origin\", \"https://github.com/my-org/my-repo.git\"], { cwd: dir, stdio: \"ignore\", });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L782"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
+        "line": 469,
+        "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.test.ts#L469"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
+        "line": 499,
+        "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.test.ts#L499"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
+        "line": 542,
+        "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.test.ts#L542"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/github.ts",
+        "line": 70,
+        "snippet": "? spawn( process.env.ComSpec ?? \"cmd.exe\", [ \"/d\", \"/s\", \"/c\", `\"${[resolved.file, ...argv.slice(1)].map(quoteWindowsBatchArg).join(\" \")}\"`, ], { stdio: [\"ignore\", \"pipe\", \"pipe\"],",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.ts#L70"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/github.ts",
+        "line": 84,
+        "snippet": ": spawn(resolved.file, argv.slice(1), { stdio: [\"ignore\", \"pipe\", \"pipe\"], ...(cwd ? { cwd } : {}), });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.ts#L84"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/github.ts",
+        "line": 406,
+        "snippet": "const match = pattern.exec(comment.body);",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.ts#L406"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/watch-pr/watch-pr.mjs",
+        "line": 11,
+        "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", entry, ...process.argv.slice(2)], { stdio: \"inherit\" }, );",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/watch-pr.mjs#L11"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/worktree-audit.mjs",
+        "line": 27,
+        "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"], }).trimEnd();",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/worktree-audit.mjs",
+        "line": 127,
+        "snippet": "const raw = execFileSync( \"gh\", [\"pr\", \"list\", \"--author\", \"@me\", \"--state\", \"all\", \"--limit\", \"500\", \"--json\", \"number,state,headRefName\"], { cwd: repoDir, encoding: \"utf8\", stdio",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.mjs#L127"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/worktree-audit.test.mjs",
+        "line": 13,
+        "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\" }).trim();",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.test.mjs#L13"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/astack-mode/scripts/worktree-audit.test.mjs",
+        "line": 94,
+        "snippet": "const jsonOut = execFileSync(\"node\", [worktreeAuditCli, \"--base\", \"main\", \"--json\", repo], { encoding: \"utf8\", env: { ...process.env, ASTACK_TRANSCRIPTS_DIR: brainDir }, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.test.mjs#L94"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/audit-architecture/scripts/arch-audit.test.mjs",
+        "line": 72,
+        "snippet": "const strictRun = spawnSync(process.execPath, [cliPath, \"--cwd\", tmp, \"--strict\", \"--json\"], { encoding: \"utf8\", });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/audit-architecture/scripts/arch-audit.test.mjs#L72"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/audit-architecture/scripts/arch-audit.test.mjs",
+        "line": 94,
+        "snippet": "const res = spawnSync(process.execPath, [cliPath, \"--cwd\", tmp, \"--strict\", \"--json\"], { encoding: \"utf8\", });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/audit-architecture/scripts/arch-audit.test.mjs#L94"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/create-verification-skill/references/control-cli-template.mjs",
+        "line": 119,
+        "snippet": "const res = spawnSync(\"taskkill\", [\"/PID\", String(pid), \"/T\", \"/F\"], { stdio: \"ignore\", windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/create-verification-skill/references/control-cli-template.mjs#L119"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/create-verification-skill/references/control-cli-template.mjs",
+        "line": 210,
+        "snippet": "const child = spawn(flags.cmd, { shell: true, detached: process.platform !== \"win32\", stdio: \"ignore\", windowsHide: true, env: { ...process.env, PORT: String(port), VERIFY_PORT: St",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/create-verification-skill/references/control-cli-template.mjs#L210"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
+        "line": 64,
+        "snippet": "return spawnSync(process.execPath, [...nodeArgs, validatorPath, ledgerPath], { encoding: \"utf8\", timeout, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L64"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
+        "line": 594,
+        "snippet": "const result = spawnSync(process.execPath, [validatorPath, missingPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L594"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
+        "line": 628,
+        "snippet": "const created = spawnSync(\"mkfifo\", [fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L628"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
+        "line": 631,
+        "snippet": "const result = spawnSync(process.execPath, [validatorPath, fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L631"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
+        "line": 660,
+        "snippet": "const result = spawnSync(process.execPath, [validatorPath, symlinkPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L660"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-findings.test.cjs",
+        "line": 105,
+        "snippet": "return spawnSync(process.execPath, [...nodeArgs, validatorPath, findingsPath], { encoding: \"utf8\", timeout, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-findings.test.cjs#L105"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-findings.test.cjs",
+        "line": 431,
+        "snippet": "const result = spawnSync(process.execPath, [validatorPath, missingPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-findings.test.cjs#L431"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/security-audit/scripts/validate-findings.test.cjs",
+        "line": 467,
+        "snippet": "const created = spawnSync(\"mkfifo\", [fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-findings.test.cjs#L467"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.4.0",
+      "sha": "d95354253fed961c3b503df07796a3e8774fd430",
+      "scannedAt": "2026-11-27T18:15:02.628Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "id": "Ray2w/antigravity-local-file-launcher",
+  "sha": "e15bf9025b808293dc068d902ca44e90dc58e065",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:04.849Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "local-file-launcher",
+    "displayName": "Local File Launcher",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "launcher",
+        "runtimeName": "local-file-launcher_launcher",
+        "transport": "stdio",
+        "command": "uv",
+        "args": [
+          "run",
+          "--no-project",
+          "--with",
+          "mcp>=2.0",
+          "${PLUGIN_ROOT}/server/server.py"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "local-file-launcher",
+        "slashCommand": "/local-file-launcher",
+        "description": "Reveal local files or folders in Windows File Explorer, open local documents with the default OS application (Word, PDF viewer, Excel, etc.), or render one-click interactive file launcher cards in chat and the side pane. Use whenever the us",
+        "disableModelInvocation": false,
+        "file": "skills/local-file-launcher/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/local-file-launcher"
+    ],
+    "mcpServerNames": [
+      "local-file-launcher_launcher"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Local File Launcher\n\nAn **Antigravity 2.0 Plugin & MCP App** that lets you jump directly to any local folder in **Windows File Explorer / macOS Finder / Linux file manager** and open generated documents (Word `.docx`, `.pdf`, Excel `.xlsx`, PowerPoint `.pptx`, images, archives, etc.) with your system's default application — directly from clickable cards inside the chat or side pane.\n\n一款专为 **Antigravity 2.0 桌面客户端** 打造的轻量级本地插件（Plugin + MCP App）：在聊天对话和右侧边栏中直接渲染可点击文件卡片，一键 **打开所在文件夹并高亮选中文件**、**用系统默认程序打开文档（Word / PDF / Excel / PPT 等）** 或 **复制完整本地路径**。\n\n---\n\n## Features / 核心功能\n\n- **One-click interactive file cards in chat (`show_file_cards`)**: Automatically renders clean, theme-aware cards whenever the agent finishes creating local deliverables, with **Reveal in Folder / 打开文件夹**, **Open File / 打开文件**, and **Copy Path / 复制路径** buttons.\n- **Side pane & sidebar Local Files browser (`browse_local_files`)**: Open **Local Files** from the `+` side-pane menu or left sidebar to browse folders, switch quick locations (Workspace, OneDrive, Desktop, Documents, Downloads), and launch files directly.\n- **Direct agent tools (`reveal_in_explorer`, `open_file`)**: Ask in natural language (e.g., *\"Reveal the outputs folder\"* or *\"Open the generated PDF\"*) and the agent launches it immediately.\n- **Automatic bilingual UI (English / 简体中文)**: Automatically follows Antigravity's host locale (`zh` / `en`) and includes a one-click **`中文` / `EN`** switcher right in the card header.\n- **Zero tokens on button clicks**: Clicking card buttons calls the local MCP server directly from the UI (`callServerTool`) without invoking the LLM.\n- **100% local & privacy-safe**: No API keys, no remote servers, no telemetry.\n- **Built-in execution guardrail**: `open_file` intentionally blocks direct launch of executable/script extensions (`.exe`, `.msi`, `.bat`, `.cmd`, `.ps1`, `.vbs`, `.js`, `.reg`, etc.). Those files can still be safely located via **Reveal in Folder**.\n\n---\n\n## Prerequisites / 前置要求\n\n- [Google Antigravity 2.0](https://antigravity.google/)\n- [`uv`](https://docs.astral.sh/uv/) (Python package & environment runner)\n\n---\n\n## Installation / 安装方式\n\nClone this repository directly into Antigravity's global plugins directory as `local-file-launcher`. Antigravity discovers it automatically without requiring a restart (tools and skills take effect on the next conversation turn).\n\n将本仓库克隆到 Antigravity 的全局插件目录 `~/.gemini/config/plugins/local-file-launcher` 即可自动加载（无需重启客户端，下一轮对话生效）：\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/Ray2w/antigravity-local-file-launcher.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\local-file-launcher\"\n```\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/Ray2w/antigravity-local-file-launcher.git ~/.gemini/config/plugins/local-file-launcher\n```\n\n### Optional: Faster Offline Startup / 可选：本机预建环境实现毫秒级冷启动\n\nBy default, `mcp_config.json` uses `uv run --no-project --with mcp>=2.0`, which works across all platforms with zero setup. If you want instant offline startup on Windows, you can pre-install a local `.venv` inside the plugin folder and point `mcp_config.json`'s `command` to that `.venv/Scripts/python.exe`.\n\n---\n\n## Usage / 使用方式\n\n1. **Automatic deliverable cards**: After the agent generates `.docx`, `.pdf`, `.xlsx`, `.pptx`, `.csv`, `.zip`, or images, the bundled rule (`rules/AGENTS.md`) prompts the agent to display clickable launch cards automatically.\n2. **Natural-language commands**:\n   - *\"Show clickable launch cards for the Word and PDF files in this folder\"*\n   - *\"Reveal the outputs folder in File Explorer\"*\n   - *\"Open the generated PDF\"*\n3. **Side pane browser**: Click `+` in the Antigravity auxiliary pane (or the left sidebar) and choose **Local Files**.\n4. **Manage / disable / uninstall**: Open Antigravity **Customizations** -> **Local File Launcher** to toggle or remove the plugin at any time.\n\n---\n\n## Supported File Types & Safety / 支持的文件类型与安全机制\n\n- **Reveal in Folder (`reveal_in_explorer`)**: Supports **all** files and directories on Windows (`explorer.exe /select,\"<path>\"`), macOS (`open -R`), and Linux (`xdg-open`).\n- **Open File (`open_file`)**: Supports any non-executable file associated with a default OS application (`.docx`, `.pdf`, `.xlsx`, `.pptx`, `.md`, `.txt`, `.png`, `.jpg`, `.svg`, `.zip`, `.csv`, scientific formats like `.cif`/`.pdb`/`.opju`, and folders).\n- **Blocked from direct execution**: `.exe`, `.msi`, `.bat`, `.cmd`, `.com`, `.scr`, `.ps1`, `.psm1`, `.vbs`, `.vbe`, `.js`, `.jse`, `.wsf`, `.wsh`, `.hta`, `.reg`, `.cpl`, `.dll`.\n\n---\n\n## Running Tests / 运行测试\n\n```powershell\nuv run --no-project --with \"mcp>=2.0\" python tests/test_server.py\n```\n\n---\n\n## Project Structure / 目录结构\n\n```text\nantigravity-local-file-launcher/\n├── plugin.json                      # Antigravity plugin manifest\n├── mcp_config.json                  # Cross-platform MCP server config (via uv)\n├── README.md                        # Documentation\n├── LICENSE                          # MIT License\n├── THIRD_PARTY_LICENSES.md          # Third-party license notices\n├── assets/\n│   └── logo.svg                     # Plugin icon\n├── rules/\n│   └── AGENTS.md                    # Always-on rule to surface cards for deliverables\n├── skills/\n│   └── local-file-launcher/\n│       └── SKILL.md                 # Skill usage guide\n├── server/\n│   ├── server.py                    # FastMCP / MCPServer 2.x stdio server\n│   ├── card.html                    # Self-contained MCP App interactive UI\n│   └── ext-apps.bundle.mjs          # Bundled @modelcontextprotocol/ext-apps SDK\n└── tests/\n    └── test_server.py               # Automated stdio MCP protocol tests\n```\n\n---\n\n## License\n\nMIT License — see [LICENSE](LICENSE) and [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "contains_minified",
+      "dynamic_code_exec",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "server/ext-apps.bundle.mjs",
+        "line": 1,
+        "snippet": "var TB=Object.defineProperty;var SB=($)=>$;function AB($,v){this[$]=SB.bind(null,v)}var zv=($,v)=>{for(var D in v)TB($,D,{get:v[D],enumerable:!0,configurable:!0,set:AB.bind(v,D)})}",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/ext-apps.bundle.mjs#L1"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ext-apps.bundle.mjs",
+        "line": 62,
+        "snippet": "Set the \\`cycles\\` parameter to \\`\"ref\"\\` to resolve cyclical schemas with defs.`)}for(let N of $.seen.entries()){let b=N[1];if(v===N[0]){_(N);continue}if($.external){let J=$.exter",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/ext-apps.bundle.mjs#L62"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ext-apps.bundle.mjs",
+        "line": 66,
+        "snippet": "*/var lK=L9(($)=>{var v=/; *([!#$%&'*+.^_`|~0-9A-Za-z-]+) *= *(\"(?:[\\u000b\\u0020\\u0021\\u0023-\\u005b\\u005d-\\u007e\\u0080-\\u00ff]|\\\\[\\u000b\\u0020-\\u00ff])*\"|[!#$%&'*+.^_`|~0-9A-Za-z-]",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/ext-apps.bundle.mjs#L66"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 292,
+        "snippet": "subprocess.Popen(f'explorer.exe /select,\"{win_path}\"', shell=False)",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L292"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 295,
+        "snippet": "subprocess.Popen([\"open\", str(target)])",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L295"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 297,
+        "snippet": "subprocess.Popen([\"open\", \"-R\", str(target)])",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L297"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 300,
+        "snippet": "subprocess.Popen([\"xdg-open\", str(folder)])",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L300"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 362,
+        "snippet": "subprocess.Popen([\"open\", str(target)])",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L362"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 364,
+        "snippet": "subprocess.Popen([\"xdg-open\", str(target)])",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L364"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 407,
+        "snippet": "subprocess.run( [\"powershell\", \"-NoProfile\", \"-Command\", \"Set-Clipboard -Value ([Console]::In.ReadToEnd())\"], input=text.encode(\"utf-8\"), check=True, creationflags=getattr(subproce",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L407"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 414,
+        "snippet": "subprocess.run([\"pbcopy\"], input=text.encode(\"utf-8\"), check=True)",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L414"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 417,
+        "snippet": "subprocess.run([\"wl-copy\"], input=text.encode(\"utf-8\"), check=True)",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L417"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 419,
+        "snippet": "subprocess.run([\"xclip\", \"-selection\", \"clipboard\"], input=text.encode(\"utf-8\"), check=True)",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L419"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/server.py",
+        "line": 421,
+        "snippet": "subprocess.run([\"xsel\", \"--clipboard\", \"--input\"], input=text.encode(\"utf-8\"), check=True)",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/server.py#L421"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "server/ext-apps.bundle.mjs",
+        "line": 1,
+        "snippet": "var TB=Object.defineProperty;var SB=($)=>$;function AB($,v){this[$]=SB.bind(null,v)}var zv=($,v)=>{for(var D in v)TB($,D,{get:v[D],enumerabl",
+        "githubBlobUrl": "https://github.com/Ray2w/antigravity-local-file-launcher/blob/e15bf9025b808293dc068d902ca44e90dc58e065/server/ext-apps.bundle.mjs#L1"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "e15bf9025b808293dc068d902ca44e90dc58e065",
+      "scannedAt": "2026-11-27T18:17:04.849Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "dynamic_code_exec",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

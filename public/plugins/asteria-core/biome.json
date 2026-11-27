@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "id": "asteria-core/biome",
+  "sha": "25bc1c824d37e6e19ee709bca7f78cabefb8b40e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:23.838Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "biome",
+    "displayName": "BIOME",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "biome-bootstrap",
+        "slashCommand": "/biome-bootstrap",
+        "description": "EGM Peanuts and Hay Documentation Bootstrapper. Automatically creates, verifies, and formats hierarchical README.md contract trees across a repository subtree, establishing leaf-level component contracts (Peanuts) and parent architecture bl",
+        "disableModelInvocation": false,
+        "file": "skills/biome-bootstrap/SKILL.md"
+      },
+      {
+        "name": "biome-brainstorm",
+        "slashCommand": "/biome-brainstorm",
+        "description": "Interactive ideation and brainstorming skill for the Elephant-Goldfish Model (EGM). Transforms raw concepts into structured RFC hypotheses through multi-turn clarifying questions, parallel Goldfish reviews (YAGNI, cost/tokens, UX ergonomics",
+        "disableModelInvocation": false,
+        "file": "skills/biome-brainstorm/SKILL.md"
+      },
+      {
+        "name": "biome-build",
+        "slashCommand": "/biome-build",
+        "description": "The standalone BIOME Beaver builder skill. Executes phase-isolated, surgical code modifications strictly against .biome/project_index.json and the approved Design Spec. Enforces multi-domain pod serialization (DB -> API -> Web/Mobile -> E2E",
+        "disableModelInvocation": false,
+        "file": "skills/biome-build/SKILL.md"
+      },
+      {
+        "name": "biome-cartographer",
+        "slashCommand": "/biome-cartographer",
+        "description": "Repository Topology Cartographer. Analyzes project manifests, module boundaries, domain pods (database, backend, web, mobile), and public entrypoints to emit an immutable topology cache in .biome/codebase_topology.json. Prevents redundant f",
+        "disableModelInvocation": false,
+        "file": "skills/biome-cartographer/SKILL.md"
+      },
+      {
+        "name": "biome-chameleon",
+        "slashCommand": "/biome-chameleon",
+        "description": "Audits source code, pull request diffs, and UI microcopy to eradicate robotic AI slop, artificial compound naming (*Helper, *Manager, *ProcessorHandler), chatty line-by-line comments, and corporate marketing buzzwords (seamless, empower, cu",
+        "disableModelInvocation": false,
+        "file": "skills/biome-chameleon/SKILL.md"
+      },
+      {
+        "name": "biome-critic",
+        "slashCommand": "/biome-critic",
+        "description": "Runs the unsparing Critic Goldfish (The Cynical Lead Auditor & Adversarial User) on design docs, RFCs, API contracts, or feature proposals. Simulates user journeys, attacks state transition traps, latency friction, partial network failures,",
+        "disableModelInvocation": false,
+        "file": "skills/biome-critic/SKILL.md"
+      },
+      {
+        "name": "biome-draft",
+        "slashCommand": "/biome-draft",
+        "description": "Drafts comprehensive, publication-grade architectural design specifications section-by-section using the concepts brief from biome-brainstorm or user notes. Enforces strict goals, non-goals, data models, API contracts, target mutation bound",
+        "disableModelInvocation": false,
+        "file": "skills/biome-draft/SKILL.md"
+      },
+      {
+        "name": "biome-falcon",
+        "slashCommand": "/biome-falcon",
+        "description": "Rapid Codebase Reconnaissance Scout. Probes directories, exported interfaces, data models, API routes, and AST signatures to return compact, high-signal summaries (10-20 lines) without context bloat or dumping raw source code. Use when the ",
+        "disableModelInvocation": false,
+        "file": "skills/biome-falcon/SKILL.md"
+      },
+      {
+        "name": "biome-index",
+        "slashCommand": "/biome-index",
+        "description": "Runs the Deterministic Structural Indexer to parse approved Design Specs and codebase topology, emitting the partitioned target mutation plan in .biome/project_index.json. Assigns files to domain pods (database, backend, web, mobile) with e",
+        "disableModelInvocation": false,
+        "file": "skills/biome-index/SKILL.md"
+      },
+      {
+        "name": "biome-resolve",
+        "slashCommand": "/biome-resolve",
+        "description": "The Elephant resolution skill. Ingests flat deficiency reports from concurrent Goldfish reviewers, auto-applies uncontested text fixes to design specifications, presents interactive decision gates for trade-offs, and secures formal APPROVED",
+        "disableModelInvocation": false,
+        "file": "skills/biome-resolve/SKILL.md"
+      },
+      {
+        "name": "biome-review-loop",
+        "slashCommand": "/biome-review-loop",
+        "description": "Executes an automated, multi-agent review loop for custom documents, design specs, READMEs, or pull requests against configured personas and qualitative standards. Audits documents in parallel and applies approved fixes. Use when the user a",
+        "disableModelInvocation": false,
+        "file": "skills/biome-review-loop/SKILL.md"
+      },
+      {
+        "name": "biome-review",
+        "slashCommand": "/biome-review",
+        "description": "Orchestrates the 5-stage EGM Goldfish Review Protocol across specialized, zero-context subagents. Executes Initial Zoom-Out, Comprehension (Naive Reader), Design Critique (The Critic), Intermediate Zoom-Out, and Implementation Readiness aud",
+        "disableModelInvocation": false,
+        "file": "skills/biome-review/SKILL.md"
+      },
+      {
+        "name": "biome-ui-craftsman",
+        "slashCommand": "/biome-ui-craftsman",
+        "description": "Audits, refactors, and unslopping user interfaces across web, mobile, and SaaS dashboards to executive standards. Eliminates AI design tells (purple glows, gradient text, emoji icons, uppercase tracked tags), enforces Apple HIG 4-tier dark ",
+        "disableModelInvocation": false,
+        "file": "skills/biome-ui-craftsman/SKILL.md"
+      },
+      {
+        "name": "biome-woodpecker",
+        "slashCommand": "/biome-woodpecker",
+        "description": "Runs the unsparing Woodpecker (The Zero-Context Code Diff & Security Inspector) on active git diffs, pull request branches, or design docs. Pecks relentlessly across 6 vectors: Spec Fidelity, Security Taint, Pathological Edge Cases, Micro-A",
+        "disableModelInvocation": false,
+        "file": "skills/biome-woodpecker/SKILL.md"
+      },
+      {
+        "name": "biome",
+        "slashCommand": "/biome",
+        "description": "BIOME: Unified autonomous end-to-end software delivery ecosystem. Orchestrates concept brainstorming, Elephant spec drafting, hardened Critic Goldfish swarm audits, feedback auto-resolution, codebase cartography, deterministic indexing, iso",
+        "disableModelInvocation": false,
+        "file": "skills/biome/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "biome-beaver",
+        "description": "The Ephemeral Surgical Builder executing phase-isolated code modifications with micro-architecture, latest dependency verification, anti-slop idiomatic craftsmanship, and self-healing tests.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/beaver.md"
+      },
+      {
+        "name": "biome-bootstrap-orchestrator",
+        "description": "Orchestrates directory README documentation, partitions subtrees, and coordinates worker subagents.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/bootstrap_orchestrator.md"
+      },
+      {
+        "name": "biome-cartographer",
+        "description": "Repository Topology Cartographer generating and caching structural maps of codebase modules, dependencies, and public entrypoints in .biome/codebase_topology.json.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/cartographer.md"
+      },
+      {
+        "name": "biome-chameleon",
+        "description": "Anti-Slop & Human-Grade Craftsmanship Auditor inspecting naming conventions, UI copy, and code styling to eliminate all robotic AI fingerprints.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/chameleon.md"
+      },
+      {
+        "name": "biome-codebase-details",
+        "description": "Pedantic Technical Quality Auditor verifying that documentation accurately and exhaustively matches actual codebase implementation and existing library reuse opportunities.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/codebase_details.md"
+      },
+      {
+        "name": "biome-comprehension",
+        "description": "Naive Reader persona auditing documents with zero assumed institutional knowledge, flagging undefined terms, acronyms, and comprehension gaps.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/comprehension.md"
+      },
+      {
+        "name": "biome-critic",
+        "description": "Cynical Lead Auditor & Adversarial User persona relentlessly attacking flawed design choices, UI/UX friction, state recovery traps, and unergonomic API contracts.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/critic.md"
+      },
+      {
+        "name": "biome-design",
+        "description": "Hostile Design Critic persona focused on system architecture, scalability, infrastructure economics, and unmitigated risks.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/design_critic.md"
+      },
+      {
+        "name": "biome-falcon",
+        "description": "Rapid Reconnaissance Scout Goldfish performing ultra-fast, low-token codebase inspections and signature extractions for the Elephant orchestrator.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/falcon.md"
+      },
+      {
+        "name": "biome-implementation-readiness",
+        "description": "Pragmatic Tech Lead persona verifying that implementation plans contain unambiguous, fully actionable execution instructions without leaving design decisions to the implementer.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/implementation_readiness.md"
+      },
+      {
+        "name": "biome-indexer",
+        "description": "Deterministic Structural Indexer auditing codebase topology, dependency manifests, and approved Design Specs to emit a minimal .egm/project_index.json manifest.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/indexer.md"
+      },
+      {
+        "name": "biome-inventive-catalyst",
+        "description": "Inventive problem-solving Goldfish persona applying TRIZ principles to identify and eliminate system-level contradictions without compromise.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/inventive_catalyst.md"
+      },
+      {
+        "name": "biome-structural",
+        "description": "Structural Layout Validator and Document Architect persona focused on symmetry, heading hierarchy, formatting, and template compliance.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/structural.md"
+      },
+      {
+        "name": "biome-style",
+        "description": "Technical Copy Editor persona focused on clarity, precision, brevity, objective framing, and stripping fluff.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/style.md"
+      },
+      {
+        "name": "biome-synthesizer",
+        "description": "Intermediate Swarm Compiler and Aggregator coordinating parallel Goldfish reviewers, deduplicating findings, and compiling deliverable reports.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/synthesizer.md"
+      },
+      {
+        "name": "biome-ui-craftsman",
+        "description": "The UI/UX Master Craftsman & Aesthetic Auditor persona relentlessly inspecting frontend interfaces, design systems, modal viewports, responsive tables, and typography to eliminate amateur AI UI defects.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/ui_craftsman.md"
+      },
+      {
+        "name": "biome-woodpecker",
+        "description": "The Woodpecker: Zero-Context Code Diff & Security Inspector relentlessly pecking at post-build code mutations for vulnerabilities, spec drift, edge-case regressions, and hidden defects.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/woodpecker.md"
+      },
+      {
+        "name": "biome-zoom-out",
+        "description": "Skeptical Architect persona focused on high-altitude simplicity, minimalism, YAGNI, and codebase reuse.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/zoom_out.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/biome",
+      "/biome-bootstrap",
+      "/biome-brainstorm",
+      "/biome-build",
+      "/biome-cartographer",
+      "/biome-chameleon",
+      "/biome-critic",
+      "/biome-draft",
+      "/biome-falcon",
+      "/biome-index",
+      "/biome-resolve",
+      "/biome-review",
+      "/biome-review-loop",
+      "/biome-ui-craftsman",
+      "/biome-woodpecker"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "biome-beaver",
+      "biome-bootstrap-orchestrator",
+      "biome-cartographer",
+      "biome-chameleon",
+      "biome-codebase-details",
+      "biome-comprehension",
+      "biome-critic",
+      "biome-design",
+      "biome-falcon",
+      "biome-implementation-readiness",
+      "biome-indexer",
+      "biome-inventive-catalyst",
+      "biome-structural",
+      "biome-style",
+      "biome-synthesizer",
+      "biome-ui-craftsman",
+      "biome-woodpecker",
+      "biome-zoom-out"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <a href=\"https://github.com/asteria-core/biome\"><img src=\"docs/assets/readme-header.svg\" width=\"480\" height=\"126\" alt=\"BIOME Ecosystem\"></a>\n</p>\n\n<p align=\"center\"><strong>BIOME: Design with an elephant. Scout with a falcon. Review with a goldfish. Map with a cartographer. Build with a beaver. Blend with a chameleon. Polish with a craftsman. Inspect with a woodpecker. Clean with the reaper.</strong></p>\n\n<p align=\"center\">\n  <a href=\"#install\">Install</a> &ensp;·&ensp;\n  <a href=\"#the-autonomous-pipeline\">Autonomous Pipeline</a> &ensp;·&ensp;\n  <a href=\"#the-agents-of-biome\">Agent Roster & Superpowers</a> &ensp;·&ensp;\n  <a href=\"#the-15-standalone-skills\">Skill Reference</a> &ensp;·&ensp;\n  <a href=\"docs/getting_started.md\">Documentation</a> &ensp;·&ensp;\n  <a href=\"https://github.com/asteria-core/biome\">GitHub</a>\n</p>\n\n<br>\n\n**BIOME** is an autonomous, production-grade software delivery ecosystem engineered for AI coding assistants. Born from Google's foundational Elephant-Goldfish Model (EGM) and evolved into a multi-agent engineering platform, BIOME eliminates the fatal flaws of autonomous AI development: **contextual amnesia**, **hallucinated package APIs**, **robotic slop**, **broken half-dark UIs**, and **uncontrolled zombie processes**.\n\n---\n\n## The Paradigm Shift: Standard AI vs. BIOME\n\n| Failure Vector in Standard AI | The BIOME Engineering Guarantee | Primary BIOME Agent / Invariant |\n| :--- | :--- | :--- |\n| **Model Amnesia**: Forgets earlier client requirements across iterations. | **The Memory Vault**: Cumulative client features are permanently locked in `.biome/requirements_ledger.json`. | 🏛️ `.biome/requirements_ledger.json` |\n| **Token Bloat & Context Exhaustion**: Reading entire codebases into conversation context. | **Falcon Reconnaissance & Cartography**: Probes AST signatures and caches module topology in `.biome/codebase_topology.json`. | 🦅 The Falcon & 🗺️ The Cartographer |\n| **The \"God Agent\" Spaghetti**: Single conversational LLM edits files blindly while debating in chat. | **The Elephant Iron Rule**: The conversational orchestrator is **strictly prohibited from writing code**. All code is built by isolated, ephemeral builder pods. | 🐘 The Elephant & 🦫 The Beaver |\n| **Hallucinated Package APIs**: Importing deprecated methods or non-existent library flags. | **Live Registry Verification**: The builder queries live npm/PyPI/crates.io releases to pin real APIs before writing imports. | 🦫 The Beaver Builder |\n| **Robotic AI Code & Copy Slop**: Clumsy compound names (`*Helper`, `*Manager`), chatty comments, and corporate buzzwords (`seamless`). | **Human-Grade Craftsmanship**: Enforces clean idiomatic verbs/nouns and purges AI marketing puffery. | 🦎 The Chameleon Stylist |\n| **Broken & \"Half-Dark\" UIs**: Duplicate controls scattered between navbars and sidebars; dark headers with blinding white cards (`#FFFFFF`). | **Apple HIG & Executive SaaS Laws**: Enforces Navigational Singularity, 4-tier dark elevation, bounded modals, and defensive tables. | 🎨 The UI/UX Master Craftsman |\n| **Blind Unchecked Commits**: Trusting shallow unit tests that test only happy paths. | **Zero-Context Diff Pecking**: Relentless inspection of raw `git diff` across 6 security and spec vectors before commit. | 🪵 The Woodpecker Inspector |\n| **Zombie Subagents**: Background agents lingering in memory, conflicting over shared files. | **The Reaper Protocol**: Single-use ephemeral workers destroyed immediately upon task delivery (Zero-Zombie Rule). | ⚡ The Reaper Protocol |\n\n---\n\n## Install\n\nBIOME is packaged as a universal plugin compatible with **Antigravity**, **Claude Code**, **OpenAI Codex**, and **Cursor / Windsurf**.\n\n### Antigravity CLI & IDE Extension\n\n```sh\nagy plugin install https://github.com/asteria-core/biome\n```\n\nFor the **Antigravity App** and **VS Code Extension**, trigger `/plugin` in chat or follow the [Harness Setup Guide](docs/harnesses.md).\n\n### Claude Code\n\nInstall directly from GitHub via the Claude Code CLI:\n\n```sh\nclaude plugin marketplace add asteria-core/biome\nclaude plugin install biome@biome\n```\n\nOr invoke within an active session:\n\n```text\n/plugin install biome --marketplace asteria-core/biome\n```\n\n### OpenAI Codex CLI\n\n```sh\ncodex plugin marketplace add asteria-core/biome\ncodex plugin add biome@biome\n```\n\n### Cursor & Windsurf\n\nInstall directly into your workspace:\n\n```sh\nnpx skills add asteria-core/biome --agent cursor\n```\n\n---\n\n## The Autonomous Pipeline\n\nRun the entire engineering lifecycle end-to-end automatically with a single command:\n\n<img src=\"skills/biome/assets/icon.svg\" width=\"20\" height=\"20\" align=\"top\" alt=\"\"> **Autonomous End-to-End Delivery**\n\n```text\n/biome Build multi-tenant voucher management with WhatsApp activation logs and executive dark mode.\n```\n\n### End-to-End Architectural Dataflow\n\n```\n[User Strategic Request]\n           │\n           ▼\n┌──────────────────────────────┐\n│       🐘 THE ELEPHANT        │ ◄─── State Anchor (.biome/state.json) & Anti-Amnesia Ledger\n└──────────────┬───────────────┘\n               │ (1. Scout codebase AST signatures without context bloat)\n               ▼\n┌──────────────────────────────┐\n│        🦅 THE FALCON         │ ───► Probes routes, interfaces, types & schemas\n└──────────────┬───────────────┘\n               │ (2. Returns compact signatures)\n               ▼\n┌──────────────────────────────┐\n│       🐘 THE ELEPHANT        │ ───► Drafts specification (docs/designs/<feature>.md)\n└──────────────┬───────────────┘      [Strictly zero production code]\n               │ (3. Fan-out to adversarial zero-context reviewers)\n               ▼\n┌─────────────────────────────────────────────────────────────────────────────┐\n│                       🐠 THE GOLDFISH SWARM                                 │\n│  ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────┐ │\n│  │  🥊 The Critic         │  │  💡 Inventive Catalyst │  │ 👓 Naive Reader│ │\n│  │  (Adversarial UX/State)│  │  (Soviet TRIZ Solver)  │  │ (No Assumptions│ │\n│  └────────────────────────┘  └────────────────────────┘  └────────────────┘ │\n│  ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────┐ │\n│  │  🏗️ Design Critic      │  │  🔭 Zoom-Out Architect │  │ 📋 Tech Lead   │ │\n│  │  (Infra & Scalability) │  │  (Simplicity & YAGNI)  │  │ (Readiness Gate│ │\n│  └────────────────────────┘  └────────────────────────┘  └────────────────┘ │\n│  ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────┐ │\n│  │  🔬 Codebase Details   │  │  📐 Structural Auditor │  │ ✍️ Style Editor │ │\n│  │  (Anti-Hallucination)  │  │  (Symmetry & Hierarchy)│  │ (Brevity/Clarity│ │\n│  └────────────────────────┘  └────────────────────────┘  └────────────────┘ │\n└──────────────────────────────────────┬──────────────────────────────────────┘\n                                       │ (4. Synthesizer aggregates findings)\n                                       ▼\n┌──────────────────────────────┐\n│       🐘 AUTO-RESOLVE        │ ───► Settles trade-offs, locks spec as APPROVED\n└──────────────┬───────────────┘\n               │ (5. Maps topology and partitions mutation plan)\n               ▼\n┌──────────────────────────────┐\n│      🗺️ CARTOGRAPHER        │ ───► Reads/Caches .biome/codebase_topology.json\n└──────────────┬───────────────┘\n               │ (6. Generates deterministic target mutation plan)\n               ▼\n┌──────────────────────────────┐\n│         🎯 INDEXER           │ ───► Emits .biome/project_index.json\n└──────────────┬───────────────┘\n               │ (7. Phase-Isolated Ephemeral Build across Domain Pods)\n               ▼\n┌─────────────────────────────────────────────────────────────────────────────┐\n│                          🦫 THE BEAVER BUILDER                              │\n│  ┌───────────────────────────────────────────────────────────────────────┐  │\n│  │ Domain Pods: [Database] ──► [Backend API] ──► [Web/Mobile] ──► [E2E]  │  │\n│  │ Invariants: Real Package Verification · Micro-Architecture · Tests    │  │\n│  └───────────────────────────────────────────────────────────────────────┘  │\n└──────────────────────────────────────┬──────────────────────────────────────┘\n                                       │ (8. Active working git diff)\n                                       ▼\n┌─────────────────────────────────────────────────────────────────────────────┐\n│                       🪵 THE WOODPECKER AUDITOR                             │\n│  Pecks at git diff across 6 vectors:                                        │\n│  [Spec Fidelity] · [Security/Taint] · [Edge Cases] · [Micro-Architecture]   │\n│  [Anti-Slop (Chameleon)] · [UI/UX Craftsmanship (Apple HIG Laws)]           │\n└──────────────────────────────────────┬──────────────────────────────────────┘\n                                       │\n                      ┌────────────────┴────────────────┐\n                 [REJECTED]                        [APPROVED]\n                      │                                 │\n                      ▼                                 ▼\n         [Beaver Self-Healing Loop]            [Atomic Git Commit]\n                                                        │\n                                                        ▼\n                                               [⚡ THE REAPER]\n                                       (Kills all ephemeral sessions)\n```\n\n---\n\n## The Agents of BIOME\n\n### 1. 🐘 The Elephant (Context Orchestrator & Living Spec Engine)\n* **Orchestrator**: [`skills/biome/SKILL.md`](skills/biome/SKILL.md) (The Elephant Orchestrator Engine)\n* **Context Mode**: Deep conversational memory and architectural steward.\n* **The Elephant Iron Rule**: The Elephant is **strictly prohibited from writing, generating, or modifying production source code**. Its sole responsibility is strategic discovery, specifications, and coordination.\n* **State Anchor**: Durable phase checkpoints are written to `.biome/state.json`. If context compaction occurs in the host harness, the Elephant automatically recovers state and resumes from `active_phase`.\n\n### 2. 🦅 The Falcon (Rapid Reconnaissance Scout)\n* **Skill**: `/biome-falcon <path>` | **Persona**: [`agents/falcon.md`](agents/falcon.md)\n* **Context Mode**: Ultra-fast, low-token reconnaissance.\n* **Superpower**: Probes deep project directories, AST signatures, interfaces, and database models to extract compact contracts without dumping massive raw code into conversational context.\n\n### 3. 🗺️ The Cartographer (Repository Topology Engine)\n* **Skill**: `/biome-cartographer` | **Persona**: [`agents/cartographer.md`](agents/cartographer.md)\n* **Context Mode**: Cached codebase knowledge engine.\n* **Superpower**: Analyzes module boundaries, entrypoints, and internal dependency graphs, writing an immutable topology cache to `.biome/codebase_topology.json`. Prevents redundant filesystem scans across subagents.\n\n### 4. 🐠 The Goldfish Reviewer Swarm (10 Specialized Personas)\nZero-context, stateless review subagents that evaluate specifications cold with zero conversational memory or developer justifications:\n1. **🥊 The Critic ([`agents/critic.md`](agents/critic.md))**: Cynical Lead Auditor attacking state transitions, latency traps, unhandled failures, and contract flaws.\n2. **💡 The Inventive Catalyst ([`agents/inventive_catalyst.md`](agents/inventive_catalyst.md))**: Applies Soviet TRIZ principles to identify and eliminate false architectural compromises without quality trade-offs.\n3. **👓 The Naive Reader ([`agents/comprehension.md`](agents/comprehension.md))**: Audits with zero assumed institutional knowledge, flagging undefined acronyms and ambiguous logic.\n4. **✍️ The Technical Style Editor ([`agents/style.md`](agents/style.md))**: Technical copy editor enforcing clarity, precision, brevity, and objective framing.\n5. **🏗️ The Hostile Design Critic ([`agents/design_critic.md`](agents/design_critic.md))**: Attacks system architecture, horizontal scaling bottlenecks, infrastructure economics, and single points of failure.\n6. **🔭 The Skeptical Minimalist ([`agents/zoom_out.md`](agents/zoom_out.md))**: Relentlessly eliminates unnecessary complexity using YAGNI and maximizes existing library reuse.\n7. **📋 The Pragmatic Tech Lead ([`agents/implementation_readiness.md`](agents/implementation_readiness.md))**: Verifies that execution instructions are 100% unambiguous with zero unresolved design decisions.\n8. **🔬 The Codebase Quality Auditor ([`agents/codebase_details.md`](agents/codebase_details.md))**: Verifies that documentation strictly reflects live code without doc-to-code hallucinations.\n9. **📐 The Structural Layout Architect ([`agents/structural.md`](agents/structural.md))**: Validates markdown heading hierarchy, table formatting, and template compliance.\n10. **Intermediate Synthesizer ([`agents/synthesizer.md`](agents/synthesizer.md))**: Aggregates parallel reviews, eliminates duplicate feedback, and standardizes citations.\n\n### 5. 🦫 The Beaver (Phase-Isolated Ephemeral Surgical Builder)\n* **Skill**: `/biome-build` | **Persona**: [`agents/beaver.md`](agents/beaver.md)\n* **Context Mode**: Ephemeral builder isolated from conversation history.\n* **Multi-Domain Pod Swarm**: Partitions complex cross-stack mutations into isolated domain pods executed in strict order:\n  $$\\text{Database Pod} \\longrightarrow \\text{Backend API Pod} \\longrightarrow \\text{Web/Mobile Pod} \\longrightarrow \\text{E2E Pod}$$\n* **Superpower Invariants**:\n  - **Live Dependency Verification**: Checks actual npm/PyPI registry APIs before importing packages to prevent hallucinated functions.\n  - **Micro-Architecture**: Decomposes sprawling logic into modular single-responsibility files.\n  - **Self-Healing Test Loops**: Runs local test suites autonomously up to 3 times to repair runtime breaks.\n\n### 6. 🦎 The Chameleon (Anti-Slop & Human-Grade Stylist)\n* **Skill**: `/biome-chameleon <path>` | **Persona**: [`agents/chameleon.md`](agents/chameleon.md)\n* **Context Mode**: Anti-slop craftsmanship auditor.\n* **Superpower**: Inspects code and UI copy to purge all AI fingerprints:\n  - Banish robotic compound naming: No `*Helper`, `*Manager`, `*ProcessorActionHandler`. Mandates clean verbs and nouns (`login()`, `getUser()`).\n  - Banish AI marketing puffery in UI: No `seamless`, `empower`, `revolutionary`, `cutting-edge`. Mandates clear, human terminology.\n  - Banish chatty obvious comments: Strips `// function to calculate sum`.\n\n### 7. 🎨 The UI/UX Master Craftsman (Apple HIG & Executive SaaS)\n* **Skill**: `/biome-ui-craftsman <path>` | **Persona**: [`agents/ui_craftsman.md`](agents/ui_craftsman.md)\n* **Standard**: [`resources/document_standards/ui-craftsmanship-standard.md`](resources/document_standards/ui-craftsmanship-standard.md)\n* **Superpower**: Relentlessly audits web, mobile, and dashboard interfaces against **The Eight Frontend Laws**:\n  1. **Navigational Singularity & Zero Redundancy**: Global controls (Theme, Language, Profile, Logout) MUST reside in exactly ONE canonical location (pinned to sidebar footer OR header dropdown, never duplicated across both). Banish duplicate stacked page titles.\n  2. **Apple HIG 4-Tier Elevation & True Dark Mode**: Strictly bans \"half-dark\" interfaces with dark headers but blinding white cards (`#FFFFFF`). Enforces layered dark elevation (`slate-950` canvas, `slate-900` cards, `slate-800` modals) and dual-theme semantic tokens.\n  3. **Modal Viewport Containment**: Enforces `max-h-[85vh]`, internal scrollable body, and permanently visible sticky action footers.\n  4. **Defensive Table Layout**: Enforces `whitespace-nowrap` on codes, dates, and badges within responsive horizontal scroll containers (`overflow-x-auto min-w-[...]`).\n  5. **Smart Customer Lookup**: Instant reactive lookup rendering rich customer preview cards (Avatar, Device, Subscription Tier, WhatsApp direct link).\n  6. **Asset & Icon Integrity**: Pure SVG / Lucide components with explicit dimensions. Strictly bans raw unrendered font ligatures (`content_copy`).\n  7. **Platform Context Fidelity**: UI copy strictly matches the target platform (no web extension references inside native mobile apps).\n  8. **Bilingual RTL/LTR Architecture**: Full bidirectional mirroring with dedicated Admin & Company Settings tab.\n\n### 8. 🪵 The Woodpecker (Zero-Context Code Diff & Security Inspector)\n* **Skill**: `/biome-woodpecker [spec.md]` | **Persona**: [`agents/woodpecker.md`](agents/woodpecker.md)\n* **Context Mode**: Stateless pre-commit auditor.\n* **Superpower**: Pecks relentlessly at the raw `git diff` across 6 dimensions:\n  1. *Spec & Boundary Fidelity & Anti-Amnesia*: Guarantees all locked features in `.biome/requirements_ledger.json` remain preserved.\n  2. *Security Hardening*: Taint analysis, injection checks (SQLi, command injection, path traversal), and secrets leakage.\n  3. *Pathological Edge Cases*: Null/nil dereferences, unhandled async Promise rejections, resource leaks, and race conditions.\n  4. *Micro-Architecture*: Modular files, type-safety rigor (bans `any`), and rejection of vanity tests.\n  5. *Anti-Slop Craftsmanship*: Validates Chameleon standards across modified files.\n  6. *UI/UX Craftsmanship*: Validates adherence to the Eight Frontend Laws before allowing commits.\n\n### 9. 🏛️ The Memory Vault & Requirements Ledger\n* **Anchor**: `.biome/requirements_ledger.json` | **Template**: [`resources/requirements_ledger.template.json`](resources/requirements_ledger.template.json)\n* **Superpower**: Protects against AI requirement amnesia. Every cumulative feature requested by the client is logged, categorized, and permanently locked. The Woodpecker automatically blocks any build that drops or regresses locked requirements.\n\n### 10. ⚡ The Reaper Protocol (Zero-Zombie Lifecycle Invariant)\n* All worker subagents are strictly ephemeral single-use instances.\n* Immediately upon completing an audit, build, or review task, worker sessions are terminated and destroyed, preventing orphaned background processes from corrupting subsequent turns.\n\n---\n\n## The 15 Standalone Skills\n\nEvery capability in BIOME can be invoked individually as a standalone granular command:\n\n<table>\n  <thead><tr><th align=\"left\">Skill Command</th><th align=\"left\">Purpose & Responsibility</th><th align=\"left\">Primary Output Artifact</th></tr></thead>\n  <tbody>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome</code></td>\n      <td>Orchestrate the complete autonomous end-to-end delivery pipeline.</td>\n      <td>Full feature branch, tests, and atomic commit.</td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-brainstorm/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-brainstorm</code></td>\n      <td>Clarify a raw concept and stress-test trade-offs with fresh reviewers.</td>\n      <td><code>concepts_brief.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-draft/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-draft</code></td>\n      <td>Draft living architectural design specifications section-by-section.</td>\n      <td><code>docs/designs/&lt;feature&gt;.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-critic/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-critic</code></td>\n      <td>Run the unsparing Critic Goldfish to expose state and contract flaws.</td>\n      <td><code>critic_audit_report.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-review/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-review</code></td>\n      <td>Execute a multi-stage review with 10 zero-context Goldfish specialists.</td>\n      <td><code>review_findings.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-resolve/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-resolve</code></td>\n      <td>Negotiate trade-offs, apply spec fixes, and secure APPROVED status.</td>\n      <td>Formal spec sign-off (<code>APPROVED</code>).</td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-falcon/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-falcon</code></td>\n      <td>Rapid low-token reconnaissance of codebase types, schemas, and routes.</td>\n      <td>Signature summaries in chat.</td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-cartographer/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-cartographer</code></td>\n      <td>Map repository modules, dependencies, and external entrypoints.</td>\n      <td><code>.biome/codebase_topology.json</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-index/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-index</code></td>\n      <td>Parse approved spec and topology to emit partitioned mutation plans.</td>\n      <td><code>.biome/project_index.json</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-build/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-build</code></td>\n      <td>Execute surgical, phase-isolated code modifications with self-healing tests.</td>\n      <td>Mutated source code & test receipts.</td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-ui-craftsman/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-ui-craftsman</code></td>\n      <td>Audit frontends against Apple HIG, true dark mode, and SaaS standards.</td>\n      <td><code>ui_audit_report.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-chameleon/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-chameleon</code></td>\n      <td>Audit code and UI copy to eliminate robotic AI naming and marketing puffery.</td>\n      <td><code>chameleon_audit_report.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-woodpecker/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-woodpecker</code></td>\n      <td>Audit the raw working git diff across 6 pecking vectors before commit.</td>\n      <td><code>woodpecker_audit_report.md</code></td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-bootstrap/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-bootstrap</code></td>\n      <td>Generate, format, and verify documentation across an existing codebase.</td>\n      <td>Hierarchical README contract trees.</td>\n    </tr>\n    <tr valign=\"top\">\n      <td><img src=\"skills/biome-review-loop/assets/icon.svg\" width=\"18\" height=\"18\" align=\"top\" alt=\"\"> <code>/biome-review-loop</code></td>\n      <td>Run a configured group of specialized reviewers for custom tasks.</td>\n      <td>Synthesized feedback report.</td>\n    </tr>\n  </tbody>\n</table>\n\n---\n\n## Architectural Invariants & State Files\n\nAll execution state is managed transparently inside the project's root `.biome/` directory:\n\n```text\n.biome/\n├── state.json                 # Durable phase checkpointing for post-compaction recovery\n├── requirements_ledger.json   # Immutable client requirements vault (Anti-Amnesia)\n├── codebase_topology.json     # Cached repository module and dependency map\n└── project_index.json         # Partitioned target mutation plan for domain pods\n```\n\n---\n\n## Learn More\n\n- [Setup & Harness Integration](docs/harnesses.md): Installation and capabilities across Antigravity, Claude Code, Codex, and Cursor.\n- [Getting Started Guide](docs/getting_started.md): The comprehensive workflow and operational rules.\n- [UI/UX Craftsmanship Standard](resources/document_standards/ui-craftsmanship-standard.md): The Eight Frontend Laws for modern executive SaaS design.\n- [System Architecture](https://github.com/asteria-core/biome/blob/main/docs/designs/architecture.md): Deep-dive into agent lifecycles, schemas, and state machines.\n- [Testing & Quality Verification](https://github.com/asteria-core/biome/blob/main/TESTING.md): Verification limits, harness matrix, and test suite execution.\n\n---\n\n## License\n\nThis project is licensed under a dual-licensing structure:\n* **[BIOME License v1.0 (Source-Available)](LICENSE)**: Copyright &copy; 2026 Asteria Studio. All Rights Reserved. Governs the BIOME multi-agent software engineering ecosystem, agent architectures (Elephant, Goldfish, Beaver, Woodpecker, Falcon, Chameleon, UI Craftsman), prompts, and orchestration state machines for personal, academic, and internal non-commercial development. Commercial hosting, SaaS, managed execution, and AI model distillation require a separate commercial license from Asteria Studio.\n* **[Apache License 2.0](LICENSE-APACHE)**: Upstream base portions Copyright &copy; 2026 Asteria Core, licensed under the Apache License, Version 2.0.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "adapters/opencode/install.py",
+        "line": 123,
+        "snippet": "config.write_text(json.dumps({ \"$schema\": \"https://opencode.ai/config.json\", \"autoupdate\": False, \"default_agent\": \"biome\", \"skills\": {\"paths\": [str(skills)]}, \"agent\": agents, \"co",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/adapters/opencode/install.py#L123"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "adapters/opencode/install.py",
+        "line": 132,
+        "snippet": "(destination / \"installation.json\").write_text(json.dumps({ \"name\": metadata[\"name\"], \"version\": metadata[\"version\"], \"host_version\": HOST_VERSION, \"status\": \"experimental\", \"sha25",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/adapters/opencode/install.py#L132"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/pack_plugin.py",
+        "line": 120,
+        "snippet": "destination.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/scripts/pack_plugin.py#L120"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/prepare_release.py",
+        "line": 65,
+        "snippet": "(output / \"SHA256SUMS\").write_text(\"\".join(checksums), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/scripts/prepare_release.py#L65"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/prepare_release.py",
+        "line": 66,
+        "snippet": "(output / \"RELEASE_NOTES.md\").write_text( f\"# BIOME {version} — Autonomous Spec-Driven Software Delivery Ecosystem\\n\\n\" f\"Declared source: `{commit}`\\nTag: `{tag}`\\n\\n\" \"Local sour",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/scripts/prepare_release.py#L66"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/prepare_release.py",
+        "line": 99,
+        "snippet": "shutil.rmtree(output, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/scripts/prepare_release.py#L99"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/style.md",
+        "line": 46,
+        "snippet": "* **Filler Words & Wordiness**: Phrases that add noise instead of signal (e.g., \"essentially,\" \"simply run the command,\" \"it is important to note that\").",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/agents/style.md#L46"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-bootstrap/SKILL.md",
+        "line": 314,
+        "snippet": "(e.g., `./child/${target_filename}` or `../sibling/${target_filename}`) for child",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-bootstrap/SKILL.md#L314"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-bootstrap/SKILL.md",
+        "line": 320,
+        "snippet": "directly to `./child/SKILL.md` or format it as an unlinked",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-bootstrap/SKILL.md#L320"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-bootstrap/SKILL.md",
+        "line": 398,
+        "snippet": "sibling links use valid relative paths (`./subdir/${target_filename}` or",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-bootstrap/SKILL.md#L398"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-bootstrap/SKILL.md",
+        "line": 399,
+        "snippet": "`./subdir/SKILL.md`), and explicitly verify that every referenced target",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-bootstrap/SKILL.md#L399"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-brainstorm/SKILL.md",
+        "line": 43,
+        "snippet": "`./concepts_brief.md` in the working directory or your harness's artifact",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-brainstorm/SKILL.md#L43"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-draft/SKILL.md",
+        "line": 29,
+        "snippet": "`./design_draft.md`) using your file-writing tool and tell the user in chat",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-draft/SKILL.md#L29"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-draft/SKILL.md",
+        "line": 148,
+        "snippet": "`concepts_brief.md` in `./concepts_brief.md`, the conversation artifact",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-draft/SKILL.md#L148"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-draft/SKILL.md",
+        "line": 153,
+        "snippet": "`./discussion_summary.md`, the conversation artifact directory, or",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-draft/SKILL.md#L153"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-draft/SKILL.md",
+        "line": 240,
+        "snippet": "using relative paths (e.g., `./sub/README.md` or `../sibling/README.md`) for",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-draft/SKILL.md#L240"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/biome-woodpecker/SKILL.md",
+        "line": 68,
+        "snippet": "* **Injection Vulnerabilities**: SQL injection, command execution, path traversal (`../`), and template injections. Ensure parameterized queries everywhere.",
+        "githubBlobUrl": "https://github.com/asteria-core/biome/blob/25bc1c824d37e6e19ee709bca7f78cabefb8b40e/skills/biome-woodpecker/SKILL.md#L68"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "25bc1c824d37e6e19ee709bca7f78cabefb8b40e",
+      "scannedAt": "2026-11-27T18:21:23.838Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

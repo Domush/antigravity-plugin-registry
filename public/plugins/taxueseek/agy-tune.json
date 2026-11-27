@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "id": "taxueseek/agy-tune",
+  "sha": "e84c1758208de3d79190864c78953946b6fffd3b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:09.025Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-tune",
+    "displayName": "AGY Tune",
+    "version": "1.0.2",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "agy-tune-context-guard",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "read_file",
+        "type": "command",
+        "command": "./scripts/run-guard.sh",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "agy-tune",
+        "slashCommand": "/agy-tune",
+        "description": "Diagnose and optimize Antigravity CLI (agy) performance, token usage, hooks, MCP configs, and skill bloat. Use when asked to tune, audit, speed up, or reduce token consumption in Antigravity / agy, or to check why agy is slow, bloated, or s",
+        "disableModelInvocation": false,
+        "file": "skills/agy-tune/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-tune"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-tune\n\n**Antigravity CLI (`agy`) 省流提速与环境自检优化插件**  \n*Stop context bloat, speed up `read_file` hooks to ~7 ms, eliminate fake-disabled MCP zombie processes, and audit your Antigravity setup — without changing native UX.*\n\n---\n\n## 为什么做 agy-tune / Why agy-tune\n\n在长期使用 Antigravity CLI (`agy`) 做真实工程开发后，我们通过数百份历史会话日志与端到端实测，定位出 4 个最隐蔽的效率杀手：\n\n1. **上下文爆炸（Context Bloat）**：内置 `<work_efficiently>` 催促易触发猜测性并发整文件读取，动辄在首次改代码前就把上下文推过 200k，频繁触发后端 ~140k–150k 自动压缩。\n2. **单行超大文件盲区**：只按行数拦截的脚本会被 1 行 50–500 KB 的 minified JSON / 打包产物直接击穿，单次 `read_file` 灌爆上下文。\n3. **Hook 延迟与假禁用 MCP 僵尸进程**：Python Hook 每次 `read_file` 冷启动耗时可达数十至数百毫秒；在 `mcp_config.json` 中写 `\"disabled\": true` 后，部分版本 `agy` 仍会为每个会话拉起闲置 MCP 子进程并在退出时报 `signal: terminated`。\n4. **静态前缀复利税**：未停用的插件、跨目录重复 Skill 软链、与路由器重复平铺的子技能，每一轮对话都在重复消耗输入 Token 与配额。\n\n`agy-tune` 把整套实测验证过的治理方案打包成**零外部依赖的 Antigravity 原生插件**：装上即获得软规则 + 硬守卫，并自带 `agy-tune` 体检优化 Skill，随时分析并优化你自己的环境。\n\n---\n\n## 实测效果 / Measured Impact\n\n基于 macOS (arm64) + `agy 1.5.14` 同题 A/B 对照实测（详参 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)）：\n\n| 维度 / Metric | 优化前 / Before | 优化后 / After | 变化 / Delta |\n| :--- | :--- | :--- | :--- |\n| 宽范围多文件排查峰值上下文 | 79.9k tokens | **44.2k tokens** | **-44.8%** |\n| 宽范围多文件排查新增输入 / 缓存读取 | 82.0k / 277.0k | **44.2k / 102.8k** | **-46.1% / -62.9%** |\n| 50 KB 单行 minified 文件 Hook 延迟（20 次中位） | 288.1 ms (Python) | **7.2 ms (Native C)** | **-97.5%（39.8x 提速）** |\n| `run-guard.sh` 零 fork 路由放行延迟（20 次中位 / p95） | 9.39 ms / 15.46 ms | **4.55 ms / 5.04 ms** | **-51.5% / -67.4%** |\n| 每会话假禁用 MCP 僵尸子进程 | 1 个 / 会话 | **0** | **清零** |\n\n---\n\n## 1 分钟安装 / Quick Install\n\n### 方式一：通过 npm / npx 一键安装（推荐，自动编译原生 C 守卫并启用）\n\n```bash\nnpx -y agy-tune install\n```\n\n也可直接调用内置体检与审计命令：\n\n```bash\nnpx -y agy-tune doctor --workspace \"$PWD\"\nnpx -y agy-tune audit --since 2026-11-01\n```\n\n### 方式二：通过 `agy plugin install`\n\n```bash\nagy plugin install https://github.com/taxueseek/agy-tune\n```\n\n### 方式三：直接克隆到全局插件目录\n\n```bash\ngit clone https://github.com/taxueseek/agy-tune.git ~/.gemini/config/plugins/agy-tune\n```\n\n安装后即自动生效（默认走纯标准库 Python 3 兜底，零依赖）。\n\n### 可选：0.2 秒手动编译原生 C 二进制（使用方式二或方式三安装时）\n\n```bash\n~/.gemini/config/plugins/agy-tune/scripts/build-native.sh\n```\n\n`hooks.json` 通过相对路径 `./scripts/run-guard.sh` 以零 fork 方式自动探测：存在 `bin/context-guard` 时直接 `exec` 原生 C 二进制，否则无缝回退 Python 3。\n\n---\n\n## 内置体检与自动优化 / Built-in Audit & Optimize\n\n除了常驻的防爆规则与 `PreToolUse` Hook，插件内置了 `agy-tune` Skill 与两套独立诊断脚本：\n\n```bash\n# 1. 一键环境体检（查假禁用 MCP、静态前缀 Token、重复 Skills、Hook 状态、0B crash 占位）\npython3 ~/.gemini/config/plugins/agy-tune/scripts/doctor.py --workspace \"$PWD\"\n\n# 2. 审计历史会话上下文膨胀（首编上下文中位/p90、>3 并发读占比、超限读取）\npython3 ~/.gemini/config/plugins/agy-tune/scripts/audit_context_bloat.py --since 2026-11-01\n```\n\n你也可以直接在 Antigravity 对话中说：\n\n> 「用 `agy-tune` 检查并优化我当前的 Antigravity 环境」\n\nAgent 会自动采集本机指标、按 MECE 拆解瓶颈、给出 2–3 套可逆方案，经你确认后安全执行并输出优化前后数据对比。\n\n---\n\n## 配置项 / Environment Variables\n\n| 变量 | 默认值 | 说明 |\n| :--- | :--- | :--- |\n| `AGY_CONTEXT_GUARD_MAX_LINES` | `250` | 单次 `read_file` 允许的最大行数 / 切片跨度 |\n| `AGY_CONTEXT_GUARD_MAX_BYTES` | `32768` | 无范围从头读取的最大字节数（防单行 minified 大文件） |\n| `AGY_HOME` | `~/.gemini` | 覆盖 `doctor.py` / `audit_context_bloat.py` 的诊断根目录 |\n\n---\n\n## 推荐三层协同组合（可选）/ Optional MECE Stack\n\n`agy-tune` 本身零外部依赖，开箱即用。若希望进一步压低搜索与终端输出的 Token 消耗，可按三层正交分工自由组合：\n\n| 层级 | 工具 | 职责与安装 |\n| :--- | :--- | :--- |\n| **上游本机精准定位** | [`argo-search`](https://github.com/taxueseek/argo) 内置 `local-seek` 子技能 | 通过 `argo seek --outline` 抽大纲、`--dot` 穿透软链与隐藏目录、`--count` 先统计命中，解决「要读哪几行」。安装：`npx -y argo-search` |\n| **中游读文件守卫与体检** | **`agy-tune`**（本插件） | `read_file` 250 行与 32 KB 硬守卫（~4.5 ms）、反膨胀规则、环境体检与历史日志审计。安装：`npx -y agy-tune install` |\n| **旁路终端输出压缩** | [`rtk`](https://github.com/rtk-ai/rtk) | 压缩 `run_command` 终端输出噪音，与 `agy-tune` 作用于互斥工具，零冲突。 |\n\n---\n\n## 卸载与回滚 / Uninstall\n\n```bash\n# 通过 npx 一键停用并卸载\nnpx -y agy-tune uninstall\n\n# 或使用 agy 原生命令\nagy plugin disable agy-tune\nagy plugin uninstall agy-tune\n```\n\n---\n\n## 项目结构 / Layout\n\n```text\nagy-tune/\n├── package.json                 # npm 发布清单（npx -y agy-tune install）\n├── plugin.json                  # Antigravity 原生插件清单\n├── hooks.json                   # PreToolUse Hook（相对路径，零硬编码）\n├── rules/AGENTS.md              # 反上下文膨胀核心规则\n├── skills/agy-tune/SKILL.md     # 内置体检分析与优化 Skill\n├── scripts/\n│   ├── cli.js                   # 零依赖 Node CLI（install/uninstall/doctor/audit）\n│   ├── run-guard.sh             # 零 fork 原生 C / Python 自动路由包装器\n│   ├── build-native.sh          # 可选本地编译脚本\n│   ├── context_guard.c          # 零依赖 C99 守卫\n│   ├── context_guard.py         # 纯标准库 Python 兜底实现\n│   ├── doctor.py                # 环境体检器\n│   └── audit_context_bloat.py   # 历史会话膨胀审计器\n├── tests/test_agy_tune.py       # C/Python 一致性与诊断单测\n└── docs/ARCHITECTURE.md         # 第一性原理架构与实测报告\n```\n\n## License\n\n[MIT](LICENSE) © 2026 [taxueseek](https://github.com/taxueseek)\n",
+  "latestReleaseNotes": "## What's New in v1.0.2\n\n- **Zero-fork Hook Router (`scripts/run-guard.sh`)**: Eliminated `dirname`/`cd`/`pwd` subshell forks on every `read_file` invocation; median router latency reduced from **9.39 ms** to **4.55 ms** (-51.5%), p95 from **15.46 ms** to **5.04 ms** (-67.4%).\n- **npm / npx One-Command Distribution (`package.json` + `scripts/cli.js`)**: Added zero-dependency Node CLI supporting `npx -y agy-tune install`, `uninstall`, `doctor`, and `audit`. Automatically compiles the native C guard (falling back to stdlib Python 3 if no C compiler is available) and enables the plugin via `agy plugin enable`.\n- **Optional MECE Stack Documentation**: Documented how `agy-tune` composes cleanly with `argo-search` (`local-seek` sub-skill for upstream local retrieval) and `rtk` (side-channel command output compression) with zero hard dependencies.",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"agy-tune-context-guard\" executes a shell command on PreToolUse (matcher: read_file).",
+        "file": "hooks.json",
+        "line": 10,
+        "snippet": "./scripts/run-guard.sh",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/hooks.json#L10"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/cli.js",
+        "line": 48,
+        "snippet": "return spawnSync(cmd, args, { stdio: \"inherit\", ...opts });",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/cli.js#L48"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/cli.js",
+        "line": 52,
+        "snippet": "const check = spawnSync(\"sh\", [\"-c\", `command -v ${cmd} >/dev/null 2>&1`]);",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/cli.js#L52"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/audit_context_bloat.py",
+        "line": 45,
+        "snippet": "with open(fp, \"r\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/audit_context_bloat.py#L45"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/audit_context_bloat.py",
+        "line": 99,
+        "snippet": "with open(path, \"rb\") as pf:",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/audit_context_bloat.py#L99"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/cli.js",
+        "line": 93,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/cli.js#L93"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/context_guard.py",
+        "line": 35,
+        "snippet": "with open(path, \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/context_guard.py#L35"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/doctor.py",
+        "line": 84,
+        "snippet": "(\"global:~/.gemini/skills\", ghome / \"skills\"),",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/doctor.py#L84"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/doctor.py",
+        "line": 85,
+        "snippet": "(\"global:~/.gemini/config/skills\", ghome / \"config/skills\"),",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/doctor.py#L85"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/doctor.py",
+        "line": 86,
+        "snippet": "(\"cli:~/.gemini/antigravity-cli/skills\", ghome / \"antigravity-cli/skills\"),",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/doctor.py#L86"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/doctor.py",
+        "line": 169,
+        "snippet": "\"fix\": \"Change the fallback branch in ~/.gemini/config/hooks.json to return '{}'.\",",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/doctor.py#L169"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/doctor.py",
+        "line": 191,
+        "snippet": "\"fix\": \"Clean empty placeholders: find ~/.gemini/antigravity-cli/crashes -name '*.log' -size 0 -delete\",",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/scripts/doctor.py#L191"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/agy-tune/SKILL.md",
+        "line": 41,
+        "snippet": "3. **Hook Latency & Blind Spots**: Whether `agy-tune` is running in Python fallback mode instead of the compiled native C binary (`./scripts/build-native.sh`), or whether third-par",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/skills/agy-tune/SKILL.md#L41"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/agy-tune/SKILL.md",
+        "line": 47,
+        "snippet": "- **Plan A (Surgical Fixes)**: Move fake-disabled MCP entries out to `mcp_config.disabled.json`, disable unused plugins, build native C `context-guard` (`./scripts/build-native.sh`",
+        "githubBlobUrl": "https://github.com/taxueseek/agy-tune/blob/e84c1758208de3d79190864c78953946b6fffd3b/skills/agy-tune/SKILL.md#L47"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.2",
+      "sha": "e84c1758208de3d79190864c78953946b6fffd3b",
+      "scannedAt": "2026-11-27T18:21:09.025Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

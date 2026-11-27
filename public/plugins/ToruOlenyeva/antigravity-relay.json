@@ -1,0 +1,596 @@
+{
+  "schemaVersion": 1,
+  "id": "ToruOlenyeva/antigravity-relay",
+  "sha": "8f74afbfd6441bd7c5400b00ccd0159664a7c9a6",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:54.890Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-relay",
+    "displayName": "账号与配额管理",
+    "version": "2.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "antigravity-relay",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "invoke_subagent",
+        "type": "command",
+        "command": "node relay-hook.cjs pre-tool",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "account-and-hotswap",
+        "slashCommand": "/account-and-hotswap",
+        "description": "[TRIGGER] 当开发或修改 Antigravity Relay (AGY Relay) 的旁路 OAuth 浏览器登录、当前已登录账号识别收录、Windows 凭据管理器 gemini:antigravity 切换、GCP 通道切换或个人通道免重载透明代理路由（relay-hook.cjs / ls-bridge.mjs / store.mjs）时自动激活。 [SCOPE] 统管 Antigravity 2.0 官方 OAuth 2.0 + PKCE S256 旁路零打",
+        "disableModelInvocation": false,
+        "file": "skills/account-and-hotswap/SKILL.md"
+      },
+      {
+        "name": "quota-and-ledger",
+        "slashCommand": "/quota-and-ledger",
+        "description": "[TRIGGER] 当开发或修改 Antigravity Relay (AGY Relay) 的三大配额池实时探针、可用模型列表过滤或 Sidecar 辅助侧边栏可视化面板（main.mjs / index.html / styles.css / i18n.js / app.js）时自动激活。 [SCOPE] 统管本地 language_server.exe GetUserStatus 与 RetrieveUserQuotaSummary Connect-RPC 探针、Clo",
+        "disableModelInvocation": false,
+        "file": "skills/quota-and-ledger/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/account-and-hotswap",
+      "/quota-and-ledger"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "PreToolUse",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "[English](README.en.md) | [简体中文](README.md)\n\n<div align=\"center\">\n  <img src=\"assets/logo.svg\" alt=\"Antigravity Relay Logo\" width=\"72\" height=\"72\" />\n  <h1>Antigravity Relay</h1>\n  <p>\n    <b>Google Antigravity 2.0 原生多账号配额监控、独立通道池与免重载算力路由中心</b><br>\n    全等级（Free / Plus / Pro / Ultra / GCP）精准识别、三大配额池实时监控、旁路零打断登录与跨个人账号无感算力接力。\n  </p>\n  <p>\n    <a href=\"https://antigravity.google/\"><img src=\"https://img.shields.io/badge/Google%20Antigravity%202.0-Plugin-4285F4?style=flat-square&logo=google&logoColor=white\" alt=\"Google Antigravity 2.0 Plugin\" /></a>\n    <a href=\"https://nodejs.org/\"><img src=\"https://img.shields.io/badge/Node.js-%3E%3D%2018-339933?style=flat-square&logo=nodedotjs&logoColor=white\" alt=\"Node.js\" /></a>\n    <a href=\"docs/ARCHITECTURE.md\"><img src=\"https://img.shields.io/badge/Dependencies-Zero-brightgreen?style=flat-square\" alt=\"Zero Dependencies\" /></a>\n    <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-orange?style=flat-square\" alt=\"MIT License\" /></a>\n    <a href=\"https://github.com/ToruOlenyeva/antigravity-relay/stargazers\"><img src=\"https://img.shields.io/github/stars/ToruOlenyeva/antigravity-relay?style=flat-square&logo=github\" alt=\"GitHub Stars\" /></a>\n  </p>\n</div>\n\n> <b>告别单账号配额焦虑与跨通道切换报错</b>：专为 <b>Google Antigravity 2.0</b> 打造的多账号池与算力路由插件。支持同一客户端内管理多个个人账号（<code>Free</code> / <code>Plus</code> / <code>Pro</code> / <code>Ultra</code>）与 <code>GCP</code> 云项目通道，提供三大官方配额池实时探针、旁路零打断 OAuth 授权登录、双层思维签名（<code>thoughtSignature</code>）无损剥离以及个人通道间 0 重载无感算力路由。\n\n<div align=\"center\">\n  <img src=\"assets/preview-zh.png\" width=\"840\" alt=\"Antigravity Relay Preview\" />\n</div>\n\n---\n\n## ✨ 核心特性\n\n- <b>全等级精准识别与配额透视</b>：基于底层 Language Server 与 CloudCode 原生探针，精准区分 <code>Free</code>（无会员）、<code>Plus</code>（含渠道赠送版）、<code>Pro</code>、<code>Ultra</code> 与 <code>GCP</code> 五大通道等级，1:1 还原 <code>Gemini 模型</code>、<code>Claude 和 GPT 模型</code> 及 <code>Gemini 4 Argon</code> 独立周限额三大配额池与重置倒计时。\n- <b>个人通道免重载无感路由</b>：内置本地透明反向代理（默认 <code>8091</code> 端口，支持 <code>8091..8095</code> 及随机端口自动递增防冲突回退），按模型家族实时替换目标个人账号 <code>Bearer Token</code>，对话全程 0 界面重载、0 中断。\n- <b>按重置时间智能自动轮询</b>：每个模型支持设置「跟随当前通道」、「指定个人账号通道」或「自动轮询有余额通道」（优先消耗最早重置且有剩余额度的个人账号，并在主账号 <code>0%</code> 时自动解除前端模型灰显锁死）。\n- <b>双层思维签名无损剥离</b>：独创 SQLite 离线 Protobuf 签名剥离 + 透明代理 JSON 流式签名剥离双引擎，彻底根除跨账号路由或 <code>GCP</code> 与个人通道相互切换后继续旧对话触发的 <code>Invalid thought signature (400)</code> 崩溃。\n- <b>旁路零打断官方 OAuth 登录</b>：通过独立本地随机端口拉起 Antigravity 官方 Google OAuth 2.0 + PKCE S256 授权流程，无论授权成功或中途取消均不触碰当前在线会话凭据，支持免重登直接复用已有账号凭据派生 <code>GCP</code> 通道。\n- <b>非侵入式 GCP 项目按需扫描</b>：添加 <code>GCP</code> 通道时点击「自动扫描」仅拉取可用云项目候选列表（单项目直接填入、多项目提供下拉框点选填入），绝不擅自批量建卡污染通道池。\n- <b>双语纯净隔离与独立小窗托管</b>：中英文界面保留 <code>Free</code> / <code>Plus</code> / <code>Pro</code> / <code>Ultra</code> / <code>GCP</code> 标准徽章且零语种混杂，同时监听宿主动态端口与固定 <code>8089</code> 端口，支持 SSE 零延迟同步与独立小窗操控。\n\n---\n\n## 🔄 核心工作流原理\n\n```mermaid\nflowchart TD\n    A[\"用户在对话中发送消息 / 调用子智能体\"] --> B{\"当前主通道类型裁决\"}\n    B -- \"个人通道 (Free / Plus / Pro / Ultra)\" --> C[\"SetCloudCodeURL 挂载本地透明代理 (8091..8095)\"]\n    C --> D[\"按模型匹配路由策略 (跟随当前 / 自动轮询 / 指定个人号)\"]\n    D --> E[\"内存动态替换目标个人号 Bearer Token + 剥离 JSON thoughtSignature\"]\n    E --> F[\"0 重载直连 CloudCode 完成推理并异步刷新目标号配额\"]\n    B -- \"点击启用切换主通道 (含 GCP 与个人通道互切)\" --> G[\"覆写 WinCred 凭据 + SQLite 离线剥离 Protobuf 签名 + 重载 LS\"]\n```\n\n---\n\n## 🚀 快速安装\n\n本项目采用纯原生 Node.js 构建，<b>零外部依赖（Zero Dependencies）</b>，克隆即可运行，无需执行 <code>npm install</code>。\n\n### 1. 克隆插件至 Antigravity 插件目录\n\n<b>macOS / Linux</b>:\n```bash\ngit clone https://github.com/ToruOlenyeva/antigravity-relay.git ~/.gemini/config/plugins/antigravity-relay\n```\n\n<b>Windows (PowerShell)</b>:\n```powershell\ngit clone https://github.com/ToruOlenyeva/antigravity-relay.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-relay\"\n```\n\n<b>Windows (CMD)</b>:\n```cmd\ngit clone https://github.com/ToruOlenyeva/antigravity-relay.git %USERPROFILE%\\.gemini\\config\\plugins\\antigravity-relay\n```\n\n### 2. 生效与启动\n\n克隆完成后，重启 Google Antigravity 或在插件设置列表中开启「账号与配额管理」即可在右侧辅助栏使用。\n\n---\n\n## 📂 模块化目录结构\n\n```\nantigravity-relay/\n├── assets/                      # 品牌矢量图标与双语高清预览图\n├── docs/                        # 深度技术架构设计文档\n├── skills/                      # 插件工程领域技能规范\n│   ├── account-and-hotswap/     # 旁路 OAuth、凭据切换与透明代理路由契约\n│   └── quota-and-ledger/        # 三大配额池探针与全等级模型过滤契约\n├── sidecars/\n│   └── panel/                   # 原生免构建前后端分离 Sidecar 面板\n│       ├── app.js               # 前端核心交互、自定义下拉与状态同步引擎\n│       ├── i18n.js              # 前端中英双语严格隔离词典\n│       ├── index.html           # 前端响应式骨架页面\n│       ├── ls-bridge.mjs        # 后端 LS RPC、透明代理、WinCred 与 OAuth 引擎\n│       ├── main.mjs             # 后端双端口 HTTP 路由与 SSE 实时广播入口\n│       ├── preload.js           # 宿主预加载桥接脚本\n│       ├── sidecar.json         # Sidecar 容器清单契约\n│       ├── store.mjs            # 配置原子化落盘与历史脏数据清洗引擎\n│       └── styles.css           # 纯扁平深浅色自适应主题样式表\n├── agy-relay-config.example.json # 脱敏示例配置档案\n├── hooks.json                   # Antigravity 生命周期 Hook 契约\n├── open-panel.bat               # 独立小窗模式快速启动脚本\n├── plugin.json                  # 插件公开元数据契约\n├── relay-hook.cjs               # 会话前置路由守护与 Sidecar 自愈钩子\n├── README.en.md                 # 英文说明文档\n└── README.md                    # 中文说明文档\n```\n\n---\n\n## 📖 使用方法指南\n\n### 1. 实时配额监控与全等级识别\n在 Antigravity 右侧辅助栏打开「账号与配额管理」面板：\n- 顶部「会话与使用量」下拉框默认跟随当前主界面激活通道（带绿色圆点标记），也可随时点选任意已收录通道预览其最新配额与重置倒计时。\n- 系统自动按各账号真实可用模型矩阵标定 <code>Free</code>、<code>Plus</code>、<code>Pro</code>、<code>Ultra</code> 与 <code>GCP</code> 方形彩色徽章，自动剔除不可用或即将下线的模型。\n\n### 2. 独立通道池与旁路零打断登录\n- <b>收录当前</b>：一键读取当前客户端已登录凭据并建立对应个人通道或 <code>GCP</code> 通道卡片。\n- <b>+ 添加账号</b>：在浏览器拉起官方登录页添加新 Google 账号，授权全程零打断当前正在进行的 AI 对话。\n- <b>+ 添加通道</b>：直接复用池内已有 Google 账号凭据派生个人通道或 <code>GCP</code> 云项目通道；<code>GCP</code> 模式下点击「自动扫描」可点选填入目标项目编号，点击通道卡片上的「启用」即可重载切换主界面账号。\n\n### 3. 个人通道免重载算力路由与自动轮询\n- 底部「模型算力路由」自动汇总池内所有个人通道（<code>Free</code> / <code>Plus</code> / <code>Pro</code> / <code>Ultra</code>）支持的可用模型合集（<code>GCP</code> 通道完全独立不参与底部路由）。\n- 为任意模型选择「自动轮询有余额通道」或指定某个有额度的个人通道后，前台对话与后台子智能体调用该模型时将通过本地透明代理自动扣除目标个人账号配额，无需重载主界面。\n\n### 4. 独立小窗模式\n若未展开右侧辅助栏，可双击插件目录下的 <code>open-panel.bat</code> 或在浏览器访问 <code>http://127.0.0.1:8089</code>，通过独立桌面小窗实时监控配额与调整路由。\n\n---\n\n## 📚 官方技术文档中心\n\n| 模块名称 | 说明与技术细节 | 链接 |\n| :--- | :--- | :--- |\n| <b>系统架构设计</b> | 全等级探测矩阵、本地透明代理免重载路由、端口回退、双层签名剥离与 API 规范 | [查看架构文档](docs/ARCHITECTURE.md) |\n| <b>示例配置档案</b> | 包含多等级个人通道、GCP 通道与模型路由策略的标准脱敏 JSON 模板 | [查看示例配置](agy-relay-config.example.json) |\n\n---\n\n## 🤝 贡献与共创团队\n\n- <b>[Toru Olenyeva](https://github.com/ToruOlenyeva)</b>\n- <b>[Google Antigravity](https://antigravity.google/)</b>\n\n---\n\n## 📄 开源协议\n\n本项目基于 [<b>MIT License</b>](LICENSE) 开源。\n",
+  "latestReleaseNotes": "### 核心特性 / Key Features\n- **全等级通道池精准识别 (Full-Tier Channel Pool Detection)**: 自动识别并渲染 `[Free]`、`[Plus]`、`[Pro]`、`[Ultra]` 与 `[GCP]` 专属方形徽章及真实可用模型矩阵 / Automatically detects and renders `[Free]`, `[Plus]`, `[Pro]`, `[Ultra]`, and `[GCP]` badges with real available model catalogs.\n- **三大配额池实时探针 (Three-Pool Real-Time Quota Probe)**: 实时监控 Gemini、Claude & GPT 以及 Gemini 4 Argon 的 5 小时与周限额剩余百分比及重置倒计时 / Real-time 5-hour and weekly quota tracking across all model pools.\n- **同体系个人通道免重载算力路由 (Reload-Free Personal Channel Model Routing)**: 基于本地透明反向代理与 `SetCloudCodeURL` 动态挂载，支持在不重载窗口、不中断对话的前提下跨个人账号（Free / Plus / Pro / Ultra）按模型定向路由或自动轮询 / Seamless cross-account model routing and auto-polling across personal accounts without window reload.\n- **端口冲突自动回退 (Automatic Port Fallback)**: 内置 `/__agy_proxy_ping` 指纹自检与 `8091..8095` + OS 随机空闲端口多级自动顺延 / Multi-stage port fallback with health signature verification.\n- **跨通道接力双层签名剥离 (Dual-Layer Thought Signature Scrubbing)**: 切换通道时自动无损剥离历史 `.pb` 状态与内存中残留的 `thoughtSignature`，彻底根除 `Invalid thought signature` 报错 / Eliminates `Invalid thought signature` errors during cross-channel handoffs.",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "credential_access",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/account-and-hotswap/SKILL.md",
+        "line": 44,
+        "snippet": "- 通过 C# P/Invoke 调用 `Advapi32.dll` 的 `CredReadW(\"gemini:antigravity\", CRED_TYPE_GENERIC)`，读取当前会话的 `StoredToken` JSON（含 `access_token`、`refresh_token`、`expiry`、`id_token`、`id_token_",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/skills/account-and-hotswap/SKILL.md#L44"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"antigravity-relay\" executes a shell command on PreToolUse (matcher: invoke_subagent).",
+        "file": "hooks.json",
+        "line": 16,
+        "snippet": "node relay-hook.cjs pre-tool",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/hooks.json#L16"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/proto-scrub.cjs",
+        "line": 178,
+        "snippet": "db.exec(\"BEGIN\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/lib/proto-scrub.cjs#L178"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/proto-scrub.cjs",
+        "line": 201,
+        "snippet": "db.exec(\"COMMIT\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/lib/proto-scrub.cjs#L201"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "relay-hook.cjs",
+        "line": 102,
+        "snippet": "const child = spawn(process.execPath, [mainScript], { detached: true, stdio: \"ignore\", windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/relay-hook.cjs#L102"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 125,
+        "snippet": "const out = execFileSync(\"powershell.exe\", [\"-NoProfile\", \"-Command\", ps], { encoding: \"utf8\", timeout: 5000, windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L125"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 150,
+        "snippet": "execFileSync(\"powershell.exe\", [\"-NoProfile\", \"-Command\", ps], { encoding: \"utf8\", timeout: 6000, windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L150"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 251,
+        "snippet": "const raw = execFileSync(\"powershell.exe\", [\"-NoProfile\", \"-Command\", psScript], { encoding: \"utf8\", timeout: 5000, windowsHide: true }).trim();",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L251"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 261,
+        "snippet": "const csrfMatch = /--csrf_token[=\\s]+([0-9a-fA-F-]+)/.exec(cmd);",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L261"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 2175,
+        "snippet": "execFileSync(\"powershell.exe\", [\"-NoProfile\", \"-Command\", stopCmd], { timeout: 4000, windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L2175"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 2357,
+        "snippet": "db.exec(\"BEGIN\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L2357"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 2380,
+        "snippet": "db.exec(\"COMMIT\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L2380"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 3133,
+        "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", authUrl.toString()], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L3133"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 559,
+        "snippet": "while ((match = regex.exec(rawText)) !== null) {",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/main.mjs#L559"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "relay-hook.cjs",
+        "line": 38,
+        "snippet": "fs.writeFileSync(tmp, serialized, \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/relay-hook.cjs#L38"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "relay-hook.cjs",
+        "line": 41,
+        "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/relay-hook.cjs#L41"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "relay-hook.cjs",
+        "line": 43,
+        "snippet": "fs.writeFileSync(filePath, serialized, \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/relay-hook.cjs#L43"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 76,
+        "snippet": "fetch(\"/api/set-language\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ lang: currentLang }) }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L76"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 324,
+        "snippet": "const res = await fetch(\"/api/probe-channel-quota\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ channelId }) });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L324"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1307,
+        "snippet": "const res = await fetch(`/api/status${force ? \"?force=1\" : \"\"}`);",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1307"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1331,
+        "snippet": "const res = await fetch(\"/api/discover-gcp-projects\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ email }) });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1331"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1361,
+        "snippet": "const res = await fetch(\"/api/add-gcp-channel\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ email: cleanEmail, projectId: \"__PERSONAL_",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1361"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1375,
+        "snippet": "fetch(\"/api/probe-channel-quota\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ channelId: `${cleanEmail}#personal` }) })",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1375"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1396,
+        "snippet": "const res = await fetch(\"/api/add-gcp-channel\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ email, projectId: packedPid, gcpBillingMod",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1396"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1417,
+        "snippet": "const res = await fetch(\"/api/add-gcp-channel\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ email, projectId: packedPid, gcpBillingMod",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1417"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1438,
+        "snippet": "const res = await fetch(\"/api/save-current-account\", { method: \"POST\" });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1438"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1450,
+        "snippet": "const res = await fetch(\"/api/start-oauth-login\", { method: \"POST\" });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1450"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1462,
+        "snippet": "const res = await fetch(\"/api/cancel-oauth-login\", { method: \"POST\" });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1462"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1474,
+        "snippet": "const res = await fetch(\"/api/switch-project\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ projectId }) });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1474"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1497,
+        "snippet": "const res = await fetch(\"/api/switch-account\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ accountId }) });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1497"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1518,
+        "snippet": "const res = await fetch(\"/api/delete-account\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ accountId }) });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1518"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/app.js",
+        "line": 1534,
+        "snippet": "const res = await fetch(\"/api/save-routing\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(payload) });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/app.js#L1534"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 159,
+        "snippet": "fs.writeFileSync(JETSKI_TOKEN_FILE, jsonStr, { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L159"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 1031,
+        "snippet": "const req = https.request( { hostname: \"oauth2.googleapis.com\", port: 443, path: \"/token\", method: \"POST\", headers: { \"Content-Type\": \"application/x-www-form-urlencoded\", \"Content-",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L1031"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 1085,
+        "snippet": "const req = https.request( { hostname: \"cloudresourcemanager.googleapis.com\", port: 443, path: \"/v1/projects?filter=lifecycleState%3AACTIVE&pageSize=50\", method: \"GET\", headers: { ",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L1085"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 1130,
+        "snippet": "const req = https.request( { hostname: \"daily-cloudcode-pa.googleapis.com\", port: 443, path: endpointPath, method: \"POST\", headers: { Authorization: `Bearer ${accessToken}`, \"Conte",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L1130"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 2662,
+        "snippet": "const upReq = https.request( { hostname: \"daily-cloudcode-pa.googleapis.com\", port: 443, path: reqUrl, method: req.method || \"POST\", headers: outHeaders, timeout: 120000 }, (upRes)",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L2662"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 2776,
+        "snippet": "const req = http.request( { hostname: \"127.0.0.1\", port, path: \"/__agy_proxy_ping\", method: \"GET\", timeout: 350 }, (res) => { const chunks = []; res.on(\"data\", (c) => chunks.push(c",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L2776"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/ls-bridge.mjs",
+        "line": 2980,
+        "snippet": "const req = https.request( { hostname: \"oauth2.googleapis.com\", port: 443, path: \"/token\", method: \"POST\", headers: { \"Content-Type\": \"application/x-www-form-urlencoded\", \"Content-",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/ls-bridge.mjs#L2980"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 489,
+        "snippet": "fs.writeFileSync(pluginJsonPath, JSON.stringify(pj, null, 2), \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/main.mjs#L489"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 495,
+        "snippet": "fs.writeFileSync(localSidecarPath, JSON.stringify(sj, null, 2), \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/main.mjs#L495"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 520,
+        "snippet": "const evictReq = http.request({ hostname: \"127.0.0.1\", port: 8089, path: \"/api/restart-sidecar?onlyStandalone=1\", method: \"POST\", timeout: 500 }, () => {});",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/main.mjs#L520"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/store.mjs",
+        "line": 164,
+        "snippet": "fs.writeFileSync(tmpPath, serialized, \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/store.mjs#L164"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/store.mjs",
+        "line": 167,
+        "snippet": "try { if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath); } catch (e) {}",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/store.mjs#L167"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/store.mjs",
+        "line": 168,
+        "snippet": "fs.writeFileSync(RELAY_CONFIG_FILE, serialized, \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/store.mjs#L168"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/store.mjs",
+        "line": 172,
+        "snippet": "fs.writeFileSync(RELAY_CONFIG_BAK, serialized, \"utf-8\");",
+        "githubBlobUrl": "https://github.com/ToruOlenyeva/antigravity-relay/blob/8f74afbfd6441bd7c5400b00ccd0159664a7c9a6/sidecars/panel/store.mjs#L172"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.0.0",
+      "sha": "8f74afbfd6441bd7c5400b00ccd0159664a7c9a6",
+      "scannedAt": "2026-11-27T18:15:54.890Z",
+      "riskTier": "high",
+      "capabilities": [
+        "credential_access",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

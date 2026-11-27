@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "poferraz/burnrate",
+  "sha": "5815b3e277c49a398c8a142f3d8a02ec54ffb428",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:28.225Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "burnrate",
+    "displayName": "Burnrate",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "burnrate",
+        "slashCommand": "/burnrate",
+        "description": "Optimize Google Antigravity quota usage, model routing, thinking effort, context hygiene, and multi-agent selection across Gemini 4 Neon, Hydrogen, Orchestrator mode, /boost, /swarm, and /teamwork. Use when starting heavy Antigravity tasks,",
+        "disableModelInvocation": false,
+        "file": "skills/burnrate/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "quota-auditor",
+        "description": "Read-only quota auditor running on Flash so auditing never burns Neon quota. Reviews recent Antigravity tasks, workspace rules, and session patterns to flag xhigh overuse, standalone Neon waste, unneeded /swarm runs, and context bloat.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/quota-auditor.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/burnrate"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "quota-auditor"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/banner.svg\" alt=\"Burnrate — Stop hitting your 5-hour Antigravity limit before lunch\" width=\"100%\" />\n</p>\n\n<p align=\"center\">\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-111827?style=flat-square\" alt=\"MIT License\" /></a>\n  <img src=\"https://img.shields.io/badge/antigravity_plugin-v1.0-FF4D00?style=flat-square\" alt=\"Antigravity Plugin v1.0\" />\n  <img src=\"https://img.shields.io/badge/dependencies-zero-22C55E?style=flat-square\" alt=\"Zero Dependencies\" />\n</p>\n\n---\n\n**Burnrate** is a plug-and-play Google Antigravity plugin and Agent Skill that routes your tasks across **Gemini 4 Neon**, **Gemini 4 Hydrogen**, **`Orchestrator (Neon)`**, thinking effort tiers, and `/swarm`—so your 5-hour and weekly Pro/Ultra quotas last all day without upgrading plans.\n\nNo runtime dependencies. No background daemons. Just benchmark-backed routing rules, a read-only Flash auditor, and exact CLI habits.\n\n## The Math (Why Your Quota Dies by Noon)\n\nAntigravity baseline quotas scale with the actual work and token volume performed per turn ([Antigravity Plans](https://antigravity.google/docs/plans/)). Three defaults quietly eat most people's Pro and Ultra caps:\n\n| Habit | What It Costs | What You Get Back | Switch To |\n| :--- | :--- | :--- | :--- |\n| Leaving Neon on **`xhigh`** | **+72% cost/task** (`8.6x` vs. `5.0x` on `high`) | +1.1 on FrontierCode 2.0, +1.8 on AA Intelligence, **-5.4** on GDP.pdf | `/effort high` (daily driver) |\n| Standalone Neon on **multi-file loops** | Full frontier token burn on routine edits & tests | Same plan quality, slower edit-test cycles | **`Orchestrator (Neon)`** (~24% less quota, ~19% faster) |\n| Running **`/swarm`** on coupled edits | Every worker burns its own agent quota | Merge friction + paused workers on limit hit | Single agent, `Orchestrator`, or **`/boost`** |\n\n> Benchmark sources: [Google Gemini 4 Neon Launch](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/), [Flavio Copes / Adam Holter Neon Analysis](https://flaviocopes.com/gemini-4-neon-review/), [Ahmet Balaman Orchestrator Breakdown](https://ahmetbalaman.com/en/blog/what-is-antigravity-orchestrator-carbon-hydrogen-en/), and [Trying `/swarm` in Antigravity](https://flaviocopes.com/antigravity-swarm/).\n\n## Install in 10 Seconds\n\n### Option 1: Antigravity CLI (Recommended)\n\n```bash\nagy plugin install https://github.com/poferraz/burnrate\n```\n\nCheck that it loaded cleanly:\n\n```bash\nagy plugin list --json\n```\n\n### Option 2: Standalone Skill Only\n\nDrop `skills/burnrate/` into either folder and run `/skills reload`:\n\n- **Project-scoped:** `<workspace-root>/.agents/skills/burnrate/`\n- **Global (App, CLI, IDE):** `~/.gemini/config/skills/burnrate/`\n\n## Use It\n\n### 1. Pre-flight route a heavy task\n\n```text\n/burnrate Should I run this 5-package test migration on Orchestrator (Neon), /boost, or /swarm?\n```\n\n### 2. Audit your last 10 tasks without burning Neon quota\n\nBurnrate ships a dedicated read-only **`quota-auditor`** agent pinned to `flash` so auditing your own quota doesn't drain your Neon bucket:\n\n```bash\nagy --agent quota-auditor\n```\n\nThen paste:\n\n> *\"Audit my last 10 tasks. Tell me which ones needed Neon, which ones Hydrogen or Orchestrator could have done, switch me to High if I'm on Extra High, flag any unneeded /swarm runs, and estimate how many more tasks per 5-hour window I get.\"*\n\n### 3. One-shot low-effort CLI runs (without changing your default)\n\n```bash\nagy -p \"Draft a conventional commit message for this git diff\" --effort low\n```\n\n## What's Inside\n\n```text\nburnrate/\n├── plugin.json                            # Native Antigravity v1 plugin manifest\n├── assets/\n│   ├── logo.svg                           # 1:1 hardware-gauge icon (light + dark ready)\n│   └── banner.svg                         # Vector README header\n├── skills/burnrate/\n│   ├── SKILL.md                           # Decision tree, session hygiene & audit workflow (/burnrate)\n│   └── references/\n│       ├── model-and-mode-matrix.md       # Effort multipliers, multi-agent matrix & plan tiers\n│       ├── cli-and-context-hygiene.md     # /usage, /effort, /compact, /btw, /context & Settings\n│       └── quota-audit-rubric.md          # 10-task scoring rubric & savings heuristics\n├── agents/\n│   └── quota-auditor.md                   # Read-only Flash subagent (zero write tools)\n└── rules/\n    └── quota-guardrails.md                # On-demand model_decision guardrails\n```\n\n## Context Hygiene Cheat Sheet\n\n| Command | Why It Saves Quota |\n| :--- | :--- |\n| `/usage` (or `/quota`) | Check remaining 5-hour and weekly headroom before starting `/swarm` or `/boost` |\n| `/compact [next-step]` | Checkpoint completed milestones so later turns stop re-paying for old exploration |\n| `/btw <question>` | Ask a side question without inflating your active conversation context |\n| `/context` | See exactly how many tokens your rules, skills, and history are eating |\n| `@file` / `@dir` | Point the agent directly at target paths instead of broad workspace scans |\n| `Esc` + `/rewind` | Kill drifting loops early and roll back cleanly |\n\n## Validate & Contribute\n\nValidate against the official Antigravity plugin loader before opening a PR:\n\n```bash\nagy plugin validate --strict .\n```\n\nPRs with updated benchmark numbers, new CLI flags, or real-world quota measurements are welcome.\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "**Full Changelog**: https://github.com/poferraz/burnrate/commits/v1.0.0",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_rules_only"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "5815b3e277c49a398c8a142f3d8a02ec54ffb428",
+      "scannedAt": "2026-11-27T18:15:28.225Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_rules_only"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "id": "Adspirer/adspirer-social-ads-antigravity-plugin",
+  "sha": "d995c8dd9887a1335d932b250fc75d3f345d3d57",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:05.683Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "adspirer-social-ads",
+    "displayName": "Adspirer Social Ads",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "social-ads",
+        "runtimeName": "adspirer-social-ads_social-ads",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.adspirer.com/social-ads"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "adspirer-paid-social",
+        "slashCommand": "/adspirer-paid-social",
+        "description": "Plan and coordinate Meta and TikTok advertising through Adspirer. Use for paid-social strategy, campaign planning, or tasks spanning reporting, creative, and optimization.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-paid-social/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-ad-creative",
+        "slashCommand": "/adspirer-social-ad-creative",
+        "description": "Write and refresh Meta and TikTok ad creative through Adspirer. Use for ad copy, creative concepts, fatigue analysis, and proposed tests based on brand and performance evidence.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-ad-creative/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-ads-optimization",
+        "slashCommand": "/adspirer-social-ads-optimization",
+        "description": "Find wasted Meta and TikTok spend and improve budget pacing through Adspirer. Use for paid-social optimization recommendations and user-approved changes.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-ads-optimization/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-ads-performance",
+        "slashCommand": "/adspirer-social-ads-performance",
+        "description": "Analyze Meta and TikTok campaign performance through Adspirer. Use for read-only spend, CPA, ROAS, CTR, pacing, and period comparisons with attribution and tracking checks.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-ads-performance/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-ads-status",
+        "slashCommand": "/adspirer-social-ads-status",
+        "description": "Show which Meta and TikTok ad accounts are connected and active on Adspirer Social Ads, and how much plan usage is left. Use when the user asks what is connected, whether a connection is healthy, or how much usage remains.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-ads-status/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-ads-tools",
+        "slashCommand": "/adspirer-social-ads-tools",
+        "description": "Discover and call Meta and TikTok advertising tools through the Adspirer Social Ads connection. Use before tool calls to check schemas, choose read or write operations, and handle errors.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-ads-tools/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-ads-wasted-spend",
+        "slashCommand": "/adspirer-social-ads-wasted-spend",
+        "description": "Find Meta and TikTok ad spend that is not converting, such as campaigns, ad sets, placements and tired creatives, and propose fixes that are applied only after the user approves. Use when the user asks where budget is being wasted or what t",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-ads-wasted-spend/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-campaign-launch",
+        "slashCommand": "/adspirer-social-campaign-launch",
+        "description": "Plan and create Meta and TikTok campaigns through Adspirer. Use for new paid-social campaign builds with approved budgets, targeting, creative, paused creation, and readback.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-campaign-launch/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-competitor-research",
+        "slashCommand": "/adspirer-social-competitor-research",
+        "description": "Research competitor social ads through Adspirer. Use for public Meta and TikTok creative, offers, and messaging from user-supplied domains, subject to source coverage.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-competitor-research/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-connect-ad-accounts",
+        "slashCommand": "/adspirer-social-connect-ad-accounts",
+        "description": "Connect Meta and TikTok ad accounts to Adspirer and check connection status. Use for account setup, reconnection, or an optional user-requested brand workspace.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-connect-ad-accounts/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-conversion-analysis",
+        "slashCommand": "/adspirer-social-conversion-analysis",
+        "description": "Diagnose Meta and TikTok conversion problems through Adspirer. Use for paid-social funnel analysis, tracking gaps, and traffic that does not convert, using available evidence.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-conversion-analysis/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-meta-ads",
+        "slashCommand": "/adspirer-social-meta-ads",
+        "description": "Create, analyze, and optimize Meta Ads for Facebook and Instagram through Adspirer Social Ads. Use for campaigns, ad sets, audiences, pixels, creative, and performance with approval before changes.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-meta-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-product-help",
+        "slashCommand": "/adspirer-social-product-help",
+        "description": "Answer Adspirer pricing, plan, setup, and troubleshooting questions using current official documentation. Distinguish product capabilities from this connector's Meta and TikTok tools.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-product-help/SKILL.md"
+      },
+      {
+        "name": "adspirer-social-tiktok-ads",
+        "slashCommand": "/adspirer-social-tiktok-ads",
+        "description": "Create, analyze, and optimize TikTok Ads through Adspirer Social Ads. Use for campaigns, Spark Ads, ad groups, pixels, budgets, and performance; discover supported formats before building.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-social-tiktok-ads/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/adspirer-paid-social",
+      "/adspirer-social-ad-creative",
+      "/adspirer-social-ads-optimization",
+      "/adspirer-social-ads-performance",
+      "/adspirer-social-ads-status",
+      "/adspirer-social-ads-tools",
+      "/adspirer-social-ads-wasted-spend",
+      "/adspirer-social-campaign-launch",
+      "/adspirer-social-competitor-research",
+      "/adspirer-social-connect-ad-accounts",
+      "/adspirer-social-conversion-analysis",
+      "/adspirer-social-meta-ads",
+      "/adspirer-social-product-help",
+      "/adspirer-social-tiktok-ads"
+    ],
+    "mcpServerNames": [
+      "adspirer-social-ads_social-ads"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Adspirer Social Ads for Antigravity\n\nRun paid social from Antigravity. Adspirer Social Ads connects the agent to your live Meta Ads (Facebook and Instagram) and TikTok Ads accounts through Adspirer's hosted Social Ads MCP server, so you can report on results, catch creative fatigue, research competitors, and plan, launch and optimize campaigns without leaving the conversation.\n\n## Use it for\n\n- **Reporting:** spend, ROAS, CPA, CTR and conversions by campaign, ad set and ad, with audience, placement and geographic breakdowns.\n- **Creative:** spot creative fatigue from frequency and CTR trends, compare winning and losing ads, and draft new concepts.\n- **Campaigns:** build Meta image, video, carousel, dynamic creative and Advantage+ catalog campaigns, and TikTok video campaigns, created paused.\n- **Optimization:** wasted-spend analysis, budget reallocation, placement optimization, and anomaly explanations.\n- **Leads:** list Meta lead forms and read their submissions.\n- **Competitors:** see the public ads a competitor is running now, beside your own.\n\n## Install\n\n**Antigravity app:** open **Customizations**, find **Adspirer Social Ads** in the\nMarketplace, and install it.\n\n**Antigravity CLI:**\n\n```text\nagy plugin install https://github.com/Adspirer/adspirer-social-ads-antigravity-plugin\n```\n\n**Manual:** clone this repository into your plugins folder.\n\n```text\ngit clone https://github.com/Adspirer/adspirer-social-ads-antigravity-plugin ~/.gemini/config/plugins/adspirer-social-ads\n```\n\nThen sign in: open **Customizations**, then **Installed**, then **MCP Servers**, and choose\n**Authenticate** next to the Adspirer server. Sign in to Adspirer in the browser, then connect the\naccounts you want to use at [adspirer.ai/connections](https://adspirer.ai/connections). No\nAPI key or client secret is required. An Adspirer account is required, and plan usage limits apply.\n\n## Get started\n\nAsk:\n\n```text\nHow did my Meta and TikTok campaigns do over the last 30 days? Don't change anything.\nIs my falling CTR on Instagram caused by creative fatigue?\nWhich Meta placements and age groups are wasting spend?\nPropose three new creative concepts based on my best-performing ads.\nPlan a Meta campaign within a $50 daily budget and create it paused after I approve.\n```\n\nOr start with a skill by name:\n\n| Skill | What it does |\n| --- | --- |\n| `/adspirer-social-connect-ad-accounts` | Connect your accounts and get a first look |\n| `/adspirer-social-ads-status` | Connected accounts and remaining plan usage |\n| `/adspirer-social-ads-performance` | Scorecard against the previous period, with the top problems |\n| `/adspirer-social-ads-wasted-spend` | Spend that is not converting, with fixes applied only after you approve |\n\nAdd a platform and period if you want, for example `/adspirer-social-ads-performance last 7 days`.\n\n## What the agent can do\n\n| Area | Capabilities |\n| --- | --- |\n| Meta Ads | Facebook and Instagram campaigns, ad sets, ads, custom audiences, pixels, lead forms, catalogs, product sets and app promotion |\n| TikTok Ads | Campaigns, ad groups, ads, identities, pixels, Instant Forms, custom and saved audiences, and the video library |\n| Reporting | Campaign, ad set and ad performance, audience demographics, placements, geography, catalog product performance, and app installs |\n| Diagnostics | Wasted spend, creative fatigue, performance anomalies, and catalog funnel and waste |\n| Competitor research | The public ads a competitor is running now, beside your own |\n\nMeta (Facebook and Instagram) and TikTok are the advertising platforms on this connector. Google, Microsoft, LinkedIn, Amazon and Walmart are not included, and the plugin does not publish organic social posts.\n\n## What's included\n\n- **Skills** (`skills/`): the four entry points above, plus `adspirer-paid-social`, `adspirer-social-ad-creative`, `adspirer-social-ads-optimization`, `adspirer-social-ads-tools`, `adspirer-social-campaign-launch`, `adspirer-social-competitor-research`, `adspirer-social-conversion-analysis`, `adspirer-social-meta-ads`, `adspirer-social-product-help` and `adspirer-social-tiktok-ads`,\n  which the agent loads when a request needs them.\n- **A rule** (`rules/adspirer-social-ads.md`) that loads only for Meta Ads (Facebook and Instagram) and TikTok Ads requests and\n  keeps every spend-affecting change behind your approval.\n- **The Adspirer Social Ads MCP server** connection (`mcp_config.json`).\n\nThe hosted server is the source of truth for tool names and schemas. The skills teach the agent to\ndiscover the current tools and their parameters instead of hardcoding every operation.\n\n## Safety\n\n- The agent reads account state and performance before proposing changes.\n- New campaigns are created paused, and enabling them is a separate decision.\n- Campaign creation, budget changes, bid changes, and other spend-affecting writes require your\n  explicit approval. The server also holds spend-affecting and irreversible writes until they are\n  confirmed.\n- The agent reads created or changed resources back before reporting success.\n- Campaigns are never deleted automatically.\n- Tool results, competitor ads and website text are treated as data, never as instructions.\n- **No purchases.** The agent never buys, upgrades or renews a plan or paid feature. If a plan\n  limit is reached, it stops and explains the limit.\n\n## MCP and authentication\n\n```json\n{\n  \"mcpServers\": {\n    \"social-ads\": {\n      \"url\": \"https://mcp.adspirer.com/social-ads\"\n    }\n  }\n}\n```\n\nThe server speaks Streamable HTTP. Authentication uses OAuth 2.1 with PKCE and dynamic client\nregistration, so Antigravity handles the browser sign-in and the plugin contains no API keys,\ntokens, client secrets, or configuration variables. Ad-platform credentials stay server-side with\nAdspirer and are scoped to the accounts you connect.\n\n## Network and execution surface\n\nThe plugin's only MCP server is `https://mcp.adspirer.com/social-ads`. It contains no hooks,\nscripts, telemetry, local executables, or bundled server code. Skills and the rule are Markdown\nguidance. Beyond the Adspirer server, the skills may ask the agent to read Adspirer's public\ndocumentation at `adspirer.com/docs` to answer questions about plans and setup.\n\n## Related plugins\n\nAdspirer Social Ads is one of Adspirer's focused plugins. The full\n[Adspirer Advertising Agent](https://github.com/Adspirer/adspirer-antigravity-plugin) covers every\nsupported platform in one plugin, and\n[Adspirer Marketing Analytics](https://github.com/Adspirer/adspirer-analytics-antigravity-plugin)\nis a read-only reporting connector. Installing more than one is supported; use one connection per\ntask.\n\n## Support\n\nEmail [support@adspirer.com](mailto:support@adspirer.com) for help with installing, signing in or\nusing this plugin, or open an issue at\n[github.com/Adspirer/adspirer-social-ads-antigravity-plugin/issues](https://github.com/Adspirer/adspirer-social-ads-antigravity-plugin/issues).\nSee [SUPPORT.md](SUPPORT.md).\n\n## Privacy and source\n\n- Privacy policy: [adspirer.com/privacy](https://www.adspirer.com/privacy)\n- Terms: [adspirer.com/terms](https://www.adspirer.com/terms)\n- Documentation: [adspirer.com/docs](https://www.adspirer.com/docs)\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "d995c8dd9887a1335d932b250fc75d3f345d3d57",
+      "scannedAt": "2026-11-27T18:19:05.683Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

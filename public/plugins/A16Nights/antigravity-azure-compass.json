@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 1,
+  "id": "A16Nights/antigravity-azure-compass",
+  "sha": "3aeeec7a83b8664f8a53093e5b846c95b062cef1",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:55.110Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agent-presets",
+    "displayName": "苍蓝罗盘",
+    "version": "1.4.5",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "agent-presets-nav",
+        "runtimeName": "agent-presets_agent-presets-nav",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "./mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agent-presets",
+        "slashCommand": "/agent-presets",
+        "description": "苍蓝套件 Agent 预设中心：支持一键切换标准/协奏台省流/极简/只读审查/冷静工程等模式，每轮通过 PreInvocation 注入底层锚点并联动 soul-md 人设卡，内置上下文 Token 水位监测与媒体载荷防装死守卫（PreToolUse 硬拦截 + CHECKPOINT 自动重置）。",
+        "disableModelInvocation": false,
+        "file": "skills/agent-presets/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agent-presets"
+    ],
+    "mcpServerNames": [
+      "agent-presets_agent-presets-nav"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "PreToolUse",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝罗盘 · Azure Compass\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-compass/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-compass?style=flat-square&label=Release&color=60a5fa&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-compass/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-compass?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-60a5fa?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>一键切换 Agent 工作模式预设 · 全局 AGENTS.md 全会话无损热同步 · 上下文与媒体载荷防装死守卫 · 苍蓝套件左侧栏总控</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n面向 **Google Antigravity** 的 Agent 工作模式预设中心、上下文水位实时监测与苍蓝套件全局入口管理插件。通过 **静态规则（`rules/AGENTS.md`）+ 生命周期 Hook（`SessionStart` + `PreInvocation`）+ 可视化侧栏面板**，精准解决长会话或外接模型指令漂移、掉人设问题，并与 **[苍蓝魂匣（Soul.md）](https://github.com/A16Nights/antigravity-soul-md)**、**[蓝汐（Lanxi Memory）](https://github.com/A16Nights/antigravity-lanxi-memory)** 及原生 `/compact` 深度联动。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🧭 4 套内置 + 无限自定义预设</h4>\n内置 <code>standard</code> / <code>orchestrator</code> / <code>minimal</code> / <code>review</code>，支持自由新建、编辑与安全删除自定义模式，并联动 <code>soul-md</code> 自动切人设。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🛡️ 外接模型智能双通道防掉线</h4>\n内置 <code>external-model-guard</code>：仅在当前主模型为外接自定义模型时每轮注入前置锚点，原生模型自动跳过、零额外 Token 损耗。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>📈 上下文水位与媒体载荷防装死守卫</h4>\n实时读取活跃会话 <code>transcript.jsonl</code> 估算 Token 占比与 <code>CHECKPOINT</code> 后累计媒体体积，提供 55%/72% 自动 <code>/compact</code> 联动与 12MB/20MB 媒体硬拦截防装死。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🎛️ 苍蓝套件左侧栏入口总控</h4>\n集中管理本机已安装的 9 款苍蓝系列插件，一键单独开关任意插件在 Antigravity 左侧栏的全局快捷入口。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<p align=\"center\">\n  <a href=\"assets/readme/preview-panel.png\"><img src=\"assets/readme/preview-panel.png\" alt=\"苍蓝罗盘控制面板预览\" width=\"90%\"></a>\n  <br><strong>苍蓝罗盘 · Agent 预设中心、上下文水位监测与苍蓝套件左侧栏总控</strong>\n  <br><sub>外接模型智能前置强化开关、55%/72% 双阈值自动 /compact、4 套内置 + 自定义预设卡片与 8 插件左侧栏统一开关</sub>\n</p>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 内置 4 套核心工作模式预设\n- **`standard`（标准模式）**：均衡的日常软件工程、文件读写、命令执行与资料整理模式。\n- **`orchestrator`（协奏台省流模式）**：强约束主脑专注轻量规划与最终抽查验收，将多文件检索、>15 行代码编写、长日志排查与文本生成优先委派给 **[苍蓝协奏台](https://github.com/A16Nights/antigravity-external-orchestrator)** 中的高性价比外部模型执行。\n- **`minimal`（极简模式）**：最小化工具调用轮次与解释篇幅，直奔结论与核心代码。\n- **`review`（只读审查模式）**：专注代码走查、架构评估、安全审计与 Bug 定位，硬性约束禁止修改或覆写业务文件。\n\n### 2. 自定义预设管理（新建 / 编辑 / 删除）\n- 在「自定义」区域末尾点击 **`＋ 新建预设`** 虚线卡片即可创建专属工作模式：\n  - 自定义 **预设 ID**、**显示名称**、**一句话简介**；\n  - 编写 **完整静态规则正文**（切换模式时自动原子写入 `rules/AGENTS.md`）与 **每轮前置核心锚点（Anchor）**；\n  - **联动 Soul.md 人设卡**：可为每个预设绑定一张 `soul-md` 人设卡，切换工作模式时自动同步切换全局生效人设卡；\n  - 支持随时编辑已有自定义预设，或通过面板内毛玻璃确认弹窗安全删除（若删除当前生效预设，自动平滑切回 `standard`）。\n\n### 3. 外接模型智能识别与双通道防掉线\n- **`SessionStart` 开场锚定**：新会话启动时注入当前生效模式的核心行为边界。\n- **`PreInvocation` 每轮前置强化（外接模型智能守卫）**：\n  - 内置 `external-model-guard` 检测器，**仅在当前主模型为外接自定义模型时注入每轮强化锚点**；\n  - 使用 Antigravity 内置原生模型时自动跳过每轮注入，零额外 Token 损耗；\n  - 支持在面板顶栏一键开关每轮强化。\n\n### 4. 上下文监测与自动 `/compact` 压缩联动\n- **实时水位估算**：读取当前活跃会话的 `transcript.jsonl`，实时计算上下文 Token 占用百分比、累计步数与最近压缩断点（`CHECKPOINT`）。\n- **两级阈值预警**：\n  - **阶段提醒线（默认 55%）**：提示可在阶段性任务完成后主动整理上下文；\n  - **红线强提醒（默认 72%）**：抢在宿主黑盒硬截断前发出高优先级预警；\n  - 支持自由切换目标上下文窗口基准（`128k` / `200k` / `256k` / `500k` / `1M`）。\n- **原生 `/compact` 压缩与蓝汐归档联动**：\n  - 支持在面板一键触发 **「立即提炼并触发 `/compact`」**（通过本地 Language Server 接口触发原生上下文压缩，并联动蓝汐沉淀关键记忆）；\n  - 支持开启 **「达到红线自动触发压缩」**，无需手动干预即可保持长会话清爽。\n- **媒体载荷守卫（防图片/视频每轮重传导致 `working` 装死）**：\n  - **精确字节计量 + `CHECKPOINT` 自动归零**：实时解析最近一次 `CHECKPOINT` 之后的用户上传（`.user_uploaded/*`）与工具读取媒体（`.system_generated/logs/media/*`），覆盖图片、视频、音频与 PDF。\n  - **双防线护栏（可自由调节阈值）**：\n    - **`PreToolUse` 入口硬拦截**：读取单个超大媒体（默认 > `10 MB`）或累计载荷触及红线（默认 > `20 MB`）时，直接弹红字拦截 `read_file` 并给出压缩/改派子代理/`/compact` 建议，对代码和文本读取零开销；\n    - **`PreInvocation` 对话兜底预警**：达到黄灯（默认 `12 MB`）或红灯（默认 `20 MB`）时回合级去重提醒，重点警示**切勿在塞满媒体的老对话中途切换模型**（避免服务端缓存失效触发冷重传）。\n\n### 5. 全局 `AGENTS.md` 在线编辑与全会话无损热同步\n- **面板内双页签直编**：顶栏可一键切换 `🧭 模式预设与监测` 与 `📜 全局 AGENTS.md`，支持 `Ctrl+S` 保存、`Tab` 缩进与符号链接安全写入（若 `~/.gemini/config/AGENTS.md` 为软链接，直接覆写目标真文件，绝不破坏符号链接）。\n- **24 KB 原生上限计量 + 实时 Diff 预览**：按 UTF-8 字节实时展示占用进度条与 85% / 100% 预警；保存前可一键切换 `🔍 Diff 预览` 核对行级增删差异。\n- **自动快照与一键回滚**：每次保存、回滚或感知到外部编辑器改盘时自动留存最近 20 版快照（`~/.gemini/agent-presets/agents-snapshots/`），支持任意版本 Diff 对比与一键回滚。\n- **全模型老会话零浪费热同步**：所有模型（含原生模型与外接模型）均由 `SessionStart` + `PreInvocation` 协同追踪文件哈希——规则未改时返回空响应（0 Token、不破坏 Prompt Cache），仅在改过后的下一轮对仍在运行的旧会话单次推送「变更 Diff 摘要 + 最新全文」，新会话自动跳过不重复注入。\n\n### 6. 苍蓝套件 · 左侧栏快捷入口统一管理\n- 在面板底部集中展示本机已安装的苍蓝系列 9 款插件（苍蓝罗盘、苍蓝回廊、苍蓝星轨、苍蓝协奏台、蓝汐认知图谱、苍蓝魂匣、思语中文、苍蓝棱镜、苍蓝魔杖）；\n- 支持一键单独开启或关闭任意插件在 Antigravity 左侧栏的全局快捷入口（关闭左侧栏入口后，仍可在右侧辅助栏或通过对话正常打开）。\n\n### 7. 苍蓝统一视觉与交互体系\n- **Neko Glass 毛玻璃界面**：支持深色 / 浅色明暗双主题切换、自定义毛玻璃下拉框（`AzureSelect`）与 7px 细圆角滚动条。\n- **跨插件共享「苍蓝主题色调中心」**：内置 6 套官方主题预设、自定义主副双色取色器及 4 个自定义保存栏位，一处切换全套件实时同步。\n- **独立 Web UI & 在线更新检查**：点击顶栏 `Web UI` 即可在系统默认浏览器全屏打开；点击顶栏版本号徽章可实时对比 GitHub Release 最新版本。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart TD\n  A[\"苍蓝罗盘 Sidecar 面板\"] -->|\"切换预设\"| B[\"原子写入 rules/AGENTS.md\"]\n  A -.->|\"绑定联动\"| S[\"苍蓝魂匣 Soul.md 切人设\"]\n  A -->|\"统一开关\"| N[\"~/.gemini/azure-sidebar-nav.json<br/>8 插件左侧栏入口控制\"]\n  H[\"SessionStart / PreInvocation Hook\"] -->|\"external-model-guard\"| M{\"当前是否外接模型?\"}\n  M -->|\"是\"| I[\"注入每轮核心锚点\"]\n  M -->|\"否（原生模型）\"| K[\"跳过重复注入 · 零开销\"]\n  T[\"活跃会话 transcript.jsonl\"] -->|\"水位估算 55% / 72%\"| C[\"一键或红线自动触发 /compact\"]\n  T -->|\"CHECKPOINT 后媒体统计\"| G[\"PreToolUse / PreInvocation<br/>12MB 黄灯 · 20MB 硬拦截防装死\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-compass.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `agent-presets`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-compass.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\agent-presets\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-azure-compass.git ~/.gemini/config/plugins/agent-presets\n```\n\n重启或重载 Antigravity（`Ctrl+R`），在 **Plugins** 面板确认 **苍蓝罗盘** 已启用，即可从左侧栏或右侧辅助面板打开。\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **预设与上下文监测配置**：`~/.gemini/agent-presets/config.json`\n- **全局 AGENTS.md 热同步状态与快照**：`~/.gemini/agent-presets/agents-sync-state.json`、`~/.gemini/agent-presets/agents-snapshots/`\n- **苍蓝套件左侧栏显示配置**：`~/.gemini/azure-sidebar-nav.json`\n- **苍蓝套件共享主题配置**：`~/.gemini/azure-theme.json`\n\n> 所有用户配置与插件代码目录完全隔离，升级插件不会丢失自定义预设。\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 9 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘** &nbsp;`✦ 当前仓库` | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 只读原生会话 FTS5 全文检索、自定义项目分组、优先级标签与独立安全归档箱 |\n| 🌌 **蓝汐 · 潮汐认知图谱** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 内部思考语言简体中文 / 英文双档热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
+  "latestReleaseNotes": "### ✨ 新增功能\n- **媒体载荷防装死守卫（`lib/media-guard.mjs`）**：精确扫描当前会话 `transcript.jsonl` 在最近一次 `CHECKPOINT` 之后累计的用户上传（`.user_uploaded/*`）与工具读入媒体（`.system_generated/logs/media/*`），覆盖图片、视频、音频与 PDF，执行 `/compact` 生成新 `CHECKPOINT` 后自动归零。\n- **`PreToolUse` 入口硬拦截（`hooks/pre-tool-use.mjs`）**：仅匹配 `read_file|view_file|Read`，对代码/文本文件零开销放行；超过单文件上限（默认 `10 MB`）或累计红线（默认 `20 MB`）时直接返回红字拦截与压缩/子代理/`/compact` 建议，防止每轮全量重传引发界面无限 `working` 装死。\n- **`PreInvocation` 对话兜底预警（`hooks/pre-invocation.mjs`）**：兜底覆盖用户粘贴图片与 MCP 截图，提供黄灯（`12 MB`）/ 红灯（`20 MB`）回合级去重提醒，重点警示切勿在塞满媒体的老对话中途切换模型。\n- **罗盘面板可视化联动（`sidecars/presets/index.html`）**：在「上下文监测」卡片内集成媒体载荷守卫开关、硬拦截开关、3 档阈值滑块、实时进度条与最大文件提示。\n\n### 📝 文档与配置\n- 同步更新 `plugin.json`、`SKILL.md`、`README.md` 与 `README.en.md`。\n- 升级后按 `Ctrl+R` 重载 Antigravity 即可启用新增的 `PreToolUse` 钩子。",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 82,
+        "snippet": "const slotMatch = /^slot-([0-9]+)$/.exec(activeId);",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L82"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 213,
+        "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", href], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L213"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 219,
+        "snippet": "spawn(\"open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L219"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 221,
+        "snippet": "spawn(\"xdg-open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/media-guard.mjs",
+        "line": 185,
+        "snippet": "while ((match = checkpointRegex.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/media-guard.mjs#L185"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/store.mjs",
+        "line": 288,
+        "snippet": "while ((match = checkpointRegex.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/store.mjs#L288"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/presets/server.mjs",
+        "line": 64,
+        "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", targetPath], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/sidecars/presets/server.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/presets/server.mjs",
+        "line": 70,
+        "snippet": "spawn(\"open\", [targetPath], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/sidecars/presets/server.mjs#L70"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/presets/server.mjs",
+        "line": 72,
+        "snippet": "spawn(\"xdg-open\", [targetPath], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/sidecars/presets/server.mjs#L72"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/agents-sync.mjs",
+        "line": 25,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/agents-sync.mjs#L25"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/agents-sync.mjs",
+        "line": 32,
+        "snippet": "fs.writeFileSync(tmp, String(text ?? \"\"), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/agents-sync.mjs#L32"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/agents-sync.mjs",
+        "line": 169,
+        "snippet": "fs.writeFileSync(writePath, finalText, \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/agents-sync.mjs#L169"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/agents-sync.mjs",
+        "line": 445,
+        "snippet": "if (fs.existsSync(oldFile)) fs.unlinkSync(oldFile);",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/agents-sync.mjs#L445"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-theme.mjs",
+        "line": 125,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(clean, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L125"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-theme.mjs",
+        "line": 128,
+        "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L128"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/compactor.mjs",
+        "line": 196,
+        "snippet": "const res = await fetch(`${base}/chat/completions`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\", ...(p.apiKey ? { Authorization: `Bearer ${p.apiKey}` } : {}), .",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/compactor.mjs#L196"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/compactor.mjs",
+        "line": 222,
+        "snippet": "const res = await fetch(`${base}/messages`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\", \"x-api-key\": String(p.apiKey || \"\"), \"anthropic-version\": \"2023-06-01\",",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/compactor.mjs#L222"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/ls-client.mjs",
+        "line": 113,
+        "snippet": "const res = await fetch(url, { method: \"POST\", headers: { \"Content-Type\": \"application/json\", \"Connect-Protocol-Version\": \"1\", ...(hub.csrfToken ? { \"x-codeium-csrf-token\": String(",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/ls-client.mjs#L113"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/plugin-updater.mjs",
+        "line": 55,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L55"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/plugin-updater.mjs",
+        "line": 58,
+        "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L58"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/plugin-updater.mjs",
+        "line": 287,
+        "snippet": "return await fetch(url, { ...options, signal: controller.signal });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L287"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/sidebar-nav.mjs",
+        "line": 132,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/sidebar-nav.mjs#L132"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/sidebar-nav.mjs",
+        "line": 176,
+        "snippet": "fs.writeFileSync(file, JSON.stringify(payload, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/sidebar-nav.mjs#L176"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/sidebar-nav.mjs",
+        "line": 225,
+        "snippet": "const req = https.request( { hostname: \"127.0.0.1\", port: Number(hub.httpsPort), path: \"/exa.language_server_pb.LanguageServerService/RefreshMcpServers\", method: \"POST\", rejectUnau",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/sidebar-nav.mjs#L225"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/store.mjs",
+        "line": 135,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(cfg, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/store.mjs#L135"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/store.mjs",
+        "line": 138,
+        "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/store.mjs#L138"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/store.mjs",
+        "line": 467,
+        "snippet": "fs.writeFileSync(filePath, JSON.stringify(next, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/store.mjs#L467"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/store.mjs",
+        "line": 573,
+        "snippet": "fs.writeFileSync(tmpPath, JSON.stringify({ seq: Number(state?.seq) || 0, conversations: kept }, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/store.mjs#L573"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/update-checker.mjs",
+        "line": 64,
+        "snippet": "return await fetch(url, { ...options, signal: controller.signal });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/update-checker.mjs#L64"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/azure-theme.mjs",
+        "line": 3,
+        "snippet": "* 配置文件路径：~/.gemini/azure-theme.json",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/azure-theme.mjs#L3"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/external-model-guard.mjs",
+        "line": 41,
+        "snippet": "* - 外接模型（命中 ~/.gemini/antigravity/custom_models.json，或使用多级外接路径 models/<provider>/<model>）返回 true。",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/external-model-guard.mjs#L41"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/plugin-updater.mjs",
+        "line": 5,
+        "snippet": "* - ~/.gemini/config/plugins/<id>/plugin.json",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L5"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/plugin-updater.mjs",
+        "line": 6,
+        "snippet": "* - ~/.gemini/config/config.json（installedFrom / enabled）",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L6"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/plugin-updater.mjs",
+        "line": 7,
+        "snippet": "* - ~/.gemini/config/plugins/<id>/.git/config（origin remote）",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L7"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/plugin-updater.mjs",
+        "line": 8,
+        "snippet": "* - 用户自定义绑定：~/.gemini/agent-presets/plugin-repos.json",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L8"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/plugin-updater.mjs",
+        "line": 9,
+        "snippet": "* - 检查结果缓存：~/.gemini/agent-presets/plugin-updates-cache.json",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-compass/blob/3aeeec7a83b8664f8a53093e5b846c95b062cef1/lib/plugin-updater.mjs#L9"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.4.5",
+      "sha": "3aeeec7a83b8664f8a53093e5b846c95b062cef1",
+      "scannedAt": "2026-11-27T18:17:55.110Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

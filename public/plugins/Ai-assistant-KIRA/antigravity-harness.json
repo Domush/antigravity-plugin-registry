@@ -1,0 +1,594 @@
+{
+  "schemaVersion": 1,
+  "id": "Ai-assistant-KIRA/antigravity-harness",
+  "sha": "fc610b166b8ccd1be46128a205517d3da3e47dc9",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:49.635Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "harness",
+    "displayName": "Harness²",
+    "version": "2.3.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "harness-lifecycle",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "python -X utf8 scripts/hook_runner.py post-tool-use",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "harness-control",
+        "slashCommand": "/harness-control",
+        "description": "Use when the user asks about Harness², learned rules, memory, self-improvement, synthesized skills, or wants to inspect, reflect on, export, sanitize, or manage the Harness plugin. Covers harness status, reflect, skills, memory, rules, and ",
+        "disableModelInvocation": false,
+        "file": "skills/harness-control/SKILL.md"
+      },
+      {
+        "name": "harness-handoff",
+        "slashCommand": "/harness-handoff",
+        "description": "Use when a task is long, context is getting crowded, work is being paused, or another agent/session must continue. Produces a compact, deterministic handoff with state, decisions, files, commands, failures, and the next action.",
+        "disableModelInvocation": false,
+        "file": "skills/harness-handoff/SKILL.md"
+      },
+      {
+        "name": "harness-recall",
+        "slashCommand": "/harness-recall",
+        "description": "Use when a command fails with an error you may have seen before, or when the user asks what Harness² learned about a topic. Searches verified lessons and installed skills for the exact request or error signature.",
+        "disableModelInvocation": false,
+        "file": "skills/harness-recall/SKILL.md"
+      },
+      {
+        "name": "harness-reflector",
+        "slashCommand": "/harness-reflector",
+        "description": "Use when the user asks to \"learn from this task\", \"save this workflow as a skill\", \"update AGENTS.md with lessons\", or reflect on a completed debugging or implementation session. Produces verified, scoped rules and reusable skills instead o",
+        "disableModelInvocation": false,
+        "file": "skills/harness-reflector/SKILL.md"
+      },
+      {
+        "name": "harness-skill-author",
+        "slashCommand": "/harness-skill-author",
+        "description": "Use when creating, reviewing, or improving an Antigravity skill (SKILL.md), or when a repeated workflow should become a reusable skill. Covers frontmatter, trigger descriptions, progressive disclosure, verification, and safe attribution.",
+        "disableModelInvocation": false,
+        "file": "skills/harness-skill-author/SKILL.md"
+      },
+      {
+        "name": "systematic-debugging",
+        "slashCommand": "/systematic-debugging",
+        "description": "Use when debugging a crash, failing test, flaky behavior, regression, build failure, or unexpected tool output. Enforces reproduction, evidence, root cause analysis, and verification before a fix, instead of shotgun changes.",
+        "disableModelInvocation": false,
+        "file": "skills/systematic-debugging/SKILL.md"
+      },
+      {
+        "name": "verification-before-completion",
+        "slashCommand": "/verification-before-completion",
+        "description": "Use before claiming a task is complete, fixed, tested, deployed, or working. Requires fresh command output and concrete evidence for every completion claim, and forbids \"should work\" or \"probably fixed\" statements.",
+        "disableModelInvocation": false,
+        "file": "skills/verification-before-completion/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "harness-curator",
+        "description": "Curates Harness² memory. Reviews sessions, verifies failure/recovery evidence, repairs AGENTS.md rules within budget, and authors or refines reusable skills. Use for audits, noisy rule cleanup, skill review, and deliberate reflection on a c",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/harness-curator.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/harness-control",
+      "/harness-handoff",
+      "/harness-recall",
+      "/harness-reflector",
+      "/harness-skill-author",
+      "/systematic-debugging",
+      "/verification-before-completion"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "harness-curator"
+    ],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Harness (Harness²)\n\nA self-improving harness plugin for Antigravity. It learns from normal sessions,\nbut only keeps lessons that were actually fixed.\n\n[![CI](https://github.com/Ai-assistant-KIRA/antigravity-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/Ai-assistant-KIRA/antigravity-harness/actions/workflows/ci.yml)\n[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)\n[![Python](https://img.shields.io/badge/python-3.10%2B-3776AB.svg)](pyproject.toml)\n\nHarness² watches Antigravity sessions and turns verified failures and recoveries\ninto scoped `AGENTS.md` rules, reusable Agent Skills, and searchable\ncross-session memory. It is local-first, written in Python with no third-party\ndependencies, and stays quiet when it has nothing useful to add.\n\n## Why it is strict\n\nMost agent memory tools summarize everything. That produces noisy rules. Harness\nis stricter: a failure only becomes a rule after a later action fixes it. If the\nfailure is never fixed, it stays in memory as a candidate and never reaches your\nrules.\n\nThat one rule keeps the harness useful:\n\n- a failed command that was never retried does not become advice;\n- a transient network error does not become a permanent rule;\n- a project-specific path does not leak into global rules;\n- a skill you wrote by hand is never overwritten.\n\n## What it does\n\n- **Writes scoped rules.** Workspace lessons go to `<workspace>/AGENTS.md`.\n  Environment and tooling lessons go to the plugin's global rules file. Harness\n  only edits its own marked block.\n- **Builds reusable skills.** A successful workflow with at least two distinct\n  steps can become a `SKILL.md`. Generated skills are updated in place, with a\n  size limit and no duplicate sections.\n- **Remembers across sessions.** Lessons live in a local SQLite database with\n  FTS5 search. Sessions are idempotent: replaying the same transcript does not\n  double-count a lesson.\n- **Recalls at the right time.** `SessionStart` injects a short briefing.\n  `PreInvocation` searches for the current request or a new tool error and\n  injects one compact message, deduplicated per conversation.\n\n## Install\n\n### Ask Antigravity to install it\n\nPaste this into a new Antigravity conversation:\n\n> Install this Antigravity plugin: https://github.com/Ai-assistant-KIRA/antigravity-harness\n\nThat is enough. The agent finds the steps below, runs one installer command,\nchecks the result, and tells you to restart Antigravity. Requirements: Python\n3.10+ (the installer tells you how to get it if it is missing). Git is not\nneeded.\n\n### For AI agents: install procedure\n\nFollow these steps exactly. Do not copy or clone the repository into the\nplugins folder yourself: the installer adapts the hooks to this machine, and a\nraw copy does not.\n\n1. Run the installer for the user's OS. It needs no clone.\n\n   Windows:\n\n   ```powershell\n   powershell -NoProfile -ExecutionPolicy Bypass -Command \"irm https://raw.githubusercontent.com/Ai-assistant-KIRA/antigravity-harness/main/install.ps1 | iex\"\n   ```\n\n   macOS / Linux:\n\n   ```bash\n   curl -fsSL https://raw.githubusercontent.com/Ai-assistant-KIRA/antigravity-harness/main/install.sh | sh\n   ```\n\n   If you already cloned the repository, run `install.ps1` or `sh install.sh`\n   from the clone instead. Do not pass `--reset` or `--force`.\n2. Read the **last line** of the output.\n   - `HARNESS_INSTALL: ok ...`: the plugin is installed, smoke-tested, and\n     passed `harness doctor`. Lines starting with `note:` are informational.\n   - `HARNESS_INSTALL: failed reason=...`: report the reason. If Python 3.10+\n     is missing, offer to install it (`winget install -e --id\n     Python.Python.3.12` on Windows, `brew install python@3.12` on macOS), then\n     run step 1 again in a new terminal.\n3. Tell the user to quit Antigravity completely and reopen it. Plugins and\n   hooks load at startup.\n\nRe-running the same command upgrades in place. The installer backs up the\ncurrent install first and keeps memory, rules, and skills.\n\n### Manual install\n\n```powershell\ngit clone https://github.com/Ai-assistant-KIRA/antigravity-harness.git\ncd antigravity-harness\npython install_plugin.py --dry-run\npython install_plugin.py\n```\n\nRestart Antigravity after the installer finishes. The full guide, including\nmacOS/Linux, upgrade, rollback, and troubleshooting, is in\n[INSTALL.md](INSTALL.md).\n\n### Check the install\n\nUse the wrapper that ships with the installed plugin.\n\n```powershell\n# Windows\n& \"$HOME\\.gemini\\config\\plugins\\harness\\bin\\harness.cmd\" doctor\n& \"$HOME\\.gemini\\config\\plugins\\harness\\bin\\harness.cmd\" status\n```\n\n```bash\n# macOS / Linux\n~/.gemini/config/plugins/harness/bin/harness doctor\n~/.gemini/config/plugins/harness/bin/harness status\n```\n\n## How the loop works\n\n```mermaid\nflowchart LR\n    A[Antigravity session] --> B[SessionStart briefing]\n    A --> C[PreInvocation recall]\n    A --> D[PostToolUse journal]\n    A --> E[Stop analysis]\n    E --> F{Verified recovery?}\n    F -->|yes| G[Rule or skill]\n    F -->|no| H[Candidate memory]\n    G --> B\n    H --> C\n```\n\n| Event | What happens |\n| :--- | :--- |\n| `SessionStart` | Injects relevant skills, verified lessons, and rule sizes. |\n| `PreInvocation` | Matches the newest prompt, then routes project-local skills and tools into `AGENTS.md`. |\n| `PostToolUse` | Records a redacted failure journal for diagnostics. Never blocks. |\n| `Stop` | Analyses the transcript, promotes verified recoveries, and refreshes routing and memory. |\n\nA simple example:\n\n1. `python -c \"...\"` fails with `SyntaxError`.\n2. The next command writes the script to a file and runs it successfully.\n3. Harness can promote that recovery into a rule.\n4. If step 2 never happens, the failure stays a candidate.\n\n## What gets written where\n\n| Output | Location | Boundary |\n| :--- | :--- | :--- |\n| Workspace rules | `<workspace>/AGENTS.md` | Only the Harness-managed block |\n| Task routing | `<workspace>/AGENTS.md` (`### Task Routing`) | Replaced per task; project skills and tools only |\n| Global rules | `<plugin>/rules/AGENTS.md` | Environment and tooling only |\n| Skills | `<workspace>/.agents/skills/<name>/SKILL.md` | Manual skills are never overwritten |\n| Tool declarations | `<workspace>/.agents/tools.json` | Optional; replaces the built-in tool catalog |\n| Memory | `<plugin>/memory/harness_memory.db` | Global knowledge only |\n| Project memory | `<plugin>/memory/projects/<fingerprint>/harness_memory.db` | Isolated per project; seeded once from global environment lessons |\n| Experience log | `<plugin>/memory/EXPERIENCE.md` | Generated; do not edit by hand |\n| Project experience | `<plugin>/memory/projects/<fingerprint>/EXPERIENCE.md` | Generated per project |\n\nThe managed rule block is capped at 20 KB so it stays below Antigravity's 24 KB\nper-file limit. Files outside the block are left alone.\n\n## Project-aware routing\n\nEvery new prompt is routed to the skills and tools that match it, without a model\ncall. The selection is written to the managed `### Task Routing (auto-selected)`\nsection of that project's `AGENTS.md`, so Antigravity loads only what is listed\nthere. Routing is replaced on the next task instead of accumulating.\n\n- Only skills that physically live in `<workspace>/.agents/skills` are eligible;\n  global and other-project skills are never routed into a project.\n- Skills generated from repeated sessions become eligible automatically and are\n  listed in the project skill inventory even when they do not match the current\n  task.\n- Tools come from a built-in catalog. A project can own the vocabulary with\n  `.agents/tools.json`:\n\n```json\n{\n  \"tools\": [\n    {\n      \"name\": \"project_runner\",\n      \"description\": \"Run this project's test matrix.\",\n      \"signals\": [\"pytest\", \"tests\", \"ci\"]\n    }\n  ]\n}\n```\n\n- Memory is isolated per project. A new project database is seeded once with\n  pre-existing global environment lessons; lessons from another project are\n  never imported.\n\n## Safety and privacy\n\n- **Verified only.** Unresolved failures are stored as candidates, not rules.\n- **Scoped by default.** Project paths and commands do not enter global rules.\n- **No overwrites.** User-authored skills and text outside the managed block are\n  preserved.\n- **Redaction.** Credentials are removed before anything is persisted. The\n  extractor also refuses to promote authentication failures into rules.\n- **Local-only.** The plugin does not call an LLM or send data to a service.\n- **Injection checks.** Learned text is scanned for prompt-injection and\n  exfiltration patterns before it is surfaced.\n\nThese are safety measures, not a security boundary. Review learned content before\nyou rely on it. The full threat model is in [docs/SECURITY.md](docs/SECURITY.md).\n\n## CLI\n\nThe wrapper works from any directory. On Windows use `bin\\harness.cmd`; on\nmacOS/Linux use `bin/harness`.\n\n| Command | Purpose |\n| :--- | :--- |\n| `harness status` | Sessions, lessons, candidates, skills, and rule sizes |\n| `harness status --effectiveness` | Rank lessons and skills by use and recurrence |\n| `harness reflect` | Analyse a transcript and run the full cycle |\n| `harness recall \"error text\"` | Search verified lessons and matching skills |\n| `harness route \"task text\"` | Route project skills and tools into this project's `AGENTS.md` |\n| `harness memory search \"pytest\"` | Search stored lessons |\n| `harness skills list` | Inspect the learned skill library |\n| `harness skills why` | Replay recent sessions and show why each task did or did not become a skill |\n| `harness rules why \"rule text\"` | Show evidence and provenance for a rule |\n| `harness rules conflicts` | Find opposing managed rules |\n| `harness privacy audit` | Review retained data without dumping content |\n| `harness privacy scrub` | Redact credentials from generated skills, managed rules, and stored cursors |\n| `harness doctor` | Read-only deployment and data health check, including stalled learning and leaked secrets |\n\n## Configuration\n\nSettings are optional. Put `harness.toml` (Python 3.11+) or `harness.json`\n(Python 3.10 fallback) next to the installed plugin.\n\n```toml\n[rules]\nmax_bytes = 20000\n\n[briefing]\nmax_chars = 7000\nmax_skills = 8\nmax_lessons = 5\n\n[skills]\nmax_per_session = 2\nmin_quality = 0.55\n\n[memory]\nprune_days = 365\ncandidate_days = 30\nmax_lessons = 2000\n\n[project]\nisolate_memory = true\nproject_skills_only = true\n\n[routing]\nenabled = true\nauto_apply = true\nmax_skills = 5\nmax_tools = 6\n\n[hooks]\nstop_timeout = 90\npost_tool_use_timeout = 5\n```\n\nInvalid values produce a warning and a safe default. They do not crash a hook.\nEnvironment variables are documented in [INSTALL.md](INSTALL.md#configuration).\n\n## Project layout\n\n```text\nantigravity-harness/\n├── plugin.json              # Antigravity plugin manifest\n├── hooks.json               # SessionStart, PreInvocation, PostToolUse, Stop\n├── install.ps1 / install.sh # One-line bootstrap: find Python, fetch, install\n├── install_plugin.py        # Install, upgrade, uninstall, rollback\n├── harness/\n│   ├── cli.py\n│   ├── hooks.py\n│   └── core/                # Analyzer, recovery rules, memory, rules, skills, trust, settings\n├── scripts/\n│   ├── hook_runner.py\n│   ├── harness_cli.py\n│   └── stress_test.py\n├── skills/                  # Bundled Agent Skills\n├── rules/AGENTS.md          # Curated global rules\n├── agents/                  # Curator subagent\n├── docs/                    # Design, security, FAQ\n└── tests/                   # Unit, integration, installer, concurrency tests\n```\n\n## Development\n\nRequirements: Python 3.10+ and no third-party packages.\n\n```powershell\npython -m unittest discover -s tests -p \"test_*.py\" -v\npython scripts/stress_test.py --quick\npython install_plugin.py --dry-run\n```\n\nThe suite uses temporary directories. It must never touch the plugin's real\nmemory or rules. CI runs on Ubuntu and Windows with Python 3.10, 3.12, and 3.13.\n\nThe design notes in [docs/DESIGN.md](docs/DESIGN.md) explain the reliability\nchoices: idempotent cycles, per-workspace locks, atomic writes, bounded\ntranscript reads, and SQLite FTS5.\n\n## Background\n\nHarness² is maintained by [Reda Alaarabi](https://github.com/Ai-assistant-KIRA),\na software engineer from Rabat, Morocco. He studied software engineering at\nENSIAS, Mohammed V University, and works on distributed systems, event-driven\nservices, and observability.\n\nThis project applies those ideas to agent tooling: idempotent writes, process\nlocks, bounded state, explicit failure/recovery pairs, and local-first storage.\nThe interesting part is not the model call. It is the reliability work around it.\n\n## Limitations\n\n- Analysis is local and heuristic. It does not call an LLM.\n- Only transcripts exposed by Antigravity can be analysed.\n- Reads are capped at 64 MB / 100,000 lines. Incremental reads keep a bounded\n  400-step pairing window.\n- False positives are reduced, not eliminated. Review memory before promoting\n  anything by hand.\n- Skill synthesis is conservative. Many sessions produce no skill.\n- `AGENTS.md` rules are text, not executable policy.\n- Remote skill installation validates structure and high-risk content, not\n  intent or runtime safety.\n\n## Contributing\n\nRead [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. For bugs,\nuse the issue template and include your Antigravity version, Python version, and\nrelevant `state/hook_errors.log` lines. Do not paste transcripts or secrets.\n\n- Questions and ideas: [SUPPORT.md](SUPPORT.md)\n- Security reports: [SECURITY.md](SECURITY.md)\n- Community standards: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)\n- Common questions: [docs/FAQ.md](docs/FAQ.md)\n\n## License\n\nCopyright 2026 Reda Alaarabi. Apache-2.0. See [LICENSE](LICENSE) and\n[NOTICE](NOTICE).\n",
+  "latestReleaseNotes": "\nUpgrade with `python install_plugin.py` (or the one-line installers below). The\ninstaller keeps memory, rules, and skills, and removes transcript cursors that\nolder versions stored unredacted. After upgrading, run `harness privacy scrub`\nin each project to redact any credential an older version wrote into a\ngenerated skill, and rotate that credential.\n\n### Install\n\n- **One-line installers.** `install.ps1` (Windows) and `install.sh`\n  (macOS/Linux) find Python 3.10+ (skipping the Microsoft Store alias),\n  download the source when not run from a checkout, and run the installer.\n  Both work piped from the web (`irm … | iex`, `curl … | sh`).\n- Every installer run ends with one machine-readable line,\n  `HARNESS_INSTALL: ok …` or `HARNESS_INSTALL: failed reason=…`, so an agent\n  driving the install can verify the result.\n- The installer runs `harness doctor` after the smoke test. Critical checks\n  fail the install; everything else is reported as a note.\n- Launchers get the line endings their shell needs, whatever the checkout\n  produced, and `.gitattributes` pins them in the repository.\n- `bin/harness.cmd` and `bin/harness` use the recorded interpreter too, so the\n  CLI works on machines that only have the `py` launcher. On macOS and Linux\n  the installer marks `bin/harness` executable as well as `bin/hook` (the CLI\n  wrapper failed with \"Permission denied\").\n- Running the installer with the checkout itself as the target explains how to\n  fix it instead of only refusing.\n- `pyproject.toml`, `plugin.json`, and `harness.__version__` agree (the\n  package metadata still said 2.1.0); a test keeps them in sync.\n\n### Fixed (performance audit, October 2026)\n\n- **Learning stopped in any workspace whose folder name has a space.** The\n  transcript/workspace check cut paths at the first space, so\n  `…\\video editor\\…` never matched its own workspace and every Stop since the\n  scope fix was skipped. Paths are now matched at their position in the raw\n  text, JSON escapes such as `task:\\n` are no longer read as drive letters, and\n  tool or agent folders (Program Files, AppData, `~/.gemini`) do not count as\n  another project. On Windows, the 8.3 short spelling of a workspace\n  (`C:\\Users\\RUNNER~1\\…`) and its long form both match.\n- **Credentials reached project files.** Redaction now covers\n  `SetEnvironmentVariable(\"X_API_KEY\", \"…\")`, `setx X_API_KEY …`, `--key …`,\n  and `sk_…` keys. Generated skills, managed rules, and routing lines also pass\n  a strict filter for bare high-entropy tokens. Transcript cursors store\n  redacted, size-bounded steps (format v2); older cursors are discarded.\n- **\"Verified fixes\" that were not fixes.** A different script of the same\n  program (`python a.py` → `python b.py`) or a different subcommand\n  (`hyperframes check` → `hyperframes render`) only counts as a fix after a\n  usage error. Status lines such as `1/1 ready, 0 failed` are not errors, a\n  rerun after file edits is not a \"transient\" lesson, inline one-liners are\n  never recommended as a fix, and host markup (`</SYSTEM_MESSAGE>`) is ignored.\n- Stored rules are re-checked on every update and by `rules repair`, so blocks\n  written by older versions are cleaned without manual edits. Recall and\n  briefings skip stored lessons that fail the current gates.\n- PowerShell quoting failures of inline `python -c` / `node -e` /\n  `powershell -Command` code become one class rule instead of one rule per\n  command, and the rule is skipped when the user's own section already says it.\n- One-off instructions (\"never re render it from scratch\") are no longer\n  promoted to standing directives.\n- Skill names, titles, and descriptions come from what the procedure did, not\n  the first words of the prompt; probes and inline one-liners are left out of\n  procedures; quality is capped without a verification step.\n- Generated skills surfaced 10 times with no reuse are retired from briefings,\n  recall, and routing (the files stay on disk).\n- Routing requires real overlap with the request, routes for the newest\n  request, strips paths and credentials from the task line, and no longer\n  routes `run_extension` to every plugin or editor task.\n- `Stop:result` journal entries keep their conversation id when a cycle is\n  skipped.\n\n### Performance\n\n- Successful PostToolUse calls are answered before Harness is imported and are\n  no longer journaled. The Windows launcher uses the interpreter recorded at\n  install time (`bin/python.path`) instead of `where py` and the `py.exe` hop.\n  Measured per tool call through `cmd /c bin\\hook.cmd`: 245 ms → 118 ms.\n- Transcript cursors are written as compact JSON with bounded strings.\n\n### Added\n\n- `harness doctor` reports a `learning` check (Stop cycles that all skip or\n  never process) and a `secrets` check (credentials in generated skills,\n  managed rules, or old cursors), and names invalid skills.\n- `harness privacy scrub [--dry-run]` redacts Harness-generated skills,\n  re-sanitizes managed rule blocks, and rewrites old transcript cursors. The\n  installer runs the cursor part automatically on upgrade.\n- `harness memory dedupe [--dry-run]`: collapses lessons that repeat the same\n  failure inside one workspace, keeping the most evidenced row.\n- Conversations are bound to the workspace they were first seen in\n  (`state/conversations/<id>.json`), so a hook payload without `workspacePaths`\n  reuses the real project instead of the process working directory.\n\n### Fixed (scope and hook cost)\n\n- **Cross-project leak.** A transcript from one project could be analysed\n  against another folder and write its rules and skills there. The cycle now\n  skips transcripts whose absolute paths belong to a different workspace, drops\n  lessons that cite foreign paths, and repairs existing pitfalls that do.\n- Chatty first-person requirements (\"never want scenes to pop up … I need them\n  high quality\") no longer become standing directives, at extraction, at\n  promotion, and during `harness rules sanitize`.\n- No workspace means memory and global environment rules only: project rules,\n  skills, and routing are never written to an unpinned working directory.\n- PostToolUse no longer imports the engine, loader, or retrieval modules at\n  module load (measured in-process; the end-to-end launcher numbers are in\n  Performance above).\n\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "harness/cli.py",
+        "line": 1499,
+        "snippet": "completed = subprocess.run(command)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/cli.py#L1499"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"harness-lifecycle\" executes a shell command on PostToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 16,
+        "snippet": "python -X utf8 scripts/hook_runner.py post-tool-use",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/hooks.json#L16"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "install_plugin.py",
+        "line": 737,
+        "snippet": "completed = subprocess.run( [sys.executable, \"-X\", \"utf8\", \"-c\", code, str(target)], cwd=str(target), capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\", timeout=12",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L737"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "install_plugin.py",
+        "line": 783,
+        "snippet": "completed = subprocess.run( arguments, cwd=str(target), input=\"{}\", text=True, encoding=\"utf-8\", errors=\"replace\", capture_output=True, timeout=timeout, env=env, )",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L783"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "install_plugin.py",
+        "line": 1028,
+        "snippet": "completed = subprocess.run( [sys.executable, \"-X\", \"utf8\", str(cli), \"doctor\", \"--json\"], cwd=str(target), capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\", timeo",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L1028"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/stress_test.py",
+        "line": 106,
+        "snippet": "return subprocess.run( [sys.executable, \"-X\", \"utf8\", str(self.runner), event], input=stdin, text=True, encoding=\"utf-8\", capture_output=True, cwd=str(self.workspace), env=self.chi",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/scripts/stress_test.py#L106"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/core/config.py",
+        "line": 241,
+        "snippet": "tmp.write_text(text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/config.py#L241"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/core/memory_store.py",
+        "line": 411,
+        "snippet": "counter_path.write_text(str(value), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/memory_store.py#L411"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/core/memory_store.py",
+        "line": 432,
+        "snippet": "counter_path.write_text(str(next_id), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/memory_store.py#L432"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/core/skill_builder.py",
+        "line": 1145,
+        "snippet": "shutil.rmtree(path, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/skill_builder.py#L1145"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "harness/core/skill_builder.py",
+        "line": 1318,
+        "snippet": "with urllib.request.urlopen(request, timeout=timeout) as response:",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/skill_builder.py#L1318"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/core/skill_builder.py",
+        "line": 1324,
+        "snippet": "destination.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/skill_builder.py#L1324"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "harness/core/skill_builder.py",
+        "line": 1330,
+        "snippet": "with urllib.request.urlopen(request, timeout=timeout) as response:",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/skill_builder.py#L1330"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/core/skill_builder.py",
+        "line": 1338,
+        "snippet": "(folder / \"SKILL.md\").write_bytes(data)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/skill_builder.py#L1338"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 233,
+        "snippet": "shutil.rmtree(staging)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L233"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 236,
+        "snippet": "shutil.rmtree(target)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L236"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 240,
+        "snippet": "shutil.rmtree(staging, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L240"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 262,
+        "snippet": "shutil.rmtree(backup_root, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L262"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 350,
+        "snippet": "shutil.rmtree(path)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L350"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 408,
+        "snippet": "shutil.rmtree(staging, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L408"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 410,
+        "snippet": "shutil.rmtree(previous, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L410"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 505,
+        "snippet": "temporary.write_text(text, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L505"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 527,
+        "snippet": "path.write_text(str(Path(sys.executable).resolve()) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L527"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 553,
+        "snippet": "path.write_bytes(normalized)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L553"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 579,
+        "snippet": "shutil.rmtree(path)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L579"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 599,
+        "snippet": "shutil.rmtree(folder, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L599"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 623,
+        "snippet": "shutil.rmtree(staging)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L623"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 626,
+        "snippet": "shutil.rmtree(dest)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L626"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 630,
+        "snippet": "shutil.rmtree(staging, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L630"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "install_plugin.py",
+        "line": 855,
+        "snippet": "shutil.rmtree(target)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/install_plugin.py#L855"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/stress_test.py",
+        "line": 493,
+        "snippet": "transcript.write_text( \"\\n\".join(json.dumps(step) for step in _learning_steps()) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\", )",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/scripts/stress_test.py#L493"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/stress_test.py",
+        "line": 678,
+        "snippet": "rules.write_text(\"# User Rules\\n\\n- Keep this manual note.\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/scripts/stress_test.py#L678"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/stress_test.py",
+        "line": 995,
+        "snippet": "shutil.rmtree(root, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/scripts/stress_test.py#L995"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "harness/core/agents_md_manager.py",
+        "line": 171,
+        "snippet": "_PLUGIN_ROOT_LITERAL = \".gemini/config/plugins/harness\"",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/agents_md_manager.py#L171"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "harness/core/analyzer.py",
+        "line": 811,
+        "snippet": "\".gemini/config/plugins/harness\",",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/analyzer.py#L811"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "harness/core/skill_builder.py",
+        "line": 112,
+        "snippet": "needles = {\".gemini/config/plugins/harness\"}",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/harness/core/skill_builder.py#L112"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 14,
+        "snippet": "- Python on Windows: run with `-X utf8` when output contains non-ASCII, and prefer `python -m module` over bare entry points.",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/rules/AGENTS.md#L14"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/harness-control/SKILL.md",
+        "line": 38,
+        "snippet": "From a checkout, `python scripts/harness_cli.py <command>` works from any",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/skills/harness-control/SKILL.md#L38"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/harness-recall/SKILL.md",
+        "line": 29,
+        "snippet": "From a checkout, use `python scripts/harness_cli.py recall \"...\"`. Add",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/skills/harness-recall/SKILL.md#L29"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/harness-reflector/SKILL.md",
+        "line": 30,
+        "snippet": "> Verified fix: run `python -m pip install pytest` in the active environment.",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/skills/harness-reflector/SKILL.md#L30"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/verification-before-completion/SKILL.md",
+        "line": 45,
+        "snippet": "- \"`python -m pytest` passed: 42 passed in 3.1s.\"",
+        "githubBlobUrl": "https://github.com/Ai-assistant-KIRA/antigravity-harness/blob/fc610b166b8ccd1be46128a205517d3da3e47dc9/skills/verification-before-completion/SKILL.md#L45"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.3.0",
+      "sha": "fc610b166b8ccd1be46128a205517d3da3e47dc9",
+      "scannedAt": "2026-11-27T18:24:49.635Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

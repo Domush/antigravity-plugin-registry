@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "id": "jiangnanquan/agy-meme",
+  "sha": "80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:42.106Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-meme",
+    "displayName": "Neko Meme Stickers (猫娘表情包)",
+    "version": "1.3.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "agy-meme",
+        "runtimeName": "agy-meme_agy-meme",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agy-meme",
+        "slashCommand": "/agy-meme",
+        "description": "Manage Gemini Neko sticker packs, inspect sticker moods, import custom local images as chat stickers, and set up or verify the Antigravity Desktop ASAR renderer patch. Use when the user asks to browse available stickers, add new sticker ima",
+        "disableModelInvocation": false,
+        "file": "skills/agy-meme/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-meme"
+    ],
+    "mcpServerNames": [
+      "agy-meme_agy-meme"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n# agy-meme (Neko Meme Stickers)\n\n**Bidirectional reaction stickers, inline composer picker & MCP server for Google Antigravity Desktop**\n\n[English](./README.md) | [简体中文](./README.zh-CN.md)\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-7C4DFF.svg)](./LICENSE)\n[![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-00BFA5.svg)](#architecture)\n[![Antigravity Desktop](https://img.shields.io/badge/Antigravity-Desktop_Plugin-FF4081.svg)](#installation)\n\n</div>\n\n`agy-meme` gives your AI assistant expressive reaction stickers inside **Antigravity Desktop** chat bubbles — while staying completely silent in terminal / CLI sessions (`agy`, `agycli`, IDE, ACP).\n\nIt bundles 48 universal, zero-text, 100% style-consistent RGBA die-cut purple-blue heterochromia neko WebP stickers (`gemini-neko` v2.2 — universally understood across all languages with bilingual search & `scene` semantic routing) across 6 moods (`happy`, `angry`, `sad`, `shy`, `confused`, `daily`) and works **both standalone on vanilla English Antigravity Desktop and stacked cleanly on top of [`agy-desktop-exo`](https://github.com/jiangnanquan/agy-desktop-exo) / [`antigravity-desktop-cn`](https://github.com/Silas-02/antigravity-desktop-cn)**.\n\n<p align=\"center\">\n  <img src=\"./assets/sticker-showcase.webp\" width=\"100%\" alt=\"48 Universal Gemini Neko Die-Cut Stickers Showcase\" />\n</p>\n\n---\n\n## Features\n\n- **Bidirectional Bubble Rendering**:\n  - AI responses containing `[表情: 描述]` automatically render as crisp inline sticker cards (default 148px with click-to-lightbox zoom, right-click actions, and toggleable/clean mode).\n  - User messages sent with stickers also render cleanly inside `[data-testid=\"user-message-bubble\"]`.\n- **Inline Composer Sticker Picker (`Cmd+Shift+M` / `Ctrl+Shift+M`)**:\n  - Mood tabs (`happy`, `angry`, `sad`, `shy`, `confused`, `daily`), keyword search, recently used strip, click-to-insert vs click-to-send toggle, and one-click custom local image import.\n- **Native MCP Server (`server.mjs`, zero npm dependencies)**:\n  - Tools: `send_meme`, `meme_list`, `learn_meme`, `meme_update`.\n  - Reads `~/.gemini/meme-packs/` (seeded automatically from the bundled `packs/gemini-neko/` pack on first launch via copy-on-write, so your custom stickers survive plugin upgrades).\n- **Strict CLI Isolation (`Desktop` vs `CLI`)**:\n  - Host process detection checks `PLUGIN_DATA` + process tree (`/bin/ps` on POSIX) so `send_meme` / `meme_list` refuse to run in `agy` CLI / IDE / ACP hosts, and `rules/AGENTS.md` enforces the same host gate on the prompt side.\n- **Non-Destructive ASAR Overlay**:\n  - `./install.sh` layers only the marked Meme IPC + Renderer blocks onto Antigravity's `app.asar` (works on vanilla English Antigravity OR on top of localized `antigravity-desktop-cn`).\n  - `./uninstall.sh` cleanly strips only the Meme blocks without removing Chinese localization or other tweaks.\n- **Settings UI Card**:\n  - Automatically mounts sticker controls inside **Settings -> Appearance** (or **Chat Width** / **设置 -> 外观 -> 聊天宽度**), supporting enable toggle, auto-send vs insert mode, compact sticker size, and pack refresh.\n\n---\n\n## Architecture\n\n```text\nagy-meme/\n├── plugin.json                # Antigravity plugin manifest\n├── mcp_config.json            # Portable stdio MCP launch config (${PLUGIN_ROOT})\n├── server.mjs                 # Zero-dependency Node.js ESM MCP server\n├── assets/logo.svg            # Plugin icon (1:1 heterochromia neko emblem)\n├── rules/AGENTS.md            # Desktop host gate & sticker collaboration rules\n├── skills/agy-meme/SKILL.md   # Slash / agent skill instructions\n├── packs/gemini-neko/         # 48 universal text-free RGBA die-cut WebP stickers + memes.json\n├── scripts/meme_patcher.js    # Cross-platform Electron ASAR overlay patcher\n├── install.sh / install.ps1   # One-command installer (macOS / Linux / Windows)\n└── uninstall.sh               # Non-destructive uninstaller\n```\n\nTwo complementary layers work together:\n1. **Standard Antigravity Plugin (`plugin.json` + `server.mjs` + `rules/` + `skills/`)**: gives the agent `send_meme` / `meme_list` / `learn_meme` / `meme_update` MCP tools and Desktop-only prompt rules.\n2. **Electron ASAR Renderer Overlay (`scripts/meme_patcher.js`)**: renders `[表情: ...]` tags as real WebP stickers inside Antigravity Desktop's chat bubbles and adds the `Cmd/Ctrl+Shift+M` composer picker (pure Node.js Electron ASAR parser + macOS ad-hoc Inside-Out re-signing, zero external binary dependencies).\n\n---\n\n## Requirements\n\n- **Antigravity Desktop** (macOS Apple Silicon/Intel, Windows, or Linux)\n- **Node.js 18+** (`node -v`)\n\n---\n\n## Installation\n\n> Note: Run `./install.sh` from a standalone system terminal (Terminal / iTerm2 / Ghostty / PowerShell), **not** from Antigravity Desktop's built-in terminal, so restarting Antigravity Desktop to apply the ASAR overlay does not terminate your shell mid-install. (`--plugin-only` is safe anywhere.)\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/jiangnanquan/agy-meme.git\ncd agy-meme\n./install.sh\n```\n\nOr install the plugin manifest first via the Antigravity CLI, then apply the Desktop renderer overlay:\n\n```bash\nagy plugin install https://github.com/jiangnanquan/agy-meme\nbash ~/.gemini/config/plugins/agy-meme/install.sh\n```\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/jiangnanquan/agy-meme.git\ncd agy-meme\n.\\install.ps1\n```\n\n### MCP Plugin Only (Skip ASAR Renderer Patch)\n\n```bash\n./install.sh --plugin-only\n```\n\n### Check Status / Uninstall\n\n```bash\n# Read-only status check\nnode scripts/meme_patcher.js --status\n\n# Non-destructive strip of Meme renderer + IPC (preserves localization if stacked)\n./uninstall.sh\n\n# Full removal including plugin files (add --purge-packs to also remove ~/.gemini/meme-packs)\n./uninstall.sh --purge-plugin\n```\n\n---\n\n## Stacking With `antigravity-desktop-cn`\n\nIf you also use `antigravity-desktop-cn`:\n1. Install or upgrade localization first (`antigravity-desktop-cn/install.sh`).\n2. Run `agy-meme/install.sh` — `meme_patcher.js` detects your localized `app.asar` and overlays only the Meme IPC and renderer blocks on top.\n3. Uninstalling `agy-meme` leaves Chinese localization intact.\n\n---\n\n## Credits & License\n\n- Character visual design pays homage to **ZipZipPipe**'s iconic heterochromia Gemini catgirl (indexed in [`shuaizenge/ai-girls`](https://github.com/shuaizenge/ai-girls) and [`lmy414/ai-girl-stickers`](https://github.com/lmy414/ai-girl-stickers)); built-in `gemini-neko` v2.2 provides 48 unified, language-agnostic chibi die-cut stickers understood worldwide.\n- Released under the [MIT License](./LICENSE).\n",
+  "latestReleaseNotes": "## ✨ Highlights (`v1.3.0` / Pack `v2.2`)\n\n- **48 Universal, Zero-Text RGBA Die-Cut Stickers (`512×512` WebP)**:\n  - Complete ground-up remaster into a 100% style-consistent 2-head-tall chibi sticker suite (paying homage to ZipZipPipe's heterochromia Gemini Neko design).\n  - Zero language-specific meme text traps — universally understood worldwide across all 6 moods (`happy`, `shy`, `angry`, `sad`, `confused`, `daily`), with full **English + Chinese** bilingual search keywords.\n- **Semantic Selection Guardrails (`server.mjs` + `rules/AGENTS.md`)**:\n  - Injects structured `scene` visual/contextual descriptions into `send_meme` candidates so the AI knows exact gestures and props before picking.\n- **Hot-Reload & Non-Destructive Pack Upgrade (`scripts/meme_patcher.js`)**:\n  - Opening the `Cmd/Ctrl+Shift+M` sticker picker automatically refreshes newly learned stickers from `~/.gemini/meme-packs`, and `--seed-only` upgrades bundled stickers while preserving user-imported custom stickers.\n\n<p align=\"center\">\n  <img src=\"https://raw.githubusercontent.com/jiangnanquan/agy-meme/main/assets/sticker-showcase.webp\" width=\"100%\" alt=\"48 Universal Gemini Neko Stickers\" />\n</p>",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 170,
+        "snippet": "const raw = execFileSync(sqliteBin, [\"-readonly\", \"-json\", dbPath, \"SELECT path, tag, file_name, caption, keywords FROM memes;\"], { encoding: \"utf8\", maxBuffer: 8 * 1024 * 1024 });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L170"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 235,
+        "snippet": "execFileSync(\"python3\", [\"-c\", pyScript], { input: JSON.stringify({ dbPath, rows }), encoding: \"utf8\", stdio: [\"pipe\", \"ignore\", \"ignore\"] });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L235"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 1249,
+        "snippet": "while ((m = MEME_RE.exec(fullText))) matches.push(m);",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L1249"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 1971,
+        "snippet": "const stdout = child_process.execFileSync( 'ps', ['-eo', 'pid=,ppid=,uid=,stat=,comm=,args='], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] } );",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L1971"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2061,
+        "snippet": "const stdout = child_process.execSync('tasklist /fi \"imagename eq Antigravity.exe\" /nh', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2061"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2077,
+        "snippet": "child_process.execSync('taskkill /f /im Antigravity.exe /t >nul 2>nul');",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2077"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2194,
+        "snippet": "const output = child_process.execSync(`reg query \"${root}\" /s /f Antigravity /d`, { encoding: 'utf-8', stdio: 'pipe' });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2194"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2233,
+        "snippet": "const mdfindOut = child_process.execSync('mdfind \"kMDItemFSName == \\'Antigravity.app\\'\" 2>/dev/null', { encoding: 'utf-8' });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2233"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2247,
+        "snippet": "const getent = child_process.execSync(`getent passwd \"${process.env.SUDO_USER}\" 2>/dev/null`, { encoding: 'utf-8' }).trim();",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2247"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2298,
+        "snippet": "const whichOut = child_process.execSync( 'command -v antigravity 2>/dev/null || which antigravity 2>/dev/null || command -v agy 2>/dev/null || which agy 2>/dev/null || command -v A",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2298"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2394,
+        "snippet": "const res = child_process.spawnSync(cmd, args, { encoding: 'utf-8', stdio: 'pipe' });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2394"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2402,
+        "snippet": "const out = child_process.execSync(cmd, { encoding: 'utf-8', stdio: 'pipe' });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2402"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2713,
+        "snippet": "const out = child_process.execFileSync(\"/bin/ps\", [\"-o\", \"ppid=,comm=\", \"-p\", String(pid)], { encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"ignore\"] }).trim();",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2713"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 3123,
+        "snippet": "if (targetApp) child_process.spawn(\"open\", [targetApp], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L3123"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 3127,
+        "snippet": "child_process.spawn(exePath, [], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L3127"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/meme_patcher.js",
+        "line": 3132,
+        "snippet": "child_process.spawn(cmd, [], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L3132"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server.mjs",
+        "line": 51,
+        "snippet": "const ppidCmd = execFileSync('/bin/ps', ['-o', 'command=', '-p', String(process.ppid)], { encoding: 'utf8', timeout: 1500, }).trim();",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L51"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server.mjs",
+        "line": 180,
+        "snippet": "const out = execFileSync( sqliteBin, ['-readonly', '-json', pack.indexDbPath, 'SELECT path, tag, file_name, caption, keywords, mtime, captioned_at FROM memes;'], { encoding: 'utf8'",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L180"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server.mjs",
+        "line": 467,
+        "snippet": "execFileSync('python3', ['-c', pyScript], { input: JSON.stringify({ dbPath, rows }), encoding: 'utf8', stdio: ['pipe', 'ignore', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L467"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 125,
+        "snippet": "fsSync.writeFileSync(CONFIG_PATH, JSON.stringify(serializable, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L125"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 406,
+        "snippet": "fsSync.writeFileSync(mPath, JSON.stringify(manifest, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L406"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 407,
+        "snippet": "fsSync.writeFileSync(pathMod.join(packDir, \"memes.json\"), JSON.stringify({ manifest, memes: rows }, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L407"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2787,
+        "snippet": "fs.writeFileSync(dstManifestPath, JSON.stringify(nextManifest, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2787"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2788,
+        "snippet": "fs.writeFileSync(dstMemesJsonPath, JSON.stringify({ manifest: nextManifest, memes: mergedRows }, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2788"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2802,
+        "snippet": "fs.writeFileSync(configPath, JSON.stringify(defCfg, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2802"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2833,
+        "snippet": "if (fs.existsSync(targetAsar)) fs.unlinkSync(targetAsar);",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2833"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2837,
+        "snippet": "try { fs.unlinkSync(tempAsarPath); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2837"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/meme_patcher.js",
+        "line": 2841,
+        "snippet": "try { if (fs.existsSync(tempAsarPath)) fs.unlinkSync(tempAsarPath); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2841"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server.mjs",
+        "line": 439,
+        "snippet": "writeFileSync(manifestPath, JSON.stringify(nextManifest, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L439"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server.mjs",
+        "line": 440,
+        "snippet": "writeFileSync(memesJsonPath, JSON.stringify({ manifest: nextManifest, memes: rows }, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L440"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/meme_patcher.js",
+        "line": 123,
+        "snippet": "packsDirs: next.packsDirs.map((d) => (d === DEFAULT_PACKS_DIR ? \"~/.gemini/meme-packs\" : d))",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L123"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/meme_patcher.js",
+        "line": 1433,
+        "snippet": "dirBtn.title = \"在 Finder 中打开 ~/.gemini/meme-packs 目录\";",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L1433"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/meme_patcher.js",
+        "line": 2800,
+        "snippet": "packsDirs: [\"~/.gemini/meme-packs\"]",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L2800"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/meme_patcher.js",
+        "line": 3032,
+        "snippet": "\" --seed-only 仅初始化 ~/.gemini/meme-packs 与 meme-config.json\",",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/scripts/meme_patcher.js#L3032"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "server.mjs",
+        "line": 5,
+        "snippet": "* 读取 ~/.gemini/meme-config.json 与 ~/.gemini/meme-packs/<pack>/memes.json",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L5"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "server.mjs",
+        "line": 294,
+        "snippet": "content: [{ type: 'text', text: '当前没有可用的 Gemini 猫娘表情库，请检查 ~/.gemini/meme-packs/gemini-neko 或插件内置 packs 目录。' }],",
+        "githubBlobUrl": "https://github.com/jiangnanquan/agy-meme/blob/80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7/server.mjs#L294"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.3.0",
+      "sha": "80f8d85d6a5b8df79e5dd0e46d3cadea18e519e7",
+      "scannedAt": "2026-11-27T18:20:42.106Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "id": "axiomfab/pdf-reviewer",
+  "sha": "a8d19eb97bfa5a93f60a927db487be0473945de5",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:22.995Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "pdf-reviewer",
+    "displayName": "PDF Reviewer & Annotator",
+    "version": "1.2.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "pdf_annotations",
+        "runtimeName": "pdf-reviewer_pdf_annotations",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "./src/mcp_server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "pdf-reviewer_pdf_annotations"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"128\" height=\"128\" alt=\"PDF Reviewer for AGY\" />\n</p>\n\n<h1 align=\"center\">📄 PDF Reviewer for Antigravity (AGY) 2.0</h1>\n\n<p align=\"center\">\n  <b>Give Antigravity the superpower to read, write, modify, and delete PDF comments directly.</b><br>\n  An Antigravity 2.0 UI plugin, live sidecar, and MCP tool suite that renders compiled PDFs live inside the <b>Right-Hand Auxiliary Pane</b> with automatic hot-reloading and empowers agents to perform full CRUD operations on native ISO 32000 PDF annotations.\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/axiomfab/pdf-reviewer\"><b>Repository</b>: github.com/axiomfab/pdf-reviewer</a>\n</p>\n\n---\n\n> [!NOTE]\n> ### 🎨 100% Heavily Vibe Coded\n> This plugin is **heavily vibe coded**. Built through fast, fluid pair programming sessions with Antigravity agents, it prioritizes immediate developer ergonomics, rapid iteration, and direct agent autonomy over enterprise ceremonial overhead. It works, it's fast, and the vibes are immaculate. Community contributions—whether authored by humans or AI agents—are highly appreciated!\n\n---\n\n## 🚀 Features\n\n### 🤖 1. Agent Capabilities: Full CRUD on PDF Comments & Markups\nPDF Reviewer bridges compiled documents and autonomous AI pair programmers by giving Antigravity native Model Context Protocol (MCP) tools to operate directly on PDF comments and text markups:\n\n* 📖 **Read Annotations (`mcp_pdf_annotations_list`)**: Antigravity inspects user feedback, highlights (`/Highlight`), underlines (`/Underline`, `/Squiggly`), strikethroughs (`/StrikeOut`), sticky notes, and diagram coordinates across the entire document or filtered by page and type.\n* ✍️ **Write Annotations (`mcp_pdf_annotations_add`)**: Antigravity programmatically embeds native ISO 32000 highlights, underlines, strikethroughs (`strikethrough` / `strike`), review notes (`note`), or bounding boxes (`area`) into the PDF—with optional notes or replacement suggestions.\n* ✏️ **Modify Annotations (`mcp_pdf_annotations_modify`)**: Antigravity updates existing comment text (or clears notes on markups), switches markup styles (`highlight`, `underline`, `strikethrough`), updates replacement text or geometry, and changes status (e.g. `resolved`).\n* 🗑️ **Delete Annotations (`mcp_pdf_annotations_delete` & `clear`)**: Antigravity purges resolved review comments or markups by ID, or clears all (or type-filtered) annotations upon final approval.\n\n### 🖥️ 2. Interactive Sidecar UI: Sidebar Viewing & Commenting\nAn embedded, lightweight viewer rendered directly inside the Antigravity 2.0 auxiliary side panel (`SIDECAR_UI_ENTRYPOINT_AUX_PANE`):\n\n* **Instant Hot-Reload**: Automatically detects workspace file changes (e.g. from `pdflatex`, `typst watch`, or `marp`) and refreshes seamlessly without losing your current zoom or scroll position.\n* **View, Add & Remove Markups/Comments in the Sidebar**:\n  * 🔤 **Text Mode**: Select any text span on the page to attach an inline highlight comment.\n  * 🖍️ **Highlight Mode**: Select text to immediately embed a native PDF `/Highlight` markup (click to add/edit a note, switch markup style, or delete).\n  * **<u>U</u> Underline Mode**: Select text to immediately embed a native PDF `/Underline` markup.\n  * **<s>S</s> Strike Mode**: Select text to immediately embed a native PDF `/StrikeOut` markup.\n  * 📌 **Note & ✂️ Snip Modes**: Drop sticky notes or marquee-box diagrams, math equations, or charts.\n* **Inline Popover Controls & History**: Click any highlight, underline, strikethrough, or note to edit its note, switch markup type (`H` / `U` / `S`), or delete it (`🗑️`), with full Undo/Redo (`Ctrl+Z` / `Ctrl+Y`) history.\n* **Show All Annotations Toggle (`💬 Show All`)**: Display all in-document comment popovers simultaneously across pages for quick full-page review.\n* **Workspace & Git Worktree Scanner**: Automatically finds PDF documents across the active workspace (`build/`, `output/`, etc.) and any linked `git worktree` checkouts with a one-click dropdown switcher.\n* **Zero Heavy Dependencies**: Built purely with `pdf-lib` for robust vector PDF manipulation and Node.js standard libraries for stdio JSON-RPC.\n\n---\n\n## 🔄 The Closed-Loop LaTeX & Document Workflow\n\nWhen writing academic papers, reports, or documentation in LaTeX (or Typst) with Antigravity agents, context-switching between external PDF viewers and copying feedback back into chat breaks flow. PDF Reviewer eliminates that friction:\n\n1. **You ask Gemini to write or edit your LaTeX.** Your background compiler (`pdflatex`, `latexmk`, `typst watch`) rebuilds the document, which refreshes automatically in the right-hand auxiliary side panel without losing scroll or zoom position.\n2. **You review visually in the sidebar.** Directly on the rendered PDF, highlight awkward phrasing or box a misaligned table/equation and attach your review comment (e.g., *\"rephrase this claim\"*, *\"table is overflowing margin\"*, *\"check equation 3\"*).\n3. **Gemini reads & fixes directly.** Instead of copying text into chat or describing coordinates, you simply tell Gemini: *\"Address the annotations on page 2 and mark them resolved\"*. Gemini uses `mcp_pdf_annotations_list` to read the comments, fixes the underlying `.tex` code, calls `mcp_pdf_annotations_modify` or `mcp_pdf_annotations_delete`, and the panel re-renders the corrected output.\n\n---\n\n## 📦 Installation\n\n### Quick Install (Antigravity CLI)\nRun the following command in your terminal:\n```bash\nagy plugin install https://github.com/axiomfab/pdf-reviewer\n```\nThen install dependencies in the plugin directory:\n```bash\ncd ~/.gemini/config/plugins/pdf-reviewer && npm install\n```\n\n### Manual Install\nClone the repository directly into your Antigravity plugins directory:\n```bash\ngit clone https://github.com/axiomfab/pdf-reviewer.git ~/.gemini/config/plugins/pdf-reviewer\ncd ~/.gemini/config/plugins/pdf-reviewer\nnpm install\n```\n*Note: Restart your Antigravity session or reload the window after installation to discover the newly mounted plugin.*\n\n---\n\n## 🛠️ Usage\n\n### 1. Sidecar UI\nLaunch or open the PDF Reviewer from any Antigravity chat session using the sidecar link:\n```markdown\n[PDF Reviewer](sidecar://pdf-reviewer/panel/)\n```\n\n### 2. Native MCP Tool Suite\nThe plugin registers a local stdio MCP server exposing 5 core tools to the agent:\n\n| MCP Tool | Operation | Description | Key Arguments |\n| :--- | :--- | :--- | :--- |\n| **`mcp_pdf_annotations_list`** | **Read** | Extract all ISO 32000 annotations & markups (`/Highlight`, `/Underline`, `/StrikeOut`, `/Text`, `/Square`, etc.) | `{ pdfPath: string, page?: number, type?: string }` |\n| **`mcp_pdf_annotations_add`** | **Write** | Programmatically embed a highlight, underline, strikethrough, note, or area box into the PDF | `{ pdfPath, page, type, comment?, selectedText?, rect?, textRects? }` |\n| **`mcp_pdf_annotations_modify`** | **Modify** | Update existing comment text, markup type, replacement, geometry, author, or status | `{ pdfPath: string, commentId: string, comment?, type?, status? }` |\n| **`mcp_pdf_annotations_delete`** | **Delete** | Remove a specific annotation or markup by ID | `{ pdfPath: string, commentId: string }` |\n| **`mcp_pdf_annotations_clear`** | **Delete All** | Clear all annotations (or only a specific `type`) from a target PDF | `{ pdfPath: string, type?: string }` |\n\n### 3. Terminal CLI Fallback\nYou can also run headless annotation management straight from your terminal:\n```bash\n# List all annotations (Read)\nnode sidecars/panel/pdf_annotations.mjs list <path-to-pdf>\n\n# Modify an annotation (Update)\nnode sidecars/panel/pdf_annotations.mjs modify <path-to-pdf> <commentId> --status=resolved\n\n# Delete a specific annotation (Delete)\nnode sidecars/panel/pdf_annotations.mjs delete <path-to-pdf> <commentId>\n\n# Clear all annotations (Clear)\nnode sidecars/panel/pdf_annotations.mjs clear <path-to-pdf>\n```\n\n---\n\n## 🧪 Testing\n\nThe plugin includes unit test coverage for PDF scanning, ISO 32000 annotation lifecycle, error handling, and MCP JSON-RPC protocol compliance:\n\n```bash\nnpm test\n```\n\n---\n\n## 📄 License\n\nMIT © [axiomfab](https://github.com/axiomfab)\n",
+  "latestReleaseNotes": "## [1.2.0](https://github.com/axiomfab/pdf-reviewer/compare/v1.1.0...v1.2.0) (2026-11-23)\n\n\n### Features\n\n* add automated release management via release-please-action ([#3](https://github.com/axiomfab/pdf-reviewer/issues/3)) ([cddf453](https://github.com/axiomfab/pdf-reviewer/commit/cddf4538d07c9c6ce29ca6a55253de1c1af45350))\n* icon-only SVG toolbar and custom inline-badge git worktree picker ([85dbf0b](https://github.com/axiomfab/pdf-reviewer/commit/85dbf0b3fd077760a3ef405726959f8c5abadedd))\n* support highlight, underline, and strikethrough CRUD in MCP and UI ([ac3186a](https://github.com/axiomfab/pdf-reviewer/commit/ac3186a70a4ed6f46b5988e4aaf046029bfdad35))\n* support modifying annotation location and cross-page relocation ([#1](https://github.com/axiomfab/pdf-reviewer/issues/1)) ([60dad88](https://github.com/axiomfab/pdf-reviewer/commit/60dad881fd292fb0845ba004b24a5635e5664444))\n\n\n### Bug Fixes\n\n* isolate workspace PDFs, support git worktrees, and clean up public repo ([bd31490](https://github.com/axiomfab/pdf-reviewer/commit/bd31490204889b7f4514eb9c603878117a53f85c))\n* lazy-load sidecar_sdk only when running inside sidecar host ([32624e0](https://github.com/axiomfab/pdf-reviewer/commit/32624e0999aa635e0aea12ff1ac52bf2fcbb2d38))",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 59,
+        "snippet": "const out = execFileSync('git', ['-C', workspaceRoot, 'worktree', 'list', '--porcelain'], { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/axiomfab/pdf-reviewer/blob/a8d19eb97bfa5a93f60a927db487be0473945de5/sidecars/panel/main.mjs#L59"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/panel/lib/pdf.min.js",
+        "line": 22,
+        "snippet": "!function webpackUniversalModuleDefinition(t,e){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=t.pdfjsLib=e():\"function\"==",
+        "githubBlobUrl": "https://github.com/axiomfab/pdf-reviewer/blob/a8d19eb97bfa5a93f60a927db487be0473945de5/sidecars/panel/lib/pdf.min.js#L22"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/panel/lib/pdf.worker.min.js",
+        "line": 22,
+        "snippet": "!function webpackUniversalModuleDefinition(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=e.pdfjsWorker=t():\"function",
+        "githubBlobUrl": "https://github.com/axiomfab/pdf-reviewer/blob/a8d19eb97bfa5a93f60a927db487be0473945de5/sidecars/panel/lib/pdf.worker.min.js#L22"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/pdf_annotations.mjs",
+        "line": 319,
+        "snippet": "writeFileSync(pdfPath, savedBytes);",
+        "githubBlobUrl": "https://github.com/axiomfab/pdf-reviewer/blob/a8d19eb97bfa5a93f60a927db487be0473945de5/sidecars/panel/pdf_annotations.mjs#L319"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/pdf_annotations.mjs",
+        "line": 514,
+        "snippet": "writeFileSync(pdfPath, savedBytes);",
+        "githubBlobUrl": "https://github.com/axiomfab/pdf-reviewer/blob/a8d19eb97bfa5a93f60a927db487be0473945de5/sidecars/panel/pdf_annotations.mjs#L514"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/pdf_annotations.mjs",
+        "line": 555,
+        "snippet": "writeFileSync(pdfPath, savedBytes);",
+        "githubBlobUrl": "https://github.com/axiomfab/pdf-reviewer/blob/a8d19eb97bfa5a93f60a927db487be0473945de5/sidecars/panel/pdf_annotations.mjs#L555"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.2.0",
+      "sha": "a8d19eb97bfa5a93f60a927db487be0473945de5",
+      "scannedAt": "2026-11-27T18:20:22.995Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

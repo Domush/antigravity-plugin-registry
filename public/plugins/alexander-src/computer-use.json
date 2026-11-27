@@ -1,0 +1,922 @@
+{
+  "schemaVersion": 1,
+  "id": "alexander-src/computer-use",
+  "sha": "1cd0386f16c825f6d655f250c9b2762195d3f61c",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:00.670Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "computer-use",
+    "displayName": "Computer Use",
+    "version": "2.6.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "computer-use",
+        "runtimeName": "computer-use_computer-use",
+        "transport": "stdio",
+        "command": "/usr/bin/python3",
+        "args": [
+          "scripts/computer_use_mcp.py"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "computer-use",
+        "slashCommand": "/computer-use",
+        "description": "Fast native Linux (Wayland/X11), Windows 10/11, and macOS desktop automation over MCP (4.5 ms capture+JPEG, non-blocking 120Hz cyan AI cursor with click ripples, independent user mouse, 8-thread parallel local OCR with inline [x,y] labels, ",
+        "disableModelInvocation": false,
+        "file": "skills/computer-use/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "computer-use",
+        "description": "Fast, context-isolated Linux, Windows, and macOS Computer Use worker subagent running on Flash. Use for long multi-step desktop GUI workflows and background app automation.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/computer-use.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/computer-use"
+    ],
+    "mcpServerNames": [
+      "computer-use_computer-use"
+    ],
+    "agentNames": [
+      "computer-use"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# computer-use\n\nFast native desktop automation MCP server and Antigravity plugin for Linux (Wayland and X11), Windows 10/11, and macOS (Apple Silicon and Intel): 4.5 ms full-screen capture + JPEG, non-blocking 120Hz cyan AI cursor with click ripples, independent user mouse, 8-thread parallel local OCR with inline `[x,y]` labels, closed-loop compound ops, background mode, and semantic AT-SPI2 / Windows UIA / macOS `AXUIElement` `[ref]` trees.\n\nWorks with Antigravity, Claude Code, Codex CLI, Cursor, Gemini CLI, and any stdio MCP client.\n\n## Paste This Into Your Agent\n\nCopy and paste this into Antigravity, Claude Code, Codex, or Cursor to install and verify automatically:\n\n```text\nInstall https://github.com/alexander-src/computer-use by following https://raw.githubusercontent.com/alexander-src/computer-use/main/INSTALL.md and verify with --selftest.\n```\n\n## Manual Quick Start\n\nLinux (Arch, CachyOS, Ubuntu, Fedora) and macOS (Apple Silicon / Intel):\n\n```bash\ngit clone https://github.com/alexander-src/computer-use.git\ncd computer-use\n./install.sh\n```\n\nWindows 10 / 11 (PowerShell, zero external binaries required):\n\n```powershell\ngit clone https://github.com/alexander-src/computer-use.git\ncd computer-use\npowershell -ExecutionPolicy Bypass -File .\\install.ps1\n```\n\nBoth installers set up the Antigravity plugin bundle (`~/.gemini/config/plugins/computer-use/`) and run `--selftest`. Restart Antigravity once after initial install so it launches the new MCP server (from v2.3.0 onward, the server also hot-reloads `scripts/*.py` in-process whenever updated on disk). See [INSTALL.md](INSTALL.md) for macOS permission setup and Claude Code, Codex CLI, Cursor, and Gemini CLI one-liners.\n\n## Reducing Both Local Overhead and LLM Round-Trips\n\nEnd-to-end speed in a desktop agent depends on both local action overhead and cloud LLM turns. `computer-use` v2.6 cuts both:\n\n- Inline pre-warmed `tessdata_fast` OCR (`OMP_THREAD_LIMIT=1` in-process, or an automatic `memfd` + `mmap` isolated `OMP_THREAD_LIMIT=1` helper when hot-reloading an existing Linux host process) replaces double-turn image offloads: on apps with empty accessibility trees (Discord, Brave, Chrome, Electron, VS Code, Spotify), `desktop_observe()` and `desktop_act(observe=\"auto\")` run 8-thread `libtesseract` (`load_system_dawg=0`, blank-strip skip, silenced Leptonica stderr, 4x local dark/white/colored-button polarity normalization) and return clickable `[x,y] \"Label\"` coordinates inline plus a 1 ms `SCREENSHOT_PATH` grid JPEG for textless icons.\n- Diff-cropped `wait_and_click` and `wait(text=...)` plus bbox-locked `wait(gone=...)` collapse multi-dialog flows into one call: `launch` (focuses an already-open window in ~1.5 ms or waits for the matching window), `open_url`, `wait_and_click` and `wait(text=...)` (wait for post-click pixels to paint so they never match stale text on the previous screen, OCR only the newly changed popup/pane in ~14 to 45 ms, skip OCR on unchanged frames, auto-retry a swallowed click once after 420 ms, support `offset_x`/`offset_y`), `click_and_type`, `keys`, `repeat`, `wait(gone=\"...\")` (locks onto the target text's bounding box, polls pixel diff at ~0.25 ms, and confirms disappearance with a ~4.5 ms tiny crop instead of re-scanning the full screen), and `wait(change=true)`.\n- Pre-warmed `/dev/uinput` + non-blocking 120Hz cursor glide + smart post-submit settle: eliminates the 200 ms first-input uinput setup delay and 400 ms first-OCR init delay at server boot, animates the cyan AI cursor on a background thread (`0.008 ms` on the action path), and waits for dialog transitions after `wait_and_click`/`submit` so post-action OCR sees the updated screen instead of a stale closing modal.\n\nMeasured live on Arch Linux with KDE Plasma 6 (Wayland, `1920x1080`) via `python3 scripts/computer_use_mcp.py --bench` and tool profiling:\n\n| Operation | Backend | Measured | Notes |\n| --- | --- | ---: | --- |\n| `desktop_act(observe=\"none\")` overhead | Direct `/dev/uinput` | 0.05 ms | Zero capture, zero settle |\n| Smooth cyan AI cursor glide (`55 ms` curve) | 120Hz async overlay thread (`glide_to`) | 0.008 ms | Animates off the action path |\n| `desktop_act(observe=\"auto\")` (visual) | `KWin.ScreenShot2` + `896px` `libturbojpeg` | 7.37 ms | 43 KB base64 payload |\n| `desktop_observe(mode=\"hybrid\")` (visual) | KWin DBus + sparse AX cache + `896px` grid | 8.45 ms | 47 KB base64 payload |\n| `400x300` region capture | `org.kde.KWin.ScreenShot2` FD pipe | 0.25 ms | Sub-millisecond crop |\n| Full `1920x1080` capture + `896px` JPEG (`q=62`) | `KWin.ScreenShot2` + Cairo + AVX2 `libturbojpeg` | 4.54 ms | 41 KB (50 KB with grid) |\n| Tiny `220x60` `wait(gone)` bbox verify | Pre-warmed `tessdata_fast` + pixel-diff gate | 4.5 ms | 0.25 ms/poll while unchanged |\n| Modal popup `440x520` local OCR (`wait_and_click` / `wait`) | Pre-warmed 8-thread `tessdata_fast` + diff crop | 14 to 45 ms | Mixed dark/light/button normalization |\n| Full `1920x1080` local OCR | Pre-warmed 8-thread `tessdata_fast` (`no_dawg`) | 108 to 161 ms | Was 790 ms (`tessdata_best`) or 1,800 ms without OMP limit |\n| Window list + active window + cursor | `org.kde.KWin /Scripting` DBus | 1.23 ms | 1.15 ms min |\n| Clipboard read | `org.kde.klipper` DBus | 0.03 ms | Async restore saves ~110 ms/paste |\n| Private background capture (`800x600`) | Authenticated `Xvfb` + direct `libX11` | 1.91 ms | Zero interference with live session |\n\n## Independent AI Cursor and Background Mode\n\n### Non-Blocking 120Hz Custom AI Cursor (Keep Your Own Mouse)\n\nWhile the agent clicks a target, a click-through cyan AI pointer glides along an ease-in-out curve at 120Hz on the overlay thread (`0.008 ms` call time, no blocking sleep on the action path) and plays expanding click ripples using `zwlr_layer_shell_v1` on Linux Wayland, `WS_EX_LAYERED` + `WDA_EXCLUDEFROMCAPTURE` on Windows, or a dedicated main-thread AppKit `NSWindow` (`NSWindowSharingNone`) on macOS. Moving your physical mouse never aborts active batches by default; your physical cursor is restored immediately after each click. Preview it non-destructively with `python3 scripts/computer_use_mcp.py --demo-cursor`.\n\n### Background Computer Use (Linux, Windows, and macOS)\n\nPass `background: true` (after `desktop_background`) to automate apps without moving your mouse, stealing focus, or touching your clipboard:\n\n- Linux: `desktop_background(action=\"start\")` launches a private `MIT-MAGIC-COOKIE-1` authenticated `Xvfb` virtual display (`XGetImage` + `XTest`) with its own screen buffer and cursor.\n- Windows: `desktop_background(action=\"attach\", app=\"...\")` captures the target window with `PrintWindow(PW_RENDERFULLCONTENT)` and sends child-HWND `PostMessageW` mouse and keyboard events directly to it while it stays behind your active windows.\n- macOS: `desktop_background(action=\"attach\", app=\"...\")` (or `action=\"launch\"` via `open -g -a`) captures the target window even while occluded (`CGWindowListCreateImage` / `screencapture -l`), activates native controls via `AXPress`, and delivers pointer/scroll/Unicode keyboard events directly via `CGEventPostToPid`.\n\n## Cross-Platform Architecture\n\n| Subsystem | Linux (Wayland / X11) | Windows 10 / 11 | macOS 13+ (arm64 / x86_64) |\n| --- | --- | --- | --- |\n| Screen capture | `KWin.ScreenShot2` FD pipe, `grim`, `maim`, `scrot`, `spectacle` | Per-Monitor DPI v2 `BitBlt`, `PrintWindow` | CoreGraphics `CGWindowListCreateImage` + `/usr/sbin/screencapture` (ScreenCaptureKit) fallback, Retina HiDPI |\n| Image encode & overlays | Cairo + AVX2 `libturbojpeg`, `GdkPixbuf` (`glycin` compatible) | Built-in GDI+ exact-length `IStream`, `turbojpeg.dll`, 5x7 bitmap badges | `CGBitmapContext` bilinear scale + Apple `ImageIO` or Homebrew `libturbojpeg`, 5x7 bitmap badges |\n| Pointer & keyboard | Persistent `/dev/uinput` (US/UK layout aware + async atomic paste), `ydotool`, `xdotool`, `wtype` | `SendInput` (`MOUSEEVENTF_VIRTUALDESK`, `KEYEVENTF_EXTENDEDKEY`, `KEYEVENTF_UNICODE` UTF-16) | `CGEvent` (`kCGMouseEventClickState`, `CGEventCreateScrollWheelEvent2`, `CGEventKeyboardSetUnicodeString` UTF-16) |\n| Window management | KWin Scripting DBus, Hyprland, Sway, X11 (`wmctrl`/`xdotool`) | `EnumWindows` (`DWMWA_CLOAKED` filtered), `DWMWA_EXTENDED_FRAME_BOUNDS`, `AttachThreadInput` focus | `CGWindowListCopyWindowInfo`, `CGGetActiveDisplayList`, `NSWorkspace`/`NSRunningApplication`, `AXUIElement` |\n| Accessibility & local OCR | AT-SPI2 (Wayland calibrated, 4s sparse cache) + 8-thread `libtesseract` OCR | Native MTA `IUIAutomation` COM (`[ref]` diffs, `Invoke`) + optional `libtesseract` OCR | Native `AXUIElement` (`0.35s` timeout, `[ref]` diffs, `AXPress`) + optional Homebrew `libtesseract` OCR |\n| Clipboard | Klipper DBus, `wl-clipboard`, `xclip`, `xsel` | Win32 `CF_UNICODETEXT` with lock retry | UTF-8 `pbcopy` / `pbpaste` |\n| Custom AI cursor | 120Hz Wayland `zwlr_layer_shell_v1` + `wl_shm` + Cairo | 120Hz Win32 `WS_EX_LAYERED` + `WS_EX_TRANSPARENT` + `WDA_EXCLUDEFROMCAPTURE` | 120Hz main-thread AppKit `NSWindow` helper (`NSWindowSharingNone`) |\n| Background mode | Authenticated private `Xvfb` + `libX11`/`libXtst` | `PrintWindow` + child-HWND `PostMessageW` | Occluded `CGWindowList`/`screencapture -l` + `AXPress` + `CGEventPostToPid` |\n\n## MCP Tools (7)\n\n| Tool | Purpose |\n| --- | --- |\n| `desktop_observe` | 1-call window list + active app AT-SPI2/UIA/`AXUIElement` `[ref]` tree (`AX_DIFF` on repeat calls) + inline `[x,y]` `OCR_TEXT` on sparse-AX apps (no image offload) + `896px` JPEG fallback when OCR has <5 words or `mode: \"vision\"` is requested. |\n| `desktop_act` | Execute batched steps (`launch`, `open_url`, `wait_and_click`, `click_and_type`, `keys`, `repeat`, `click`, `move`/`hover`, `drag`, `scroll`, `type`, `key`/`hotkey`, `ax_action`, `focus`, `window`, `wait`, `screenshot`) with non-blocking 120Hz cyan cursor glide, local AX+OCR text targeting, and `observe: \"none\"` fast bursts. Supports `background: true`. |\n| `desktop_background` | Start, attach, launch into, inspect, or stop a background session (`Xvfb` on Linux, `PrintWindow` + `PostMessageW` on Windows, `CGWindowList` + `AXPress`/`CGEventPostToPid` on macOS). |\n| `desktop_screenshot` | Capture `screen`, `active`, `window`, `area`, `ref`, or `background` with optional Set-of-Marks `[ref]` badges, `0..1000` coordinate grid, and `diff_from_last`. |\n| `desktop_windows` | List, focus, minimize, maximize, unmaximize, move/resize, close, or launch desktop windows. |\n| `desktop_clipboard` | Read, write, or clear the system clipboard. |\n| `desktop_status` | Report OS, active backends (including OCR), macOS TCC permission status, overlay status, background status, and multi-monitor geometry. |\n\n## Testing and Diagnostics\n\n```bash\n# Non-destructive MCP protocol and live desktop backend check\npython3 scripts/computer_use_mcp.py --selftest\n\n# Live subsystem latency benchmark\npython3 scripts/computer_use_mcp.py --bench\n\n# Visual non-destructive preview of the smooth cyan AI cursor + click ripples\npython3 scripts/computer_use_mcp.py --demo-cursor\n\n# Full Linux, Windows, and macOS unit + integration test suite\npython3 -m unittest discover -s tests -v\n```\n\nSet `COMPUTER_USE_AUDIT_LOG=/path/to/audit.jsonl` to log every tool call and latency to JSONL. Set `COMPUTER_USE_OVERLAY=0` or `COMPUTER_USE_SMOOTH_CURSOR=0` to disable the custom cursor overlay or smooth glide. Set `COMPUTER_USE_HOT_RELOAD=0` to disable automatic in-process script reload on disk updates. Set `COMPUTER_USE_ENABLE_SCREENREADER=1` on Linux only if you want `org.a11y.Status.ScreenReaderEnabled` toggled on for Chromium/Electron AT-SPI2 trees (restored on exit).\n\n## Limitations\n\n- Total wall-clock time on multi-step tasks still depends on cloud LLM latency (typically 1 to 3 seconds per model turn). Inline local OCR and compound ops reduce the number of turns, but a task that needs 3 model turns will still spend most of its wall-clock time waiting on the model rather than local input/capture.\n- On macOS, clicking, typing, and `AXUIElement` trees require Accessibility permission, and capturing other apps' windows requires Screen Recording permission (System Settings -> Privacy & Security).\n- Local OCR text targeting uses system `libtesseract` when installed (`tesseract` + `tesseract-data-eng` on Linux, `brew install tesseract` on macOS, or Tesseract-OCR on Windows). Without it, accessibility trees and `0..1000` grid coordinates still work normally.\n- Windows (`PrintWindow` + `PostMessageW`) and macOS (`CGWindowList` + `CGEventPostToPid`) background modes require the target window to be unminimized (it can sit behind other windows); some GPU-composited or raw-input apps ignore background posted events unless focused.\n- On Linux Wayland, the click-through AI cursor overlay requires compositor support for `zwlr_layer_shell_v1` (supported on KDE Plasma 6, Hyprland, Sway, River, and COSMIC; GNOME Mutter does not expose `wlr-layer-shell`, so actions still work without the floating cyan cursor).\n- On Windows, clicking inside elevated (Administrator / UAC) windows requires running the MCP server with matching elevation due to Windows UIPI isolation.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/capture.py",
+        "line": 494,
+        "snippet": "subprocess.run(cmd, check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/capture.py#L494"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/capture.py",
+        "line": 497,
+        "snippet": "subprocess.run([\"spectacle\", \"-b\", \"-n\", \"-f\", \"-o\", out_path], check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/capture.py#L497"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/capture.py",
+        "line": 504,
+        "snippet": "subprocess.run(cmd, check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/capture.py#L504"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/capture.py",
+        "line": 507,
+        "snippet": "subprocess.run([\"scrot\", out_path], check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/capture.py#L507"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/clipboard.py",
+        "line": 53,
+        "snippet": "r = subprocess.run([\"wl-paste\", \"--no-newline\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/clipboard.py#L53"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/clipboard.py",
+        "line": 56,
+        "snippet": "r = subprocess.run([\"xclip\", \"-selection\", \"clipboard\", \"-o\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/clipboard.py#L56"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/clipboard.py",
+        "line": 59,
+        "snippet": "r = subprocess.run([\"xsel\", \"--clipboard\", \"--output\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/clipboard.py#L59"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/clipboard.py",
+        "line": 71,
+        "snippet": "subprocess.run( [\"wl-copy\"], input=text, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/clipboard.py#L71"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/clipboard.py",
+        "line": 77,
+        "snippet": "subprocess.run( [\"xclip\", \"-selection\", \"clipboard\", \"-i\"], input=text, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/clipboard.py#L77"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/clipboard.py",
+        "line": 83,
+        "snippet": "subprocess.run( [\"xsel\", \"--clipboard\", \"--input\"], input=text, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/clipboard.py#L83"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/cursor_overlay.py",
+        "line": 938,
+        "snippet": "self._proc = subprocess.Popen( [sys.executable, os.path.abspath(__file__), \"--mac-overlay-helper\"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=en",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/cursor_overlay.py#L938"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/fast_ocr.py",
+        "line": 263,
+        "snippet": "proc = subprocess.Popen( [sys.executable, os.path.abspath(__file__), \"--worker\", str(self._workers), str(fd)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVN",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/fast_ocr.py#L263"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 206,
+        "snippet": "self._proc = subprocess.Popen( [ xvfb, \"-displayfd\", str(w_fd), \"-screen\", \"0\", f\"{self._width}x{self._height}x24\", \"-auth\", auth_path, \"-nolisten\", \"tcp\", ], pass_fds=(w_fd,), std",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L206"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 337,
+        "snippet": "proc = subprocess.Popen( argv, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L337"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 392,
+        "snippet": "subprocess.run([\"xdotool\", \"mousemove\", str(cx), str(cy)], env=self._env(), check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L392"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 415,
+        "snippet": "subprocess.run([\"xdotool\", \"click\", \"--repeat\", str(max(1, int(count))), str(b)], env=self._env(), check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L415"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 460,
+        "snippet": "subprocess.run([\"xdotool\", \"click\", \"--repeat\", str(n), str(b)], env=self._env(), check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L460"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 470,
+        "snippet": "subprocess.run([\"xdotool\", \"type\", \"--clearmodifiers\", \"--delay\", \"2\", \"--\", text], env=self._env(), check=True, capture_output=True, timeout=10)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L470"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/linux_bg.py",
+        "line": 481,
+        "snippet": "subprocess.run([\"xdotool\", \"key\", \"--clearmodifiers\", combo], env=self._env(), check=True, capture_output=True, timeout=3)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L481"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/macos_backend.py",
+        "line": 1288,
+        "snippet": "proc = subprocess.Popen(open_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, start_new_session=True)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1288"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/macos_backend.py",
+        "line": 1293,
+        "snippet": "proc = subprocess.Popen(open_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, start_new_session=True)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1293"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/macos_backend.py",
+        "line": 1298,
+        "snippet": "proc = subprocess.Popen(argv, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1298"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/macos_backend.py",
+        "line": 1668,
+        "snippet": "r = subprocess.run( [\"pbpaste\"], capture_output=True, timeout=2.0, env=self._utf8_env(), )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1668"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/macos_backend.py",
+        "line": 1679,
+        "snippet": "subprocess.run( [\"pbcopy\"], input=text.encode(\"utf-8\"), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=2.0, env=self._utf8_env(), check=True, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1679"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/macos_backend.py",
+        "line": 1785,
+        "snippet": "r = subprocess.run(cmd, capture_output=True, timeout=5.0)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1785"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 179,
+        "snippet": "r = subprocess.run( [\"gsettings\", \"get\", \"org.gnome.desktop.input-sources\", \"mru-sources\"], capture_output=True, text=True, timeout=1.5, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L179"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 191,
+        "snippet": "r = subprocess.run([\"localectl\", \"status\"], capture_output=True, text=True, timeout=1.5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L191"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 205,
+        "snippet": "r = subprocess.run([\"setxkbmap\", \"-query\"], capture_output=True, text=True, timeout=1.5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L205"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 501,
+        "snippet": "subprocess.run([\"ydotool\", \"mousemove\", \"--absolute\", f\"-x={cx}\", f\"-y={cy}\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L501"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 505,
+        "snippet": "subprocess.run([\"xdotool\", \"mousemove\", \"--sync\", str(cx), str(cy)], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L505"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 551,
+        "snippet": "subprocess.run([\"ydotool\", \"click\", code_map[btn_name]], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L551"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 557,
+        "snippet": "subprocess.run([\"xdotool\", \"keydown\", xm], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L557"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 558,
+        "snippet": "subprocess.run( [\"xdotool\", \"click\", \"--repeat\", str(max(1, int(count))), XDOTOOL_BUTTONS[btn_name]], check=True, capture_output=True, timeout=2, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L558"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 564,
+        "snippet": "subprocess.run([\"xdotool\", \"keyup\", xm], capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L564"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 612,
+        "snippet": "subprocess.run([\"xdotool\", \"mousedown\", xb], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L612"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 614,
+        "snippet": "subprocess.run([\"xdotool\", \"mousemove\", \"--sync\", str(end_x), str(end_y)], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L614"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 616,
+        "snippet": "subprocess.run([\"xdotool\", \"mouseup\", xb], capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L616"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 651,
+        "snippet": "subprocess.run([\"xdotool\", \"click\", \"--repeat\", str(n), bmap[d]], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L651"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 679,
+        "snippet": "subprocess.run([\"xdotool\", \"key\", \"--clearmodifiers\", combo], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L679"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 713,
+        "snippet": "subprocess.run([\"wtype\", \"--\", text], check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L713"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 716,
+        "snippet": "subprocess.run([\"ydotool\", \"type\", \"--key-delay\", str(max(1, key_delay_ms)), \"--\", text], check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L716"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/uinput_driver.py",
+        "line": 719,
+        "snippet": "subprocess.run([\"xdotool\", \"type\", \"--delay\", str(max(1, key_delay_ms)), \"--\", text], check=True, capture_output=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/uinput_driver.py#L719"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/win32_backend.py",
+        "line": 588,
+        "snippet": "proc = subprocess.Popen( argv, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=CREATE_NEW_PROCESS_GROUP, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/win32_backend.py#L588"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 93,
+        "snippet": "mons = json.loads(subprocess.check_output([\"hyprctl\", \"monitors\", \"-j\"], text=True, timeout=2))",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L93"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 112,
+        "snippet": "outs = json.loads(subprocess.check_output([\"swaymsg\", \"-t\", \"get_outputs\"], text=True, timeout=2))",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L112"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 123,
+        "snippet": "r = subprocess.run([\"kscreen-doctor\", \"-o\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L123"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 135,
+        "snippet": "r = subprocess.run([\"xrandr\", \"--current\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L135"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 229,
+        "snippet": "raw = subprocess.check_output([\"hyprctl\", \"cursorpos\"], text=True, timeout=1.5).strip()",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L229"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 237,
+        "snippet": "r = subprocess.run([\"xdotool\", \"getmouselocation\", \"--shell\"], capture_output=True, text=True, timeout=1.5)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L237"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 251,
+        "snippet": "tree = json.loads(subprocess.check_output([\"swaymsg\", \"-t\", \"get_tree\"], text=True, timeout=2))",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L251"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 336,
+        "snippet": "clients = json.loads(subprocess.check_output([\"hyprctl\", \"clients\", \"-j\"], text=True, timeout=2))",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L336"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 337,
+        "snippet": "active_w = json.loads(subprocess.check_output([\"hyprctl\", \"activewindow\", \"-j\"], text=True, timeout=2))",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L337"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 338,
+        "snippet": "cur_raw = subprocess.check_output([\"hyprctl\", \"cursorpos\"], text=True, timeout=2).strip()",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L338"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 376,
+        "snippet": "r = subprocess.run([\"xdotool\", \"getmouselocation\", \"--shell\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L376"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 382,
+        "snippet": "r2 = subprocess.run([\"xdotool\", \"getactivewindow\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L382"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 388,
+        "snippet": "r = subprocess.run([\"wmctrl\", \"-lpGx\"], capture_output=True, text=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L388"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 533,
+        "snippet": "subprocess.run([\"hyprctl\", \"dispatch\", \"focuswindow\", f\"address:{wid}\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L533"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 535,
+        "snippet": "subprocess.run([\"hyprctl\", \"dispatch\", \"closewindow\", f\"address:{wid}\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L535"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 542,
+        "snippet": "subprocess.run([\"swaymsg\", f\"[con_id={wid}] focus\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L542"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 544,
+        "snippet": "subprocess.run([\"swaymsg\", f\"[con_id={wid}] kill\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L544"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 546,
+        "snippet": "subprocess.run([\"swaymsg\", f\"[con_id={wid}] fullscreen enable\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L546"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 548,
+        "snippet": "subprocess.run([\"swaymsg\", f\"[con_id={wid}] fullscreen disable\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L548"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 550,
+        "snippet": "subprocess.run([\"swaymsg\", f\"[con_id={wid}] move scratchpad\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L550"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 557,
+        "snippet": "subprocess.run([\"xdotool\", \"windowminimize\", str(int(wid, 16))], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L557"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 561,
+        "snippet": "subprocess.run([\"wmctrl\", \"-i\", \"-a\", wid], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L561"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 563,
+        "snippet": "subprocess.run([\"wmctrl\", \"-i\", \"-c\", wid], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L563"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 565,
+        "snippet": "subprocess.run([\"wmctrl\", \"-i\", \"-r\", wid, \"-b\", \"add,maximized_vert,maximized_horz\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L565"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 567,
+        "snippet": "subprocess.run([\"wmctrl\", \"-i\", \"-r\", wid, \"-b\", \"remove,maximized_vert,maximized_horz\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L567"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 573,
+        "snippet": "subprocess.run([\"wmctrl\", \"-i\", \"-r\", wid, \"-e\", f\"0,{nx},{ny},{nw},{nh}\"], check=True, capture_output=True, timeout=2)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L573"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/windows.py",
+        "line": 607,
+        "snippet": "proc = subprocess.Popen( argv, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L607"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/computer_use_mcp.py",
+        "line": 338,
+        "snippet": "with open(self._audit_path, \"a\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/computer_use_mcp.py#L338"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/fast_ocr.py",
+        "line": 44,
+        "snippet": "with open(\"/proc/self/environ\", \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/fast_ocr.py#L44"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/linux_bg.py",
+        "line": 287,
+        "snippet": "os.unlink(self._auth_path)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/linux_bg.py#L287"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/macos_backend.py",
+        "line": 1792,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1792"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/macos_backend.py",
+        "line": 1797,
+        "snippet": "os.unlink(path)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/macos_backend.py#L1797"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/windows.py",
+        "line": 212,
+        "snippet": "os.unlink(script_path)",
+        "githubBlobUrl": "https://github.com/alexander-src/computer-use/blob/1cd0386f16c825f6d655f250c9b2762195d3f61c/scripts/windows.py#L212"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.6.0",
+      "sha": "1cd0386f16c825f6d655f250c9b2762195d3f61c",
+      "scannedAt": "2026-11-27T18:21:00.670Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

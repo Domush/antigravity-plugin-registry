@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 1,
+  "id": "magalz/ignis-swarm",
+  "sha": "d6d8bad49f17cead531fe38dcade4c6b7dec0fd4",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:00.618Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "ignis-swarm",
+    "displayName": "Ignis Swarm",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "broker",
+        "runtimeName": "ignis-swarm_broker",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/ignis-broker.mjs",
+          "mcp-bridge"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "ignis-safety-guard",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "node ./hooks/pre-tool-use.mjs",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "ignis-audit-tracker",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "edit_file|write_file|run_command",
+        "type": "command",
+        "command": "node ./hooks/post-tool-use.mjs",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "ignis-audit-docs",
+        "slashCommand": "/ignis-audit-docs",
+        "description": "Use in Phase 3 (@doc-auditor) or whenever recording technical decisions (ADRs), business decisions (BDRs), or operational playbooks. Enforces 1 file per decision + INDEX.md in the repository and optional syncing to a connected issue tracker",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-audit-docs/SKILL.md"
+      },
+      {
+        "name": "ignis-benchmark",
+        "slashCommand": "/ignis-benchmark",
+        "description": "On-demand methodological audit for performance measurements, speedups, latency/throughput claims, or regressions (\"explain the number\"). Use before trusting or reporting any benchmark result.",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-benchmark/SKILL.md"
+      },
+      {
+        "name": "ignis-broker",
+        "slashCommand": "/ignis-broker",
+        "description": "Use whenever calling managed MCP tools through the resilient ignis-swarm broker daemon via its 4 MCP meta-tools or cross-platform Node CLI fallback.",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-broker/SKILL.md"
+      },
+      {
+        "name": "ignis-bug-fix",
+        "slashCommand": "/ignis-bug-fix",
+        "description": "On-demand playbook for standalone bugs or regressions outside a full slice. Enforces targeted root-cause tracing, mandatory failing reproduction test (TDD), attack-the-premise after 2 failed attempts, minimal YAGNI fix, and real runtime ver",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-bug-fix/SKILL.md"
+      },
+      {
+        "name": "ignis-investigate",
+        "slashCommand": "/ignis-investigate",
+        "description": "On-demand read-only playbook for parallel codebase investigations or root-cause forensics using targeted symbol lookup and read-only /swarm workers. Never modifies code; separates verified facts from inferences.",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-investigate/SKILL.md"
+      },
+      {
+        "name": "ignis-onboarding",
+        "slashCommand": "/ignis-onboarding",
+        "description": "Interactive first-run setup and reconfiguration wizard for ignis-swarm. Probes installed MCPs and local CLIs, asks concise preferences via ask_question, registers managed MCPs in ignis-broker, and persists opt-in integrations.",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-onboarding/SKILL.md"
+      },
+      {
+        "name": "ignis-plan",
+        "slashCommand": "/ignis-plan",
+        "description": "Use during /plan (Phase 0) to plan an epic, feature, or slice using targeted codebase discovery, YAGNI/subtract-before-you-add gates, frozen interface contracts, atomic waves of nuclear tasks, BDD criteria, and [ADR]/[BDR] documentation fla",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-plan/SKILL.md"
+      },
+      {
+        "name": "ignis-review",
+        "slashCommand": "/ignis-review",
+        "description": "Use for Level 1 per-task @verifier checks and Level 2 slice-end 3-lens final audit using the bundled read-only blind-edge-hunter subagent and an independent @acceptance-auditor.",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-review/SKILL.md"
+      },
+      {
+        "name": "ignis-swarm",
+        "slashCommand": "/ignis-swarm",
+        "description": "Use as the /swarm Coordinator to orchestrate an approved slice plan across waves of nuclear workers, enforce 5-field briefs, apply capability-tier model routing, manage context compaction checkpoints, and run Phase 3 (@doc-auditor) and Phas",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-swarm/SKILL.md"
+      },
+      {
+        "name": "ignis-tdd-bdd",
+        "slashCommand": "/ignis-tdd-bdd",
+        "description": "Use when implementing code or tests in ignis-swarm. Enforces outer-loop BDD (Given/When/Then) paired with inner-loop TDD (Red-Green-Refactor), anti-Goodhart/anti-over-mocking discipline, zero narrative inline comments, and optional incremen",
+        "disableModelInvocation": false,
+        "file": "skills/ignis-tdd-bdd/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "blind-edge-hunter",
+        "description": "Read-only adversarial auditor that inspects only the raw git diff and repository code—never the implementation plan or issue tracker—to catch logic bugs, edge cases, concurrency flaws, test cheating, and banned inline comments.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/blind-edge-hunter.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ignis-audit-docs",
+      "/ignis-benchmark",
+      "/ignis-broker",
+      "/ignis-bug-fix",
+      "/ignis-investigate",
+      "/ignis-onboarding",
+      "/ignis-plan",
+      "/ignis-review",
+      "/ignis-swarm",
+      "/ignis-tdd-bdd"
+    ],
+    "mcpServerNames": [
+      "ignis-swarm_broker"
+    ],
+    "agentNames": [
+      "blind-edge-hunter"
+    ],
+    "hookEvents": [
+      "PostInvocation",
+      "PostToolUse",
+      "PreToolUse",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/logo.svg\" alt=\"Ignis Swarm Logo\" width=\"88\" height=\"88\" />\n</p>\n\n<h1 align=\"center\">Ignis Swarm (<code>ignis-swarm</code>)</h1>\n\n<p align=\"center\">\n  <strong>Contract-driven, auditable <code>/swarm</code> engineering workflow for Google Antigravity.</strong><br/>\n  Zero external dependencies · Cross-platform (macOS, Linux, Windows) · Node.js &ge; 20\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/magalz/ignis-swarm/releases/tag/v1.0.0\"><img src=\"https://img.shields.io/badge/release-v1.0.0-orange\" alt=\"Release v1.0.0\" /></a>\n  <img src=\"https://img.shields.io/badge/node-%3E%3D20-brightgreen\" alt=\"Node >= 20\" />\n  <img src=\"https://img.shields.io/badge/dependencies-zero-blue\" alt=\"Zero Dependencies\" />\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-lightgrey\" alt=\"MIT License\" /></a>\n  <a href=\"https://github.com/magalz/ignis-swarm/wiki\"><img src=\"https://img.shields.io/badge/docs-GitHub%20Wiki-informational\" alt=\"GitHub Wiki\" /></a>\n</p>\n\n---\n\n## Why Ignis Swarm?\n\nMost multi-agent setups rely on verbose personas and hope the model remembers every rule across long sessions. **`ignis-swarm`** enforces engineering rigor through **structural mechanisms** instead:\n\n- **Frozen contracts before parallel fan-out** — `/plan` locks shared types, signatures, and exclusive file ownership before `/swarm` spawns parallel workers.\n- **Outer-loop BDD + inner-loop TDD** — Every nuclear task starts with observable `Given / When / Then` criteria, proves a failing test first (Red → Green → Refactor), and forbids over-mocking and narrative inline comments.\n- **Auditable decision trails** — Technical choices (`docs/adr/ADR-NNN-*.md`) and business rules (`docs/bdr/BDR-NNN-*.md`) live in 1 file per decision with a lean `INDEX.md`, enforced by a deterministic `Stop` hook.\n- **Unbiased 3-lens final audit** — A read-only `blind-edge-hunter` subagent (and optional headless Claude Opus / Codex CLI runners) inspects **only the raw `git diff`** with zero access to plans or trackers, paired with an independent `@acceptance-auditor`.\n- **Resilient local MCP broker (`ignis-swarm_broker`)** — Supervises `stdio` and Streamable HTTP MCP servers behind 4 compact meta-tools with auto-reconnect, per-workspace pooling, local-first/global-fallback config, and spill-to-file output truncation.\n\n---\n\n## Prerequisites & Installation\n\n- **Google Antigravity** (App or `agy` CLI)\n- **Node.js `>= 20`** (powers the zero-dependency hooks and bundled MCP broker)\n\n### Install via Antigravity CLI\n\n```bash\n# Install directly from GitHub\nagy plugin install https://github.com/magalz/ignis-swarm\n\n# Or install from a local clone\ngit clone https://github.com/magalz/ignis-swarm.git\nagy plugin install ./ignis-swarm\n```\n\n### Verify Installation\n\n```bash\nagy plugin list\n```\n\nYou should see `ignis-swarm (enabled, 1.0.0)` with **10 skills, 1 agent, 1 rule, 1 MCP server, and 5 hooks**.\n\n---\n\n## First-Run Setup (`/ignis-onboarding`)\n\nOn your first interactive session in a project workspace, `ignis-swarm` prompts you to run **`/ignis-onboarding`** (you can also run it any time to reconfigure). Subagents and `/swarm` workers never receive onboarding prompts.\n\nThe wizard probes your environment (with secrets redacted) and configures 4 areas saved to `~/.ignis-broker/onboarding.json`:\n\n1. **Managed MCP Servers** — Selectively register discovered MCP servers into `ignis-broker` without modifying your existing `~/.gemini/config/mcp_config.json`.\n2. **Opt-In Issue Trackers** — Choose `None` (local repo only), **Linear**, **ItsAPlan**, and/or **GitHub Issues** for Phase 0 discovery and Phase 3 ADR/BDR mirroring.\n3. **Opt-In Memtrace** — Optionally enable Memtrace code-intelligence health checks and broker integration (disabled by default).\n4. **Phase 4 Blind Review Routing (`reviewRouting`)** — Pick how diff-only blind audits run:\n   - `antigravity_gemini_only` — Uses only the bundled Antigravity `blind-edge-hunter` subagent (zero external CLIs required).\n   - `antigravity_first` — Uses `blind-edge-hunter` first, falling back to a headless external CLI (`claude` Opus or `codex` Sol) if native quota runs out.\n   - `headless_always` — Runs `scripts/run-blind-review.mjs` directly, falling back to native only if the external CLI fails.\n\n> Deep dive into `onboarding.json` schema, CLI probing, and smoke tests: **[Getting Started & Onboarding](https://github.com/magalz/ignis-swarm/wiki/Getting-Started-and-Onboarding)**.\n\n---\n\n## Day-to-Day Commands & Skills\n\n### 1. Primary Feature Workflow (Use Native Antigravity Commands)\n\n`rules/AGENTS.md` automatically wires Antigravity's native commands to `ignis-swarm`:\n\n| Step | Command you type | What happens |\n| :--- | :--- | :--- |\n| **1. Plan** | `/plan <feature or slice goal>` | Loads `ignis-plan` (Phase 0): targeted discovery, YAGNI gate, frozen contracts, atomic waves, BDD criteria, and `[ADR]`/`[BDR]` flags. |\n| **2. Compact** | `/compact Preserve: ...` *(pre-filled by Phase 0)* | Compacts the conversation cleanly while keeping exact wave tasks, contracts, and file ownership. |\n| **3. Execute** | `/swarm Execute the approved plan starting at Wave 0/1 using ignis-swarm.` | Activates Antigravity's native Swarm runtime and loads `ignis-swarm` to dispatch waves, verify each task, write ADRs/BDRs, and run the 3-lens final audit. |\n\n> [!IMPORTANT]\n> **Always use native `/swarm` (not `/ignis-swarm` alone) to run a swarm.**\n> Antigravity only activates the native Swarm message board and `swarm` tool when you invoke `/swarm` explicitly. Once `/swarm` starts, `rules/AGENTS.md` automatically loads the `ignis-swarm` coordinator playbook.\n\n### 2. Standalone On-Demand Playbooks\n\nCall these directly whenever you don't need a full multi-wave slice:\n\n| Command | When to use it |\n| :--- | :--- |\n| **`/ignis-onboarding`** | First-run setup or reconfiguring MCP broker servers, trackers, Memtrace, or `reviewRouting`. |\n| **`/ignis-bug-fix`** | Standalone bugs or regressions: failing repro test first (Red), root-cause trace, `attack-the-premise` after 2 failed attempts, minimal fix, runtime proof. |\n| **`/ignis-investigate`** | Read-only architectural questions or incident forensics (optionally parallelized), separating **Observed**, **Inferred**, and **Unknown** facts. |\n| **`/ignis-benchmark`** | Methodological audit (*\"Explain the Number\"*) before trusting or reporting any latency, throughput, memory, or speedup claim. |\n\n### 3. Stage Skills (Auto-Triggered & Usable Directly)\n\nThese skills trigger automatically during `/plan` and `/swarm`, and also work standalone when called directly:\n\n| Command | Standalone use |\n| :--- | :--- |\n| **`/ignis-tdd-bdd`** | Implement a task with strict BDD + TDD, boundary-only mocking, and zero narrative inline comments. |\n| **`/ignis-review`** | Run `@verifier` checks or the 3-lens final audit (`blind-edge-hunter` + `@acceptance-auditor`) on your current diff. |\n| **`/ignis-audit-docs`** | Create/update `docs/adr/ADR-NNN-*.md`, `docs/bdr/BDR-NNN-*.md`, `INDEX.md`, and optional tracker links. |\n| **`/ignis-broker`** | Query/call managed MCP servers via `ignis-swarm_broker` or troubleshoot the broker daemon. |\n| **`/ignis-plan`** | Run Phase 0 planning rules directly outside Antigravity's native `/plan` UI mode. |\n\n> Full reference with examples and trigger matrix: **[Commands & Skills Reference](https://github.com/magalz/ignis-swarm/wiki/Commands-and-Skills-Reference)**.\n\n---\n\n## The 5-Phase Workflow\n\n```mermaid\nflowchart LR\n    P0[\"Phase 0: /plan\\nDiscovery · YAGNI\\nFrozen Contracts · Waves\"]\n    HO[\"2-Step Handoff\\n/compact Preserve: ...\\n/swarm ...\"]\n    P12[\"Phases 1-2: /swarm Waves\\n5-Field Nuclear Briefs\\nBDD+TDD · @verifier\"]\n    P3[\"Phase 3: @doc-auditor\\n1-File ADRs/BDRs\\nINDEX.md · Opt-In Sync\"]\n    P4[\"Phase 4: 3-Lens Audit\\nblind-edge-hunter (diff-only)\\n@acceptance-auditor\"]\n    P5[\"Phase 5: Closure\\nSummary & Final /compact\"]\n\n    P0 --> HO --> P12 --> P3 --> P4 --> P5\n```\n\n1. **Phase 0 (`/plan`):** Maps callers/callees and `docs/{adr,bdr}/INDEX.md`, cuts dead weight (`subtract-before-you-add`) and speculative work (YAGNI), freezes shared contracts (Wave 0), and splits work into non-colliding waves with exclusive file ownership.\n2. **Phases 1–2 (`/swarm` Coordinator + Workers):** Dispatches 1 named worker per nuclear task using a strict 5-field brief and capability-tier model routing; pairs waves with `@verifier` (Red → Green proof, scope check, anti-mock check, factual coverage) and pauses for `/compact` at wave boundaries when context pressure rises.\n3. **Phase 3 (`@doc-auditor`):** Writes 1 file per `[ADR]`/`[BDR]` decision, updates `INDEX.md`, and optionally mirrors links/comments into your connected issue tracker.\n4. **Phase 4 (3-Lens Final Audit):** Combines **`blind-edge-hunter`** (strictly diff-only, read-only, `inheritMcp: false`, `model: pro`, or headless Claude/Codex via `scripts/run-blind-review.mjs`) with **`@acceptance-auditor`** (full access to plan, tracker, and ADRs/BDRs).\n5. **Phase 5 (Closure):** Fixes proven `HIGH`/`MEDIUM` findings, reports observed coverage and audit verdicts, and emits a pre-filled post-slice `/compact` checkpoint.\n\n> Detailed walkthrough, brief templates, model routing, and compaction checkpoints: **[Five-Phase Swarm Workflow](https://github.com/magalz/ignis-swarm/wiki/Five-Phase-Swarm-Workflow)**.\n\n---\n\n## Built-In Resilience & Safety at a Glance\n\n### Resilient MCP Broker (`ignis-swarm_broker`)\nExposes **4 compact meta-tools** (`broker_list`, `broker_describe`, `broker_call`, `broker_status`) backed by a detached localhost Node.js daemon with lazy auto-start, crash recovery, per-workspace pooling, local-first (`.agents/ignis-broker.json`) + global-fallback (`~/.ignis-broker/servers.json`) config, `${VAR}` secret expansion from `~/.ignis-broker/.env`, and spill-to-file output truncation.\n\n```bash\n# Quick CLI diagnostics\nnode scripts/ignis-broker.mjs status\nnode scripts/ignis-broker.mjs discover-mcp\n```\n\n### Automatic Lifecycle Hooks (`hooks.json`)\n| Hook | What it does automatically |\n| :--- | :--- |\n| **`SessionStart`** | Prompts first-run onboarding (main session only), detects `docs/{adr,bdr}/INDEX.md`, warns on local broker config errors/fallbacks, and checks opt-in Memtrace health. |\n| **`PreToolUse`** | Blocks `--no-verify`, force-push to `main`/`master`, `git reset --hard`, and destructive root deletions; asks confirmation before other force pushes or `git clean -f`. |\n| **`PostToolUse`** | Logs lightweight per-conversation JSONL audit entries (`~/.ignis-broker/audit/<id>.jsonl`) and tags test executions. |\n| **`PostInvocation`** | Deterministic `compaction-watch.mjs` monitors active transcript size (default `550 KB`) and prompts a pre-filled `/compact` checkpoint. |\n| **`Stop`** | Blocks finishing if any `ADR-NNN`/`BDR-NNN` file is missing from `INDEX.md` or if added git diff lines contain `.only`, `.skip`, `#[ignore]`, `t.Skip`, `@ts-ignore`, `eslint-disable`, bare `// nolint`, or new `TODO`/`FIXME`. |\n\n---\n\n## Full Documentation (GitHub Wiki)\n\nDetailed guides, schemas, CLI flags, environment variables, and troubleshooting live in the **[GitHub Wiki](https://github.com/magalz/ignis-swarm/wiki)**:\n\n| Wiki Page | What you'll find |\n| :--- | :--- |\n| **[Home](https://github.com/magalz/ignis-swarm/wiki)** | Documentation map by role and task |\n| **[Getting Started & Onboarding](https://github.com/magalz/ignis-swarm/wiki/Getting-Started-and-Onboarding)** | Install methods, Q1–Q5 wizard walkthrough, `onboarding.json` schema, CLI management |\n| **[Commands & Skills Reference](https://github.com/magalz/ignis-swarm/wiki/Commands-and-Skills-Reference)** | All 10 skills, native `/plan` & `/swarm` rules, triggers, and standalone examples |\n| **[Five-Phase Swarm Workflow](https://github.com/magalz/ignis-swarm/wiki/Five-Phase-Swarm-Workflow)** | Wave anatomy, 5-field nuclear brief, model routing tiers, compaction checkpoints |\n| **[TDD/BDD & Audit Documentation](https://github.com/magalz/ignis-swarm/wiki/TDD-BDD-and-Audit-Documentation)** | BDD+TDD loop, anti-Goodhart rules, mutation testing, ADR/BDR templates, tracker profiles |\n| **[Blind Review & Final Audit](https://github.com/magalz/ignis-swarm/wiki/Blind-Review-and-Final-Audit)** | `@verifier`, `blind-edge-hunter`, `run-blind-review.mjs` (Claude Opus & Codex Sol), `@acceptance-auditor` |\n| **[Resilient MCP Broker](https://github.com/magalz/ignis-swarm/wiki/Resilient-MCP-Broker)** | Architecture, 4 meta-tools, all 14 CLI commands, config precedence, `.env` secrets, spill-to-file |\n| **[Lifecycle Hooks & Guardrails](https://github.com/magalz/ignis-swarm/wiki/Lifecycle-Hooks-and-Guardrails)** | Exact rules for all 5 hooks, audit logs, and all environment variables |\n| **[Architecture, Troubleshooting & FAQ](https://github.com/magalz/ignis-swarm/wiki/Architecture-Troubleshooting-and-FAQ)** | 8 engineering principles, ADR index, common issues & fixes, FAQ |\n\n---\n\n## Validation, Tests & Architecture Decisions\n\n```bash\n# Strict Antigravity plugin validation\nagy plugin validate --strict .\n\n# Full automated test suite (hooks, broker unit/supervisor/E2E, onboarding, blind-review runner)\nnode --test tests/*.test.mjs\n```\n\n- Architecture Decision Records: [docs/adr/INDEX.md](docs/adr/INDEX.md)\n\n## License\n\n[MIT](LICENSE) © 2026 [magalz](https://github.com/magalz)\n",
+  "latestReleaseNotes": "Initial public release of **ignis-swarm** — a zero-dependency, cross-platform, contract-driven \\/swarm\\ engineering workflow plugin for Google Antigravity.\n\n### Highlights\n- **5-Phase Workflow:** \\/plan\\ (Phase 0) -> 2-step \\/compact\\ + \\/swarm\\ handoff -> atomic wave execution with 5-field nuclear briefs -> \\@doc-auditor\\ ADRs/BDRs -> 3-lens final audit (\\\blind-edge-hunter\\ + \\@acceptance-auditor\\).\n- **10 Skills, 1 Custom Subagent, 1 Rule, 5 Lifecycle Hooks:** Zero external dependencies (Node.js >= 20).\n- **Resilient Local MCP Broker (\\ignis-swarm_broker\\):** 4 compact meta-tools, detached auto-start daemon, local-first/global-fallback config, per-workspace pooling, Windows \\.cmd\\ shim support, and spill-to-file truncation.\n- **Full Documentation:** See the [GitHub Wiki](https://github.com/magalz/ignis-swarm/wiki).",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"ignis-safety-guard\" executes a shell command on PreToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 18,
+        "snippet": "node ./hooks/pre-tool-use.mjs",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks.json#L18"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"ignis-audit-tracker\" executes a shell command on PostToolUse (matcher: edit_file|write_file|run_command).",
+        "file": "hooks.json",
+        "line": 32,
+        "snippet": "node ./hooks/post-tool-use.mjs",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks.json#L32"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/session-start.mjs",
+        "line": 86,
+        "snippet": "const res = spawnSync(resolved.command, resolved.args, { cwd, encoding: \"utf8\", timeout: 2500, windowsHide: true, ...resolved.options, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks/session-start.mjs#L86"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/session-start.mjs",
+        "line": 168,
+        "snippet": "const res = spawnSync(resolved.command, resolved.args, { cwd, encoding: \"utf8\", timeout: 3000, windowsHide: true, ...resolved.options, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks/session-start.mjs#L168"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/stop-gate.mjs",
+        "line": 74,
+        "snippet": "const res = spawnSync(\"git\", args, { cwd, encoding: \"utf8\", timeout: 4000, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks/stop-gate.mjs#L74"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/broker/adapters.mjs",
+        "line": 170,
+        "snippet": "spawnSync(\"taskkill\", [\"/PID\", String(pid), \"/T\", \"/F\"], { stdio: \"ignore\", windowsHide: true, timeout: 4000, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/adapters.mjs#L170"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/broker/adapters.mjs",
+        "line": 210,
+        "snippet": "this.proc = spawn(resolved.command, resolved.args, { cwd: this.cwd, env: mergedEnv, stdio: [\"pipe\", \"pipe\", \"pipe\"], windowsHide: true, detached: process.platform !== \"win32\", ...r",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/adapters.mjs#L210"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/broker/adapters.mjs",
+        "line": 598,
+        "snippet": "proc = spawn(resolved.command, resolved.args, { cwd: cwd || undefined, env: process.env, stdio: [\"ignore\", \"pipe\", \"pipe\"], windowsHide: true, detached: process.platform !== \"win32",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/adapters.mjs#L598"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 203,
+        "snippet": "const child = spawn(process.execPath, [entryScript, \"daemon\"], { detached: true, stdio: \"ignore\", windowsHide: true, env: { ...process.env, IGNIS_BROKER_HOME: home, IGNIS_BROKER_DA",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L203"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/broker/onboarding.mjs",
+        "line": 218,
+        "snippet": "const res = spawnSync(\"which\", [cmd], { encoding: \"utf8\", timeout: 2000, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/onboarding.mjs#L218"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/run-blind-review.mjs",
+        "line": 115,
+        "snippet": "return spawnSync(process.execPath, [cmd, ...args], { cwd, input, encoding: \"utf8\", timeout: timeoutMs, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/run-blind-review.mjs#L115"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/run-blind-review.mjs",
+        "line": 137,
+        "snippet": "return spawnSync(resolved.command, resolved.args, { cwd, input, encoding: \"utf8\", timeout: timeoutMs, windowsHide: true, ...resolved.options, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/run-blind-review.mjs#L137"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/run-blind-review.mjs",
+        "line": 148,
+        "snippet": "const res = spawnSync(\"git\", [\"diff\", `${base}...HEAD`], { cwd, encoding: \"utf8\", maxBuffer: 20 * 1024 * 1024, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/run-blind-review.mjs#L148"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/compaction-watch.mjs",
+        "line": 78,
+        "snippet": "fs.writeFileSync( statePath, JSON.stringify( { lastPromptedBytes: activeBytes, lastMarkerEnd, updatedAt: new Date().toISOString(), }, null, 2 ), { encoding: \"utf8\", mode: 0o600 } )",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks/compaction-watch.mjs#L78"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/post-tool-use.mjs",
+        "line": 45,
+        "snippet": "fs.appendFileSync(logFile, `${JSON.stringify(entry)}\\n`, { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks/post-tool-use.mjs#L45"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "hooks/session-start.mjs",
+        "line": 112,
+        "snippet": "const resp = await fetch(`http://127.0.0.1:${info.port}/v1/status`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\", Authorization: `Bearer ${info.token}`, Connecti",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/hooks/session-start.mjs#L112"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/broker/adapters.mjs",
+        "line": 456,
+        "snippet": "await fetch(this.url, { method: \"POST\", headers, body: JSON.stringify({ jsonrpc: \"2.0\", method, params }), signal: AbortSignal.timeout(timeoutMs), });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/adapters.mjs#L456"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/broker/adapters.mjs",
+        "line": 476,
+        "snippet": "resp = await fetch(this.url, { method: \"POST\", headers, body: JSON.stringify({ jsonrpc: \"2.0\", id, method, params }), signal: AbortSignal.timeout(timeoutMs), });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/adapters.mjs#L476"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/broker/bridge.mjs",
+        "line": 20,
+        "snippet": "resp = await fetch(`http://127.0.0.1:${info.port}/mcp`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\", Authorization: `Bearer ${info.token}`, Connection: \"close\",",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/bridge.mjs#L20"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/config.mjs",
+        "line": 412,
+        "snippet": "fs.writeFileSync(dest, JSON.stringify(data, null, 2), { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/config.mjs#L412"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/config.mjs",
+        "line": 444,
+        "snippet": "fs.writeFileSync(dest, JSON.stringify(data, null, 2), { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/config.mjs#L444"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 23,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(info, null, 2), { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 28,
+        "snippet": "fs.rmSync(target, { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 47,
+        "snippet": "fs.rmSync(daemonInfoPath(dataDir), { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L47"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 55,
+        "snippet": "const resp = await fetch(`http://127.0.0.1:${info.port}/health`, { method: \"GET\", headers: { Authorization: `Bearer ${info.token}` }, signal: AbortSignal.timeout(400), });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L55"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 70,
+        "snippet": "const resp = await fetch(`http://127.0.0.1:${info.port}/admin/shutdown`, { method: \"POST\", headers: { Authorization: `Bearer ${info.token}` }, signal: AbortSignal.timeout(1500), })",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L70"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 106,
+        "snippet": "fs.rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L106"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 115,
+        "snippet": "fs.rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L115"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 122,
+        "snippet": "fs.rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L122"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 138,
+        "snippet": "fs.rmSync(daemonInfoPath(dataDir), { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L138"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 149,
+        "snippet": "fs.rmSync(daemonInfoPath(dataDir), { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L149"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/lifecycle.mjs",
+        "line": 199,
+        "snippet": "fs.rmSync(daemonInfoPath(dataDir), { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/lifecycle.mjs#L199"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/onboarding.mjs",
+        "line": 180,
+        "snippet": "fs.writeFileSync(onboardingPath(dataDir), JSON.stringify(next, null, 2), { encoding: \"utf8\", mode: 0o600, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/onboarding.mjs#L180"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/onboarding.mjs",
+        "line": 194,
+        "snippet": "fs.writeFileSync(onboardingPath(dataDir), JSON.stringify(next, null, 2), { encoding: \"utf8\", mode: 0o600, });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/onboarding.mjs#L194"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/spill.mjs",
+        "line": 33,
+        "snippet": "fs.writeFileSync(filePath, text, { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/spill.mjs#L33"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/broker/spill.mjs",
+        "line": 119,
+        "snippet": "fs.rmSync(fullPath, { force: true });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/broker/spill.mjs#L119"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/ignis-broker.mjs",
+        "line": 76,
+        "snippet": "const resp = await fetch(`http://127.0.0.1:${info.port}${endpoint}`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\", Authorization: `Bearer ${info.token}`, Connect",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/ignis-broker.mjs#L76"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/ignis-broker.mjs",
+        "line": 255,
+        "snippet": "fs.writeFileSync(dest, rendered, { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/magalz/ignis-swarm/blob/d6d8bad49f17cead531fe38dcade4c6b7dec0fd4/scripts/ignis-broker.mjs#L255"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "d6d8bad49f17cead531fe38dcade4c6b7dec0fd4",
+      "scannedAt": "2026-11-27T18:14:00.618Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

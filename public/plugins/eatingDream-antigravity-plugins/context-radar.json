@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "id": "eatingDream-antigravity-plugins/context-radar",
+  "sha": "7e95945a2c1cc202745ce0f2804e05d1d7cf8047",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:20.503Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-radar-mcp",
+    "displayName": "Context Radar",
+    "version": "1.6.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "context-radar-mcp",
+        "runtimeName": "context-radar-mcp_context-radar-mcp",
+        "transport": "stdio",
+        "command": "/usr/bin/env",
+        "args": [
+          "${PLUGIN_ROOT}/bin/context-radar-mcp",
+          "daemon",
+          "--data-dir",
+          "${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "context-radar-exec",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "./bin/context-radar-mcp guard exec",
+        "prompt": null,
+        "timeout": 3
+      }
+    ],
+    "skills": [
+      {
+        "name": "context-radar",
+        "slashCommand": "/context-radar",
+        "description": "Monitor Antigravity session, subagent, and aside context budgets, diagnose cache misses, save key-point notes without breaking active caches, and run gated /compact or new-chat handoffs using context-radar-mcp tools.",
+        "disableModelInvocation": false,
+        "file": "skills/context-radar/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/context-radar"
+    ],
+    "mcpServerNames": [
+      "context-radar-mcp_context-radar-mcp"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreToolUse",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n<img src=\"assets/logo.svg\" alt=\"Context Radar\" width=\"76\" height=\"76\">\n\n# Context Radar (`context-radar-mcp`)\n\n**Know how full your context is before it bites.**\n\nContext Radar shows token use, cache hits, and cost for every Antigravity session and subagent, live in the sidebar. When a chat is getting full, it tells you whether to `/compact` or start fresh — and writes the handoff note for you.\n\n[Homepage](https://contextradar.eatingdream.dev) · **English** | [简体中文](README.zh-CN.md) · [Releases](https://github.com/eatingDream-antigravity-plugins/context-radar/releases) · [AI Guide](docs/ai-guide.md) · [`llms.txt`](llms.txt)\n\n[![CI](https://github.com/eatingDream-antigravity-plugins/context-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/eatingDream-antigravity-plugins/context-radar/actions/workflows/ci.yml)\n[![Release](assets/release-badge.svg)](https://github.com/eatingDream-antigravity-plugins/context-radar/releases)\n![Built with Rust](https://img.shields.io/badge/built%20with-Rust-12151E?logo=rust&logoColor=white)\n[![License: MIT](https://img.shields.io/badge/license-MIT-12151E)](LICENSE)\n\n<br>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/contextradar-overview-dark.png\">\n  <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/images/contextradar-overview-light.png\">\n  <img src=\"docs/images/contextradar-overview-dark.png\" alt=\"Context Radar live side panel showing active session headroom, KV cache hit rate, subagent dock, and session list\" width=\"640\">\n</picture>\n\n</div>\n\n## Is It For You?\n\n- **Yes, if** you run long multi-turn or multi-subagent sessions in Antigravity and want to spot sudden latency spikes, cache misses, and token bloat before hitting the context wall.\n- **No, if** you mostly ask short one-off questions that finish well under half the context window—Antigravity's defaults already cover that without an extra side panel.\n\n## What You Get\n\n| | |\n| :--- | :--- |\n| **Live headroom & subagent view** | Track remaining context tokens, running/waiting/error states, thinking-to-reply ratio, streaming speed, and estimated cost across main sessions and docked subagents. |\n| **Clear answers when turns slow down** | Pinpoint whether a slow turn came from normal growth, a mid-loop cache drop (TTL expiry, replica spillover, or model switch), or a post-compact rebuild—and catch cross-model `/compact` cache resets. |\n| **Trim bloat without breaking cache** | Spot which exact turns spiked your context and save a concise digest to `scratch/` out-of-band so your active prompt cache stays hot. |\n| **Compaction only when it pays off** | Check budget thresholds, active subagents, and break-even turns before running `/compact` or handing off to a fresh chat, with automatic CLI support for unattended runs. |\n| **100% local & read-only** | Runs as a single native Rust binary with zero outbound network calls, zero telemetry, and read-only access to Antigravity's local session logs. |\n\n## Quick Start\n\n```sh\ncurl -fsSL https://raw.githubusercontent.com/eatingDream-antigravity-plugins/context-radar/main/scripts/install.sh | sh\n```\n\n<sub>Verifies the release archive SHA-256 automatically · Refreshes MCP servers automatically inside Antigravity (use `--reload` outside or `--no-reload` to skip) · Supports macOS (Apple Silicon & Intel) and Linux `x86_64` · Pin a tag with `CONTEXT_RADAR_VERSION=vX.Y.Z` · Remove cleanly anytime with `... | sh -s -- --uninstall`.</sub>\n\nReload Antigravity, open **Context Radar** in the side pane, or ask your agent:\n\n- *\"Why did the last few turns get slow?\"*\n- *\"Which turns bloated this session, and is it worth running `/compact` now?\"*\n\n### 30-Second Local Demo\n\nCheck your live local telemetry latency or inspect the built panel offline right from the terminal:\n\n```sh\n~/.gemini/config/plugins/context-radar-mcp/bin/context-radar-mcp bench --iterations 5\n```\n\nOr from a source checkout:\n\n```sh\nnpm --prefix panel ci --ignore-scripts && npm --prefix panel run build && open panel/dist/panel.html\n```\n\n## For AI Agents\n\nContext Radar ships machine-readable docs and a portable skill (`agentskills.io` compatible) for Antigravity, Claude Code, Codex, Cursor, and OpenCode:\n\n```sh\nnpx skills add eatingDream-antigravity-plugins/context-radar\n```\n\n> **Agent hint**: Read [`llms.txt`](llms.txt), [`skills/context-radar/SKILL.md`](skills/context-radar/SKILL.md), and [`docs/ai-guide.md`](docs/ai-guide.md) for MCP tool schemas, headless ACP workflows, settings, and source builds.\n\n## Safety & Privacy\n\n- **Zero network & zero telemetry**: Reads local Antigravity ledgers in read-only mode and never transmits prompts, paths, or metrics off your machine.\n- **Symlink-safe local writes**: Out-of-band `scratch/` digests and single-use handoff grants are scoped to the active conversation and workspace with owner-only (`0600`) atomic writes.\n- **Self-contained panel UI**: Single offline HTML bundle with strict `default-src 'none'` CSP, zero external requests, and zero `innerHTML` writes.\n\n## Documentation\n\n- [AI Agent & Operator Guide](docs/ai-guide.md) — Full MCP tool schemas, ACP `acp-proxy` / `acp-run`, settings & env vars, source build\n- [Portable Agent Skill (`SKILL.md`)](skills/context-radar/SKILL.md) · [LLM Index (`llms.txt`)](llms.txt)\n- [Settings Example](settings.example.json) · [Contributor Guide](AGENTS.md) · [Changelog](CHANGELOG.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)\n\n## Antigravity Plugin Suite\n\nPart of the [Antigravity Plugins](https://github.com/eatingDream-antigravity-plugins) suite: **Context Radar** · [Clam Guard](https://github.com/eatingDream-antigravity-plugins/clam-guard) · [Remote Cast](https://github.com/eatingDream-antigravity-plugins/remote-cast) · [Colab Deck](https://github.com/eatingDream-antigravity-plugins/colab-deck) · [Panel Kit](https://github.com/eatingDream-antigravity-plugins/panel-kit).\n\n## License\n\nLicensed under the [MIT License](LICENSE).\n",
+  "latestReleaseNotes": "## [1.6.0](https://github.com/eatingDream-antigravity-plugins/context-radar/compare/v1.5.3...v1.6.0) (2026-11-27)\n\n\n### Features\n\n* Lucid Indigo 64 KiB TS panel, /btw side-question tracking, settings hot-reload, and 30s demo ([#36](https://github.com/eatingDream-antigravity-plugins/context-radar/issues/36)) ([30d5c3f](https://github.com/eatingDream-antigravity-plugins/context-radar/commit/30d5c3f7156d302b23bd4e6266012d6b8840861f))",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "dynamic_code_exec",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"context-radar-exec\" executes a shell command on PreToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 18,
+        "snippet": "./bin/context-radar-mcp guard exec",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/hooks.json#L18"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "panel/pack.ts",
+        "line": 43,
+        "snippet": "const out = execFileSync( esbBin, [ tmpEntry, \"--bundle\", \"--minify\", \"--tree-shaking=true\", \"--charset=utf8\", \"--legal-comments=none\", \"--format=iife\", \"--platform=browser\", \"--ta",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/pack.ts#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "panel/pack.ts",
+        "line": 69,
+        "snippet": "const out = execFileSync( bunBin, [\"build\", tmpEntry, \"--bundle\", \"--minify\", \"--format=iife\", \"--target=browser\"], { encoding: \"utf8\", maxBuffer: 4 * 1024 * 1024, stdio: [\"ignore\"",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/pack.ts#L69"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "panel/panel.test.ts",
+        "line": 373,
+        "snippet": "vm.runInNewContext( stripTs(`${normWsM[0]}\\n${sameWsM[0]}\\n${getHeroM[0]}\\n${canDirectM[0]}\\n${canAutoM[0]}\\n${maybeAutoM[0]}\\n${execM[0]}`) + `\\nthis.canAutoRelay=canAutoRelay;thi",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L373"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "panel/panel.test.ts",
+        "line": 507,
+        "snippet": "vm.runInNewContext(stripTs(`${applyM[0]}\\n${refreshM[0]}`) + `\\nthis.refreshSnapshot = refreshSnapshot;`, sandbox);",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L507"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "panel/panel.test.ts",
+        "line": 561,
+        "snippet": "vm.runInNewContext( stripTs(`${canForceM[0]}\\n${forceNowM[0]}\\n${setupObsM[0]}\\n${hostChgM[0]}\\n${ptrM[0]}`) + `\\nsetupRevealObservers();`, sandbox );",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L561"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "panel/panel.test.ts",
+        "line": 653,
+        "snippet": "vm.runInNewContext( stripTs(slice) + ` this.render=render; this.fmtDur=fmtDur; this.errTxt=errTxt; this.getLiveDot=getLiveDot; this.getLivePhaseBadge=getLivePhaseBadge; this.coldKi",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L653"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "panel/panel.test.ts",
+        "line": 1031,
+        "snippet": "vm.runInNewContext('errorText = \"Closed\"; render();', sandbox);",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L1031"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "panel/panel.test.ts",
+        "line": 1052,
+        "snippet": "vm.runInNewContext(stripTs(toggleM[0]) + `; this.toggleAutoHandoff = toggleAutoHandoff;`, tBox);",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L1052"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "panel/pack.ts",
+        "line": 37,
+        "snippet": "fs.writeFileSync(path.join(tmpDir, \"kit\", \"bridge.ts\"), fs.readFileSync(bridgeTs, \"utf8\"), \"utf8\");",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/pack.ts#L37"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "panel/pack.ts",
+        "line": 39,
+        "snippet": "fs.writeFileSync(tmpEntry, fs.readFileSync(entryTs, \"utf8\"), \"utf8\");",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/pack.ts#L39"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "panel/pack.ts",
+        "line": 83,
+        "snippet": "fs.rmSync(tmpDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/pack.ts#L83"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "panel/pack.ts",
+        "line": 162,
+        "snippet": "fs.writeFileSync(tmpHtml, html, \"utf8\");",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/pack.ts#L162"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 32,
+        "snippet": "- Never commit personal paths, tokens, emails, or real conversation IDs (`./scripts/check_sanitized.sh` must exit 0).",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/AGENTS.md#L32"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "panel/panel.test.ts",
+        "line": 1155,
+        "snippet": "settings_path: \"~/.gemini/antigravity/plugin_data/context-radar-mcp/settings.json\",",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L1155"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "panel/panel.test.ts",
+        "line": 1178,
+        "snippet": "assert.ok(st.uSet.textContent.includes(\"~/.gemini/antigravity/plugin_data/context-radar-mcp/settings.json\"));",
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/context-radar/blob/7e95945a2c1cc202745ce0f2804e05d1d7cf8047/panel/panel.test.ts#L1178"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.6.0",
+      "sha": "7e95945a2c1cc202745ce0f2804e05d1d7cf8047",
+      "scannedAt": "2026-11-27T18:14:20.503Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

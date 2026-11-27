@@ -1,0 +1,1228 @@
+{
+  "schemaVersion": 1,
+  "id": "calvinxxw/context-mode-antigravity",
+  "sha": "5975193fa8c57c7051558f661c95bfdbe897c565",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:45.648Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "context-mode",
+    "displayName": "Context Mode",
+    "version": "2.2.4",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "context-mode",
+        "runtimeName": "context-mode_context-mode",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/plugins/claude-code/server.mjs",
+          "--agent",
+          "antigravity"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "context-mode",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "^(run_command|view_file|read_file|grep_search|read_url_content|write_to_file|replace_file_content|multi_replace_file_content|write_file|edit_file|mcp_context-mode_context-mode_ctx_.*)$",
+        "type": "command",
+        "command": "node ./plugins/claude-code/hook.mjs --agent antigravity",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "context-mode",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "^(run_command|view_file|read_file|grep_search|read_url_content|write_to_file|replace_file_content|multi_replace_file_content|write_file|edit_file|mcp_context-mode_context-mode_ctx_.*)$",
+        "type": "command",
+        "command": "node ./plugins/claude-code/hook.mjs --agent antigravity",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "ctx-doctor",
+        "slashCommand": "/ctx-doctor",
+        "description": "Check that context-mode is installed and working, as a table.",
+        "disableModelInvocation": true,
+        "file": "skills/ctx-doctor/SKILL.md"
+      },
+      {
+        "name": "ctx-stats",
+        "slashCommand": "/ctx-stats",
+        "description": "Show how much context context-mode saved, as a detailed report.",
+        "disableModelInvocation": true,
+        "file": "skills/ctx-stats/SKILL.md"
+      },
+      {
+        "name": "ctx-upgrade",
+        "slashCommand": "/ctx-upgrade",
+        "description": "Update context-mode to the latest release.",
+        "disableModelInvocation": true,
+        "file": "skills/ctx-upgrade/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ctx-doctor",
+      "/ctx-stats",
+      "/ctx-upgrade"
+    ],
+    "mcpServerNames": [
+      "context-mode_context-mode"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "PreToolUse",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Context Mode — Native Google Antigravity Plugin\n\n**Native Google Antigravity plugin adaptation of [`mksglu/context-mode`](https://github.com/mksglu/context-mode) (Copyright 2026 Mert Koseoglu, licensed under [ELv2](LICENSE)) — a free, local plugin for 12 coding agents. Modified to add native Google Antigravity support while syncing automatically with upstream. It keeps tool output out of your agent's context window and keeps all usage data on your machine. The plugin is free forever.**\n\n[![npm downloads](https://img.shields.io/npm/dt/context-mode?label=npm%20downloads)](https://www.npmjs.com/package/context-mode) [![GitHub stars](https://img.shields.io/github/stars/mksglu/context-mode?style=flat&color=yellow)](https://github.com/mksglu/context-mode) [![Discord](https://img.shields.io/discord/1478479412700909750?label=Discord&logo=discord&color=5865f2)](https://discord.gg/DCN9jUgN5v) [![License: ELv2](https://img.shields.io/badge/License-ELv2-blue.svg)](LICENSE)\n\n**35K GitHub stars · 956K npm downloads** (read 2026-11-27, [stats.json](stats.json)) · on the Hacker News front page and GitHub Trending: [charts and sources](#adoption-stars-and-npm-downloads)\n\n> The Context Mode plugin is free and local, with its source open on GitHub. **Context Mode Gateway** is a separate hosted service with its own account and subscription. It takes the same idea from tool output to the whole conversation: Gateway Recall keeps long sessions searchable, and Gateway Memory shares what your agents learn across sessions and tools. [See how the Gateway works](https://contextmode.ai/docs/how-saving-works?utm_source=github&utm_medium=readme&utm_content=quote)\n\n**Google Antigravity Native Adaptation (App · CLI `agy` · IDE)** — First-class native plugin adaptation synced automatically with upstream `mksglu/context-mode` via GitHub Actions.\n\n```sh\nagy plugin install https://github.com/calvinxxw/context-mode-antigravity\n```\n\n- **Native plugin & hooks:** `.antigravity-plugin/plugin.json`, `mcp_config.json`, `hooks.json` (`SessionStart`, `PreInvocation`, `PreToolUse`, `PostToolUse`), PascalCase tool normalization, and `/ctx-doctor`, `/ctx-stats`, `/ctx-upgrade` skills.\n- **Direct MCP hot path & workspace resolution:** 5 hot-path tools (`ctx_execute`, `ctx_batch`, `ctx_index`, `ctx_search`, `ctx_resume`) configured `eager: true`, 3-tier workspace & `conversationId` resolution (`roots/list` + hook handoff), `PreInvocation` deduplication, and Windows UTF-8/GB18030 sandbox decoding.\n- **Details:** [Antigravity Adaptation Guide](docs/architecture/antigravity-adaptation.md) · [Install & verify steps](#install-antigravity)\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/hero-dark.png\">\n  <img src=\"docs/assets/readme/hero-light.png\" alt=\"Context Mode plugin: free and local, zero telemetry, the plugin keeps your data on your machine. Bench of 2026-11-01: 99.4% of output bytes saved (median of 36 rows with 10 KB or more of raw output). A full debugging session (row g-session-total): 281,261 B raw to 3,266 B in context, about 70K to 817 tokens (an estimate at 4 B per token). Resume after compaction (row e-long-session): a 442,893 B transcript to a 2,019 B block, about 111K to 505 tokens (an estimate). Runs in 10 coding agents with 9 MCP tools.\">\n</picture>\n\n**Contents:** [Why](#why) · [Adoption](#adoption-stars-and-npm-downloads) · [Install](#install) · [Try it](#try-it) · [Use cases](#use-cases) · [Benchmarks](#benchmarks) · [How it works](#how-it-works) · [Tools](#tools) · [Security and privacy](#security-and-privacy) · [Context Mode Gateway](#context-mode-gateway) · [License](#license) · [Community](#community)\n\n## Why\n\nA coding agent reads files, runs commands and fetches pages, and every result goes into its context window.\nThe Context Mode plugin runs that work in a local sandbox, keeps the full output in a SQLite index on your machine, and gives the agent the part it asks for.\n\n- **The plugin is free forever.** Use it at home and at work, free of charge, under a source-available license.\n- **Runs on your machine.** The hooks, the sandbox and search run as local processes next to your agent.\n- **The plugin keeps your data on your machine.** Every index lives in `~/.context-mode`: one `context.db` per project.\n- **Zero telemetry.** The plugin keeps all usage data on your machine. [Security and privacy](#security-and-privacy) lists each network call it makes.\n- **Works offline after install.** Sandbox runs, file indexing and search use local SQLite and your own runtimes.\n- **Code Mode.** The agent writes a short script instead of reading the data, and only what the script prints reaches the context: see [How it works, step 5](#code-mode).\n- **Small replies.** On the 36 bench rows with 10 KB or more of raw output, the plugin's median reply is 99.4% smaller than the raw output.\n\n## Adoption: stars and npm downloads\n\n<table><tr>\n<td width=\"50%\"><a href=\"https://contextmode.ai/open-source/stats?utm_source=github&utm_medium=readme&utm_content=adoption#stars\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/star-history-dark.png\"><img src=\"docs/assets/readme/star-history-light.png\" alt=\"Line chart of cumulative GitHub stars for mksglu/context-mode since 2026-02-23. A daily job redraws it.\"></picture></a></td>\n<td width=\"50%\"><a href=\"https://contextmode.ai/open-source/stats?utm_source=github&utm_medium=readme&utm_content=adoption#daily\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/npm-downloads-dark.png\"><img src=\"docs/assets/readme/npm-downloads-light.png\" alt=\"Area chart of npm downloads per day for context-mode, the last 90 days. A daily job redraws it.\"></picture></a></td>\n</tr></table>\n\nOpen the [interactive chart](https://contextmode.ai/open-source/stats?utm_source=github&utm_medium=readme&utm_content=adoption#daily) and point at a bar to read its value. Tabs there show days, weeks, months and years. Stars come from the GitHub GraphQL API (`starredAt`); npm downloads come from `api.npmjs.org/downloads/range`. The total up to 2026-10-29 is 683K npm downloads (`stats.json` keeps a daily copy). A daily job redraws both charts.\n\n- **Hacker News.** \"MCP server that reduces Claude Code context consumption by 98%\" reached the front page with 570+ points and 107 comments on 2026-02-28 ([thread](https://news.ycombinator.com/item?id=47193064)).\n- **GitHub Trending.** A bot that watches GitHub Trending logged the repo there on 14 days from 2026-04-24 to 2026-10-17 ([uibm/trending-watcher](https://github.com/uibm/trending-watcher/issues?q=%22mksglu%2Fcontext-mode%22)).\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/stargazers-dark.png\">\n  <img src=\"docs/assets/readme/stargazers-light.png\" alt=\"Companies that stargazers of mksglu/context-mode name in their GitHub profile, Microsoft, Tencent, Alibaba, ByteDance, Google and more.\">\n</picture>\n\nStarred by engineers at these companies: each name is the company field of 2 or more stargazer profiles, read with the GitHub GraphQL API on 2026-11-01 ([data](docs/assets/readme/data/stargazer-companies.json)).\n\n## Install\n\nPick your agent: [Claude Code](#install-claude-code) · [Codex](#install-codex) · [Gemini CLI](#install-gemini) · [Qwen Code](#install-qwen) · [Pi](#install-pi) · [OMP](#install-omp) · [OpenCode](#install-opencode) · [Copilot CLI](#install-copilot-cli) · [Kiro](#install-kiro) · [VS Code](#install-vscode) · [ZCode](#install-zcode) · [Antigravity](#install-antigravity)\n\nOpen its block and copy its own install command. Each block also holds the update, check and remove steps, and the [Install guide](https://contextmode.ai/docs/engine/install?utm_source=github&utm_medium=readme&utm_content=install) walks through them.\n\nThe plugin needs Node 24.15.0 or later, from the engines field in [package.json](package.json). On Windows, add Git for Windows: the shell tools run in Git Bash, and doctor checks for it.\ncontextmode installs as the npm package and command `context-mode`.\nClaude Code, Codex, Gemini CLI and Qwen Code install from GitHub, and each of their commands names the release branch.\n\n<details id=\"install-claude-code\"><summary><b>Claude Code</b></summary>\n\n```sh\nclaude plugin marketplace add mksglu/context-mode\nclaude plugin install context-mode@context-mode\n```\n\n```sh\n# update\nclaude plugin update context-mode@context-mode\n# check\nclaude plugin list\n# remove\nclaude plugin marketplace remove context-mode\n```\n\nHooks ✓ (package) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-codex\"><summary><b>Codex</b></summary>\n\n```sh\ncodex plugin marketplace add mksglu/context-mode\ncodex plugin add context-mode@context-mode\n# one-time step: trust the plugin hooks\nnpm i -g context-mode\ncontext-mode setup --agents codex\n```\n\n```sh\n# update\ncodex plugin marketplace upgrade context-mode\n# check\ncodex mcp list\n# remove\ncodex plugin remove context-mode@context-mode\n```\n\nHooks ✓ (hook file) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-gemini\"><summary><b>Gemini CLI</b></summary>\n\n```sh\ngemini extensions install https://github.com/mksglu/context-mode\n```\n\n```sh\n# update\ngemini extensions update context-mode\n# check\nGEMINI_CLI_TRUST_WORKSPACE=true gemini mcp list\n# remove\ngemini extensions uninstall context-mode\n```\n\nHooks ✓ (package) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-qwen\"><summary><b>Qwen Code</b></summary>\n\n```sh\nqwen extensions install https://github.com/mksglu/context-mode:context-mode\n```\n\n```sh\n# update\nqwen extensions update context-mode\n# check\nqwen extensions list\n# remove\nqwen extensions uninstall context-mode\n```\n\nHooks ✓ (package) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-pi\"><summary><b>Pi</b></summary>\n\n```sh\npi install npm:context-mode\n```\n\n```sh\n# update\npi update --extensions\n# check\npi list\n# remove\npi remove npm:context-mode\n```\n\nHooks ✓ (the plugin's own event handlers) · MCP ✓ (ctx tools built into the plugin) · Skills ✓\n\n</details>\n<details id=\"install-omp\"><summary><b>OMP</b></summary>\n\n```sh\nomp plugin install context-mode\n```\n\n```sh\n# update\nomp plugin upgrade context-mode\n# check\nomp plugin list\n# remove\nomp plugin uninstall context-mode\n```\n\nHooks ✓ (the plugin's own event handlers) · MCP ✓ (ctx tools built into the plugin) · Skills ✓\n\n</details>\n<details id=\"install-opencode\"><summary><b>OpenCode</b></summary>\n\n```sh\nopencode plugin add context-mode\n```\n\n```sh\n# update\nopencode plugin update\n# check\nopencode mcp list --pure          # OpenCode 1.19\nopencode mcp list --standalone    # OpenCode 2\n# remove\nopencode plugin remove context-mode\n```\n\nHooks ✓ (the plugin's own event handlers) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-copilot-cli\"><summary><b>Copilot CLI</b></summary>\n\n```sh\nnpm i -g context-mode\ncontext-mode setup --agents copilot-cli\n```\n\n```sh\n# update\ncontext-mode upgrade\n# check\ncontext-mode doctor --agents copilot-cli\ncopilot mcp list\n# remove\ncontext-mode setup --remove --agents copilot-cli\n```\n\nHooks ✓ (hook file) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-kiro\"><summary><b>Kiro</b></summary>\n\n```sh\nnpm i -g context-mode\ncontext-mode setup --agents kiro\n```\n\n```sh\n# update\ncontext-mode upgrade\n# check\ncontext-mode doctor --agents kiro\n# remove\ncontext-mode setup --remove --agents kiro\n```\n\nHooks ✓ (hook file) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-vscode\"><summary><b>VS Code (Copilot)</b></summary>\n\n```sh\nnpm i -g context-mode\ncontext-mode setup --agents vscode\n```\n\n```sh\n# update\ncontext-mode upgrade\n# check\ncontext-mode doctor --agents vscode\n# remove\ncontext-mode setup --remove --agents vscode\n```\n\nHooks ✓ (hook file) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-zcode\"><summary><b>ZCode</b></summary>\n\n```sh\nzcode plugins marketplace add mksglu/context-mode\nzcode plugins install context-mode@context-mode\n```\n\n```sh\n# update\nzcode plugins update context-mode@context-mode\n# check\nzcode plugins list\n# remove\nzcode plugins uninstall context-mode@context-mode\n```\n\nHooks ✓ (hook file) · MCP ✓ · Skills ✓\n\n</details>\n<details id=\"install-antigravity\"><summary><b>Antigravity</b></summary>\n\n```sh\nagy plugin install https://github.com/calvinxxw/context-mode-antigravity\n```\n\n```sh\n# update\ncontext-mode upgrade\n# check\nagy plugin list\n# remove\nagy plugin uninstall context-mode\n```\n\nHooks ✓ (hook file) · MCP ✓ · Skills ✓\n\n</details>\n\nThe npm route works for every agent:\n\n```sh\nnpm i -g context-mode\ncontext-mode setup\n```\n\nSetup is also the repair. It shows a plan, saves your earlier config, then applies the plan; when a step ends early, it restores the saved config. To uninstall:\n\n```sh\ncontext-mode setup --remove\nnpm rm -g context-mode\n```\n\nRestart the agent, then run `/ctx-doctor` in it. Each check prints PASS or a fix command, and the [Doctor guide](https://contextmode.ai/docs/engine/doctor?utm_source=github&utm_medium=readme&utm_content=install-doctor) explains each check.\n\n<details><summary><b>How we tested the install</b></summary>\n\nEvery agent gets hooks, the MCP server and the plugin skills; the last line of each block above says how.\nHooks reach each agent in one of three ways: in the plugin package (Antigravity, Claude Code, Gemini CLI, Qwen Code), in a hook file (Codex, Copilot CLI, Kiro, VS Code, ZCode), or in a plugin inside the agent (OpenCode, Pi, OMP). The [Agents guide](https://contextmode.ai/docs/engine/agents?utm_source=github&utm_medium=readme&utm_content=install-agents) shows what each agent runs.\nWe ran the real binary of each agent with the plugin hook: Claude Code, Codex, Gemini CLI, Qwen Code, Pi, OpenCode, Copilot CLI and ZCode. Each run used a clean temp home and a local test model, on 2.0.0-next.15. OMP 18.20.0 ran the same way with ADR-0026, and CI installs the real OMP on Linux, macOS and Windows.\nFor VS Code and Kiro, the check covers the hook setup: VS Code runs the hook command with the documented payload, and kiro-cli 2.35.2 loads all 6 hook entries.\nCI runs setup, doctor, a hook and an MCP handshake for all 12 agents from the packed package on Linux, macOS and Windows. Record: [HOOKS-FIRE.md](docs/architecture/release/HOOKS-FIRE.md).\nEach agent uses its own install command, and [ADR-0023](docs/architecture/adr/ADR-0023-native-install.md) says why.\n\n</details>\n\nYour first task with the plugin, step by step: [First session](https://contextmode.ai/docs/engine/first-session?utm_source=github&utm_medium=readme&utm_content=install-next). Or paste a prompt from [Try it](#try-it) right now.\n\n## Try it\n\nPaste one of these prompts into your agent after the install. Each one ran once, live, in Claude Code 2.1.312, and its answer matched the source data ([evidence and rerun steps](bench/evidence/try-it-2026-11-02/README.md)). The headline numbers in [Benchmarks](#benchmarks) use the median of 5 runs. Other agents do the same job with the same tools: `ctx_execute`, `ctx_index` and `ctx_search`.\nAfter a prompt, run the stats skill and read the report yourself ([See the saving](#see-the-saving)).\n```text\nOn https://react.dev/reference/react/useEffect, show me the example that connects to a chat server and cleans up, and list the rules for the dependency array.\n```\nThe hook sends WebFetch to the sandbox, and the agent searches the page for the example and the rules. 601,984 B raw, 20,860 B reached the context, 96.5% saved (2026-11-02, 2.0.0-next.26, claude-haiku-5-5).\n```text\nFetch https://jsonplaceholder.typicode.com/photos. Which photo has the longest title (give its id and title), and how many photos have a title that contains the word \"est\"?\n```\nThe agent runs code over 5,000 JSON records in the sandbox and gets back two answers. 1,039,898 B raw, 393 B reached the context, 99.96% saved (2026-11-02, 2.0.0-next.26, claude-haiku-5-5). The answer is two short facts, so this is the best case of the four.\n```text\nHere is a Linux syslog sample: https://raw.githubusercontent.com/logpai/loghub/master/Linux/Linux_2k.log. How many authentication failures does it contain, and which 3 remote hosts caused the most?\n```\nThe agent counts failures in a 1,999-line syslog in the sandbox. 216,485 B raw, 566 B reached the context, 99.7% saved (2026-11-02, 2.0.0-next.26, claude-haiku-5-5).\n```text\nWhat are the top 10 stories on the Hacker News front page right now? Give title, points and domain for each.\n```\nThe hook sends WebFetch to the sandbox, and the agent reads ten stories from the page. 35,087 B raw, 1,501 B reached the context, 95.7% saved (2026-11-02, 2.0.0-next.26, claude-haiku-5-5). The front page changes, so the raw size changes with each run.\n\n### See the saving\n\nRun the stats skill right after a prompt. Each agent uses its own command; the skill calls `ctx_stats` and shows its report unchanged.\n\n| Agent | Command |\n|---|---|\n| Antigravity | `/ctx-stats` |\n| Claude Code | `/ctx-stats` |\n| Codex | `$ctx-stats` |\n| Copilot CLI | `/ctx-stats` |\n| Gemini CLI | `Call ctx_stats and show me the report.` |\n| Kiro | `Call ctx_stats and show me the report.` |\n| OMP | `/skill:ctx-stats` |\n| OpenCode | `Call ctx_stats and show me the report.` |\n| Pi | `/skill:ctx-stats` |\n| Qwen Code | `Call ctx_stats and show me the report.` |\n| VS Code (Copilot) | `/ctx-stats` |\n| ZCode | `Call ctx_stats and show me the report.` |\n\nThe first lines of a real report, after the JSON prompt above ran as one `ctx_execute` call:\n\n```text\ncontext-mode stats\n────────────────────────────────────────────────────────────────────────────────\n\nThis session · 1 call · <1m active\n  1015.5 KB became 3.7 KB: 1011.8 KB kept out (99.6%)\n  Without context-mode |████████████████████████████████████████|  1015.5 KB\n  With context-mode    |█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░|     3.7 KB\n  about 259K tokens kept out, 1.3 times a 200K window\n```\nCaptured 2026-11-03 with 2.0.0-next.35: `release-out/server.mjs` over MCP in a temp HOME.\n\nNext, the same numbers for 20 real tools, in [Use cases](#use-cases).\n\n## Use cases\n\nReal tool output from public projects, run through Context Mode. Bench of 2026-11-01 on 2.0.0-next.23 (commit 16a4bcc5), median of 5 runs.\n\n| What you do | Tool | Raw | Reaches the context | Saved |\n|---|---|---:|---:|---:|\n| [Read a browser page](bench/a-sandbox/README.md#a-devtools-mcp-snapshot) | Chrome DevTools MCP `take_snapshot`, [Code Mode](#code-mode) | 136,514 B | 463 B | 99.7% |\n| [List 40 issues](bench/a-sandbox/README.md#a-gh-issue-list-vite) | GitHub CLI `gh issue list --json`, [Code Mode](#code-mode) | 182,943 B | 850 B | 99.5% |\n| [List 25 pull requests with checks](bench/a-sandbox/README.md#a-gh-pr-list-vite) | GitHub CLI `gh pr list --json`, [Code Mode](#code-mode) | 195,471 B | 776 B | 99.6% |\n| [Look up library docs](bench/a-sandbox/README.md#a-context7-query-docs-vite) | Context7 `query-docs`, [Code Mode](#code-mode) | 6,917 B | 473 B | 93.2% |\n| [Run 1,106 tests](bench/a-sandbox/README.md#a-vitest-run-vite) | Vitest `vitest run --reporter=verbose`, [Code Mode](#code-mode) | 62,909 B | 429 B | 99.3% |\n| [Lint a source folder](bench/a-sandbox/README.md#a-biome-lint-vite) | Biome `biome lint --reporter=json`, [Code Mode](#code-mode) | 288,523 B | 577 B | 99.8% |\n| [Install a workspace](bench/a-sandbox/README.md#a-pnpm-install-vite) | pnpm `pnpm install --frozen-lockfile`, [Code Mode](#code-mode) | 14,988 B | 199 B | 98.7% |\n| [Install packages](bench/a-sandbox/README.md#a-npm-install-log) | npm `npm install --loglevel http`, [Code Mode](#code-mode) | 37,761 B | 435 B | 98.8% |\n| [Read container logs](bench/a-sandbox/README.md#a-docker-logs-mongo) | Docker `docker logs`, [Code Mode](#code-mode) | 60,374 B | 587 B | 99.0% |\n| [Plan 72 resources](bench/a-sandbox/README.md#a-terraform-plan) | Terraform `terraform plan`, [Code Mode](#code-mode) | 34,081 B | 166 B | 99.5% |\n| [Read 300 commits with file stats](bench/a-sandbox/README.md#a-git-log-stat-vite) | git `git log --stat`, [Code Mode](#code-mode) | 164,385 B | 268 B | 99.8% |\n| [Read an 89 KB source file](bench/f-hook-redirect/README.md#f-read-vite-config) | Read, sent to `ctx_execute` by the hook | 91,362 B | 375 B | 99.6% |\n| [Fetch a 265 KB docs page](bench/f-hook-redirect/README.md#f-webfetch-vite-docs) | WebFetch, sent to `ctx_index` and `ctx_search` | 271,731 B | 439 B | 99.8% |\n| [Fetch a 214 KB API reply](bench/f-hook-redirect/README.md#f-bash-curl-post) | curl in Bash, replaced after it runs | 219,175 B | 291 B | 99.9% |\n| [Print a 187 KB git log in Bash](bench/f-hook-redirect/README.md#f-bash-dump-post) | Bash, output replaced after it runs | 191,120 B | 204 B | 99.9% |\n| [Print the same git log through a host tool](bench/d-externalize/README.md#d-real-git-log) | Host tool output over the cap, indexed whole | 191,120 B | 2,842 B | 98.5% |\n| [Print a 214 KB GitHub API reply through a host tool](bench/d-externalize/README.md#d-real-github-json) | Host tool output over the cap, indexed whole | 219,175 B | 4,060 B | 98.1% |\n| [Read a 45 KB log file](bench/f-hook-redirect/README.md#f-read-large-file) | Read, sent to `ctx_execute` by the hook | 46,216 B | 371 B | 99.2% |\n| [Read a 60 KB source file](bench/f-hook-redirect/README.md#f-read-big-source) | Read, sent to `ctx_execute` by the hook | 61,576 B | 374 B | 99.4% |\n| [Debug for a full session: 8 outputs, 3 searches](bench/g-overhead/README.md#g-session-total) | All hooks and tools | 281,261 B | 3,266 B | 98.8% |\n\nSource: [bench/results/2026-11-01-darwin-arm64.json](bench/results/2026-11-01-darwin-arm64.json), one row per line; [SOURCE.md](bench/fixtures/data/SOURCE.md) names where each input comes from.\nClick a task to open its case: the command, the input file with its sha256, and the run command, so you can run the same row on your machine.\n\nThe agent gets the part it asks for. The full output stays in the local index, and `ctx_search` reads it back.\nRows with a command run in the [sandbox](https://contextmode.ai/docs/engine/sandbox?utm_source=github&utm_medium=readme&utm_content=usecases); the agent then finds the rest with [search](https://contextmode.ai/docs/engine/search?utm_source=github&utm_medium=readme&utm_content=usecases).\nThe Context7 row has 6,917 B of raw output, under the 10 KB line of the headline rule, so the headline leaves it out.\n\nNext, how the bench counts these bytes, in [Benchmarks](#benchmarks).\n\n## Benchmarks\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/fig-saving-dark.png\">\n  <img src=\"docs/assets/readme/fig-saving-light.png\" alt=\"Bar chart: median output bytes saved per category for rows of 10 KB or more. Sandbox 99.5%, Batch 93.1%, Externalize 98.3%, Hook redirect 99.8%, Session total 98.8%. The table below adds Retrieval, 77.2%.\">\n</picture>\n\nRule for every headline number in this README: rows with 10 KB or more of raw output, median of 5 runs per row, measured with `ctx_bytes` against `raw_bytes`; a category is the median of its rows; 1 KB = 1,024 B.\nAll 36 such rows, the six categories below: the plugin keeps a median of 99.4% of output bytes out of the context. Bench on 2.0.0-next.23 (commit 16a4bcc5 and the local edits that the file records), macOS arm64, 2026-11-01.\n\n| Category | What runs | Rows | Median saved |\n|---|---|---:|---:|\n| a. Sandbox | `ctx_execute` on a file or command | 19 | 99.5% |\n| b. Retrieval | `ctx_search` over the local index | 3 | 77.2% |\n| c. Batch | `ctx_batch`: many commands, then search | 2 | 93.1% |\n| d. Externalize | Host tool output over the cap, indexed whole | 4 | 98.3% |\n| f. Hook redirect | A big Read, curl or WebFetch sent to the sandbox | 7 | 99.8% |\n| g. Session total | One full scripted session | 1 | 98.8% |\n\nSearch replies (category b) carry the matching text, so they save 77.2%. Category e (long sessions) is in [Longer sessions](#longer-sessions). The full file lists every row, small ones too: [2026-11-01-darwin-arm64.md](bench/results/2026-11-01-darwin-arm64.md).\nReproduce with `cd bench && node run.mjs`. It needs plain Node and runs offline; [bench/README.md](bench/README.md) lists each scenario and its options.\nMethod, data files and rerun steps: [Benchmarks guide](https://contextmode.ai/docs/engine/benchmarks?utm_source=github&utm_medium=readme&utm_content=benchmarks).\n\n### Longer sessions\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/fig-oss-dark.png\">\n  <img src=\"docs/assets/readme/fig-oss-light.png\" alt=\"A session grows, the context stays small. The PreToolUse hook sends a tool call to ctx_execute or ctx_index; the full output goes into context.db and a small reply returns. At compaction a snapshot keeps the state, and ctx_resume and ctx_search read it back.\">\n</picture>\n\nSay you debug a slow test all afternoon. The agent reads files, runs the suite and fetches docs, and each result goes into the context window. When the window is full, the host compacts it, and from then on the agent sees a short summary plus your next message.\n\nContext Mode keeps the full output of each large tool call in `context.db` on your machine and gives the agent a small reply. At compaction, a snapshot of at most 2,048 B keeps the session state. After the compaction, the agent calls `ctx_resume` to read that snapshot back and `ctx_search` to find any earlier output by keyword.\n\nIn the bench, a scripted session of 40 tool outputs and one compaction made a 442,893 B transcript, and the `ctx_resume` block that brought the agent back was 2,019 B (row `e-long-session` in the bench file; [open the case](bench/e-continuity/README.md#e-long-session)).\nIn the same bench, one large log of 666,796 B put 3,380 B into the context, and the full log stayed in the index for `ctx_search` (row `d-synth-1m`; [open the case](bench/d-externalize/README.md#d-synth-1m)).\nHow the snapshot picks what to keep: the [Long sessions guide](https://contextmode.ai/docs/engine/long-sessions?utm_source=github&utm_medium=readme&utm_content=longer-sessions) and [ADR-0009](docs/architecture/adr/0009-compaction-and-memory.md).\n\n### Speed\n\nMedian of 5 runs, bench of 2026-11-01.\n\n| Measure | Result |\n|---|---|\n| Hook time over a bare `node` start, per agent | 7.5 ms to 12.3 ms |\n| `ctx_search`, 20 queries over 8 indexed files | 1.62 ms median, 6.70 ms max |\n| `ctx_index`, 3 real files, 625,649 B | 150 ms per MB |\n\nSource: rows `g-hook-kiro` to `g-hook-claude-code`, `g-search-latency` and `g-index-per-mb` of [the bench file](bench/results/2026-11-01-darwin-arm64.md), with every agent and query. The [overhead cases](bench/g-overhead/README.md) show how each one runs.\n\nNext, what happens inside one tool call, in [How it works](#how-it-works).\n\n## How it works\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/assets/readme/fig-flow-dark.png\">\n  <img src=\"docs/assets/readme/fig-flow-light.png\" alt=\"One tool call, step by step: the agent runs a tool, the PreToolUse hook denies a big Read and names the ctx_execute call, the MCP server runs it in the sandbox, SQLite FTS5 keeps the output, and after compaction a state block of at most 2,048 B comes back.\">\n</picture>\n\nOne tool call, in time order, from the install to a hook error.\n\n1. **Install.** Each agent's own install command adds the MCP server, the hooks and the skills `ctx-doctor`, `ctx-stats` and `ctx-upgrade` to that agent's config folder, for example `~/.codex/skills/<name>/SKILL.md`. `context-mode setup` writes or repairs any part the native command leaves out ([ADR-0023](docs/architecture/adr/ADR-0023-native-install.md)).\n2. **Session start.** The `SessionStart` hook opens the project database. When the session ran before, the agent gets one line that tells it to call `ctx_resume` ([dispatch.ts](src/core/hooks/dispatch.ts)).\n3. **PreToolUse checks.** Before a tool runs, the `PreToolUse` hook checks the call in a fixed order: the user's deny list, WebFetch, curl and wget, inline HTTP and build commands, then a full-file Read over `OUTPUT_CAP` (16,384 B) and one-file shell dumps such as `cat` or `tail`. A Read with a line range runs as usual ([decide.ts](src/core/policy/decide.ts)).\n4. **The exact call.** When a check matches, the hook stops the call and its reply names the exact `ctx_*` call to use, for example `ctx_execute` with `{\"language\":\"shell\",\"code\":\"<the command>\",\"intent\":\"<what you need>\"}`. For WebFetch the reply names `ctx_index`, then `ctx_search` ([read-deny.ts](src/core/policy/read-deny.ts)).\n5. **The sandbox.** This is the Code Mode step: the agent's script runs here, and only what it prints comes back. `ctx_execute` writes the script to a temp folder and spawns the runtime from an argument list in the project folder. The timeout is `EXEC_TIMEOUT_MS` (600,000 ms, default and maximum); on timeout it stops the whole process group (`taskkill /F /T` on Windows). The child gets your environment minus preload variables such as `NODE_OPTIONS`, and the agent gets what the script prints, at most `OUTPUT_CAP` ([execute.ts](src/core/tools/execute.ts)).\n   <a id=\"code-mode\"></a>**Code Mode.** The agent sends a short script as a tool parameter, the script reads the data in the sandbox, and only what it prints goes into the context. Two real calls, in the form the Claude Code terminal shows them:\n\n   `ctx_execute` on 5,000 JSON records, from the Claude Code 2.1.312 stream of the Try-it run with Context Mode 2.0.0-next.26 ([04-api-json.json](bench/evidence/try-it-2026-11-02/04-api-json.json)). The data is 1,039,898 B; the agent gets 254 B.\n\n   ```text\n   ⏺ context-mode - ctx_execute (MCP)(language: \"javascript\", c…jsonplaceholder.typicode.com/photos\\\");\n     if (!res.ok) throw new Error(\\\"HTTP \\\" + res.status);\n     const photos = await res.json();\n     let longest = null;\n     for (const p of photos) {\n       if (!longest || p.title.length > longest.title.length) longest = p;\n     }\n     const withEst = photos.filter(p => p.title.includes(\\\"est\\\")).length;\n     const ties = photos.filter(p => p.title.length === longest.title.length).map(p => p.id);\n     console.log(JSON.stringify({ total: photos.length, longest…nd count of titles containing \\\"est\\\"\")\n     ⎿  exit 0 · 239 B\n        {\n          \"total\": 5000,\n          \"longest\": {\n            \"id\": 653,\n            \"title\": \"temporibus commodi et fugit doloremque re…rit exercitationem necessitatibus aut\",\n            \"length\": 86\n          },\n          \"longestTieIds\": [\n            653\n          ],\n          \"titlesContainingEst\": 892\n        }\n   ```\n\n   `ctx_batch` on an install log and a long git log, one live MCP call to `release-out/server.mjs` of Context Mode 2.0.0-next.36 on 2026-11-03 ([2026-11-03-ctx-batch.json](bench/evidence/code-mode/2026-11-03-ctx-batch.json)). The commands print 228,881 B; the agent gets 8,667 B, the parts that match its two queries, and the full output stays in the index.\n\n   ```text\n   ⏺ context-mode - ctx_batch (MCP)(commands: [\"cat npm-install… queries: [\"cache miss\",\"feat commit\"])\n     ⎿  ## cache miss\n        js.org/@esbuild%2fwin32-x64 282ms (cache miss)\n        npm http fetch GET 200 https://registry.npmjs.org/@esbuild%2flinux-s390x 79ms (cache miss)\n        npm http fetch GET 200 https://registry.npmjs.org/@esbuild%2fopenbsd-x64 101ms (cache miss)\n        npm http fetch GET 200 https://registry.npmjs.org/@esbuild%2fwin32-arm64 99ms (cache miss)\n        npm http fetch GET 200 https://registry.npmjs.org/@esbuild%2fdarwin-arm64 99ms (cache miss)\n        … +95 lines (ctrl+o to expand)\n   ```\n6. **Indexing.** The full output goes into the index in chunks of at most `MAX_CHUNK_BYTES` (4,096 B). A Markdown chunk stays inside one heading section, and a code block that fits stays whole. Each chunk goes into two SQLite FTS5 tables: a Porter-stemmed table for words and a trigram table for paths, names and parts of words ([fts.ts](src/core/store/fts.ts)).\n\n   `ctx_index` on a copy of this repo's `docs/how-it-works.md`, one live MCP call to `release-out/server.mjs` of Context Mode 2.0.0-next.36 on 2026-11-03 ([calls.json](bench/evidence/terminal-calls-2026-11-03/calls.json)). The file is 11,577 B; the agent gets 64 B.\n\n   ```text\n   ⏺ context-mode - ctx_index (MCP)(path: \"how-it-works.md\")\n     ⎿  Indexed 1 source(s), 17 chunk(s) from s1. Label: how-it-works.md\n   ```\n7. **Search.** `ctx_search` ranks each table with BM25 and joins the two lists with Reciprocal Rank Fusion: a hit scores 1/(`RRF_K` + rank), with `RRF_K` = 60. Before it returns an empty list, it tries a spelling fix from the indexed words. Search covers this session, this worktree (the default) or the whole project, and each snippet is at most `SNIPPET_MAX_BYTES` (800 B) ([search.ts](src/core/tools/search.ts)).\n\n   `ctx_search` on that index, in the same run, in a project that also holds an `AGENTS.md`. One search reads the index and every agent's memory files. The agent gets 1,2",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": ".github/scripts/fixed-on-main.mjs",
+        "line": 297,
+        "snippet": "const git = (a) => execFileSync(\"git\", a, { encoding: \"utf8\", maxBuffer: 1 << 28 });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/.github/scripts/fixed-on-main.mjs#L297"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": ".github/scripts/fixed-on-main.mjs",
+        "line": 298,
+        "snippet": "const gh = (a) => execFileSync(\"gh\", a, { encoding: \"utf8\", maxBuffer: 1 << 28 });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/.github/scripts/fixed-on-main.mjs#L298"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": ".github/scripts/fixed-on-main.mjs",
+        "line": 341,
+        "snippet": "const inTag = (sha) => spawnSync(\"git\", [\"merge-base\", \"--is-ancestor\", sha, tag]).status === 0;",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/.github/scripts/fixed-on-main.mjs#L341"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": ".github/scripts/issue-intake-act.mjs",
+        "line": 95,
+        "snippet": "const gh = (args) => execFileSync(\"gh\", args, { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/.github/scripts/issue-intake-act.mjs#L95"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/c-batch/index.mjs",
+        "line": 14,
+        "snippet": "const execOut = (cmd) => { try { return execSync(cmd, { encoding: \"utf8\" }); } catch { return \"\"; } };",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/c-batch/index.mjs#L14"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/c-batch/index.mjs",
+        "line": 30,
+        "snippet": "native = commands.reduce((a, cmd) => a + bytes(execSync(cmd, { encoding: \"utf8\", cwd: process.cwd() })), 0);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/c-batch/index.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/d-externalize/index.mjs",
+        "line": 12,
+        "snippet": "const sampleOf = (code) => execFileSync(process.execPath, [\"-e\", code], { encoding: \"utf8\", maxBuffer: 1 << 26 }).split(\"\\n\").slice(0, 8).join(\"\\n\");",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/d-externalize/index.mjs#L12"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/evidence/code-mode/batch-live.mjs",
+        "line": 13,
+        "snippet": "const child = spawn(process.execPath, [path.join(repo, \"release-out/server.mjs\")], { cwd: work, env: { ...process.env, HOME: home, CLAUDE_PROJECT_DIR: work }, stdio: [\"pipe\", \"pipe",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/evidence/code-mode/batch-live.mjs#L13"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/evidence/ctx-batch-2026-11-03/batch-call.mjs",
+        "line": 7,
+        "snippet": "const p = spawn(\"node\", [server], { cwd, env: { ...process.env, HOME: process.env.CM_HOME, CLAUDE_PROJECT_DIR: cwd } });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/evidence/ctx-batch-2026-11-03/batch-call.mjs#L7"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/evidence/terminal-calls-2026-11-03/calls-live.mjs",
+        "line": 17,
+        "snippet": "await new Promise((res) => spawn(process.execPath, [path.join(repo, \"release-out/cli.mjs\"), \"setup\", \"--agents\", \"claude-code\", \"--yes\"], { cwd: work, env, stdio: \"ignore\" }).on(\"e",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/evidence/terminal-calls-2026-11-03/calls-live.mjs#L17"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/evidence/terminal-calls-2026-11-03/calls-live.mjs",
+        "line": 18,
+        "snippet": "const child = spawn(process.execPath, [path.join(repo, \"release-out/server.mjs\")], { cwd: work, env, stdio: [\"pipe\", \"pipe\", \"inherit\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/evidence/terminal-calls-2026-11-03/calls-live.mjs#L18"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/fixtures/run.mjs",
+        "line": 30,
+        "snippet": "execFileSync(process.execPath, [path.join(REPO, \"build\", \"build.mjs\"), \"--out\", BUNDLE], { cwd: REPO, stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/fixtures/run.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/fixtures/run.mjs",
+        "line": 59,
+        "snippet": "const child = spawn(process.execPath, [path.join(bundle, \"server.mjs\"), \"--agent\", \"claude-code\"], { cwd, env, stdio: [\"pipe\", \"pipe\", \"pipe\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/fixtures/run.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/fixtures/run.mjs",
+        "line": 99,
+        "snippet": "const r = spawnSync(process.execPath, [path.join(BUNDLE, \"hook.mjs\"), \"--agent\", \"claude-code\"], { cwd: project, env, input: JSON.stringify(payload), encoding: \"utf8\", timeout: 300",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/fixtures/run.mjs#L99"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/fixtures/run.mjs",
+        "line": 119,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", project]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/fixtures/run.mjs#L119"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/fixtures/run.mjs",
+        "line": 178,
+        "snippet": "try { sha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: REPO, encoding: \"utf8\" }).trim(); } catch { /* not a git checkout */ }",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/fixtures/run.mjs#L178"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/g-overhead/index.mjs",
+        "line": 6,
+        "snippet": "const bare = () => { const t = performance.now(); spawnSync(process.execPath, [\"-e\", \"\"]); return performance.now() - t; };",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/g-overhead/index.mjs#L6"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-gs6.mjs",
+        "line": 24,
+        "snippet": "const b = spawnSync(process.execPath, [path.join(ROOT, \"build/build.mjs\"), \"--out\", path.join(ROOT, \"release-out\")], { stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-gs6.mjs#L24"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-gs6.mjs",
+        "line": 33,
+        "snippet": "spawnSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-gs6.mjs#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-gs6.mjs",
+        "line": 51,
+        "snippet": "const c = spawn(process.execPath, [\"--import\", probe, ...args], { env, stdio: [\"pipe\", \"ignore\", \"pipe\", \"pipe\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-gs6.mjs#L51"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-index.mjs",
+        "line": 21,
+        "snippet": "const b = spawnSync(process.execPath, [path.join(ROOT, \"build/build.mjs\"), \"--out\", path.join(ROOT, \"release-out\")], { stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-index.mjs#L21"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-index.mjs",
+        "line": 44,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-index.mjs#L44"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-index.mjs",
+        "line": 51,
+        "snippet": "const r = spawnSync(process.execPath, args, { input, cwd: repo, env, encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-index.mjs#L51"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-index.mjs",
+        "line": 59,
+        "snippet": "const loadavg = execFileSync(\"sysctl\", [\"-n\", \"vm.loadavg\"], { encoding: \"utf8\" }).trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-index.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-large-post.mjs",
+        "line": 28,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-large-post.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/hook-large-post.mjs",
+        "line": 48,
+        "snippet": "const r = spawnSync(process.execPath, [...pre, b, \"--agent\", \"claude-code\"], { input: payload, cwd: repo, env, encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/hook-large-post.mjs#L48"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/ab-quick.mjs",
+        "line": 47,
+        "snippet": "const version = spawnSync(bin, [\"--version\"], { encoding: \"utf8\" }).stdout.trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/ab-quick.mjs#L47"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/fixtures.mjs",
+        "line": 51,
+        "snippet": "const g = (...a) => execFileSync(\"git\", [\"-C\", dir, ...a], { stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/fixtures.mjs#L51"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/fixtures.mjs",
+        "line": 63,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", dir]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/fixtures.mjs#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/fixtures.mjs",
+        "line": 64,
+        "snippet": "execFileSync(\"git\", [\"-C\", dir, \"config\", \"commit.gpgsign\", \"false\"]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/fixtures.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/run.mjs",
+        "line": 30,
+        "snippet": "const version = spawnSync(bin, [\"--version\"], { encoding: \"utf8\" }).stdout.trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/run.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/run.mjs",
+        "line": 97,
+        "snippet": "spawnSync(\"git\", [\"add\", \"bench/live/results/aggregate.json\"], { cwd: ROOT });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/run.mjs#L97"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/run.mjs",
+        "line": 98,
+        "snippet": "spawnSync(\"git\", [\"-c\", \"user.name=mksglu\", \"-c\", \"user.email=mksglu@users.noreply.github.com\", \"commit\", \"-qm\", `bench(live): aggregate after ${agg.sessionsDone} sessions`], { cwd",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/run.mjs#L98"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/live/run.mjs",
+        "line": 99,
+        "snippet": "for (let i = 0; i < 5; i++) { if (spawnSync(\"git\", [\"push\", \"-q\", \"origin\", \"v2-design\"], { cwd: ROOT }).status === 0) break; spawnSync(\"git\", [\"pull\", \"--rebase\", \"-q\", \"origin\", ",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/live/run.mjs#L99"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/m2/eval.mjs",
+        "line": 49,
+        "snippet": "const r = spawnSync(\"security\", [\"find-generic-password\", \"-s\", \"Claude Code-credentials\", \"-w\"], { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/m2/eval.mjs#L49"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/m2/eval.mjs",
+        "line": 57,
+        "snippet": "const agent = spawnSync(bin, [\"--version\"], { encoding: \"utf8\" }).stdout.trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/m2/eval.mjs#L57"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/m2/eval.mjs",
+        "line": 71,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", dir]); execFileSync(\"git\", [\"-C\", dir, \"config\", \"commit.gpgsign\", \"false\"]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/m2/eval.mjs#L71"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/m2/eval.mjs",
+        "line": 88,
+        "snippet": "const p = spawn(bin, args, { cwd: dir, env, stdio: [\"ignore\", fd, \"ignore\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/m2/eval.mjs#L88"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/replay.mjs",
+        "line": 42,
+        "snippet": "const m = OWN_RE.exec(name);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/replay.mjs#L42"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/replay.mjs",
+        "line": 119,
+        "snippet": "const own = OWN_RE.test(u.name) && ctxNames.has(OWN_RE.exec(u.name)[1]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/replay.mjs#L119"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/run.mjs",
+        "line": 47,
+        "snippet": "execFileSync(process.execPath, [path.join(REPO, \"build\", \"build.mjs\"), \"--out\", BUNDLE], { cwd: REPO, stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/run.mjs#L47"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/run.mjs",
+        "line": 49,
+        "snippet": "const git = (...a) => { try { return execFileSync(\"git\", a, { cwd: REPO, encoding: \"utf8\" }).trim(); } catch { return null; } };",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/run.mjs#L49"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/saving-score.mjs",
+        "line": 64,
+        "snippet": "const r = spawnSync(\"node\", [\"scripts/gate.mjs\", \"--milestone\", \"M7\", \"--quick\"], { cwd: ROOT, encoding: \"utf8\", maxBuffer: 1 << 28 });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/saving-score.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/saving-score.mjs",
+        "line": 75,
+        "snippet": "const p = spawn(\"node\", [\"bench/replay.mjs\", \"--out\", out], { cwd: ROOT, stdio: [\"ignore\", \"ignore\", \"ignore\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/saving-score.mjs#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/saving-score.mjs",
+        "line": 159,
+        "snippet": "const version = spawnSync(bin, [\"--version\"], { encoding: \"utf8\" }).stdout.trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/saving-score.mjs#L159"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/saving-score.mjs",
+        "line": 163,
+        "snippet": "const b = spawnSync(\"node\", [\"build/build.mjs\", \"--out\", \"release-out\"], { cwd: ROOT, encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/saving-score.mjs#L163"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/search/crosscheck.mjs",
+        "line": 43,
+        "snippet": "const child = spawn(cmd, args, { cwd, env, stdio: [\"pipe\", \"pipe\", \"pipe\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/search/crosscheck.mjs#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/search/crosscheck.mjs",
+        "line": 103,
+        "snippet": "mkdirSync(home); mkdirSync(project); execFileSync(\"git\", [\"init\", \"-q\", project]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/search/crosscheck.mjs#L103"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/search/heldout.mjs",
+        "line": 52,
+        "snippet": "const child = spawn(cmd, args, { cwd, env, stdio: [\"pipe\", \"pipe\", \"pipe\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/search/heldout.mjs#L52"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/search/heldout.mjs",
+        "line": 113,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", project]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/search/heldout.mjs#L113"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/suite/lib.mjs",
+        "line": 50,
+        "snippet": "spawnSync(\"git\", [\"init\", \"-q\", project]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/suite/lib.mjs#L50"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/suite/lib.mjs",
+        "line": 60,
+        "snippet": "const child = spawn(process.execPath, [path.join(bundle, \"server.mjs\"), \"--agent\", agent], { cwd: sb.project, env: sb.env, stdio: [\"pipe\", \"pipe\", \"pipe\"] });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/suite/lib.mjs#L60"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bench/suite/lib.mjs",
+        "line": 104,
+        "snippet": "const r = spawnSync(process.execPath, [path.join(bundle, \"hook.mjs\"), \"--agent\", agent], { cwd: sb.project, env: sb.env, input: JSON.stringify(payload), encoding: \"utf8\", timeout: ",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/bench/suite/lib.mjs#L104"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SEARCH-heldout.e2e.mjs",
+        "line": 107,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", project]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SEARCH-heldout.e2e.mjs#L107"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 101,
+        "snippet": "execFileSync(process.execPath, [path.join(REPO_ROOT, \"build\", \"build.mjs\"), \"--out\", outDir, \"--version\", VERSION], { cwd: REPO_ROOT, stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L101"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 102,
+        "snippet": "const sh = (cmd, args, opts = {}) => execFileSync(cmd, args, { encoding: \"utf8\", shell: WIN, windowsHide: true, ...opts });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L102"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 221,
+        "snippet": "execFileSync(process.execPath, [path.join(REPO_ROOT, \"build\", \"build.mjs\"), \"--out\", outDir, \"--version\", VERSION], { cwd: REPO_ROOT, stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 233,
+        "snippet": "out = execFileSync(process.execPath, [path.join(outDir, \"cli.mjs\"), \"setup\", \"--agents\", \"copilot-cli\", \"--yes\", \"--no-input\"], { env, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L233"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 282,
+        "snippet": "try { execFileSync(\"cc\", [\"-O2\", \"-o\", path.join(miseBin, \"mise\"), path.join(tmp, \"mise.c\")], { stdio: \"pipe\" }); }",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L282"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 285,
+        "snippet": "execFileSync(process.execPath, [path.join(REPO_ROOT, \"build\", \"build.mjs\"), \"--out\", outDir, \"--version\", VERSION], { cwd: REPO_ROOT, stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L285"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP-SETUP-npm-install.e2e.mjs",
+        "line": 290,
+        "snippet": "try { return { code: 0, out: execFileSync(process.execPath, [path.join(outDir, \"cli.mjs\"), ...args], { env, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"] }) }; }",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP-SETUP-npm-install.e2e.mjs#L290"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 65,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: ws });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L65"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 66,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@example.com\"], { cwd: ws });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L66"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 67,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"t\"], { cwd: ws });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L67"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 68,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"--allow-empty\", \"-q\", \"-m\", \"init\"], { cwd: ws });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L68"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 506,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: repo });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L506"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 534,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: repo });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L534"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 682,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: repo });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L682"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 736,
+        "snippet": "try { return execFileSync(\"opencode\", [\"--version\"], { encoding: \"utf8\", timeout: 30000 }).trim(); } catch { return \"\"; }",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L736"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP1-install.e2e.mjs",
+        "line": 754,
+        "snippet": "try { out = execFileSync(process.execPath, [CLI, \"setup\", \"--yes\", \"--agents\", \"opencode\"], { cwd: root, env, encoding: \"utf8\", timeout: 60000, stdio: [\"ignore\", \"pipe\", \"pipe\"] })",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP1-install.e2e.mjs#L754"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP10-stats.e2e.mjs",
+        "line": 29,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: repo });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP10-stats.e2e.mjs#L29"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 46,
+        "snippet": "return execFileSync(process.execPath, [\"--input-type=module\", \"-e\", DRIVER, `file://${PI_BUNDLE}`, repo], { env, cwd: repo, encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L46"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 54,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: repo });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L54"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 107,
+        "snippet": "return execFileSync(process.execPath, [\"--input-type=module\", \"-e\", OMP_DRIVER, `file://${OMP_BUNDLE}`, repo, tool, JSON.stringify(params)], { env, cwd: repo, encoding: \"utf8\", tim",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L107"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 277,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\"], { cwd: repo }); // D-M5-R1-2: resolveProject needs a git repo (as GP10)",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L277"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 387,
+        "snippet": "try { execFileSync(process.execPath, [CLI, ...args, \"--agents\", \"codex\", \"--no-input\", \"--json\"], { env, cwd: repo, stdio: \"ignore\" }); return 0; }",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L387"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 539,
+        "snippet": "const cache = execFileSync(\"npm\", [\"config\", \"get\", \"cache\"], { encoding: \"utf8\" }).trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L539"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 545,
+        "snippet": "const npm = (args, cwd = tmp) => execFileSync(\"npm\", args, { cwd, env, encoding: \"utf8\", stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L545"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 552,
+        "snippet": "const r = spawnSync(bin, [\"upgrade\", \"--platform\", \"claude-code\"], { cwd: proj, env, encoding: \"utf8\", timeout: 400_000 });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L552"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 565,
+        "snippet": "execFileSync(process.execPath, [path.join(ROOT, \"build\", \"build.mjs\"), \"--out\", rel, \"--version\", want], { cwd: ROOT, encoding: \"utf8\", stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L565"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP11-doctor-upgrade.e2e.mjs",
+        "line": 569,
+        "snippet": "assert.ok(execFileSync(bin, [\"--version\"], { env, encoding: \"utf8\" }).includes(want));",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP11-doctor-upgrade.e2e.mjs#L569"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP2-prompt-surface.e2e.mjs",
+        "line": 73,
+        "snippet": "stdout = execFileSync(process.execPath, [lintScript, \"--out\", outDir], { stdio: [\"ignore\", \"pipe\", \"pipe\"] }).toString(\"utf8\");",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP2-prompt-surface.e2e.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP2-prompt-surface.e2e.mjs",
+        "line": 90,
+        "snippet": "execFileSync(process.execPath, [lintScript, \"--out\", path.join(tmp, \"release-out\")], { stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP2-prompt-surface.e2e.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP2-prompt-surface.e2e.mjs",
+        "line": 191,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP2-prompt-surface.e2e.mjs#L191"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP2-prompt-surface.e2e.mjs",
+        "line": 207,
+        "snippet": "const r = JSON.parse(execFileSync(process.execPath, [\"--input-type=module\", \"-e\", driver, `file://${bundle}`, repo], { env, cwd: repo, encoding: \"utf8\" }));",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP2-prompt-surface.e2e.mjs#L207"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 271,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", proj]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L271"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 320,
+        "snippet": "const npmRoot = spawnSync(\"npm\", [\"root\", \"-g\"], { encoding: \"utf8\", shell: process.platform === \"win32\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L320"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 331,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L331"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 378,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L378"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 385,
+        "snippet": "const stdout = execFileSync(process.execPath, [\"--input-type=module\", \"-e\", OMP_DRIVER, pathToFileURL(OMP_BUNDLE).href, f.repo], { env, cwd: f.repo, input: JSON.stringify(steps), e",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L385"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 502,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L502"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 517,
+        "snippet": "const r = spawnSync(process.execPath, [HOOK_BUNDLE, \"--agent\", \"claude-code\"], { input: JSON.stringify(payload), cwd: repo, env, encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L517"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 567,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", repo]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L567"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 575,
+        "snippet": "const r = spawnSync(process.execPath, [script, ...args], { input: payload === undefined ? \"\" : JSON.stringify(payload), cwd: repo, env, encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L575"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 688,
+        "snippet": "const s = spawnSync(process.execPath, [words[0], words[1], \"2000\", words[3]], { cwd: tmpdir(), env: { PATH: process.env.PATH, HOME: path.dirname(f.repo), USERPROFILE: path.dirname(",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L688"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 763,
+        "snippet": "const r = spawnSync(NODE18, [path.join(OUT, \"hook.mjs\"), \"--agent\", \"claude-code\"], { input: JSON.stringify(payload), env, encoding: \"utf8\", timeout: 20000 });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L763"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP3-hooks.e2e.mjs",
+        "line": 775,
+        "snippet": "const s = spawnSync(NODE18, [path.join(OUT, \"server.mjs\"), \"--agent\", \"claude-code\"], { input: lines, env, encoding: \"utf8\", timeout: 20000 });",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP3-hooks.e2e.mjs#L775"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP4-execute.e2e.mjs",
+        "line": 28,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", PROJECT]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP4-execute.e2e.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP4-execute.e2e.mjs",
+        "line": 273,
+        "snippet": "const nodeV = execFileSync(\"node\", [\"-v\"], { env: ENV, encoding: \"utf8\" }).trim();",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP4-execute.e2e.mjs#L273"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "e2e/cases/GP5-index-search.e2e.mjs",
+        "line": 44,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-q\", PROJECT]);",
+        "githubBlobUrl": "https://github.com/calvinxxw/context-mode-antigravity/blob/5975193fa8c57c7051558f661c95bfdbe897c565/e2e/cases/GP5-index-search.e2e.mjs#L44"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.2.4",
+      "sha": "5975193fa8c57c7051558f661c95bfdbe897c565",
+      "scannedAt": "2026-11-27T18:15:45.648Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

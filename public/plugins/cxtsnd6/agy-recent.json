@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "cxtsnd6/agy-recent",
+  "sha": "451d208f9cafc7c6611dda26f779feb0e39e4523",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:15.099Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-recent",
+    "displayName": "agy-recent · Codex 风格最近会话 (Recent)",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agy-recent",
+        "slashCommand": "/agy-recent",
+        "description": "Inspect, troubleshoot, or configure the agy-recent Codex-style collapsible Recent conversations sidebar dock for the Antigravity desktop app. Use when the user asks about agy-recent status, preferences, or enabling the DevTools debug port.",
+        "disableModelInvocation": false,
+        "file": "skills/agy-recent/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-recent"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" width=\"72\" alt=\"agy-recent logo\" />\n\n# agy-recent\n\n**Codex-style chronological, collapsible & height-resizable \"Recent / 最近\" conversations dock at the bottom of the Google Antigravity desktop sidebar.**\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)]()\n[![Node](https://img.shields.io/badge/node-%E2%89%A522.5-339933)]()\n[![Zero deps](https://img.shields.io/badge/dependencies-0-success)]()\n\n[简体中文](#简体中文) · [English](#english)\n\n</div>\n\n> **Unofficial community project.** Not affiliated with, endorsed by, or sponsored by Google.\n\n---\n\n<a id=\"简体中文\"></a>\n\n## 简体中文\n\n### 为什么写这个插件\n\n平时用 Antigravity（Anti）干活、聊技术问题的时候，总觉得切回刚才的会话特别别扭、很不顺手，但一开始也没想明白差在哪。后来切到 Codex 对比看了一眼才反应过来：**Anti 的左侧边栏把会话死板地按项目文件夹折叠着，居然没有「最近对话」功能！**\n\n平时同时切两三个项目，或者随手开几个独立对话，刚聊过两句的会话很快就被其他项目挤到不知哪一屏去了。想接着上一个话题继续聊，还得先回忆刚才是在哪个目录下面开的对话、再去点开折叠目录翻半天，思路直接被打断。\n\n于是就做了这个 `agy-recent` 插件——不动 `app.asar` 安装包，也不影响应用自动更新，直接在 Anti 左侧边栏底端（`Settings` 上方）加了一个 **Codex 同款的「最近 / Recent」可伸缩面板**，日常用起来顺手多了：\n\n- **所有最近对话按时间倒序排成一列**：不用再管刚才挂在哪个项目底下，最新聊过的永远在最上面（自动过滤掉后台子 Agent 和已归档的对话）。\n- **随手就能收起和拉高（双向可伸缩）**：\n  - 嫌占地方时点一下标题栏 `最近 ⌄` 就能折叠成一条（有任务在跑时还会显示一个小圆点提示）；\n  - 觉得面板太矮或太高，按住顶部分隔条直接上下拖拽改高度，双击恢复默认高度，重启也会记住。\n- **Codex 风格顺手交互**：\n  - 正在运行的会话右侧显示动态旋转圆环 `○`；\n  - 鼠标悬停行可直接 **置顶 (Pin)** 与 **归档/隐藏**（本地隐藏带 4.5 秒撤销提示）；\n  - 悬停悬浮卡片展示完整标题、所属工作区文件夹（`📁`）、步数与时间；\n  - 标题栏支持一键内联搜索过滤，支持 `简体中文 / English / Auto` 切换，自动适配亮色与暗色主题。\n- **零外部依赖 & 100% 本地**：完全基于 Node.js 内置模块（`node:sqlite`、`node:http`、`WebSocket`），无任何第三方 npm 包与外网请求。\n\n### 工作原理\n\n```mermaid\nflowchart LR\n  DB[\"conversation_summaries.db<br/>(SQLite 只读 + WAL)\"] -->|\"fs.watch + 轮询\"| SC[\"Sidecar 进程<br/>(sidecars/recent/main.mjs)\"]\n  SC -->|\"CDP Runtime.addBinding<br/>(127.0.0.1 DevToolsActivePort)\"| UI[\"侧边栏底部可伸缩 Dock<br/>(Shadow DOM + 原生主题变量)\"]\n  UI -->|\"点击会话 / 置顶 / 折叠 / 调高\"| SC\n```\n\n- 与其他基于 `DevToolsActivePort` 的插件（如 `antigravity-pulse`）使用完全独立的 CDP Binding 与 DOM ID，可安全并行使用。\n- 自带 Aux Pane 伴随设置面板（侧边栏右侧辅助面板 `+` → `Recent Conversations`），支持检查连接状态、设置上限与恢复本地隐藏会话。\n\n### 安装\n\n**前置条件**：Google Antigravity 桌面端，以及开启了本地调试端口（`--remote-debugging-port=0 --remote-debugging-address=127.0.0.1`）。如果尚未开启，安装脚本支持一键自动写入快捷方式参数。\n\n#### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/cxtsnd6/agy-recent.git\ncd agy-recent\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 -SetupDebug\n```\n\n> 若已安装 `antigravity-pulse` 等插件并开启了 `DevToolsActivePort`，可省略 `-SetupDebug`。\n\n#### macOS / Linux\n\n```bash\ngit clone https://github.com/cxtsnd6/agy-recent.git\ncd agy-recent\nsh ./install.sh --setup-debug\n```\n\n- **macOS 注意事项**：可运行 `open -a Antigravity --args --remote-debugging-port=0 --remote-debugging-address=127.0.0.1` 启动桌面端以开放本地 `DevToolsActivePort`。\n- 安装后请**完全退出并重启 Antigravity**（若之前未开启调试端口），侧边栏底端即可看到「最近 / Recent」面板。\n\n### 卸载\n\n```powershell\n# Windows（加 -Purge 可同时清理偏好设置）\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\uninstall.ps1\n```\n\n```bash\n# macOS / Linux（加 --purge 可同时清理偏好设置）\nsh ./uninstall.sh\n```\n\n---\n\n<a id=\"english\"></a>\n\n## English\n\n### Why I built agy-recent\n\nWhenever I used Antigravity across a couple of projects, jumping back to a chat from a few minutes ago always felt weirdly clunky. Then it clicked when I looked at Codex: **Antigravity groups every conversation strictly inside collapsible Project folders—it had no chronological \"Recent conversations\" list at all!**\n\nJuggle two or three workspaces (or standalone chats) and your most active threads quickly get buried behind folded folders. Instead of remembering which folder a thread started in and hunting through the tree, `agy-recent` adds a **Codex-style collapsible & height-resizable Recent dock** at the bottom of the left sidebar (just above `Settings`), without patching `app.asar` or breaking updates:\n\n- **Cross-project chronological timeline**: Reads `~/.gemini/antigravity/conversation_summaries.db` (read-only via `node:sqlite` + WAL watching), showing top-level conversations across all workspaces and standalone chats while excluding subagents and archived threads.\n- **Collapsible & height-resizable**:\n  - Click `Recent ⌄` / `最近 ⌄` to collapse or expand smoothly;\n  - Drag the top splitter bar to resize height freely (double-click to reset), persisted across restarts.\n- **Codex-inspired UX**:\n  - Live spinner (`○`) for running conversations (plus a running indicator badge when collapsed);\n  - Row hover actions for **Pin** and **Archive / Hide** (with an Undo bar for local hides);\n  - Hover preview card showing full title, workspace folder (`📁`), step count, and timestamp;\n  - Inline quick filter search, automatic Light/Dark theme variable inheritance, and `Auto / 简体中文 / English` localization.\n- **Zero dependencies & 100% local**: Uses only Node.js built-in modules (`node:sqlite`, `node:http`, `WebSocket`), zero external packages, zero telemetry.\n\n### Install\n\n#### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/cxtsnd6/agy-recent.git\ncd agy-recent\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 -SetupDebug\n```\n\n#### macOS / Linux\n\n```bash\ngit clone https://github.com/cxtsnd6/agy-recent.git\ncd agy-recent\nsh ./install.sh --setup-debug\n```\n\nOn macOS, if `DevToolsActivePort` is not active yet, start Antigravity with:\n\n```bash\nopen -a Antigravity --args --remote-debugging-port=0 --remote-debugging-address=127.0.0.1\n```\n\n### Tests\n\n```bash\nnode --test tests/*.test.mjs\n```\n\n### License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/launch-config.mjs",
+        "line": 286,
+        "snippet": "await writeFile(userDesktop, updated, 'utf8');",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-recent/blob/451d208f9cafc7c6611dda26f779feb0e39e4523/src/launch-config.mjs#L286"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/prefs.mjs",
+        "line": 74,
+        "snippet": "writeFileSync(tempPath, payload, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-recent/blob/451d208f9cafc7c6611dda26f779feb0e39e4523/src/prefs.mjs#L74"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/prefs.mjs",
+        "line": 89,
+        "snippet": "unlinkSync(tempPath);",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-recent/blob/451d208f9cafc7c6611dda26f779feb0e39e4523/src/prefs.mjs#L89"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "451d208f9cafc7c6611dda26f779feb0e39e4523",
+      "scannedAt": "2026-11-27T18:19:15.099Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace"
+      ]
+    }
+  ]
+}

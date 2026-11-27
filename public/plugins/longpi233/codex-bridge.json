@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "id": "longpi233/codex-bridge",
+  "sha": "2deeab8f09d9dbee896c076bd5510819fd189756",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:12:49.275Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-bridge",
+    "displayName": "Codex GPT Bridge",
+    "version": "0.2.4",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "codex-bridge",
+        "runtimeName": "codex-bridge_codex-bridge",
+        "transport": "stdio",
+        "command": "python",
+        "args": [
+          "-u",
+          "${PLUGIN_ROOT}/server/codex_mcp_server.py"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-delegate",
+        "slashCommand": "/codex-delegate",
+        "description": "Delegate verification, code review, or bounded subtasks to OpenAI Codex CLI GPT models (such as gpt-6.2-sol and gpt-6.2-astra) via the codex-bridge MCP server, with live account quota and reset-time-aware task routing.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-delegate/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "codex_worker",
+        "description": "Delegates verification, code review, or bounded implementation subtasks to OpenAI Codex CLI GPT models (e.g. gpt-6.2-sol, gpt-6.2-astra) with live quota and reset-time awareness.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/codex_worker.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-delegate"
+    ],
+    "mcpServerNames": [
+      "codex-bridge_codex-bridge"
+    ],
+    "agentNames": [
+      "codex_worker"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Codex GPT Bridge (`codex-bridge`)\n\n<p align=\"center\">\n  <img src=\"./assets/logo-full.png\" alt=\"codex-bridge logo\" width=\"220\" />\n</p>\n\n<p align=\"center\">\n  <strong>English</strong> | <a href=\"./README_CN.md\">简体中文</a>\n</p>\n\n<p align=\"center\">\n  <code>Python 3.10+</code> · <code>Zero Dependencies</code> · <code>MCP stdio</code> · <code>Windows / macOS / Linux</code> · <code>MIT License</code>\n</p>\n\n> **Tired of GPT's defensive lecturing, robotic hedging, and refusal-flavored walls of text? Had enough of arguing with GPT just to get a straight answer?**\n>\n> Put an MCP bridge in between: let **Gemini**, **Claude**, or whichever main coding agent you already love handle the conversation under the hood. You keep all of GPT's heavy-duty reasoning and code-review horsepower — while your main agent manages the back-and-forth, filters the attitude, and translates every finding back to you in plain human language.\n\n**`codex-bridge`** is a lightweight, zero-dependency **MCP server** and **native plugin** (for **Antigravity**, **Claude Code / Claude Desktop**, and **DeepSeek Harness**) that lets your favorite AI coding agent delegate tasks and code reviews to your local **OpenAI Codex CLI** (`codex`).\n\n---\n\n## Table of Contents\n\n- [Why Use codex-bridge](#why-use-codex-bridge)\n- [Available Tools](#available-tools)\n- [Prerequisites](#prerequisites)\n- [Installation and Setup](#installation-and-setup)\n- [Quick Start](#quick-start)\n- [Environment Variables](#environment-variables)\n- [Troubleshooting](#troubleshooting)\n- [Running Tests](#running-tests)\n- [License](#license)\n\n---\n\n## Why Use codex-bridge\n\n- **Smart Quota and Reset-Time Routing**: Your main agent can query live 5-hour and 7-day Codex limits (`codex_quota_status`) before delegating, knowing when to go all-in with `gpt-6.2-astra` and when to conserve quota.\n- **No Client Timeouts on Deep Audits**: Supports asynchronous background execution (`background: true`) for long analyses and large git diff reviews, collecting results cleanly via `codex_job_status`.\n- **Multi-Turn Context Continuity**: Preserves Codex sessions across follow-up turns so you can review, fix, and re-verify without starting from scratch.\n- **Multimodal and Config Profiles**: Attach local screenshots to prompts (`images`) or reuse your existing `~/.codex` config profiles (`profile`).\n- **Zero Dependencies, Cross-Platform**: Built purely on the Python 3.10+ standard library and works out of the box on Windows, macOS, and Linux.\n\n## Available Tools\n\n| Tool | What It Does |\n| :--- | :--- |\n| `codex_quota_status` | Checks live 5-hour / 7-day Codex quota, reset times, and recommends a model and reasoning effort. |\n| `codex_list_models` | Lists the GPT models available on your Codex account along with supported reasoning efforts. |\n| `codex_exec` | Runs non-interactive prompts, audits, or bounded subtasks with configurable sandbox, images, profiles, session resume, and background execution. |\n| `codex_review` | Runs read-only git code reviews on uncommitted changes, branch diffs, specific commits, or custom focus areas. |\n| `codex_job_status` | Monitors and collects results from background jobs and lists active resumable sessions. |\n| `codex_job_cancel` | Cleanly cancels queued or running background jobs and terminates their child processes. |\n\n---\n\n## Prerequisites\n\n1. **OpenAI Codex CLI** installed and signed in:\n   ```bash\n   codex --version\n   codex login status    # Should show: Logged in using ChatGPT\n   ```\n2. **Python 3.10+** installed:\n   ```bash\n   python --version\n   ```\n\n---\n\n## Installation and Setup\n\nChoose your client:\n\n- [1. Antigravity](#1-antigravity)\n- [2. Claude Code and Claude Desktop](#2-claude-code-and-claude-desktop)\n- [3. DeepSeek Harness](#3-deepseek-harness)\n- [4. Cursor, Windsurf, WorkBuddy and Other MCP Clients](#4-cursor-windsurf-workbuddy-and-other-mcp-clients)\n\n---\n\n### 1. Antigravity\n\nInstalls the MCP server, `codex-delegate` skill, always-on rule, and `codex_worker` subagent as one bundle (shared across the Antigravity CLI and App).\n\n- **Install via Antigravity CLI (`agy`, Recommended)**:\n  ```bash\n  git clone https://github.com/longpi233/codex-bridge.git\n  agy plugin install ./codex-bridge\n  ```\n- **Or clone directly into Antigravity's plugins folder**:\n  - **macOS / Linux**:\n    ```bash\n    git clone https://github.com/longpi233/codex-bridge.git ~/.gemini/config/plugins/codex-bridge\n    ```\n  - **Windows (PowerShell)**:\n    ```powershell\n    git clone https://github.com/longpi233/codex-bridge.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-bridge\"\n    ```\n  - **Windows (`cmd`)**:\n    ```cmd\n    git clone https://github.com/longpi233/codex-bridge.git \"%USERPROFILE%\\.gemini\\config\\plugins\\codex-bridge\"\n    ```\n- **Or register an existing clone** in `~/.gemini/config/plugins.json`:\n  ```json\n  { \"entries\": [{ \"path\": \"/path/to/parent-folder\", \"include_only\": [\"codex-bridge\"] }] }\n  ```\n\n---\n\n### 2. Claude Code and Claude Desktop\n\nThe native plugin bundles all 6 MCP tools, the `codex-delegate` skill, and a native `codex-worker` subagent *(on Claude Desktop, plugin-local MCP servers and subagents apply to **Cowork** and **Claude Code**; if you use the standard Desktop **Chat** tab, use [Manual Setup](#manual-setup-custom-python-path-or-environment-variables) below)*.\n\n#### Option A: Sync via GitHub Marketplace (Recommended — Easy Updates)\n\n- **Claude Desktop (Cowork)**:\n  1. Open **Customize** → **Plugins** → **Discover** → click **`+`** *(hovering over `+` shows **Add marketplace**)*.\n  2. Enter `longpi233/codex-bridge` and click **Sync**.\n  3. Install **`codex-bridge`** from the synced marketplace.\n- **Claude Code**:\n  ```text\n  # Claude Code 2.1.275+\n  /plugin install codex-bridge --marketplace longpi233/codex-bridge\n\n  # Earlier versions with /plugin\n  /plugin marketplace add longpi233/codex-bridge\n  /plugin install codex-bridge@codex-bridge\n  /reload-plugins\n  ```\n  You can also load a local clone directly with `claude --plugin-dir /path/to/codex-bridge`.\n\n#### Option B: Upload Prebuilt `.plugin` Package (Claude Desktop Cowork)\n\n1. Download **`codex-bridge.plugin`** from [GitHub Releases](https://github.com/longpi233/codex-bridge/releases/latest) *(or build it locally with `python scripts/pack_claude_plugin.py`)*.\n2. Open **Customize** → **Plugins** → **Upload local plugin** and select `codex-bridge.plugin`.\n\n#### Manual Setup (Desktop Chat Tab, Custom Python Path, or Env Vars)\n\n- **Claude Desktop (Chat / Cowork)**: Open **Settings… → Developer → Edit Config** (`%APPDATA%\\Claude\\claude_desktop_config.json` on Windows or `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS), use the JSON template in [§4](#4-cursor-windsurf-workbuddy-and-other-mcp-clients) with your Python path (`python` on Windows or `python3` / full path on macOS/Linux), then fully quit and relaunch Claude Desktop.\n- **Claude Code CLI**:\n  ```bash\n  git clone https://github.com/longpi233/codex-bridge.git /path/to/codex-bridge\n  # Use `python3` instead of `python` on macOS/Linux if `python` is unavailable\n  claude mcp add-json codex-bridge '{\"command\":\"python\",\"args\":[\"-u\",\"/path/to/codex-bridge/server/codex_mcp_server.py\"]}'\n  ```\n  *(Add `-s user` before `codex-bridge` to register globally.)*\n\n---\n\n### 3. DeepSeek Harness\n\nDSH supports `codex-bridge` as a native Cordis plugin bundle, automatically mounting all 6 MCP tools and the bundled `codex-delegate` skill (no manual skill copying required).\n\n- **Install via DSH CLI (Recommended)**:\n  ```bash\n  # Replace `desktop` with your profile name if different (e.g. `web` or `tui`)\n  dsh plugin --profile desktop add github:longpi233/codex-bridge\n  ```\n  *(Or pass a local clone path: `dsh plugin --profile desktop add /path/to/codex-bridge`.)*\n  Then enable **`codex-bridge`** in DSH's Plugins page (or add `\"codex-bridge\"` to `dsh.profile.bundles` in `~/.dsh/profiles/<profile>/package.json`). *(If you previously added a manual `cordis.patch.yml` entry below, remove it before enabling the plugin bundle.)*\n\n- **Or configure manually via `cordis.patch.yml`**:\n  Append the entry below to `~/.dsh/profiles/<profile>/cordis.patch.yml` and save (DSH hot-reloads without restarting):\n  ```yaml\n  - insert:\n      - id: codex-bridge-mcp-manual\n        name: '@deepseek-ai/dsh-mcp-client'\n        config:\n          serverName: codex-bridge\n          transport: stdio\n          command: 'C:\\Python311\\python.exe'    # absolute path to Python\n          args: ['-u', 'D:\\tools\\codex-bridge\\server\\codex_mcp_server.py']\n          cwd: 'D:\\tools\\codex-bridge'\n          toolCallTimeoutMs: 1800000\n          failOnStartupError: true\n  ```\n\n---\n\n### 4. Cursor, Windsurf, WorkBuddy and Other MCP Clients\n\n1. **Clone the repository**:\n   ```bash\n   git clone https://github.com/longpi233/codex-bridge.git /path/to/codex-bridge\n   ```\n2. **Add `codex_bridge` to your client's MCP configuration** (`~/.cursor/mcp.json`, `%USERPROFILE%\\.workbuddy\\mcp.json`, Windsurf `mcp_config.json`, etc.):\n   ```json\n   {\n     \"mcpServers\": {\n       \"codex_bridge\": {\n         \"command\": \"/path/to/python\",\n         \"args\": [\"-u\", \"/path/to/codex-bridge/server/codex_mcp_server.py\"]\n       }\n     }\n   }\n   ```\n   - Replace `\"/path/to/python\"` with your Python executable path (e.g. `C:/Python311/python.exe` on Windows or `/usr/local/bin/python3` on macOS/Linux).\n   - **WorkBuddy**: After saving `mcp.json`, completely quit and restart WorkBuddy, then open **Connectors → Custom Connectors** and click **Trust** on `codex_bridge`.\n3. **Install the Skill & Rule (Recommended)**:\n   - **Skill**: Copy or symlink `skills/codex-delegate/` to your client's skill folder (`~/.agents/skills/codex-delegate`, `.cursor/skills/codex-delegate`, `~/.workbuddy/skills/codex-delegate`, or `.codebuddy/skills/codex-delegate`).\n   - **Rule**: Copy [`rules/AGENTS.md`](./rules/AGENTS.md) into your project's `AGENTS.md` or client rules directory.\n\n---\n\n## Quick Start\n\nOnce installed, try asking your main agent:\n\n- *\"Check my Codex quota and reset time, and recommend which GPT model and reasoning effort we should use.\"*\n- *\"Ask Codex (`gpt-6.2-astra`) in read-only background mode to review my uncommitted changes for bugs and edge cases.\"*\n- *\"Send this UI screenshot to Codex via `codex_exec` and check layout alignment against `src/App.tsx`.\"*\n\n---\n\n## Environment Variables\n\nAll environment variables are optional:\n\n| Variable | Description |\n| :--- | :--- |\n| `CODEX_BIN` | Explicit path to `codex` / `codex.exe` if not on `PATH`. |\n| `CODEX_HOME` | Custom Codex auth/state directory (defaults to `~/.codex`). |\n| `CODEX_DEFAULT_MODEL` | Fallback model id when `model` and `profile` are omitted. |\n| `CODEX_BRIDGE_PYTHON` | Explicit Python path for the native DSH plugin bundle. |\n| `CODEX_BRIDGE_LOG_FILE` | File path to enable optional JSONL diagnostic logging. |\n| `CODEX_BRIDGE_INCLUDE_EMAIL` | Set to `1` to include unmasked `account.email` in quota status (masked by default). |\n\n---\n\n## Troubleshooting\n\nIf tools do not show up in your client, verify that the server itself responds cleanly:\n\n- **Windows (PowerShell)**:\n  ```powershell\n  $p = @'\n  {\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}\n  {\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n  {\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}\n  '@\n  $p | python -u server/codex_mcp_server.py\n  ```\n- **macOS / Linux**:\n  ```bash\n  printf '%s\\n' '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' \\\n    '{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}' \\\n    '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}' \\\n    | python3 -u server/codex_mcp_server.py\n  ```\n\n- **Prints 2 JSON lines listing all 6 tools**: The server is working — check your client's config path, specify the full path to Python, and fully restart the client (in WorkBuddy, also click **Trust** under Custom Connectors).\n- **Hangs with no output**: Make sure `-u` is included in `args` so Python does not buffer stdout.\n\n---\n\n## Running Tests\n\n```bash\n# Offline test suite (zero model quota)\npython tests/test_codex_bridge.py\n\n# Live smoke tests using your local Codex CLI\npython tests/test_codex_bridge.py --live\n```\n\n---\n\n## License\n\nLicensed under the [MIT License](./LICENSE).\n",
+  "latestReleaseNotes": "## What's Changed in v0.2.4\n\n### Security & Runtime Hardening (`codex_mcp_server.py`)\n- **Read-only Git Fingerprinting**: Disabled repo-configured `core.fsmonitor`, hooks, and external diff/textconv helpers during `codex_review` fingerprinting, and expanded `workspaceChangedDuringReview` detection to cover staged diffs and untracked file contents.\n- **Windows Batch & Process-Tree Safety**: Bypassed Windows `.cmd` wrappers via `node` + `codex.js` when native `codex.exe` is unavailable, blocked shell metacharacters on `.cmd`/`.bat` invocations, and added a `taskkill /F /T` fallback when Job Object assignment is unavailable.\n- **Session & Concurrency Integrity**: Pinned newly created persistent session locks from `thread.started` until Turn 1 completes, re-validated `cwd`/sandbox bindings inside the lock on resume (blocking TOCTOU downgrades), required explicit `cwd` for writable sandboxes, rejected leading-dash/control-char CLI tokens, and prevented `SESSION_RUN_LOCKS` leaks on failed/ephemeral resumes.\n- **Job Lifecycle & Schema Enforcement**: Made terminal job states immutable against late `codex_job_cancel` calls, verified `request_id` payload fingerprints on reuse, enforced runtime `additionalProperties: false` argument checks, and tightened JSON-RPC 2.0 envelope + MCP `2025-03-26` batch handling.\n- **Quota & Model Pagination Fixes**: Normalized missing/empty/expired fallback quota windows safely (`tier: \"unknown\"`), excluded expired fallback windows from burn recommendations, derived sample age from event timestamps, and flagged truncated/repeated-cursor `codex_list_models` responses.\n\n### Packaging, DSH Bundle & Documentation\n- **DSH (`cordis.patch.yml` & `package.json`)**: Restricted `CODEX_BRIDGE_PYTHON` and `CODEX_BIN` overrides to trusted `process`/`user-env` layers, verified Python `3.10+` across Windows (`python`/`python3`/`py -3`) and POSIX `PATH`, validated a single verified `codex-bridge` package root, and included `rules/AGENTS.md` in the npm bundle.\n- **Claude `.plugin` Archive**: Updated `scripts/pack_claude_plugin.py` with atomic writes and suffix validation, removing the duplicate `assets/logo.png` copy (9 files total, ~99.7 KB smaller).\n- **Docs & Logo**: Added full-resolution transparent logo (`assets/logo-full.png`) for READMEs, clarified Claude Desktop Cowork vs. Chat installation paths, updated DSH manual migration ID (`codex-bridge-mcp-manual`), and aligned skill/agent instructions on cancel-and-resume (`codex_exec` resumable jobs only), polling ranges, and plugin tool naming.\n\n---\n\n## v0.2.4 更新说明\n\n### 服务端安全与并发稳定性加固\n- **只读审查指纹加固**：`codex_review` 指纹计算禁用仓库自定义 `core.fsmonitor`、Hooks 与外部 diff/textconv 程序，并补齐对暂存区（`diff --cached`）与未跟踪文件内容的变更检测。\n- **Windows 子进程与进程树兜底**：未找到原生 `codex.exe` 时优先通过 `node` + `codex.js` 直接启动以绕过 `cmd.exe`，拦截 `.cmd`/`.bat` 参数中的 shell 元字符；Win32 Job Object 不可用时降级使用 `taskkill /F /T` 清理进程树。\n- **会话与后台任务安全**：新建持久化会话自 `thread.started` 起即持有互斥锁直至首轮完成；`resume` 获取锁后二次校验 `cwd` 与沙箱等级；可写沙箱强制要求显式 `cwd`；严格校验 `request_id` 请求指纹、终态不可逆、CLI Token 防注入与 `additionalProperties: false`。\n- **协议与配额边界修复**：补齐 JSON-RPC 2.0 信封校验与 MCP `2025-03-26` 批处理支持；空/缺失/过期回退配额窗口不再误判为可用配额或触发消耗建议，并修正 `codex_list_models` 重复游标检测。\n\n### 多平台打包与文档完善\n- **DSH 插件加固**：隔离项目 `.env` 对 Python/Codex 路径的覆盖，实测校验 Python `3.10+` 与单一受信任包根目录，并在 npm 包内补齐 `rules/AGENTS.md`。\n- **Claude `.plugin` 精简**：移除与 `.claude-plugin/icon.png` 重复的 `assets/logo.png`（缩减至 9 个文件），并采用原子写入。\n- **文档与视觉资源**：README 启用高清透明背景徽标 `assets/logo-full.png`，明确 Claude Desktop Cowork 与 Chat 的差异及各端轮询/续接说明。\n\n**Full Changelog**: https://github.com/longpi233/codex-bridge/compare/v0.2.3...v0.2.4\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 522,
+        "snippet": "subprocess.run( [\"taskkill\", \"/F\", \"/T\", \"/PID\", str(pid)], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3, )",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L522"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 577,
+        "snippet": "proc = subprocess.Popen( app_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, start_new_session=(os.name != \"nt\"), )",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L577"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1457,
+        "snippet": "head = subprocess.run( [*git_base, \"rev-parse\", \"HEAD\"], stdin=subprocess.DEVNULL, capture_output=True, timeout=3, )",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1457"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1465,
+        "snippet": "status = subprocess.run( [*git_base, \"status\", \"--porcelain\", \"-z\", \"-uall\"], stdin=subprocess.DEVNULL, capture_output=True, timeout=3, )",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1465"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1473,
+        "snippet": "diff = subprocess.run( [*git_base, \"diff\", \"--no-ext-diff\", \"--no-textconv\"], stdin=subprocess.DEVNULL, capture_output=True, timeout=3, )",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1473"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1481,
+        "snippet": "cached_diff = subprocess.run( [*git_base, \"diff\", \"--cached\", \"--no-ext-diff\", \"--no-textconv\"], stdin=subprocess.DEVNULL, capture_output=True, timeout=3, )",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1481"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1627,
+        "snippet": "proc = subprocess.Popen( full_cmd, stdin=subprocess.PIPE if prompt is not None else subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, start_new_session=(",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1627"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/codex_mcp_server.py",
+        "line": 144,
+        "snippet": "with open(log_path, \"a\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L144"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1531,
+        "snippet": "with open(full_path, \"rb\") as uf:",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1531"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1830,
+        "snippet": "with open(out_file, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1830"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/codex_mcp_server.py",
+        "line": 1894,
+        "snippet": "os.remove(out_file)",
+        "githubBlobUrl": "https://github.com/longpi233/codex-bridge/blob/2deeab8f09d9dbee896c076bd5510819fd189756/server/codex_mcp_server.py#L1894"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.4",
+      "sha": "2deeab8f09d9dbee896c076bd5510819fd189756",
+      "scannedAt": "2026-11-27T18:12:49.275Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

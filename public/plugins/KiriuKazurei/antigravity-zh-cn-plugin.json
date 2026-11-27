@@ -1,0 +1,802 @@
+{
+  "schemaVersion": 1,
+  "id": "KiriuKazurei/antigravity-zh-cn-plugin",
+  "sha": "2464d8d574c426c24dc1b7a410e71b173b5e281c",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:18.373Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-zh-cn",
+    "displayName": "Antigravity 简体中文汉化包",
+    "version": "2.2.4",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "manage-chinese",
+        "slashCommand": "/manage-chinese",
+        "description": "管理 Antigravity GUI 简体中文汉化插件的状态、词典热更新、版本更新自愈及英文原版切换。当用户询问汉化状态、更新词典、版本更新后恢复汉化或还原界面时使用。",
+        "disableModelInvocation": false,
+        "file": "skills/manage-chinese/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/manage-chinese"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity 简体中文汉化插件 (`antigravity-zh-cn`)\n\n为 Google `Antigravity` 2.0 桌面应用提供**自包含、跨小版本兼容、更新自动自愈**的简体中文本地化插件体验，覆盖主界面与系统托盘菜单，并内置专有名词保护与中文交互规则。\n\n---\n\n## 一句话安装提示词（交给 AI 自动安装）\n\n如果你正在使用 `Antigravity`，直接复制下面这段提示词发送给 AI 助手即可完成安装：\n\n```text\n请帮我安装 GitHub 仓库 https://github.com/KiriuKazurei/antigravity-zh-cn-plugin 中的 Antigravity 简体中文汉化插件：将其克隆到用户插件目录 ~/.gemini/config/plugins/antigravity-zh-cn（Windows 为 %USERPROFILE%\\.gemini\\config\\plugins\\antigravity-zh-cn），运行其中的 scripts/plugin_host.py install 完成宿主接入并检查状态；若提示 app.asar 正在被占用，请引导我重启或通过脚本完成替换生效。全过程你盯着，遇到安装报错、环境差异或兼容性问题请直接排查并修复；如果确认属于插件 Bug 或新版 Antigravity 兼容性问题且有必要的话，请顺手给项目仓库（https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/issues）提交一个 GitHub Issue（附上操作系统、Antigravity 版本、复现步骤与脱敏后的错误日志），帮助项目持续优化兼容性。\n```\n\n---\n\n## 核心特性\n\n1. **完全自包含插件结构**：词典、DOM 引擎、宿主加载器、`SessionStart` 自愈钩子、规则与管理 `Skill` 全部封装在单个插件目录中，部署至 `~/.gemini/config/plugins/antigravity-zh-cn/` 即可使用。\n2. **全界面 + 系统托盘汉化**：\n   - 前端通过 DOM `MutationObserver` 与精确/正则词典（`runtime/zh-CN.json`）实时翻译界面文本，不依赖前端构建哈希或行号。\n   - 宿主加载器（`scripts/pluginLoader.js`）支持系统托盘菜单汉化，且采用非致命降级策略，即使后续版本微调托盘实现也不会影响主界面汉化。\n3. **连续兼容多个 `Antigravity` 小版本**：已收录的旧有界面文案自动汉化，新版新增文案自动保持原样英文，直到词典更新适配，不会导致界面报错或空白。\n4. **版本更新后自动自愈（基于 `hooks.json`）**：\n   - `Antigravity` 自动更新覆盖 `resources/app.asar` 后，下次开启任意新对话时，`SessionStart` 钩子会自动检测并预编译校验 `app.asar.staged`。\n   - 校验通过后自动礼貌关闭 `Antigravity`、替换 `app.asar` 并自动重启恢复中文（内置同版本防死循环冷却与次数保护）；若预编译校验失败则会安全跳过重启，绝不干扰正常使用。\n5. **词典热更新与一键切换英文**：\n   - 修改 `runtime/zh-CN.json` 后，在 `Antigravity` 窗口内按 `Ctrl+R` 即可即时生效，无需重新打包 `app.asar`。\n   - 在 `Antigravity` 插件设置中禁用 `antigravity-zh-cn` 并按 `Ctrl+R`，即可立即切换回原版英文界面。\n6. **专有名词保护与内置管理 `Skill`**：\n   - 内置 `rules/AGENTS.md`，严格保留 `Gemini`、`Antigravity`、`MCP`、`Artifact`、`Subagent`、`Sidecar`、`Skill`、`Git`、`Python`、`/plan` 等英文专有名词与斜杠指令。\n   - 内置 `skills/manage-chinese/SKILL.md`，可在对话中直接协助检查汉化状态、补充词典或恢复原版。\n\n---\n\n## 手动安装与使用\n\n### 环境要求\n\n- `Python 3`\n- `Git`（可选，也可直接下载仓库 ZIP 解压）\n\n### 1. 获取并安装插件\n\n#### Windows (PowerShell)\n\n```powershell\n# 1. 克隆到 Antigravity 插件目录\ngit clone https://github.com/KiriuKazurei/antigravity-zh-cn-plugin.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-zh-cn\"\n\n# 2. 完全退出 Antigravity 后执行一次宿主接入\npython \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-zh-cn\\scripts\\plugin_host.py\" install\n```\n\n#### macOS / Linux (Bash / Zsh)\n\n```bash\n# 1. 克隆到 Antigravity 插件目录\ngit clone https://github.com/KiriuKazurei/antigravity-zh-cn-plugin.git ~/.gemini/config/plugins/antigravity-zh-cn\n\n# 2. 完全退出 Antigravity 后执行一次宿主接入\npython3 ~/.gemini/config/plugins/antigravity-zh-cn/scripts/plugin_host.py install\n```\n\n> [!TIP]\n> 也可以先将本仓库克隆到任意本地目录，再执行 `python scripts/plugin_host.py install`，脚本会自动将插件同步到 `~/.gemini/config/plugins/antigravity-zh-cn/` 并完成宿主接入。\n> 之后当 `Antigravity` 小版本自动更新时，`hooks.json` 中的 `SessionStart` 钩子会在开启新对话时自动完成自愈恢复，无需再次手动运行脚本。\n\n### 2. 常用管理命令\n\nWindows (PowerShell)：\n\n```powershell\n# 查看插件、宿主版本、备份与自愈状态\npython \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-zh-cn\\scripts\\plugin_host.py\" status\n\n# 仅预编译生成 app.asar.staged，不立即替换\npython \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-zh-cn\\scripts\\plugin_host.py\" stage\n\n# 彻底还原官方原版 app.asar（需先完全退出 Antigravity）\npython \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-zh-cn\\scripts\\plugin_host.py\" restore\n```\n\nmacOS / Linux 将路径替换为 `~/.gemini/config/plugins/antigravity-zh-cn/scripts/plugin_host.py`（使用 `python3`）即可。\n\n### 3. 运行词典与引擎单元测试\n\n```bash\nnode runtime/test_i18n.js\n```\n\n---\n\n## 目录结构\n\n```text\nantigravity-zh-cn/\n├── plugin.json                   # 插件清单\n├── hooks.json                    # SessionStart 更新自愈钩子\n├── README.md                     # 说明文档\n├── LICENSE                       # MIT 开源协议\n├── rules/\n│   └── AGENTS.md                 # 中文交互与专有名词保护规则\n├── skills/\n│   └── manage-chinese/\n│       └── SKILL.md              # 汉化插件管理技能\n├── scripts/\n│   ├── plugin_host.py            # 自包含宿主安装、校验与自动自愈脚本\n│   ├── session_hook.py           # SessionStart 钩子安全入口\n│   └── pluginLoader.js           # 注入 app.asar 的通用插件宿主加载器\n└── runtime/\n    ├── i18n-engine.js            # DOM 汉化引擎\n    ├── zh-CN.json                # 简体中文词典（支持 Ctrl+R 热更新）\n    └── test_i18n.js              # 词典与引擎单元测试\n```\n\n---\n\n## 开源协议\n\n本项目基于 [MIT License](LICENSE) 开源。\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pluginLoader.js",
+        "line": 852,
+        "snippet": "while ((tm = tagRe.exec(line)) !== null) {",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L852"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pluginLoader.js",
+        "line": 860,
+        "snippet": "while ((lm = linkRe.exec(line)) !== null) {",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L860"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1703,
+        "snippet": "const child = child_process.spawn( \"powershell.exe\", [ \"-NoProfile\", \"-WindowStyle\", \"Hidden\", \"-Command\", `if (Get-Command wt.exe -ErrorAction SilentlyContinue) { Start-Process wt",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1703"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1717,
+        "snippet": "const child = child_process.spawn( \"powershell.exe\", [ \"-NoProfile\", \"-WindowStyle\", \"Hidden\", \"-Command\", `if (Get-Command wt.exe -ErrorAction SilentlyContinue) { Start-Process wt",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1717"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1732,
+        "snippet": "const child = child_process.spawn(\"open\", [\"-a\", \"Terminal\", resolvedDir], { detached: true, stdio: \"ignore\", });",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1732"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1739,
+        "snippet": "const child = child_process.spawn(\"x-terminal-emulator\", [], { cwd: resolvedDir, detached: true, stdio: \"ignore\", });",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1739"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 180,
+        "snippet": "out = subprocess.check_output( [ \"powershell\", \"-NoProfile\", \"-Command\", \"(Get-Process -Name Antigravity -ErrorAction SilentlyContinue | Select-Object -First 1).Path\", ], text=True",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L180"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1014,
+        "snippet": "proc = subprocess.run( [\"powershell\", \"-NoProfile\", \"-NonInteractive\", \"-EncodedCommand\", encoded], stdin=subprocess.DEVNULL, capture_output=True, timeout=15, creationflags=_win_no",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1014"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1037,
+        "snippet": "subprocess.Popen( cmd_args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=flags | CREATE_BREAKAWAY_FROM_JOB, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1037"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1057,
+        "snippet": "mid = subprocess.Popen( [bg_python, \"-c\", launcher_code], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=flags, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1057"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1068,
+        "snippet": "subprocess.Popen( cmd_args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1068"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1155,
+        "snippet": "rc = subprocess.run([\"pgrep\", \"-x\", \"Antigravity\"], capture_output=True).returncode",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1155"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1157,
+        "snippet": "rc = subprocess.run([\"pgrep\", \"-f\", \"antigravity\"], capture_output=True).returncode",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1157"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1169,
+        "snippet": "subprocess.run( [\"taskkill\", \"/IM\", \"Antigravity.exe\"], capture_output=True, timeout=5, creationflags=no_win, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1169"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1181,
+        "snippet": "subprocess.run( [\"taskkill\", \"/IM\", \"Antigravity.exe\", \"/F\", \"/T\"], capture_output=True, timeout=5, creationflags=no_win, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1181"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1192,
+        "snippet": "subprocess.run( [\"osascript\", \"-e\", 'tell application \"Antigravity\" to quit'], capture_output=True, timeout=5, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1192"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1201,
+        "snippet": "subprocess.run([\"pkill\", \"-TERM\", \"-x\", \"Antigravity\"], capture_output=True)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1201"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1203,
+        "snippet": "subprocess.run([\"pkill\", \"-TERM\", \"-f\", \"Antigravity\"], capture_output=True)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1203"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1218,
+        "snippet": "subprocess.Popen( [exe_path], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=CREATE_NO_WINDOW | CREATE_NEW_PROCESS_GR",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1218"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1228,
+        "snippet": "subprocess.Popen([\"open\", app_bundle], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1228"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1230,
+        "snippet": "subprocess.Popen( [exe_path], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1230"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1269,
+        "snippet": "subprocess.run( [\"osascript\", \"-e\", f'display dialog \"{safe_msg}\" with title \"{safe_title}\" buttons {{\"确定\"}} default button \"确定\"'], stdout=subprocess.DEVNULL, stderr=subprocess.DEV",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1269"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1278,
+        "snippet": "subprocess.run( [\"zenity\", f\"--{icon}\", f\"--title={title}\", f\"--text={message}\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1278"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/plugin_host.py",
+        "line": 1285,
+        "snippet": "subprocess.run( [\"notify-send\", str(title), str(message)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, )",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1285"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 99,
+        "snippet": "fs.writeFileSync(logPath, \"\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L99"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 101,
+        "snippet": "fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L101"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 667,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L667"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 669,
+        "snippet": "fs.unlinkSync(dst);",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L669"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 734,
+        "snippet": "fs.writeFileSync(path.join(vaultDir, \"欢迎使用 Antigravity 知识库.md\"), starter, \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L734"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 736,
+        "snippet": "fs.writeFileSync(markerPath, new Date().toISOString(), \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L736"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1121,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1121"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1123,
+        "snippet": "fs.unlinkSync(dst);",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1123"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1288,
+        "snippet": "fs.writeFileSync(tmp, text, \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1288"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1294,
+        "snippet": "fs.unlinkSync(resolved.fullPath);",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1294"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1302,
+        "snippet": "fs.unlinkSync(tmp);",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1302"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1680,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1680"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 1682,
+        "snippet": "fs.unlinkSync(dst);",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1682"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 33,
+        "snippet": "with open(manifest_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L33"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 135,
+        "snippet": "with open(file_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L135"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 146,
+        "snippet": "with open(HEAL_LOG_PATH, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L146"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 149,
+        "snippet": "with open(HEAL_LOG_PATH, \"a\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L149"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 246,
+        "snippet": "with open(file_path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L246"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 256,
+        "snippet": "with open(asar_path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L256"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 272,
+        "snippet": "with open(asar_path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L272"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 278,
+        "snippet": "with open(asar_path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L278"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 326,
+        "snippet": "with open(tmp_path, \"wb\") as out_f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L326"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 343,
+        "snippet": "os.remove(dst_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L343"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 401,
+        "snippet": "with open(PLUGIN_LOADER_SRC, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L401"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 418,
+        "snippet": "with open(PLUGIN_LOADER_SRC, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L418"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 592,
+        "snippet": "with open(PLUGIN_LOADER_SRC, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L592"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 627,
+        "snippet": "os.remove(tmp_dst)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L627"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 701,
+        "snippet": "with open(tmp_path, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L701"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 707,
+        "snippet": "os.remove(tmp_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L707"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 812,
+        "snippet": "os.remove(staged_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L812"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 873,
+        "snippet": "shutil.rmtree(legacy_dir, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L873"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 909,
+        "snippet": "os.remove(staged_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L909"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 985,
+        "snippet": "os.remove(GLOBAL_EXIT_WATCHER_LOCK)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L985"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1493,
+        "snippet": "os.remove(staged_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1493"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1505,
+        "snippet": "os.remove(staged_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1505"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1526,
+        "snippet": "os.remove(staged_path)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1526"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1561,
+        "snippet": "os.remove(GLOBAL_EXIT_WATCHER_LOCK)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1561"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1672,
+        "snippet": "os.remove(notice_lock)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1672"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1686,
+        "snippet": "os.remove(notice_lock)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1686"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1743,
+        "snippet": "os.remove(notice_lock)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1743"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/plugin_host.py",
+        "line": 1760,
+        "snippet": "os.remove(notice_lock)",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1760"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/session_hook.py",
+        "line": 24,
+        "snippet": "with open(log_path, \"a\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/session_hook.py#L24"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/pluginLoader.js",
+        "line": 721,
+        "snippet": "\"这是一个**直接存储在本地真实 `.md` 文件夹**中的轻量化知识库（默认路径：`~/.gemini/kb`），完全兼容 Obsidian、VS Code 与 Git。\",",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L721"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.2.4",
+      "sha": "2464d8d574c426c24dc1b7a410e71b173b5e281c",
+      "scannedAt": "2026-11-27T18:15:18.373Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

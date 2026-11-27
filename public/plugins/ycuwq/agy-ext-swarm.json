@@ -1,0 +1,788 @@
+{
+  "schemaVersion": 1,
+  "id": "ycuwq/agy-ext-swarm",
+  "sha": "6592c3215f14aae776f2fdb82b4e7480da7e4f00",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:52.079Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-ext-swarm",
+    "displayName": "AGY Ext Swarm",
+    "version": "0.8.2",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "ext_swarm",
+        "runtimeName": "agy-ext-swarm_ext_swarm",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server/dist/index.mjs",
+          "--data-dir=${PLUGIN_DATA}",
+          "--plugin-root=${PLUGIN_ROOT}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agy-ext-swarm",
+        "slashCommand": "/agy-ext-swarm",
+        "description": "调度本机外部编码 CLI 在隔离 git worktree 并行提速或跨模型对比：适用于多模块开发、批量分片、只读审计/调研、交叉审查，以及 prefer-external 策略下边界清晰的单模块/单测/文档任务。",
+        "disableModelInvocation": false,
+        "file": "skills/agy-ext-swarm/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-ext-swarm"
+    ],
+    "mcpServerNames": [
+      "agy-ext-swarm_ext_swarm"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AGY Ext Swarm — External Multi-CLI Agent Swarm Plugin for Antigravity\n\n> **[中文文档](./README.zh-CN.md)** | English\n\n[![npm version](https://img.shields.io/npm/v/agy-ext-swarm)](https://www.npmjs.com/package/agy-ext-swarm)\n[![CI](https://github.com/ycuwq/agy-ext-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/ycuwq/agy-ext-swarm/actions/workflows/ci.yml)\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)\n[![Node.js >= 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org/)\n\n[Quick Start](#quick-start) · [Key Capabilities](#key-capabilities) · [CLI Providers](#supported-cli-providers) · [Configuration](#configuration) · [MCP Tools](#mcp-tools-44-total-18-model--26-app-only) · [Development](#development--packaging)\n\nAn open-source Antigravity (AGY) plugin where Antigravity acts as the **Coordinator** (architect, task splitter, diff reviewer, and merger) to orchestrate external headless coding CLI workers across **`dsh` (DeepSeek Harness)**, **Claude Code (`claude`)**, **OpenAI Codex (`codex`)**, **Gemini CLI (`gemini`)**, **Antigravity CLI (`agy`)**, or **any custom CLI command** in isolated `git worktree` branches over a shared message board.\n\n![AGY Ext Swarm Side-Pane Preview](./assets/preview.svg)\n\n## Quick Start\n\n### Recommended: Antigravity Desktop (`npx`, Cross-Platform)\n\nRequires only **Node.js >= 20** (no `git`, `pnpm`, or `agy` CLI required). Copies zero-dependency runtime bundles into `~/.gemini/config/plugins/agy-ext-swarm` while preserving `.data/` across upgrades:\n\n```bash\nnpx -y agy-ext-swarm install\n```\n\nUseful management commands:\n\n```bash\nnpx -y agy-ext-swarm status               # Inspect install path, version, and bundle health\nnpx -y agy-ext-swarm install --workspace  # Install into ./.agents/plugins for repo/team sharing\nnpx -y agy-ext-swarm uninstall            # Remove the global plugin\n```\n\n### Alternative: `agy` CLI Direct Install\n\n```bash\nagy plugin install https://github.com/ycuwq/agy-ext-swarm\n```\n\n<details>\n<summary>More Install Options (curl / PowerShell / Offline Archives / From Source)</summary>\n\n- **macOS / Linux (GitHub Release one-liner)**:\n  ```bash\n  curl -fsSL https://raw.githubusercontent.com/ycuwq/agy-ext-swarm/main/scripts/install.sh | bash\n  ```\n- **Windows PowerShell (GitHub Release one-liner)**:\n  ```powershell\n  irm https://raw.githubusercontent.com/ycuwq/agy-ext-swarm/main/scripts/install.ps1 | iex\n  ```\n- **Offline Archive**: Download `agy-ext-swarm.tar.gz` or `agy-ext-swarm.zip` from [GitHub Releases](https://github.com/ycuwq/agy-ext-swarm/releases) and extract the `agy-ext-swarm/` directory into `~/.gemini/config/plugins/` (or `.agents/plugins/`). No `pnpm install` step is needed.\n- **From Source (Contributors)**:\n  ```bash\n  git clone https://github.com/ycuwq/agy-ext-swarm.git\n  cd agy-ext-swarm\n  node scripts/install.mjs   # Symlink/junction from checkout (--copy for copy mode, --build to rebuild)\n  ```\n  Manual build:\n  ```bash\n  cd agy-ext-swarm/server && pnpm install && pnpm build\n  ```\n\n</details>\n\n### 3-Step First Run\n\n1. Enable **AGY Ext Swarm** in Antigravity Desktop (**Skills & Customizations**; toggle off/on or restart after upgrading).\n2. Open the board (or ask Antigravity to check `ext_swarm_providers`): the **Onboarding Wizard** automatically scans installed CLIs, discovers models, and lets you configure defaults and optional Writer/Reader pools in one step.\n3. Ask Antigravity to parallelize multi-module coding, batch refactors, codebase recon, or cross-review—Antigravity dispatches worktree workers, verifies diffs, and lets you merge or open a GitHub PR cleanly.\n\n**Requirements**: `Node.js >= 20`, `git` (`>= 2.38` recommended for `git merge-tree --write-tree`), and at least one CLI provider (`dsh`, `claude`, `codex`, `gemini`, `agy`, or custom).\n\n## Key Capabilities\n\n### 1. Multi-CLI Orchestration & Routing\n- **Zero-Setup Auto-Delegation (`rules/AGENTS.md`)**: Automatically splits multi-module development, batch sharding, read-only recon, and cross-review across available CLIs under `balanced`, `prefer-external`, or `manual-only` policies—and stays silent for small single-file edits.\n- **Auto-Discovery, Scene Routing & Presets**: Probes local caches and CLI catalogs (`agy models` fallback included), routes by `task_type` across Writer/Reader pools, skips rate-limited CLIs on temporary cooldown, and offers one-click presets for **OpenCode**, **Aider**, **Qwen Code**, and **Goose**.\n- **Reasoning Effort, Fast Mode & Resolved Defaults**: Controls `reasoning_effort` and `fast_mode` uniformly across supported CLIs, task scenes, templates, and Worker cards, while automatically surfacing each CLI's actual runtime default model and effective effort.\n- **Reusable Team Playbooks**: Ships with `feature-squad`, `bug-hunt`, `doc-and-test`, and `review-loop`, merged with global and repository `.agy-ext-swarm/templates.json` (plus one-click template capture from an active swarm).\n\n### 2. Worktree Isolation, Guardrails & Safe Delivery\n- **Worktree Hydration & Port Isolation**: Runs parallel writers in isolated `git worktree` branches (`ext-swarm/<swarmId>/<worker>`) with optional `.agy-ext-swarm/worktree.json` (`copyFiles`, `symlinkDirs`, `setupCommand`, `teardownCommand`, and `SWARM_WORKER_INDEX` / `SWARM_PORT_OFFSET`).\n- **Deterministic DAG (`depends_on`) & Self-Heal Verification**: Queues downstream workers as `blocked`, injects upstream diffs and unescaped Markdown `reportPath` links on unlock, enforces or warns on `allowed_files` (`scope_mode: \"enforce\" | \"warn\"`), and runs host `verify_commands` (`verify_timeout_seconds`, default `300s`) with optional `max_verify_retries` self-heal loops.\n- **Zero-Side-Effect Conflict Preview, Safe Merge & Direct PR**: Previews conflicts via `git merge-tree --write-tree` without touching the working tree, merges via `squash`, `cherry-pick`, or `merge`, or pushes and opens pre-filled GitHub PRs via `gh` (`ext_swarm_merge(action: \"pr\")`).\n\n### 3. Live Side-Pane Board & Human-in-the-Loop\n- **Bilingual 5-Tab MCP App (`中 / EN`)**: Interactive **Board**, **Graph & Swimlanes**, **Workers** Commander + Event/Diff/Merge Drawers, **Usage** Dashboard, and **Settings** (`CLIs & Models` + `Orchestration & Routing`).\n- **Arena & Cross-Vendor Review**: Race 2+ CLI backends side by side in isolated worktrees (`ext_swarm_arena`) and trigger a different vendor CLI for read-only audit (`ext_swarm_cross_review`).\n- **Inline Diff Comments, In-Place Recovery & Takeover**: Comment on colored diff lines to dispatch targeted fixes to `@worker`, switch `provider` / `model` / `reasoning_effort` / `fast_mode` or pass `reset_session: true` while keeping worktree changes, or copy a one-click **`>_ Takeover`** terminal command.\n- **Zero-Polling Background Wait & Watchdogs**: `ext-board wait` uses kernel `fs.watch` for reactive wakeup, persists long outputs cleanly to `reports/seq-*.md`, and guards turns with `turn_timeout_seconds` (`1800s` + 1 automatic convergence turn) and `stall_timeout_seconds` (`300s`).\n\n### 4. 3-Way Observability, Cost Control & Export\n- **Read-Only Native Subagent Observability**: Discovers Antigravity native subagents automatically (even with no external swarm running) with source/wave filters, live trace drawers, dual-track topology edges, and parallel **Swimlanes** timelines.\n- **3-Way Attribution & 3-Layer Pricing**: Tracks tokens, cache hit rates, and costs across **AGY Main Model** (including Orchestrator Plan/Execute splits), **Native Subagents**, and **External CLI Workers** using CLI `total_cost_usd` actuals, built-in baseline rates, and opt-in **LiteLLM / OpenRouter** sync with unified **CNY / USD** display.\n- **Budget Guardrails & Post-Mortem Reports**: Enforce per-swarm `max_cost_usd` pause/resume caps and export complete Markdown post-mortems (`ext_swarm_export`).\n\n## Supported CLI Providers\n\n| Provider ID | CLI Command | Session Resume | Effort / Fast | Streaming & Notes |\n| --- | --- | --- | --- | --- |\n| `dsh` | `dsh` (`$DSH_BIN`) | `--session-id` | Effort (`low`–`xhigh`) | NDJSON (`--json`), per-worker `--patch` overrides via `cordis.patch.yml`. |\n| `claude` | `claude` (`$CLAUDE_BIN`) | `--resume` | Effort (`low`–`max`) + Fast | `stream-json`, maps presets to `plan` / `acceptEdits` / bypass. |\n| `codex` | `codex` (`$CODEX_BIN`) | `exec resume` | Effort (`low`–`ultra`) + Fast | JSONL (`--json`), runs `codex exec` / `exec resume` with `--sandbox`. |\n| `gemini` | `gemini` (`$GEMINI_BIN`) | `--resume` | — | `stream-json` via `gemini -p --output-format stream-json`. |\n| `agy` | `agy` (`$AGY_BIN`) | `--conversation` | Effort (`low`–`max`) | Bidirectional `stream-json`, `--effort` / label tiers, sandboxed read-only review. |\n| `custom` / `<id>` | Any executable | Optional `resumeArgs` | Optional via templates | `text` or `ndjson`, configured via inline `custom_command` or `providers.json`. |\n\n### Provider Notes (`agy` & `dsh`)\n\n- **`agy` CLI**: Read-only reviewers run with `--mode plan`, `--sandbox`, and `--add-dir` (for `swarmDir` and `gitCommonDir`). When the local model cache is empty, `ext_swarm_models` automatically falls back to `agy models`. If headless read-only shell commands trigger permission denials, inspect `~/.gemini/antigravity-cli/settings.json`.\n- **`dsh` Profile Isolation**: Never modify `~/.dsh/profiles/desktop` (locked by the desktop client). Workers run on `headless` (or a configured profile), reading sibling catalogs read-only and passing a clean overlay via `--patch` without altering disk profiles.\n\n## Configuration\n\n### Auto-Detection & `providers.json`\n\nWhen `default_provider` is omitted in `ext_swarm_create`, AGY Ext Swarm picks:\n1. `\"defaultProvider\"` from `<repo_root>/.agy-ext-swarm/providers.json` or `${PLUGIN_DATA}/providers.json`, if set;\n2. Otherwise the first built-in CLI found on `PATH` (`dsh` -> `claude` -> `codex` -> `gemini` -> `agy`);\n3. Otherwise the first available custom provider.\n\nExample `providers.json` (showing conditional option placeholders):\n\n```json\n{\n  \"defaultProvider\": \"my-agent\",\n  \"defaultTurnTimeoutSeconds\": 1800,\n  \"defaultStallTimeoutSeconds\": 300,\n  \"providers\": {\n    \"my-agent\": {\n      \"displayName\": \"My Local Coding CLI\",\n      \"command\": \"my-agent-cli\",\n      \"args\": [\n        \"--cwd\", \"{{cwd}}\",\n        \"{{?model:--model}}\", \"{{model}}\",\n        \"{{?reasoningEffort:--effort}}\", \"{{reasoningEffort}}\",\n        \"{{?fastMode:--fast}}\", \"{{fastMode}}\",\n        \"-p\", \"{{prompt}}\"\n      ],\n      \"resumeArgs\": [\n        \"--cwd\", \"{{cwd}}\",\n        \"--resume\", \"{{sessionId}}\",\n        \"{{?model:--model}}\", \"{{model}}\",\n        \"-p\", \"{{prompt}}\"\n      ],\n      \"listModelsArgs\": [\"models\"],\n      \"promptMode\": \"arg\",\n      \"outputFormat\": \"text\",\n      \"defaultModel\": \"default\",\n      \"models\": [\"default\", \"fast\"]\n    }\n  }\n}\n```\n\nSupported template variables in `args` / `resumeArgs`:\n`{{prompt}}`, `{{model}}`, `{{reasoningEffort}}`, `{{fastMode}}`, `{{cwd}}`, `{{sessionId}}`, `{{permissionMode}}`, `{{workerName}}`, `{{swarmDir}}`, `{{gitCommonDir}}`, `{{boardCli}}`, plus standalone conditional flags (`{{?model:--flag}}`, `{{?model:--flag=}}`, `{{?reasoningEffort:--effort}}`, `{{?fastMode:--fast}}`).\n\n### Worktree Hydration & Port Isolation (`.agy-ext-swarm/worktree.json`)\n\nPlace `.agy-ext-swarm/worktree.json` in your repository root to hydrate worker worktrees and isolate test/dev ports (`SWARM_WORKER_INDEX`, `SWARM_PORT_OFFSET`):\n\n```json\n{\n  \"copyFiles\": [\".env.local\"],\n  \"symlinkDirs\": [\"node_modules\"],\n  \"setupCommand\": \"pnpm db:migrate\",\n  \"teardownCommand\": \"pnpm db:cleanup\",\n  \"portOffsetBase\": 4000,\n  \"portOffsetStep\": 20\n}\n```\n\nRelative paths in `copyFiles` and `symlinkDirs` are strictly validated to stay inside the repository root.\n\n## MCP Tools (44 Total: 18 Model + 26 App-Only)\n\n### Model Tools (18)\n\n| Tool | Purpose |\n| --- | --- |\n| `ext_swarm_providers` | Inspect built-in/custom CLI status, `activePool`, `routingPolicy` (`delegationMode`, `taskRouting`, `routingNotes`, Writer/Reader pools), rate-limit `cooldowns`, default timeouts, and resolved `defaultProvider`. |\n| `ext_swarm_models` | Query models for a provider (`dsh` `lastCatalog`, local discovery + async `agy models` fallback for `agy`, or `providers.json`). |\n| `ext_swarm_create` | Create a swarm anchored at `repo_root` with optional `active_providers`, `routing_policy`, `max_cost_usd`, and `coordinator_conversation_id`. |\n| `ext_swarm_add` | Spawn 1 worker, multi-CLI mirror fan-out (`providers`), or sharded `tasks` pool with `task_type`, `reasoning_effort`, `fast_mode`, `workspace`, `allowed_files`, `scope_mode`, `verify_commands`, `auto_verify`, `verify_timeout_seconds`, `max_verify_retries`, and `depends_on` DAG. |\n| `ext_swarm_post` | Post as `coordinator` and wake `@mentioned` workers (skips `blocked` and `killed`), returning `delivery` (`woken` / `deferred` / `skipped`). |\n| `ext_swarm_read` | Read board messages incrementally after `since` (supports optional `agent` sender filter). |\n| `ext_swarm_status` | Inspect worker status, `hostTelemetry` (Main + Native Subagents), `outOfScopeFiles`, `lastVerifyResults`, optional diffs, and `asyncWaitCommand`. |\n| `ext_swarm_wait` | Wait 1–90s for `any_post`, `mentions_coordinator`, `all_idle`, or `worker_done` (12 KB adaptive `compactMode` + `reportPath` links; pairs with `ext-board wait`). |\n| `ext_swarm_update_worker` | Update a waiting/failed worker's `provider`, `model`, `reasoning_effort`, `fast_mode`, clear its session (`reset_session: true`), and/or retry in place keeping its worktree. |\n| `ext_swarm_merge` | Run conflict-safe `git merge-tree` preview (`action: \"preview\"`), branch merge (`action: \"apply\"`), or `gh` GitHub PR creation (`action: \"pr\"`). |\n| `ext_swarm_arena` | Race 2+ CLI providers/models side by side in isolated worktrees on the same task. |\n| `ext_swarm_cross_review` | Run a read-only cross-vendor audit of a worker's branch diff and summary report. |\n| `ext_swarm_templates` | List built-in and custom team templates merged from global and repo `templates.json`. |\n| `ext_swarm_apply_template` | Instantiate a DAG team playbook (`feature-squad`, `bug-hunt`, `doc-and-test`, `review-loop`, or custom) with `{{goal}}` injection and per-worker overrides (`provider`, `model`, `reasoning_effort`, `fast_mode`, `allowed_files`, `verify_commands`). |\n| `ext_swarm_kill` | Terminate worker(s) or `all`, optionally removing temporary worktrees and branches. |\n| `ext_swarm_delete` | Terminate remaining processes, clean up worktrees/branches, and delete a historical swarm record. |\n| `ext_swarm_export` | Export a Markdown post-mortem report covering workers, 3-way token/cache/cost attribution, diffs, and full board history. |\n| `ext_swarm_open_board` | Open the interactive side-pane / global MCP App board UI. |\n\n<details>\n<summary>App-Only UI Tools (26)</summary>\n\n`app_get_snapshot`, `app_post_message`, `app_kill_worker`, `app_get_worker_log`, `app_get_native_subagent_log`, `app_get_worker_diff`, `app_retry_worker`, `app_bind_conversation`, `app_set_ui_prefs`, `app_get_provider_config`, `app_save_provider_config`, `app_test_provider`, `app_discover_models`, `app_delete_swarm`, `app_export_swarm`, `app_preview_merge`, `app_merge_worker`, `app_create_worker_pr`, `app_create_swarm`, `app_update_swarm_budget`, `app_add_worker`, `app_start_arena`, `app_cross_review`, `app_get_templates`, `app_save_template`, `app_apply_template`.\n\n</details>\n\n## Privacy & Security\n\n- **Strictly Read-Only Host Telemetry**: Reads local Antigravity `transcript.jsonl` and `.system_generated/` metadata read-only; never mutates host logs and makes zero background network calls (pricing catalog sync happens only when explicitly triggered).\n- **Automatic Env Secret Redaction**: Custom CLI `env` values configured in Settings remain local for UI management and are redacted from LLM-facing tool outputs (`envKeys` in `ext_swarm_providers`, `***` in inline `custom_command.env` outputs).\n- **Local Sandboxing & Recursion Guard**: Workers execute locally under configured permission modes (`read-only`, `workspace-write`, `danger-full-access`), and a hard nested-worker guard blocks mutating orchestration tools whenever `EXT_SWARM_AGENT` or `DSH_SWARM_AGENT` is set to prevent recursive swarms.\n- See [CONTRIBUTING.md](./CONTRIBUTING.md) and [SECURITY.md](./SECURITY.md) for guidelines and vulnerability reporting.\n\n## Development & Packaging\n\n### Side-Pane UI Source\n\nThe UI compiles into a zero-external-link single-file HTML bundle (`server/dist/board.html`, < 1 MiB) from `server/ui/index.html`, `styles.css`, `app.ts`, `i18n.ts`, `model-options-ui.ts`, and modular views (`board-view.ts`, `commander.ts`, `workers-view.ts`, `native-workers-section.ts`, `graph-view.ts`, `timeline-view.ts`, `usage-view.ts`, `pricing-view.ts`, `onboarding-view.ts`, `settings-view.ts`).\n\nAfter editing, rebuild and toggle **AGY Ext Swarm** off/on in **Skills & Customizations** (or set `EXT_SWARM_APP_HTML` during UI iteration):\n\n```bash\ncd server && pnpm typecheck && pnpm build\n```\n\n### Tests & Release Archives\n\n```bash\ncd server\npnpm typecheck        # Type-check server & UI\npnpm build            # Build dist/index.mjs, dist/providers.mjs, dist/host-telemetry.mjs, and dist/board.html\npnpm test:host        # Host transcript, brain topology, and native subagent telemetry checks\npnpm test:providers   # Offline multi-provider, parser, security, and i18n checks\npnpm test:standalone  # Zero-dependency standalone bundle & MCP/SSE smoke test\npnpm test:smoke       # Live dsh E2E smoke test\n\n# From repository root: verify GitHub Release archives (.tar.gz, .zip, SHA256SUMS.txt)\nnode scripts/package-release.mjs\n```\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "### Added\n\n- **Host Auto-Commit for Verified Worktree Edits (`server/src/worktree.ts`, `server/src/runner-postturn.ts`, `server/src/runner-deps.ts`)**: Added `snapshotWorktreeChanges` to automatically stage and commit eligible verified edits (`chore(swarm): snapshot worker <name> edits`) on non-read-only worker branches before auto-posting and releasing downstream `depends_on` workers, excluding untracked `.agy-ext-swarm/worktree.json` hydrated files (`copyFiles`/`symlinkDirs`) and respecting `allowed_files` scope guards; surfaced `commits` count and `uncommittedDirtyFiles` in upstream dependency summaries.\n\n### Fixed\n\n- **Markdown Code-Aware `@mention` Parsing (`server/src/mentions.ts`)**: Skipped fenced code blocks (` ``` ` / `~~~`) and inline backtick code spans in `extractMentions` (while preserving unmatched stray backticks and email exclusion), preventing mentions inside inline code (e.g. `` `@impl` ``) or code blocks (e.g. `@all`) from accidentally waking workers.\n- **Unusable Session Cleanup on Failed Turns (`server/src/runner-turn.ts`, `server/src/runner.ts`)**: Automatically cleared `sessionId` when a turn fails with an empty/invalid/missing conversation or session ID error, or when an initial session-less first turn fails without completing a step/tool call or hits `permission denied in headless mode`, ensuring `ext_swarm_update_worker(retry=true)` cleanly starts a fresh session.\n- **`review-loop` Diff Redirection Guard (`server/src/templates.ts`)**: Updated the built-in `review-loop` `reviewer` brief to prohibit redirecting `git diff` to `/tmp` or paths outside the workspace and instruct direct subpath inspection (`git diff <base>..<branch> -- <path>`).\n- **Closed-Loop Regression Coverage (`server/test/providers.test.mjs`)**: Added unit and end-to-end MCP tests covering `extractMentions` code skipping, `snapshotWorktreeChanges` hydration/scope behavior, host auto-commit with downstream `commits: 1` inspection, and `agy` failed-session reset on retry.\n\n\n**Full Changelog**: https://github.com/ycuwq/agy-ext-swarm/compare/v0.8.1...v0.8.2",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install.mjs",
+        "line": 142,
+        "snippet": "const res = spawnSync(cmd, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32', });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/package-release.mjs",
+        "line": 35,
+        "snippet": "const res = spawnSync(cmd, args, { cwd, stdio: 'inherit', env: { ...process.env, ...extraEnv }, });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/package-release.mjs#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/shared/model-options.ts",
+        "line": 28,
+        "snippet": "/\\((low|medium|high|xhigh|max)\\)\\s*$/i.exec(trimmed) ||",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/shared/model-options.ts#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/shared/model-options.ts",
+        "line": 29,
+        "snippet": "/-(low|medium|high|xhigh|max)$/i.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/shared/model-options.ts#L29"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/host/transcript.ts",
+        "line": 143,
+        "snippet": "const reqMatch = /<USER_REQUEST>\\s*([\\s\\S]*?)\\s*<\\/USER_REQUEST>/i.exec(text);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/host/transcript.ts#L143"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/mentions.ts",
+        "line": 42,
+        "snippet": "const openBacktick = /^[ ]{0,3}(`{3,})([^`]*)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/mentions.ts#L42"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/mentions.ts",
+        "line": 43,
+        "snippet": "const openTilde = openBacktick ? null : /^[ ]{0,3}(~{3,})(.*)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/mentions.ts#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/mentions.ts",
+        "line": 60,
+        "snippet": "const closeMatch = closeRe.exec(line);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/mentions.ts#L60"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/mentions.ts",
+        "line": 147,
+        "snippet": "while ((match = re.exec(scannableText)) !== null) {",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/mentions.ts#L147"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/models/dsh-catalog.ts",
+        "line": 164,
+        "snippet": "const connectMatch = /dsh-connect-([a-z0-9][a-z0-9._-]*)/i.exec(candidate);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/dsh-catalog.ts#L164"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/models/dsh-diagnostics.ts",
+        "line": 79,
+        "snippet": "const base = /dsh-connect-([a-z0-9][a-z0-9._-]*)/i.exec(unscopedName)?.[1] || modelProvider;",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/dsh-diagnostics.ts#L79"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/models/dsh-diagnostics.ts",
+        "line": 94,
+        "snippet": "const match = /dsh-connect-([a-z0-9][a-z0-9._-]*)/i.exec(pkg);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/dsh-diagnostics.ts#L94"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/models/local-discovery.ts",
+        "line": 50,
+        "snippet": "const m = /^\\s*model\\s*=\\s*[\"']([^\"']+)[\"']/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/local-discovery.ts#L50"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/models/local-discovery.ts",
+        "line": 56,
+        "snippet": "const eff = /^\\s*model_reasoning_effort\\s*=\\s*[\"']([^\"']+)[\"']/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/local-discovery.ts#L56"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/models/local-discovery.ts",
+        "line": 65,
+        "snippet": "const tier = /^\\s*service_tier\\s*=\\s*[\"']([^\"']+)[\"']/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/local-discovery.ts#L65"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/providers/agy.ts",
+        "line": 72,
+        "snippet": "const labelMatch = /^(.+?)\\s*\\((low|medium|high|xhigh|max)\\)$/i.exec(modelArg);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/providers/agy.ts#L72"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/providers/agy.ts",
+        "line": 81,
+        "snippet": "const suffixMatch = /^(.+)-(low|medium|high|xhigh|max)$/i.exec(modelArg);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/providers/agy.ts#L81"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/providers/shared.ts",
+        "line": 223,
+        "snippet": "const optional = /^\\{\\{\\?(model|reasoningEffort|fastMode):([^{}\\s]+)\\}\\}$/.exec(raw);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/providers/shared.ts#L223"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-merge.ts",
+        "line": 353,
+        "snippet": "const urlMatch = /https?:\\/\\/\\S+/.exec(combined);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-merge.ts#L353"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-process.ts",
+        "line": 10,
+        "snippet": "execFile('taskkill', ['/pid', String(proc.pid), '/T', '/F'], { windowsHide: true }, (err) => { if (err && proc.exitCode === null && proc.signalCode === null) { try { proc.kill(sign",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-process.ts#L10"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-process.ts",
+        "line": 83,
+        "snippet": "child = spawn(command, [], { cwd, env, shell: true, stdio: ['ignore', 'pipe', 'pipe'], detached: process.platform !== 'win32', windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-process.ts#L83"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-routing.ts",
+        "line": 63,
+        "snippet": "/NO_ADAPTER:\\s*no adapter registered for provider\\s+[\"']?([a-zA-Z0-9._-]+)[\"']?/i.exec( reasonDetail, ) ||",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-routing.ts#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-routing.ts",
+        "line": 66,
+        "snippet": "/NO_ADAPTER\\b.*?\\bprovider\\s+[\"']?([a-zA-Z0-9._-]+)[\"']?/i.exec(reasonDetail);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-routing.ts#L66"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-routing.ts",
+        "line": 75,
+        "snippet": "/UNKNOWN_MODEL:.*?\\bprovider\\s+[\"']?([a-zA-Z0-9._-]+)[\"']?.*?\\bmodel\\s+[\"']?([^\"'\\s|]+)[\"']?/i.exec( reasonDetail, );",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-routing.ts#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/src/runner-turn.ts",
+        "line": 197,
+        "snippet": "proc = spawn(spawnCmd.command, spawnCmd.args, { cwd: member.cwd, env, stdio: ['pipe', 'pipe', 'pipe'], detached: process.platform !== 'win32', ...(spawnCmd.windowsVerbatimArguments",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-turn.ts#L197"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ui/format.ts",
+        "line": 170,
+        "snippet": "while ((m = re.exec(trimmed)) !== null) {",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/ui/format.ts#L170"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ui/render-events.ts",
+        "line": 244,
+        "snippet": "const reqMatch = /<USER_REQUEST>\\s*([\\s\\S]*?)\\s*<\\/USER_REQUEST>/i.exec(text);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/ui/render-events.ts#L244"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ui/render-events.ts",
+        "line": 327,
+        "snippet": "const encoded = /^\"((?:\\\\.|[^\"\\\\])*)\"/.exec(header)?.[1];",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/ui/render-events.ts#L327"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ui/render-events.ts",
+        "line": 340,
+        "snippet": "const quotedOld = /^\"(?:\\\\.|[^\"\\\\])*\" /.exec(header);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/ui/render-events.ts#L340"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/ui/render-events.ts",
+        "line": 368,
+        "snippet": "const hunk = /^@@ -(\\d+)(?:,(\\d+))? \\+(\\d+)(?:,(\\d+))? @@/.exec(line);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/ui/render-events.ts#L368"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/ext-board.mjs",
+        "line": 113,
+        "snippet": "writeFileSync(tmpFile, JSON.stringify(payload) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/bin/ext-board.mjs#L113"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 186,
+        "snippet": "rmSync(src, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L186"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 247,
+        "snippet": "rmSync(stagingDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L247"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 253,
+        "snippet": "rmSync(backupDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L253"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 294,
+        "snippet": "rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L294"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 361,
+        "snippet": "rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L361"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 382,
+        "snippet": "rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L382"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 96,
+        "snippet": "rmSync(outZipPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/package-release.mjs#L96"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 129,
+        "snippet": "rmSync(stageRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/package-release.mjs#L129"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 174,
+        "snippet": "writeFileSync(sumsPath, `${checksumLines.join('\\n')}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/package-release.mjs#L174"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 182,
+        "snippet": "rmSync(stageRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/package-release.mjs#L182"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/build.mjs",
+        "line": 160,
+        "snippet": "writeFileSync(outHtmlPath, finalHtml, 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/build.mjs#L160"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "server/dist/host-telemetry.mjs",
+        "line": 5,
+        "snippet": "`)){let i=r.trim();if(!i)continue;let s;try{s=JSON.parse(i)}catch{continue}let a=typeof s.type==\"string\"?s.type:\"\",c=typeof s.status==\"strin",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/dist/host-telemetry.mjs#L5"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "server/dist/index.mjs",
+        "line": 2,
+        "snippet": "var HC=Object.create;var nf=Object.defineProperty;var KC=Object.getOwnPropertyDescriptor;var GC=Object.getOwnPropertyNames;var JC=Object.get",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/dist/index.mjs#L2"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "server/dist/providers.mjs",
+        "line": 2,
+        "snippet": "var Hc=Object.create;var Yi=Object.defineProperty;var Vc=Object.getOwnPropertyDescriptor;var Yc=Object.getOwnPropertyNames;var Jc=Object.get",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/dist/providers.mjs#L2"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/src/host/conversation-api.ts",
+        "line": 22,
+        "snippet": "const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Connect-Protocol-Version': '1', 'x-antigravity-csrf-token': csrfToken, }, body: JSON.",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/host/conversation-api.ts#L22"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/models/dsh-catalog.ts",
+        "line": 694,
+        "snippet": "writeFileSync(patchPath, YAML.stringify(doc), 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/dsh-catalog.ts#L694"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/src/pricing-catalog.ts",
+        "line": 239,
+        "snippet": "const res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(timeoutMs), });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/pricing-catalog.ts#L239"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/runner-turn.ts",
+        "line": 176,
+        "snippet": "logStream = createWriteStream(logPath, { flags: 'a', encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-turn.ts#L176"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/runner-turn.ts",
+        "line": 480,
+        "snippet": "appendFileSync( logPath, JSON.stringify({ type: 'final', reason: { kind: 'completed' }, text: finalText }) + '\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/runner-turn.ts#L480"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 38,
+        "snippet": "writeFileSync(tmpPath, JSON.stringify(value, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L38"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 54,
+        "snippet": "unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L54"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 429,
+        "snippet": "writeFileSync(reportFile, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L429"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 449,
+        "snippet": "appendFileSync(boardPath, JSON.stringify(msg) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L449"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 549,
+        "snippet": "unlinkSync(fullPath);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L549"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 553,
+        "snippet": "unlinkSync(fullPath);",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L553"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/store.ts",
+        "line": 646,
+        "snippet": "rmSync(dir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/store.ts#L646"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/worktree.ts",
+        "line": 119,
+        "snippet": "rmSync(worktreePath, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/worktree.ts#L119"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/worktree.ts",
+        "line": 1129,
+        "snippet": "rmSync(worktreePath, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/worktree.ts#L1129"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/src/worktree.ts",
+        "line": 1147,
+        "snippet": "rmSync(worktreePath, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/worktree.ts#L1147"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 63,
+        "snippet": "--plugins-dir <path> Override target plugins directory (default: ~/.gemini/config/plugins)",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/scripts/install.mjs#L63"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "server/src/models/local-discovery.ts",
+        "line": 338,
+        "snippet": "if (hitSettings) sources.push('~/.gemini/settings.json');",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/local-discovery.ts#L338"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "server/src/models/local-discovery.ts",
+        "line": 446,
+        "snippet": "...(hitSettings ? { source: '~/.gemini/antigravity-cli/settings.json' } : {}),",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/models/local-discovery.ts#L446"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "server/src/providers/agy.ts",
+        "line": 230,
+        "snippet": "`Re-run with permission_mode=\"danger-full-access\" (or pre-allow tools in ~/.gemini/antigravity-cli/settings.json).`;",
+        "githubBlobUrl": "https://github.com/ycuwq/agy-ext-swarm/blob/6592c3215f14aae776f2fdb82b4e7480da7e4f00/server/src/providers/agy.ts#L230"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.8.2",
+      "sha": "6592c3215f14aae776f2fdb82b4e7480da7e4f00",
+      "scannedAt": "2026-11-27T18:14:52.079Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "id": "wdhongtw/task-progress",
+  "sha": "ace461b8a806b3b7a4ee0a26e1bb4402ac49e464",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:51.463Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "task-progress",
+    "displayName": "Task Progress",
+    "version": "0.2.2",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "task",
+        "runtimeName": "task-progress_task",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/task_mcp.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "task-progress",
+        "slashCommand": "/task-progress",
+        "description": "Manage, visualize, and export per-session task dependency graphs using the task_* MCP tools and the Task Progress AuxPane UI. Use when tracking multi-step plans, expressing subtask dependencies (A > B > D), inspecting blocked tasks, or expo",
+        "disableModelInvocation": false,
+        "file": "skills/task-progress/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/task-progress"
+    ],
+    "mcpServerNames": [
+      "task-progress_task"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Task Progress (`task-progress`)\n\nInteractive UI plugin and MCP toolset (`task_*`) for tracking, visualizing, and\nexporting per-session task dependency graphs.\n\n## Features\n\n- **Per-Session State Persistence**:\n  - Tasks and dependencies are persisted per conversation in\n    `${PLUGIN_DATA}/sessions/<conversationId>.json` and shared between the MCP\n    server and AuxPane UI sidecar.\n- **Dependency & Completion Semantics (`A > B > D` and `A > C`)**:\n  - Express subtask dependencies via `depends_on`. If `A` depends on `B` and `C`\n    and `B` depends on `D`, then `B`, `C`, and `D` must all be `completed`\n    before `A` can be completed.\n  - Prevents self-dependencies and cycles with descriptive error messages\n    reporting the exact cycle or incomplete subtask path.\n- **Interactive AuxPane UI (`task_ui`)**:\n  - **Graph View**: Hierarchical SVG graph visualization with configurable\n    hop-radius limiting (`1`, `2`, `3`, `All`) centered on the focused task,\n    pan/zoom, and visual distinction between completed and blocking dependency\n    edges.\n  - **List View**: Filterable by status or blocked state (`All`, `Pending`,\n    `In Progress`, `Completed`, `Cancelled`, `Blocked`) and sortable by\n    `Created Time`, `Updated Time`, `In-Degree`, `Out-Degree`, `Total Degree`,\n    `Status`, `Topological Order`, or `Title`.\n  - **Focused Task Inspector**: Displays full task details, blocking dependency\n    chains, clickable subtask/parent chips, and custom metadata key-values (with\n    one-click AuxPane file preview for file paths).\n- **Spanning-Tree Markdown Nested List Export (`BFS` & `DFS`)**:\n  - Exports any task node's dependency subtree (`A > B > D` and `A > C`) into a\n    GFM Markdown nested list (`- [x]` / `- [ ]`), deduplicating shared diamond\n    subtasks via Breadth-First (`bfs`, default) or Depth-First (`dfs`) spanning\n    tree traversal.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/task_dag.mjs",
+        "line": 158,
+        "snippet": "const match = TASK_TOOL_RE.exec(rawName);",
+        "githubBlobUrl": "https://github.com/wdhongtw/task-progress/blob/ace461b8a806b3b7a4ee0a26e1bb4402ac49e464/lib/task_dag.mjs#L158"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "mcp/task_mcp.mjs",
+        "line": 354,
+        "snippet": "/(?:^|_)(task_(?:register|update|complete|delete|focus|list|export_tree))$/.exec( rawToolName );",
+        "githubBlobUrl": "https://github.com/wdhongtw/task-progress/blob/ace461b8a806b3b7a4ee0a26e1bb4402ac49e464/mcp/task_mcp.mjs#L354"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/task_ui/app.js",
+        "line": 136,
+        "snippet": "const m = /(?:^|\\/)([^/?#]+)\\.task-progress$/i.exec(rawFile);",
+        "githubBlobUrl": "https://github.com/wdhongtw/task-progress/blob/ace461b8a806b3b7a4ee0a26e1bb4402ac49e464/sidecars/task_ui/app.js#L136"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/task_dag.mjs",
+        "line": 947,
+        "snippet": "writeFileSync(tmpPath, `${JSON.stringify(payload, null, 2)}\\n`, 'utf-8');",
+        "githubBlobUrl": "https://github.com/wdhongtw/task-progress/blob/ace461b8a806b3b7a4ee0a26e1bb4402ac49e464/lib/task_dag.mjs#L947"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/task_dag.mjs",
+        "line": 952,
+        "snippet": "unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/wdhongtw/task-progress/blob/ace461b8a806b3b7a4ee0a26e1bb4402ac49e464/lib/task_dag.mjs#L952"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/task_ui/app.js",
+        "line": 324,
+        "snippet": "const res = await fetch(url, { method: 'GET', headers });",
+        "githubBlobUrl": "https://github.com/wdhongtw/task-progress/blob/ace461b8a806b3b7a4ee0a26e1bb4402ac49e464/sidecars/task_ui/app.js#L324"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.2",
+      "sha": "ace461b8a806b3b7a4ee0a26e1bb4402ac49e464",
+      "scannedAt": "2026-11-27T18:16:51.463Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

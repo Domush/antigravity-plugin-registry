@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "wingkit123/agy-cache-guard",
+  "sha": "082b8a18670914ea3fcc329c0679714e650f3033",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:31.254Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "cache-guard",
+    "displayName": "Cache & Context Guard",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PostInvocation",
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# cache-guard\n\n[简体中文](README.zh-CN.md) · English\n\nA zero-intrusion lifecycle hook plugin for **Google Antigravity** (`agy` CLI / Desktop / IDE). It reads persisted telemetry snapshots from [antigravity-usage-monitor](https://github.com/yuhuan-dev/antigravity-usage-monitor) in read-only mode to surface inline warnings when Prompt Cache TTL expires, context grows past compaction thresholds, or cache hit rate drops sharply—without touching `usage-monitor` files or injecting extra tokens into the model context.\n\n## Features\n\n- **Zero modification to `usage-monitor`**: Only reads `cli-status-snapshot.json` under Antigravity's persisted `sidecar_data/usage-monitor/panel/data/` directory, so `usage-monitor` updates never overwrite your setup.\n- **Zero model token overhead**: Uses Antigravity `PreInvocation` `injectSteps` with `systemMessage: \"\"` and `metadata.user_markdown`, rendering alerts inline for the user only.\n- **Fail-open safety**: Any missing file, parse failure, or I/O error outputs `{}` immediately with exit code `0`.\n- **Three built-in guards (with turn-level deduplication)**:\n  1. **Cache TTL Idle Alert**: Warns at the start of a new user turn when idle time since the last turn end is `>= 55s` and context is `>= 30k` tokens.\n  2. **Context Threshold Alert**: Tiered warning at `120k` tokens (or `60%` window) and strong warning at `150k` tokens (or `75%` window), repeating only every `+30k` growth thereafter.\n  3. **Cache Hit Drop Alert**: Warns when context is `>= 30k` tokens and the latest step cache hit rate drops below `30%` (2-turn cooldown).\n\n## Requirements\n\n- **Node.js >= 20**\n- **Google Antigravity** with [antigravity-usage-monitor](https://github.com/yuhuan-dev/antigravity-usage-monitor) installed and running\n\n## Installation\n\n### Windows (PowerShell)\n\n```powershell\nirm https://raw.githubusercontent.com/wingkit123/agy-cache-guard/main/install.ps1 | iex\n```\n\n### macOS / Linux\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/wingkit123/agy-cache-guard/main/install.sh | sh\n```\n\n### Manual Clone\n\n```bash\n# macOS / Linux\ngit clone https://github.com/wingkit123/agy-cache-guard.git ~/.gemini/config/plugins/cache-guard\n```\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/wingkit123/agy-cache-guard.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\cache-guard\"\n```\n\nOpen a **new session** in Antigravity (or check **Customizations -> Installed -> `cache-guard`**) to activate all hooks.\n\n## Configuration (Optional)\n\nDefault thresholds work out of the box. To override any threshold, create `config.json` inside the plugin's `PLUGIN_DATA` directory (by default `~/.gemini/antigravity/plugin_data/cache-guard/config.json`):\n\n```json\n{\n  \"ttlWarnSec\": 55,\n  \"ttlMinContextTokens\": 30000,\n  \"contextWarnTokens\": 120000,\n  \"contextDangerTokens\": 150000,\n  \"contextRepeatStepTokens\": 30000,\n  \"contextWarnPct\": 60,\n  \"contextDangerPct\": 75,\n  \"cacheHitLowPct\": 30,\n  \"cacheDropMinTokens\": 30000,\n  \"cacheDropCooldownTurns\": 2\n}\n```\n\n## Verification\n\nRun the included test suite (requires Node.js >= 20):\n\n```bash\nnode tests/guard.test.mjs\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "fs_write_workspace"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.mjs",
+        "line": 34,
+        "snippet": "writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/wingkit123/agy-cache-guard/blob/082b8a18670914ea3fcc329c0679714e650f3033/scripts/guard.mjs#L34"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "082b8a18670914ea3fcc329c0679714e650f3033",
+      "scannedAt": "2026-11-27T18:17:31.254Z",
+      "riskTier": "low",
+      "capabilities": [
+        "fs_write_workspace"
+      ]
+    }
+  ]
+}

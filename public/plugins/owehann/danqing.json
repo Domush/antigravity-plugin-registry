@@ -1,0 +1,837 @@
+{
+  "schemaVersion": 1,
+  "id": "owehann/danqing",
+  "sha": "ad086d536af51f95bcc47a110c263c8442d3bcdd",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:40.028Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "danqing",
+    "displayName": "Danqing (丹青)",
+    "version": "0.8.2",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "danqing_mcp",
+        "runtimeName": "danqing_danqing_mcp",
+        "transport": "stdio",
+        "command": "danqing-mcp",
+        "args": [],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "danqing",
+        "slashCommand": "/danqing",
+        "description": "Losslessly recolor finished scientific vector figures (.pdf or .svg from R/ggplot2, Python/matplotlib/scanpy, GraphPad Prism, or Illustrator) and match whole manuscript figure sets to comfortable, reviewer-safe palettes without re-running p",
+        "disableModelInvocation": false,
+        "file": "skills/danqing/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/danqing"
+    ],
+    "mcpServerNames": [
+      "danqing_danqing_mcp"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.png\" alt=\"Danqing Albers Mineral Seal Logo\" width=\"128\" height=\"128\" />\n\n# Danqing · 丹青\n\n### New color for discovery, faithful to every datum\n#### 赋科研以丹青，守数据之本真\n\n<p>\n  <a href=\"./README.zh-CN.md\"><strong>简体中文文档</strong></a> ·\n  <a href=\"#-why-danqing\">Why Danqing</a> ·\n  <a href=\"#-quickstart--zero-cost-deployment\">Quickstart &amp; Cloud</a> ·\n  <a href=\"#-manuscript-match--the-3434-palettes\">Manuscript Match &amp; 3,434 Palettes</a> ·\n  <a href=\"#-agent-plugin--mcp-server\">Plugin &amp; MCP</a> ·\n  <a href=\"#-citation--attribution\">Citation</a>\n</p>\n\n[![Live Studio](https://img.shields.io/badge/Live_Studio-danqing.onrender.com-C84B31?style=flat-square&logo=googlechrome&logoColor=white)](https://danqing.onrender.com)\n[![CI Status](https://github.com/owehann/danqing/actions/workflows/ci.yml/badge.svg)](https://github.com/owehann/danqing/actions/workflows/ci.yml)\n[![Deploy to Render](https://img.shields.io/badge/Deploy_to_Render-Free_%240_Blueprint-0D9488?style=flat-square&logo=render)](https://render.com/deploy?repo=https://github.com/owehann/danqing)\n[![Palettes: 3,434 Verified](https://img.shields.io/badge/Palettes-3%2C434_Primary--Source_Verified-C84B31?style=flat-square)](#-manuscript-match--the-3434-palettes)\n[![Plugin + MCP](https://img.shields.io/badge/Antigravity_%2B_MCP-danqing__mcp-0F766E?style=flat-square)](#-agent-plugin--mcp-server)\n[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-0284C7?style=flat-square)](./LICENSE)\n\n</div>\n\n<br/>\n\n## ✨ Why Danqing\n\nScientists and students shouldn't lose hours tweaking hex codes, re-running plotting scripts twenty times, and staring at harsh or muddy colors just to make manuscript figures comfortable to read.\n\n**Danqing (丹青)** lets every scholar recolor finished vector figures — PDFs and SVGs exported from **R (`ggplot2`)**, **Python (`matplotlib` / `seaborn` / `scanpy`)**, **GraphPad Prism**, or **Adobe Illustrator** — in seconds, free and open-source, without altering a single coordinate, text glyph, or raw experimental image pixel.\n\n<table width=\"100%\">\n  <tr>\n    <td width=\"50%\" valign=\"top\">\n      <h3>📖 1. One-Click Manuscript Match</h3>\n      <p>Pick a scholarly tone (<em>CNS Clean</em>, <em>Clinical</em>, <em>Omics Atlas</em>, <em>Mineral &amp; Museum</em>) or type your target journal and field (optional Gemini 2.5 Flash + built-in perceptual comfort ranker) to match the whole paper's figure set without trial-and-error.</p>\n    </td>\n    <td width=\"50%\" valign=\"top\">\n      <h3>🎯 2. Lossless Vector Engine &amp; Gate G0 Shield</h3>\n      <p>Parses PDF content streams and SVG stylesheets under strict <code>preview == export</code> parity while physically locking <strong>Western blot lanes, H&amp;E sections, immunofluorescence, and EM micrographs</strong> (verified bit-identical on export).</p>\n    </td>\n  </tr>\n  <tr>\n    <td width=\"50%\" valign=\"top\">\n      <h3>🎨 3. 3,434 Verified Palettes &amp; Paired Ramps</h3>\n      <p>Spans <strong>Accessible</strong> (Okabe–Ito, Petroff IEEE VIS, Paul Tol), <strong>Journal &amp; Scientific</strong> (NPG/NEJM/Lancet, CNS Iso-Chroma, <code>pypalettes</code>), <strong>World Museums</strong> (<code>MetBrewer</code>, <code>MoMAColors</code>, <code>nice-color-palettes</code>), <strong>CC0 Eastern Artifacts &amp; Sanzo Wada</strong>, and <strong>Crameri v8.0 / cmocean</strong> continuous maps — every palette paired with homologous 7-stop sequential &amp; diverging ramps.</p>\n    </td>\n    <td width=\"50%\" valign=\"top\">\n      <h3>🤖 4. Antigravity Plugin, MCP &amp; Zero-Retention Privacy</h3>\n      <p>Ships with a native <strong>MCP server (<code>danqing_mcp</code>)</strong> and <code>plugin.json</code> for Google Antigravity, Claude Code, and Cursor, plus <strong>100% RAM-only multi-visitor isolation</strong> and ready-to-paste <code>ggplot2</code> &amp; <code>matplotlib</code> export snippets.</p>\n    </td>\n  </tr>\n</table>\n\n<br/>\n\n<div align=\"center\">\n  <img src=\"./assets/icon_system.png\" alt=\"Danqing Optical Brand System — Albers Mineral Seal\" width=\"880\" />\n</div>\n\n<br/>\n\n---\n\n## 🚀 Quickstart & Zero-Cost Deployment\n\n### Option A · Use Online Immediately (Free Forever)\nOpen **[https://danqing.onrender.com](https://danqing.onrender.com)** in any desktop browser (`≥ 600 px`).\n\n### Option B · Local Studio (3 Commands)\n\n```bash\npip install -e \".[dev]\"\n(cd web/frontend && pnpm install && pnpm build)\n./scripts/start_studio.sh\n```\n\nOpen `http://127.0.0.1:8765`.\n\n### Option C · Instant Share Link or Self-Hosted \\$0 Cloud\n\n```bash\n./scripts/share_public.sh          # Public HTTPS link via Cloudflare Quick Tunnel ($0)\n./scripts/share_public.sh --lan    # Lab / campus Wi-Fi LAN mode ($0)\n```\n\n[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/owehann/danqing)\n\n---\n\n## 🎨 Manuscript Match & The 3,434 Palettes\n\nClick **Manuscript Match (`论文配色定调`)** in the studio sidebar to select a journal aesthetic (`CNS Clean`, `Clinical`, `Omics Atlas`, `Mineral & Museum`) or describe your manuscript (with optional session-only Google AI Studio Gemini key support and zero-cost perceptual fallback). Every discrete palette also exposes homologous 7-stop `paired_sequential_stops` and `paired_diverging_stops` so discrete panels and heatmaps stay visually unified.\n\n| Collection | Count | Representative Palettes & Provenance |\n| :--- | :---: | :--- |\n| **Accessible** | `16` | Okabe–Ito, Petroff 6/8/10 (*Matplotlib 3.10 / IEEE VIS*), IBM Safe, Paul Tol (*Bright, Vibrant, Muted, High-Contrast*), CARTO Safe |\n| **Journal & Data-Vis** | `728` | 22 curated CNS Iso-Chroma series (*Nature Immunology*, *Cell Spatial Atlas*, *Science Translational*, *Cancer Discovery*, *Nature Medicine*), NPG/AAAS/NEJM/Lancet/JAMA/JCO (`*-inspired`), LocusZoom GWAS, Observable 10, Seaborn, Scanpy 10 & academic visualization schemes |\n| **Museum, Art & Design** | `2,094` | Metropolitan Museum of Art (`MetBrewer`, CC0), MoMA (`MoMAColors`, MIT), `PNWColors`, `NatParksPalettes`, Ghibli/cinema & `nice-color-palettes` (MIT) |\n| **Eastern & Sanzo Wada** | `252` | 24 deterministic CC0 Cleveland Museum of Art mineral artifact suites (Ru/Jun/Longquan celadons, Zhao Mengfu landscape, Hokusai Red Fuji) + 228 Sanzo Wada (1933) *Dictionary of Color Combinations* (MIT) |\n| **Many Colors (Single-Cell)** | `13` | Polychrome 36, Green-Armytage 25, Scanpy 20, Zeileis 28 & Ultra-Cluster 64, Kelly 22, Glasbey + dynamic hull expansion (`K > N`) |\n| **Continuous & Diverging** | `325` | 6 CNS white-paper ramps (`cns_ramp_*`, `cns_div_*`), Crameri *Scientific colour maps* v8.0 (`batlow`, `lipari`, `navia`, `vik`, `roma`, `bam`), `cmocean`, Viridis/Cividis, ColorBrewer 2.0, zero-midpoint lock |\n| **Domain Conventions** | `6` | COSMIC SBS-6 mutational signatures, Manhattan alternating chromosomes, Volcano `Up/Down/NS`, Cell Cycle `G1/S/G2M`, CNV `Gain/Loss/Neutral`, `A/C/G/T` bases |\n\n---\n\n## 🤖 Agent Plugin & MCP Server\n\nDanqing is packaged as a ready-to-use **Google Antigravity Plugin** ([`plugin.json`](./plugin.json) + [`mcp_config.json`](./mcp_config.json) + [`skills/danqing/SKILL.md`](./skills/danqing/SKILL.md)) and standard **MCP stdio server** (`danqing-mcp` / `python -m danqing.mcp_server`) exposing four tools:\n\n- `danqing_inspect_figure` — Inspect discrete groups, panels, continuous scales, protected raw images, and deuteranopia diagnostics.\n- `danqing_match_manuscript_palettes` — Recommend the 3 most comfortable palettes for a figure or manuscript brief.\n- `danqing_recolor_figure` — Losslessly recolor a `.pdf` or `.svg` with byte-level geometry/image verification plus `.palette.R` & `.palette.py` code output.\n- `danqing_list_palettes` — Search and filter the 3,434 verified palettes (including homologous paired gradient stops).\n\n---\n\n## 📝 Citation & Attribution\n\nCreated and maintained by **Xinyin Han** ([@owehann](https://github.com/owehann)). If Danqing saves you time preparing figures or manuscripts, please cite the software (GitHub's **Cite this repository** button reads [`CITATION.cff`](./CITATION.cff) automatically):\n\n```bibtex\n@software{han2026danqing,\n  author       = {Han, Xinyin},\n  title        = {{Danqing: Lossless Scientific Figure \\& Manuscript Recoloring Studio}},\n  year         = {2026},\n  version      = {0.3.0},\n  url          = {https://github.com/owehann/danqing},\n  license      = {Apache-2.0}\n}\n```\n\n- **Code & Brand Assets**: [Apache License 2.0](./LICENSE) — Copyright © 2026 Xinyin Han (`0` GPL/AGPL runtime dependencies).\n- **Palette Provenance & Public Benchmark Datasets**: Documented in [`NOTICE`](./NOTICE) and [`core/danqing/palettes/VERIFICATION.md`](./core/danqing/palettes/VERIFICATION.md).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/check_i18n_strings.py",
+        "line": 130,
+        "snippet": "proc = subprocess.run( [\"node\", \"-e\", TS_AST_CHECK_JS], cwd=str(FRONTEND_DIR), capture_output=True, text=True, check=True, )",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/check_i18n_strings.py#L130"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "web/frontend/src/components/ExportDialog.tsx",
+        "line": 91,
+        "snippet": "const match = /filename=\"([^\"]+)\"/.exec(disp);",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/components/ExportDialog.tsx#L91"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "web/frontend/src/table/pipeline.ts",
+        "line": 85,
+        "snippet": "const m = SUPERSCRIPT_TOKEN_RE.exec(raw);",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/pipeline.ts#L85"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "web/frontend/src/table/pipeline.ts",
+        "line": 425,
+        "snippet": "const m = TABLE_NUM_PREFIX_RE.exec(sug.titleCandidate);",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/pipeline.ts#L425"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "web/frontend/src/table/pipeline.ts",
+        "line": 463,
+        "snippet": "const m = LEADING_FN_SYM_RE.exec(rawFn.trim());",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/pipeline.ts#L463"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "web/frontend/src/table/pipeline.ts",
+        "line": 1408,
+        "snippet": "const rawDecMatch = /\\.(\\d+)$/.exec(raw0.trim());",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/pipeline.ts#L1408"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "core/danqing/manuscript_matcher.py",
+        "line": 315,
+        "snippet": "with urllib.request.urlopen(req, timeout=8.0) as resp:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/core/danqing/manuscript_matcher.py#L315"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "core/danqing/mcp_server.py",
+        "line": 330,
+        "snippet": "out_p.write_bytes(out_bytes)",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/core/danqing/mcp_server.py#L330"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "core/danqing/mcp_server.py",
+        "line": 338,
+        "snippet": "r_path.write_text( generate_r_ggplot_snippet( snip_tag, scene.entities, solved.entity_hex, scene.continuous_scales, solved.scale_stops, ), \"utf-8\", )",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/core/danqing/mcp_server.py#L338"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "core/danqing/mcp_server.py",
+        "line": 348,
+        "snippet": "py_path.write_text( generate_python_mpl_snippet( snip_tag, scene.entities, solved.entity_hex, scene.continuous_scales, solved.scale_stops, ), \"utf-8\", )",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/core/danqing/mcp_server.py#L348"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "core/danqing/mcp_server.py",
+        "line": 358,
+        "snippet": "csv_path.write_text(generate_change_report_csv(scene.entities, solved.entity_hex), \"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/core/danqing/mcp_server.py#L358"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/benchmark_api_v2.py",
+        "line": 93,
+        "snippet": "(REPO / \"bench\" / \"wp5_performance_report.json\").write_text(json.dumps(report, indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/benchmark_api_v2.py#L93"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_brand_assets.py",
+        "line": 96,
+        "snippet": "(PUBLIC_DIR / \"favicon.svg\").write_text(FAVICON_SVG, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_brand_assets.py#L96"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_brand_assets.py",
+        "line": 97,
+        "snippet": "(PUBLIC_DIR / \"icon-seal.svg\").write_text(SEAL_SVG, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_brand_assets.py#L97"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 315,
+        "snippet": "(CORPUS_DIR / \"c21_svglite_css_dodged_bar.svg\").write_text(c21, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L315"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 344,
+        "snippet": "(CORPUS_DIR / \"c22_svglite_faceted_lines.svg\").write_text(c22, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L344"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 364,
+        "snippet": "(CORPUS_DIR / \"c23_seaborn_joint_scatter.svg\").write_text(c23, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L364"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 482,
+        "snippet": "(CORPUS_DIR / \"c28_illustrator_svg_classes.svg\").write_text(c28, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L482"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 498,
+        "snippet": "(CORPUS_DIR / \"c29_inkscape_layered_violin.svg\").write_text(c29, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L498"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 533,
+        "snippet": "(CORPUS_DIR / \"c30_biorender_signaling_pathway.svg\").write_text(c30, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L533"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 630,
+        "snippet": "(CORPUS_DIR / \"c34_waterfall_24genes_hier.svg\").write_text(c34, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L630"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 674,
+        "snippet": "(CORPUS_DIR / \"MANIFEST.json\").write_text(json.dumps(manifest, indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L674"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_corpus.py",
+        "line": 730,
+        "snippet": "(REPO / \"bench\" / \"wp4_engine_coverage_report.json\").write_text(json.dumps(wp4_report, indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_corpus.py#L730"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/build_demo_fixtures.py",
+        "line": 66,
+        "snippet": "with urllib.request.urlopen(req, timeout=60) as resp:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_demo_fixtures.py#L66"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_demo_fixtures.py",
+        "line": 67,
+        "snippet": "target.write_bytes(resp.read())",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_demo_fixtures.py#L67"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_demo_fixtures.py",
+        "line": 612,
+        "snippet": "out_path.write_text(svg, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_demo_fixtures.py#L612"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_demo_fixtures.py",
+        "line": 1114,
+        "snippet": "out_path.write_text(\"\\n\".join(parts_svg), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_demo_fixtures.py#L1114"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_expanded_palettes.py",
+        "line": 208,
+        "snippet": "fp.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_expanded_palettes.py#L208"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/build_expanded_palettes.py",
+        "line": 1228,
+        "snippet": "with urllib.request.urlopen(req, timeout=15) as r:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_expanded_palettes.py#L1228"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/build_expanded_palettes.py",
+        "line": 1281,
+        "snippet": "with urllib.request.urlopen(req, timeout=15) as r:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_expanded_palettes.py#L1281"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_palette_catalog.py",
+        "line": 1154,
+        "snippet": "out_path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + \"\\n\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_palette_catalog.py#L1154"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/build_table_samples.py",
+        "line": 193,
+        "snippet": "with urllib.request.urlopen(req, timeout=45) as resp:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_table_samples.py#L193"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_table_samples.py",
+        "line": 199,
+        "snippet": "dest.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_table_samples.py#L199"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_table_samples.py",
+        "line": 734,
+        "snippet": "SOURCES_MD_PATH.write_text(\"\\n\".join(sources_md_lines) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_table_samples.py#L734"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_table_samples.py",
+        "line": 740,
+        "snippet": "MANIFEST_PATH.write_text( json.dumps(manifest_payload, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/build_table_samples.py#L740"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/extract_artifact_palette.py",
+        "line": 563,
+        "snippet": "with urllib.request.urlopen(req, timeout=25) as r:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/extract_artifact_palette.py#L563"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/extract_artifact_palette.py",
+        "line": 564,
+        "snippet": "cache_path.write_bytes(r.read())",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/extract_artifact_palette.py#L564"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/extract_artifact_palette.py",
+        "line": 928,
+        "snippet": "(out_dir / f\"{pid}.json\").write_text(json.dumps(pal_obj, indent=2, ensure_ascii=False) + \"\\n\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/extract_artifact_palette.py#L928"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/palette_assignment_eval.py",
+        "line": 187,
+        "snippet": "out_json.write_text(json.dumps(report, indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/palette_assignment_eval.py#L187"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/palette_qc.py",
+        "line": 248,
+        "snippet": "VERIFICATION_MD.write_text(\"\\n\".join(lines).rstrip() + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/palette_qc.py#L248"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/palette_qc.py",
+        "line": 282,
+        "snippet": "fp.write_text(json.dumps(pal, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/scripts/palette_qc.py#L282"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/components/ExportDialog.tsx",
+        "line": 41,
+        "snippet": "fetch(`/api/v2/figures/${figure.figure_id}/export/verify`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ format, include_r: includeR, in",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/components/ExportDialog.tsx#L41"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/components/ExportDialog.tsx",
+        "line": 76,
+        "snippet": "const res = await fetch(`/api/v2/figures/${figure.figure_id}/export`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ format, include_r: i",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/components/ExportDialog.tsx#L76"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/components/FigureCanvas.tsx",
+        "line": 179,
+        "snippet": "const res = await fetch(targetRenderUrl, { signal: controller.signal });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/components/FigureCanvas.tsx#L179"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/components/RightSidebar.tsx",
+        "line": 580,
+        "snippet": "const res = await fetch(`/api/v2/figures/${encodeURIComponent(figure.figure_id)}/manuscript-match`, { method: \"POST\", headers, body: JSON.stringify({ preset: chosenPreset, brief: m",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/components/RightSidebar.tsx#L580"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/components/table/TableDialogs.tsx",
+        "line": 65,
+        "snippet": "const res = await fetch(\"/api/v2/tables/samples/penguins_long\");",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/components/table/TableDialogs.tsx#L65"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/layout/layoutStore.ts",
+        "line": 572,
+        "snippet": "const res = await fetch(\"/api/v2/layout/init\");",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/layout/layoutStore.ts#L572"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/layout/layoutStore.ts",
+        "line": 650,
+        "snippet": "const res = await fetch(\"/api/v2/layout/upload\", { method: \"POST\", body: fd });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/layout/layoutStore.ts#L650"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/layout/layoutStore.ts",
+        "line": 992,
+        "snippet": "const res = await fetch(\"/api/v2/layout/derive-roi\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ source_panel_id: rootSrcId, roi: chil",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/layout/layoutStore.ts#L992"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/layout/layoutStore.ts",
+        "line": 1289,
+        "snippet": "const res = await fetch(\"/api/v2/layout/compose\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(buildComposeBody(get())), signal: ctrl.sig",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/layout/layoutStore.ts#L1289"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/layout/layoutStore.ts",
+        "line": 1313,
+        "snippet": "const res = await fetch(\"/api/v2/layout/export\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ ...payload, show_guides: false, format: \"",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/layout/layoutStore.ts#L1313"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/layout/layoutStore.ts",
+        "line": 1337,
+        "snippet": "const res = await fetch(\"/api/v2/layout/export\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ ...buildComposeBody(s), format, dpi }), }",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/layout/layoutStore.ts#L1337"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 169,
+        "snippet": "const res = await fetch(\"/api/v2/palettes\");",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L169"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 184,
+        "snippet": "const res = await fetch(\"/api/v2/figures\");",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L184"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 212,
+        "snippet": "const res = await fetch(\"/api/v2/figures\", { method: \"POST\", body: fd });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L212"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 244,
+        "snippet": "const res = await fetch(\"/api/v2/figures\", { method: \"POST\", body: fd });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L244"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 263,
+        "snippet": "const res = await fetch(\"/api/v2/figures\", { method: \"POST\", body: fd });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L263"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 279,
+        "snippet": "const res = await fetch(\"/api/v2/figures\", { method: \"POST\", body: fd });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L279"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 293,
+        "snippet": "const res = await fetch(`/api/v2/figures/${figureId}`);",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L293"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/store.ts",
+        "line": 336,
+        "snippet": "const res = await fetch(`/api/v2/figures/${fig.figure_id}/state`, { method: \"PATCH\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(payload), });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/store.ts#L336"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 331,
+        "snippet": "const res = await fetch(\"/api/v2/tables/samples\");",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L331"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 353,
+        "snippet": "const sRes = await fetch(`/api/v2/tables/samples/${encodeURIComponent(meta.sampleId)}`);",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L353"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 405,
+        "snippet": "const res = await fetch(`/api/v2/tables/samples/${encodeURIComponent(sampleId)}`);",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L405"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 824,
+        "snippet": "const res = await fetch(\"/api/v2/tables/compute\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ grid: baseRaw.grid, header_rows: baseRaw",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L824"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 928,
+        "snippet": "const res = await fetch(\"/api/v2/tables/parse\", { method: \"POST\", body: fd, });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L928"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 1004,
+        "snippet": "const res = await fetch(\"/api/v2/tables/parse\", { method: \"POST\", body: fd, });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L1004"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "web/frontend/src/table/tableStore.ts",
+        "line": 1080,
+        "snippet": "const res = await fetch(endpoint, { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(payload), });",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/web/frontend/src/table/tableStore.ts#L1080"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 7,
+        "snippet": "- `./scripts/start_studio.sh --restart` (built-in listener-only cleanup), or",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/AGENTS.md#L7"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/danqing/SKILL.md",
+        "line": 24,
+        "snippet": "When the `danqing_mcp` MCP server is enabled (`danqing-mcp` or `python -m danqing.mcp_server`), prefer calling its deterministic tools directly:",
+        "githubBlobUrl": "https://github.com/owehann/danqing/blob/ad086d536af51f95bcc47a110c263c8442d3bcdd/skills/danqing/SKILL.md#L24"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.8.2",
+      "sha": "ad086d536af51f95bcc47a110c263c8442d3bcdd",
+      "scannedAt": "2026-11-27T18:21:40.028Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "id": "wakatime/antigravity-wakatime",
+  "sha": "bd6c82f85780c0cc0e7d2090e6c74275159e1bf2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:25:38.797Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-cli-wakatime",
+    "displayName": "antigravity-cli-wakatime",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "antigravity-cli-wakatime",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "node ./bin/antigravity-cli-wakatime.js --background --event=postToolUse",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity CLI WakaTime\n\n[WakaTime][wakatime] plugin for [Antigravity CLI][antigravity-cli].\n\nThe plugin installs [wakatime-cli][wakatime-cli] into `~/.wakatime/`, checks GitHub Releases for wakatime-cli updates when a new Antigravity CLI session makes its first model invocation, and syncs AI heartbeats after model invocations and file-edit tool events.\n\nThe hook runner is detached and passes hook payloads over a pipe. It does not create update markers, heartbeat state, or temporary payload files.\n\n## Install\n\n```sh\nagy plugin install /path/to/antigravity-cli-wakatime\n```\n\nRestart Antigravity CLI after installing the plugin.\n\n## Configuration\n\nThe plugin reads standard WakaTime settings from `~/.wakatime.cfg`.\n\nUseful settings:\n\n```ini\n[settings]\napi_key = XXXX\ndebug = true\nproxy = https://user:pass@example.com:8080\n```\n\nLogs are written to `~/.wakatime/antigravity-cli.log`.\n\n[wakatime]: https://wakatime.com/\n[antigravity-cli]: https://antigravity.google/docs/cli-overview\n[wakatime-cli]: https://github.com/wakatime/wakatime-cli\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 60,
+        "snippet": "const child = childProcess.spawn(process.execPath, args, { detached: true, stdio: ['pipe', 'ignore', 'ignore'], windowsHide: true, env: process.env, });",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L60"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 641,
+        "snippet": "childProcess.execFile(file, args, options, (error, stdout, stderr) => { if (error) { error.stdout = stdout; error.stderr = stderr; reject(error); return; } resolve({ stdout, stderr",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L641"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"antigravity-cli-wakatime\" executes a shell command on PostToolUse (matcher: write_to_file|replace_file_content|multi_replace_file_content).",
+        "file": "hooks.json",
+        "line": 16,
+        "snippet": "node ./bin/antigravity-cli-wakatime.js --background --event=postToolUse",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/hooks.json#L16"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 251,
+        "snippet": "if (fs.existsSync(backupPath)) fs.unlinkSync(backupPath);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L251"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 254,
+        "snippet": "if (fs.existsSync(backupPath)) fs.unlinkSync(backupPath);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L254"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 259,
+        "snippet": "if (fs.existsSync(cliPath)) fs.unlinkSync(cliPath);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L259"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 265,
+        "snippet": "fs.unlinkSync(zipFile);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L265"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 275,
+        "snippet": "fs.unlinkSync(alias);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L275"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 372,
+        "snippet": "const stream = fs.createWriteStream(outputFile);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L372"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 421,
+        "snippet": "request = https.request( { host: targetUrl.hostname, port: targetUrl.port ? Number.parseInt(targetUrl.port, 10) : 443, path: `${targetUrl.pathname}${targetUrl.search}`, method: 'GE",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L421"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 561,
+        "snippet": "fs.writeFileSync(outputFile, data);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L561"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/antigravity-cli-wakatime.js",
+        "line": 631,
+        "snippet": "fs.appendFileSync(logFile, `[${new Date().toISOString()}][${level}] ${message}\\n`);",
+        "githubBlobUrl": "https://github.com/wakatime/antigravity-wakatime/blob/bd6c82f85780c0cc0e7d2090e6c74275159e1bf2/bin/antigravity-cli-wakatime.js#L631"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "bd6c82f85780c0cc0e7d2090e6c74275159e1bf2",
+      "scannedAt": "2026-11-27T18:25:38.797Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

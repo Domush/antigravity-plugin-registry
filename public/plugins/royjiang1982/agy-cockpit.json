@@ -1,0 +1,1010 @@
+{
+  "schemaVersion": 1,
+  "id": "royjiang1982/agy-cockpit",
+  "sha": "aef3a79bd37ad70a48fe5e39a178645b2c52063f",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:07.203Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-cockpit",
+    "displayName": "AGY Cockpit",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "sa-guard",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "./runtime/guard/sa-guard.sh agy",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "cockpit-dispatch",
+        "slashCommand": "/cockpit-dispatch",
+        "description": "AGY Cockpit 通用 5 角色子代理派发、常驻执行与 Fallback 调度手册（覆盖软件研发、视频制作、亚马逊选品与运营分析）。 主代理不确定接管状态、超出直做边界或命中高危逻辑时，先运行 `resolve.py` 查询路由。覆盖跨目录检索（scout）、UI/视觉/图文（standard）、后端/逻辑/跨文件修改（deep）、疑难排错/高危验收（expert）、多方评审（panel）。`mode == \"disabled\"` 切回用户/项目原有设置；`mode =",
+        "disableModelInvocation": false,
+        "file": "skills/cockpit-dispatch/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/cockpit-dispatch"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AGY Cockpit\n\n[![Antigravity Plugin](https://img.shields.io/badge/Antigravity-Plugin-4285F4?logo=google&logoColor=white)](https://github.com/royjiang1982/agy-cockpit)\n[![Version](https://img.shields.io/badge/version-1.1.0-0A7EA4)](./plugin.json)\n[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)\n[![License: MIT](https://img.shields.io/badge/License-MIT-2EA44F)](./LICENSE)\n\n**English** | [简体中文](./README.zh-CN.md)\n\n**AGY Cockpit** is a real-time observability cockpit and multi-engine subagent orchestration plugin for **Google Antigravity**. Monitor context window usage, prompt cache hit rate, TPS/TTFT, token spend, and model quotas in the side pane — and centrally manage multi-engine subagent routing, resident execution, and safety guard hooks.\n\n## Preview\n\n<table>\n  <tr>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"./docs/screenshots/cockpit-panel.png\" alt=\"AGY Cockpit Real-Time Panel\" width=\"380\" />\n      <br />\n      <sub><b>Real-Time Cockpit Panel</b> (demo data)</sub>\n    </td>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"./docs/screenshots/dispatch-drawer.png\" alt=\"Subagent Orchestration Settings Drawer\" width=\"380\" />\n      <br />\n      <sub><b>Subagent Orchestration Settings</b> (demo data)</sub>\n    </td>\n  </tr>\n</table>\n\n## Key Features\n\n- **Real-Time Metrics Dashboard**: Tracks context window utilization, prompt cache hit rate, decode speed (TPS), time-to-first-token (TTFT), per-turn trends, model cost breakdown, subagent consumption, and live quota rings.\n- **5-Role Subagent Orchestration**: Ships with the `cockpit-dispatch` skill and a zero-port local policy resolver (`resolve.py`) that routes tasks across 5 general-purpose roles with automatic fallback chains:\n  - `scout` (read-only fast research)\n  - `standard` (UI, visual & content tasks)\n  - `deep` (backend logic, architecture & data pipelines)\n  - `expert` (debugging, security/billing audit & acceptance)\n  - `panel` (read-only multi-seat blind review)\n- **Self-Contained Resident Runtime**: Bundles `sa-subagentd` (Unix socket daemon) and engine wrappers (`sa-agy`, `sa-codex`, `sa-droid`, `sa-grok`, `sa-pi`) plus `sa-run.sh` for persistent connection reuse and multi-turn session resume.\n- **Native PreToolUse Safety Guard**: Automatically registers `hooks.json` (`sa-guard.sh agy`) to block recursive subagent spawning and high-risk shell/git commands inside subagent sessions.\n\n## Repository Layout\n\n```text\nagy-cockpit/\n├── plugin.json                 # Antigravity plugin manifest\n├── hooks.json                  # Native PreToolUse safety guard hook\n├── install.sh                  # One-way installer with syntax & hash verification\n├── rules/AGENTS.md             # Minimal always-on dispatch trigger rule\n├── skills/cockpit-dispatch/    # 5-role dispatch skill + local policy resolver\n├── runtime/                    # Self-contained resident daemon, wrappers, runner & sa-guard\n└── sidecars/cockpit/           # Sidecar HTTP server, UI & unit tests\n```\n\n## Quickstart\n\n```bash\n# Install / sync into ~/.gemini/config/plugins/agy-cockpit\n./install.sh\n\n# Run Sidecar and safety-guard unit tests\nPYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s sidecars/cockpit -p \"test_*.py\"\npython3 runtime/tests/test-sa-guard.py\n```\n\nAfter installation, reload Antigravity and open the **AGY Cockpit** panel from the sidebar (or click the **Settings** button inside the Subagents section to toggle orchestration takeover and customize per-role routes).\n",
+  "latestReleaseNotes": "## Highlights\n\n- **Smarter Subagent Dispatching**: Clearer always-on routing rules so the main agent reliably delegates research, UI/content, backend logic, expert review, and multi-seat panels instead of doing everything inline.\n- **Read-Only Acceptance & True Blind Reviews**: Added `--read-only` for independent `expert` reviews and `--blind` for isolated `panel` reviews (excluding shared Swarm boards), plus safe fail-closed handling when policy files are corrupted.\n- **Readable Subagent Task Names**: Fixed subagent rows showing generic `*-cli` labels — the Cockpit panel now displays concise core task names (≤10 chars) at a glance.\n- **Safer Runtime & Safety Guards**: Removed private RPC dependencies, restricted AGY auto-approval to one-time permissions only, aligned default Droid quota fallbacks, and strengthened Swarm Worker, Git branch, daemon restart, and installer protections.\n- **More Accurate Speed Metrics**: Prevented buffered-thinking turns from inflating decode TPS.\n\n## 更新亮点（简体中文）\n\n- **更准确的子代理自动分流**：补齐常驻触发边界与 5 角色必派清单，主代理会自动将侦察、视觉/图文、后端逻辑、专家验收与多方评审派给对应子代理，不再默认全揽自做。\n- **只读独立验收与真盲审**：新增 `--read-only`（高危改动只读 `expert` 独立验收）与 `--blind`（`panel` 真盲审排除共享 Swarm 面板），策略文件损坏时自动止损停派。\n- **子代理面板清晰任务名**：修复列表退化显示 `*-cli` 的问题，现自动提炼并展示 10 字以内的核心任务名称，一眼看清每个子代理在做什么。\n- **运行时与安全守卫全面加固**：移除私有 RPC 依赖，AGY 自动审批仅放行单次授权（不再永久授权），统一默认 Droid 配额回退，并补强 Swarm Worker、Git 分支操作、守护进程重启校验与安装器边界防护。\n- **解码速度统计更准确**：修复缓冲思考场景下首 Token 延迟导致解码 TPS 虚高的问题。\n\n## Install / Upgrade\n\n```bash\ngit clone https://github.com/royjiang1982/agy-cockpit.git\ncd agy-cockpit && ./install.sh\n```",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "credential_access",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 241,
+        "snippet": "'.netrc', '.npmrc', '.pypirc', '.git-credentials', '.docker/config.json',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L241"
+      },
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 242,
+        "snippet": "'.codex/auth.json', '.gemini/oauth_creds.json', '.gemini/google_accounts.json',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L242"
+      },
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 246,
+        "snippet": "_PRIVATE_KEY_NAMES = {'id_rsa', 'id_ed25519', 'id_ecdsa', 'id_dsa', 'id_ed25519_sk'}",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L246"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"sa-guard\" executes a shell command on PreToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 9,
+        "snippet": "./runtime/guard/sa-guard.sh agy",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/hooks.json#L9"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "runtime/agent_runtime/agy_quota.py",
+        "line": 57,
+        "snippet": "proc = subprocess.Popen([binary, \"-p\", \"/usage\", \"--output-format\", \"json\"], start_new_session=True, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, te",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/agent_runtime/agy_quota.py#L57"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "runtime/agent_runtime/daemon.py",
+        "line": 612,
+        "snippet": "subprocess.Popen( [sys.executable, \"-m\", \"agent_runtime.daemon\", \"serve\"], cwd=str(Path.home()), env=env, stdin=subprocess.DEVNULL, stdout=log_f, stderr=log_f, start_new_session=Tr",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/agent_runtime/daemon.py#L612"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/cockpit/dispatch_drawer.catalog.js",
+        "line": 70,
+        "snippet": "const effortOf = x => x.effort || (/-?(low|medium|high|xhigh|max|ultra)$/i.exec(x.model || '')?.[1]?.toLowerCase() || '');",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_drawer.catalog.js#L70"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/dispatch_models.py",
+        "line": 95,
+        "snippet": "proc = subprocess.Popen( [codex_bin, \"app-server\", \"--stdio\"], cwd=td, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, encoding=\"utf-8\", errors",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_models.py#L95"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/rpc_quota.py",
+        "line": 61,
+        "snippet": "proc = subprocess.Popen(*args, **kwargs)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/rpc_quota.py#L61"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "sidecars/cockpit/rpc_quota.py",
+        "line": 368,
+        "snippet": "\\xe4\\xbf\\xa1\\xe4\\xbb\\xbb\\xe6\\xad\\xa4\\xe6\\x96\\x87\\xe4\\xbb\\xb6\\xe5\\xa4\\xb9",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/rpc_quota.py#L368"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 304,
+        "snippet": "result = subprocess.run([\"node\", \"--check\", str(assets / js)], capture_output=True, text=True)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L304"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 425,
+        "snippet": "child = subprocess.run([*cmd, *action], cwd=cwd, env=env, capture_output=True, text=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L425"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 443,
+        "snippet": "expert = subprocess.run([*cmd, \"--role\", \"expert\", \"--read-only\"], **opts)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L443"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 446,
+        "snippet": "panel = subprocess.run([*cmd, \"--role\", \"panel\", \"--blind\", \"--count\", \"2\"], **opts)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L446"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 452,
+        "snippet": "bad = subprocess.run([*cmd, *args], **opts)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L452"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 509,
+        "snippet": "child = subprocess.run([sys.executable, str(script), \"--policy-path\", str(self.policy_path), *bad_args], capture_output=True, text=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L509"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 269,
+        "snippet": "proc = subprocess.run([\"node\", \"--check\", tf.name], capture_output=True, text=True)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L269"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "runtime/agent_runtime/daemon.py",
+        "line": 541,
+        "snippet": "self.pid_path.write_text(str(os.getpid()), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/agent_runtime/daemon.py#L541"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "runtime/agent_runtime/daemon.py",
+        "line": 601,
+        "snippet": "with open(lock_file, \"w\") as lf:",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/agent_runtime/daemon.py#L601"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "runtime/agent_runtime/daemon.py",
+        "line": 611,
+        "snippet": "with open(log_path, \"ab\") as log_f:",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/agent_runtime/daemon.py#L611"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/cockpit/dispatch_drawer.js",
+        "line": 235,
+        "snippet": "const res = await fetch(withToken(url), opts), data = await res.json().catch(() => null);",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_drawer.js#L235"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/cockpit/dispatch_drawer.js",
+        "line": 245,
+        "snippet": "const res = await fetch(withToken('/'), { cache: 'no-store' });",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_drawer.js#L245"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/server.py",
+        "line": 314,
+        "snippet": "tmp_file.write_text(payload, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/server.py#L314"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 34,
+        "snippet": "path.write_text(\"\".join(json.dumps(row) + \"\\n\" for row in rows), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L34"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 197,
+        "snippet": "path.write_text(json.dumps({\"model\": \"claude-opus-5-5\", \"tokenUsage\": {\"inputTokens\": 100}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L197"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 212,
+        "snippet": "summary.write_text(json.dumps({\"inputTokens\": 180, \"outputTokens\": 20, \"costUsdTicks\": 3_000_000}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L212"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 217,
+        "snippet": "summary.write_text(json.dumps(usage))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L217"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 233,
+        "snippet": "summary.write_text(json.dumps(dict(total, modelUsage={regular: placed, fast: extra})))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L233"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 246,
+        "snippet": "summary.write_text(json.dumps(total))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L246"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 250,
+        "snippet": "complete.write_text(json.dumps(dict(total, modelUsage={**total[\"modelUsage\"], \"grok-4.7\": { \"inputTokens\": 40, \"cacheCreationTokens\": 6, \"cachedReadTokens\": 2, \"outputTokens\": 5, \"",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L250"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 271,
+        "snippet": "self.cache.write_text(json.dumps(snapshot))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L271"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 318,
+        "snippet": "settings.write_text(json.dumps({\"model\": models[0], \"tokenUsage\": {\"inputTokens\": tokens}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L318"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 385,
+        "snippet": "settings.write_text(json.dumps({\"model\": \"claude-opus-5-5\", \"tokenUsage\": {\"inputTokens\": 50}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L385"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_calendar_models.py",
+        "line": 403,
+        "snippet": "settings.write_text(json.dumps({\"model\": \"claude-opus-5-5\", \"tokenUsage\": {\"inputTokens\": 100}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_calendar_models.py#L403"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_cost_archive.py",
+        "line": 41,
+        "snippet": "self.cache.write_text(json.dumps(payload), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_cost_archive.py#L41"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_cost_archive.py",
+        "line": 150,
+        "snippet": "self.cache.write_text('{\"files\":', encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_cost_archive.py#L150"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_cost_archive.py",
+        "line": 213,
+        "snippet": "probe.write_text(json.dumps({\"model\": \"claude-sonnet-4-6\", \"tokenUsage\": {\"inputTokens\": tokens}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_cost_archive.py#L213"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 26,
+        "snippet": "html.write_bytes(b\"<meta content='__CSRF_TOKEN__'><span>__UI_VERSION__</span>\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L26"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 70,
+        "snippet": "self.state.write_text(json.dumps({\"quota_cache\": {\"codex-5h\": {\"pct\": 42}}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L70"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 146,
+        "snippet": "self.path.write_text('{\"schema_version\": 2}')",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L146"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 159,
+        "snippet": "self.path.write_text(\"{\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L159"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 164,
+        "snippet": "self.path.write_text(json.dumps(dispatch_policy.default_policy()))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L164"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_api.py",
+        "line": 282,
+        "snippet": "(self.root / f\"dispatch_drawer.{suffix}\").write_bytes(b\"test asset\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_api.py#L282"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 121,
+        "snippet": "self.policy_path.write_text(contents)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L121"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 134,
+        "snippet": "self.policy_path.write_text(\"{\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L134"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 297,
+        "snippet": "self.state_path.write_text(json.dumps({\"quota_cache\": { \"codex-5h\": sample, \"codex-weekly\": dict(observed_at=recently, pct=99, reset_ts=NOW + 60, limit_id=\"other\"), }}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L297"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 315,
+        "snippet": "self.state_path.write_text(json.dumps({\"quota_cache\": { \"gemini-5h\": dict(rem_frac=.8, observed_at=NOW, reset_ts=NOW + 60), \"3p-5h\": dict(rem_frac=0, observed_at=NOW, reset_ts=NOW ",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L315"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 395,
+        "snippet": "incoming.write_text(external_contents)",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L395"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 419,
+        "snippet": "self.policy_path.write_text(json.dumps(dict(dp.default_policy(), allow_swarm=True)))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L419"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 440,
+        "snippet": "self.policy_path.write_text(json.dumps(p))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L440"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 472,
+        "snippet": "exe.write_text(\"#!/bin/sh\\nexit 0\\n\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L472"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 519,
+        "snippet": "codex_cache.write_text(json.dumps({\"models\": [{\"slug\": \"gpt-6.2-astra\"}, {\"slug\": \"gpt-6.5-astra\"}, {\"slug\": \"gpt-6.4-sol\"}]}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L519"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 520,
+        "snippet": "grok_cache.write_text(json.dumps({\"models\": {\"grok-4.7\": {}, \"grok-5.1\": {}, \"grok-5.1-build-fast\": {}}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L520"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_dispatch_policy.py",
+        "line": 521,
+        "snippet": "agy_state.write_text(json.dumps({\"dynamic_models\": {\"1900\": [\"Gemini 4.5 Neon (High)\"], \"1901\": [\"Claude Opus 6.0\"]}}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_dispatch_policy.py#L521"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 244,
+        "snippet": "tr.write_text(\"\\n\".join(json.dumps(x) for x in lines) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L244"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 306,
+        "snippet": "rf1.write_text( json.dumps({\"event\": \"init\", \"agent\": \"agy\", \"conversation_id\": old_sid}) + \"\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L306"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 311,
+        "snippet": "rf2.write_text( json.dumps({\"event\": \"session_handoff\", \"from_session_id\": old_sid}) + \"\\n\" + json.dumps({\"event\": \"init\", \"agent\": \"agy\", \"conversation_id\": new_sid}) + \"\\n\", enco",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L311"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 318,
+        "snippet": "(bdir / \"steps\" / \"1\" / \"output.txt\").write_text(\"■ 完成\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L318"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 347,
+        "snippet": "rf2.write_text( json.dumps({\"event\": \"session_handoff\", \"from_session_id\": old_sid}) + \"\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L347"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 358,
+        "snippet": "rf2.write_text(\"\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L358"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 386,
+        "snippet": "(bdir / \"steps\" / \"1\" / \"output.txt\").write_text( json.dumps({\"conversationId\": sub_a}) + \"\\n\", encoding=\"utf-8\" )",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L386"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_orchestrator_recognition.py",
+        "line": 389,
+        "snippet": "(bdir / \"steps\" / \"2\" / \"output.txt\").write_text( json.dumps({\"conversationId\": sub_b}) + \"\\n\", encoding=\"utf-8\" )",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_orchestrator_recognition.py#L389"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_status_performance.py",
+        "line": 216,
+        "snippet": "path.write_text(text, encoding='utf-8')",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_status_performance.py#L216"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_subagent_labels.py",
+        "line": 113,
+        "snippet": "log.write_text(json.dumps({\"type\": \"thread.started\", \"thread_id\": first}) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_subagent_labels.py#L113"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_swarm_subagents.py",
+        "line": 63,
+        "snippet": "self.roster.write_text(json.dumps({\"title\": \"Review\", \"members\": members}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_swarm_subagents.py#L63"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/cockpit/test_swarm_subagents.py",
+        "line": 78,
+        "snippet": "step.write_text(json.dumps({\"conversationId\": WORKER}))",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/test_swarm_subagents.py#L78"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 8,
+        "snippet": "- **先查接管**：用户未禁用子代理时，若不确定接管开关状态、超出直做边界**或**命中高危逻辑，先运行 `python3 ~/.gemini/config/plugins/agy-cockpit/skills/cockpit-dispatch/scripts/resolve.py --role <role>`。",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/rules/AGENTS.md#L8"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/agent_runtime/dispatch_policy_reader.py",
+        "line": 10,
+        "snippet": "_DEFAULT_PATH = \".gemini/antigravity/sidecar_data/statusline/dispatch-policy.json\"",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/agent_runtime/dispatch_policy_reader.py#L10"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 242,
+        "snippet": "'.codex/auth.json', '.gemini/oauth_creds.json', '.gemini/google_accounts.json',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L242"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 355,
+        "snippet": "'.gemini/config/skills/', '.gemini/antigravity/builtin/', '.gemini/antigravity/brain/',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L355"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 374,
+        "snippet": "'.gemini/config/hooks.json', '.gemini/config/GEMINI.md', '.gemini/GEMINI.md',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L374"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 376,
+        "snippet": "'.gemini/antigravity/sidecar_data/statusline/dispatch-policy.json',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L376"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 377,
+        "snippet": "'.gemini/config/plugins/agy-cockpit/hooks.json',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L377"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 378,
+        "snippet": "'.gemini/config/plugins/agy-cockpit/rules/AGENTS.md',",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L378"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 382,
+        "snippet": "rel == '.gemini/config/rules'",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L382"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 383,
+        "snippet": "or rel.startswith('.gemini/config/rules/')",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L383"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 384,
+        "snippet": "or rel == '.gemini/config/plugins/agy-cockpit/rules'",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L384"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 385,
+        "snippet": "or rel.startswith('.gemini/config/plugins/agy-cockpit/rules/')",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L385"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 386,
+        "snippet": "or rel == '.gemini/config/plugins/agy-cockpit/runtime/guard'",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L386"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "runtime/guard/sa-guard-literals.py",
+        "line": 387,
+        "snippet": "or rel.startswith('.gemini/config/plugins/agy-cockpit/runtime/guard/')",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/runtime/guard/sa-guard-literals.py#L387"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/cockpit/dispatch_models.py",
+        "line": 20,
+        "snippet": "_AGY_STATE = Path.home() / \".gemini/antigravity/sidecar_data/statusline/view_state.json\"",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_models.py#L20"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/cockpit/dispatch_policy.py",
+        "line": 18,
+        "snippet": "DATA_DIR = Path.home() / \".gemini/antigravity/sidecar_data/statusline\"",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_policy.py#L18"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/cockpit/dispatch_policy.py",
+        "line": 33,
+        "snippet": "_EXTRA_WRAPPER_DIRS = (Path.home() / \".gemini/config/bin\", Path.home() / \".local/bin\")",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/dispatch_policy.py#L33"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/cockpit/rpc_quota.py",
+        "line": 664,
+        "snippet": "\"\"\"Read Antigravity userSettings theme seeds from ~/.gemini/config/config.json with mtime_ns caching.\"\"\"",
+        "githubBlobUrl": "https://github.com/royjiang1982/agy-cockpit/blob/aef3a79bd37ad70a48fe5e39a178645b2c52063f/sidecars/cockpit/rpc_quota.py#L664"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "aef3a79bd37ad70a48fe5e39a178645b2c52063f",
+      "scannedAt": "2026-11-27T18:13:07.203Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "credential_access",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "id": "roedyrustam/dev-flow-timer",
+  "sha": "809ee0d9a9bc109350d675eef05b42d3b0459d8e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:57.049Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "dev-flow-timer",
+    "displayName": "DevFlow - Coding & Break Timer",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "devflow-timer",
+        "runtimeName": "dev-flow-timer_devflow-timer",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "devflow-rhythm",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "write_file",
+        "type": "command",
+        "command": "node ./scripts/hook-handler.mjs post-tool",
+        "prompt": null,
+        "timeout": null
+      },
+      {
+        "group": "devflow-rhythm",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "edit_file",
+        "type": "command",
+        "command": "node ./scripts/hook-handler.mjs post-tool",
+        "prompt": null,
+        "timeout": null
+      }
+    ],
+    "skills": [
+      {
+        "name": "coding-break-timer",
+        "slashCommand": "/coding-break-timer",
+        "description": "Expert guide for coding duration tracking, Pomodoro rhythm, and ergonomic break intervals to sustain high developer productivity and prevent mental/physical burnout / Panduan ahli pelacakan durasi coding, ritme Pomodoro, dan istirahat ergon",
+        "disableModelInvocation": false,
+        "file": "skills/coding-break-timer/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "flow-coach",
+        "description": "Specialized ergonomics and productivity pacing subagent that monitors coding sprints, tracks mental focus intervals, and guides developers through physical stretches and restorative breaks.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/flow-coach.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/coding-break-timer"
+    ],
+    "mcpServerNames": [
+      "dev-flow-timer_devflow-timer"
+    ],
+    "agentNames": [
+      "flow-coach"
+    ],
+    "hookEvents": [
+      "PostToolUse",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# ⚡ DevFlow - Coding & Break Timer Plugin\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)\n[![Antigravity Plugin](https://img.shields.io/badge/Antigravity-Plugin-emerald.svg)](https://antigravity.google)\n[![MCP v1.x](https://img.shields.io/badge/MCP-v1.x_Compliant-purple.svg)](https://modelcontextprotocol.io)\n[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)\n[![Author](https://img.shields.io/badge/Author-Roedy_Rustam-cyan.svg)](https://github.com/roedyrustam)\n\n> **Penghitung & Pelacak Durasi Waktu Coding dan Istirahat Cerdas untuk Antigravity AI**  \n> *Sustain High Productivity, Eliminate Mental Fatigue, and Protect Developer Health.*\n\n---\n\n## 🚀 Panduan Instalasi Cepat (Quick Installation)\n\nPengembang mana pun dapat memasang plugin ini dengan **1 baris perintah saja**:\n\n### A. Windows (PowerShell)\nBuka terminal PowerShell dan jalankan:\n```powershell\nirm https://raw.githubusercontent.com/roedyrustam/dev-flow-timer/main/install.ps1 | iex\n```\n\n### B. macOS & Linux (Bash / Zsh)\nBuka terminal dan jalankan:\n```bash\ncurl -fsSL https://raw.githubusercontent.com/roedyrustam/dev-flow-timer/main/install.sh | bash\n```\n\n### C. Manual via Git Clone\n```bash\n# Clone langsung ke direktori plugin Antigravity\ngit clone https://github.com/roedyrustam/dev-flow-timer.git ~/.gemini/config/plugins/dev-flow-timer\n\n# Inisialisasi CLI launcher\nnode ~/.gemini/config/plugins/dev-flow-timer/bin/cli.mjs install\n```\n\nSetelah instalasi selesai, cukup **restart Antigravity** dan buka menu `Overview > Plugins > DevFlow Timer`!\n\n---\n\n**DevFlow** adalah plugin terpadu untuk Antigravity yang dirancang khusus untuk memonitor durasi coding dan mengatur ritme istirahat terencana. Terinspirasi dari riset neurosains dan ergonomi modern, produktivitas terbaik diraih bukan dengan bekerja berjam-jam tanpa henti (*burnout trap*), melainkan melalui ritme gelombang fokus tinggi (*Deep Work*) yang diimbangi dengan jeda pemulihan terstruktur (*Active Recovery*).\n\n### ✨ Fitur Utama\n1. **Multi-Mode Timer Ilmiah**:\n   - 🍅 **Pomodoro Klasik (25m Fokus / 5m Istirahat)**: Cocok untuk implementasi harian dan sprint terarah.\n   - 🧠 **Ritme Ultradian (50m Deep Work / 10m Istirahat)**: Dirancang untuk arsitektur kompleks dan debugging intensif.\n   - 👁️ **Aturan 20-20-20 (Eye Relief 20s)**: Mengistirahatkan otot siliaris mata setiap 20 menit menatap layar.\n   - ☕ **Istirahat Panjang (15m–30m)**: Reset menyeluruh setiap 4 siklus Pomodoro selesai.\n2. **Cockpit Dashboard Visual Interaktif**:\n   - Antarmuka web modern dengan circular ring SVG real-time.\n   - Web Audio Synthesizer: Chime bel harmonik 528Hz ramah telinga tanpa perlu file audio eksternal.\n   - Panel metrik harian (total menit coding, menit istirahat, rasio kerja, skor ritme).\n3. **9 Alat MCP Native (Model Context Protocol)**:\n   - Agen AI dapat mengontrol, memeriksa, menjeda, dan menyarankan istirahat secara otonom.\n4. **Ergonomic Sentinel & Tips Cepat**:\n   - Panduan peregangan leher (*chin tuck*), pergelangan tangan (*carpal tunnel prevention*), pinggang, dan pengingat hidrasi air putih.\n5. **CLI Terintegrasi**:\n   - Dapat dioperasikan langsung dari terminal/PowerShell dengan sintaks ringkas: `node bin/cli.mjs start 25`.\n\n---\n\n## 🇬🇧 Overview (English)\n\n**DevFlow** is a comprehensive productivity and ergonomic pacing plugin for Antigravity AI. It helps engineers balance high-output coding blocks with restorative recovery periods to maintain sustainable focus and eliminate cognitive fatigue.\n\n### Core Architecture\n- **State Store**: Persistent, thread-safe JSON store (`~/.gemini/antigravity/devflow-state.json`).\n- **MCP Server**: Pure Node.js stdio server implementing Model Context Protocol v1.x with 9 dedicated tools and 2 live resources.\n- **Visual Cockpit**: Standalone single-file HTML5 app with Web Audio synthesis and local time synchronization.\n- **Flow Coach Subagent**: Dedicated companion persona assisting developers during long sessions.\n- **Lifecycle Hooks**: Automatically updates activity heartbeats and reports session status on startup.\n\n---\n\n## 🛠️ MCP Tools Reference\n\n| Tool Name | Parameters | Description |\n| :--- | :--- | :--- |\n| `devflow_start_timer` | `type`, `duration_minutes`, `task`, `tag` | Starts a focus coding sprint or break session |\n| `devflow_get_status` | *(none)* | Returns current session status, remaining time, and pacing advice |\n| `devflow_pause_timer` | *(none)* | Temporarily pauses the running timer |\n| `devflow_resume_timer` | *(none)* | Resumes the paused timer |\n| `devflow_stop_timer` | `completed`, `reason` | Completes/stops active session and logs to daily history |\n| `devflow_get_stats` | *(none)* | Returns today's metrics: total coding time, break ratio, score |\n| `devflow_open_dashboard` | *(none)* | Generates and launches the visual HTML cockpit in your default browser |\n| `devflow_get_ergonomic_tip`| `category` | Provides quick actionable stretch/health exercises for developers |\n| `devflow_configure` | `pomodoro_minutes`, etc. | Customizes default timer intervals |\n\n---\n\n## 💻 CLI Usage (Terminal / PowerShell)\n\nAnda dapat menjalankan perintah langsung melalui terminal:\n\n```bash\n# Mulai sesi Pomodoro 25 menit\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" start 25 \"Refactor Auth Middleware\"\n\n# Mulai istirahat singkat 5 menit\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" break 5\n\n# Jalankan aturan mata 20-20-20\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" eye\n\n# Cek status dan sisa waktu\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" status\n\n# Buka Dashboard Cockpit visual di browser\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" dashboard\n\n# Lihat statistik harian\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" stats\n\n# Dapatkan tips peregangan\nnode \"C:\\Users\\roedy\\.gemini\\config\\plugins\\dev-flow-timer\\bin\\cli.mjs\" tip posture\n```\n\n---\n\n## 📂 Struktur Direktori Plugin\n\n```text\n~/.gemini/config/plugins/dev-flow-timer/\n├── plugin.json                 # Manifest plugin (metadata & suggested prompts)\n├── README.md                   # Dokumentasi lengkap\n├── mcp_config.json             # Pendaftaran MCP server lokal\n├── hooks.json                  # Lifecycle hooks (SessionStart & PostToolUse)\n├── assets/\n│   └── logo.svg                # Logo vektor high-contrast (Dark/Light mode)\n├── bin/\n│   ├── mcp-server.mjs          # Server MCP v1.x stdio (Zero dependencies)\n│   └── cli.mjs                 # CLI interaktif untuk terminal\n├── lib/\n│   ├── timer-engine.mjs        # Mesin state & kalkulasi metrik ergonomis\n│   └── dashboard-generator.mjs # Generator Cockpit HTML + Web Audio Chime\n├── skills/\n│   └── coding-break-timer/\n│       └── SKILL.md            # Panduan keahlian AI untuk ritme kerja\n├── agents/\n│   └── flow-coach.md           # Definisi subagent Flow Coach\n├── rules/\n│   └── AGENTS.md               # Aturan kesadaran ritme & anti-burnout\n└── scripts/\n    └── hook-handler.mjs        # Handler eksekusi event lifecycle\n```\n\n---\n\n## 🌿 Ergonomic & Health Reference\n\n1. **Aturan 20-20-20**: Setiap 20 menit, tatap objek 6 meter jauhnya selama 20 detik.\n2. **De-stress Leher**: Tarik dagu ke belakang (*chin tuck*) 5 detik untuk meredakan beban serviks.\n3. **Pencegahan Carpal Tunnel**: Lenturkan pergelangan tangan ke depan dan belakang setiap jeda 5 menit.\n4. **Hidrasi Otak**: 1 gelas air putih di setiap siklus Pomodoro menjaga kecepatan transmisi sinapsis.\n",
+  "latestReleaseNotes": "Official release of DevFlow Timer for Antigravity AI. Includes Sidecar UI, 11 MCP Tools, Smart Pomodoro, and 1-Line Cross-Platform Installers for Windows, macOS, and Linux.",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"devflow-rhythm\" executes a shell command on PostToolUse (matcher: write_file).",
+        "file": "hooks.json",
+        "line": 15,
+        "snippet": "node ./scripts/hook-handler.mjs post-tool",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/hooks.json#L15"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/dashboard-generator.mjs",
+        "line": 685,
+        "snippet": "exec(cmd, (err) => { if (err) { console.warn('[DevFlow] Could not auto-launch browser:', err.message); } });",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/dashboard-generator.mjs#L685"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git-integrator.mjs",
+        "line": 5,
+        "snippet": "const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/git-integrator.mjs#L5"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/git-integrator.mjs",
+        "line": 11,
+        "snippet": "const statusShort = execSync('git status --short', { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/git-integrator.mjs#L11"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/notifier.mjs",
+        "line": 14,
+        "snippet": "execFile('powershell.exe', [ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', NOTIFY_PS1, '-Title', title, '-Message', message ], (err) => { if (err) { // Fallback bell process",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/notifier.mjs#L14"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/notifier.mjs",
+        "line": 28,
+        "snippet": "execFile('osascript', ['-e', script], () => {});",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/notifier.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/notifier.mjs",
+        "line": 30,
+        "snippet": "execFile('notify-send', [title, message], () => {});",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/notifier.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/cli.mjs",
+        "line": 170,
+        "snippet": "fs.writeFileSync(cmdPath, `@echo off\\r\\nnode \"${scriptPath}\" %*\\r\\n`, 'ascii');",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/bin/cli.mjs#L170"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/cli.mjs",
+        "line": 175,
+        "snippet": "try { fs.unlinkSync(linkPath); } catch(e) {}",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/bin/cli.mjs#L175"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/cli.mjs",
+        "line": 186,
+        "snippet": "fs.writeFileSync(configFile, JSON.stringify(cfg, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/bin/cli.mjs#L186"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/analytics-reporter.mjs",
+        "line": 108,
+        "snippet": "fs.writeFileSync(filePath, rep.markdownReport, 'utf8');",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/analytics-reporter.mjs#L108"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/dashboard-generator.mjs",
+        "line": 674,
+        "snippet": "fs.writeFileSync(DASHBOARD_FILE, html, 'utf8');",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/dashboard-generator.mjs#L674"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/timer-engine.mjs",
+        "line": 131,
+        "snippet": "fs.writeFileSync(tempFile, JSON.stringify(state, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/roedyrustam/dev-flow-timer/blob/809ee0d9a9bc109350d675eef05b42d3b0459d8e/lib/timer-engine.mjs#L131"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "809ee0d9a9bc109350d675eef05b42d3b0459d8e",
+      "scannedAt": "2026-11-27T18:24:57.049Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

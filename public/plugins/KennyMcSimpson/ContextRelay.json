@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "id": "KennyMcSimpson/ContextRelay",
+  "sha": "6e963a2094200c95be4f061af3cddc12882db31d",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:48.940Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-relay",
+    "displayName": "Context Relay",
+    "version": "0.2.2",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "context-relay",
+        "slashCommand": "/context-relay",
+        "description": "Internal alias redirecting to the native /relay skill for zero-UI context pruning, cross-project clean relaunch, and full-text session search in Google Antigravity.",
+        "disableModelInvocation": false,
+        "file": "skills/context-relay/SKILL.md"
+      },
+      {
+        "name": "fork",
+        "slashCommand": "/fork",
+        "description": "One-click zero-UI /fork command for Google Antigravity. Trigger whenever the user invokes /fork, wants to cleanly fork and slim down a long conversation in the same folder without prompts, fork into another project directory, fork up to tur",
+        "disableModelInvocation": false,
+        "file": "skills/fork/SKILL.md"
+      },
+      {
+        "name": "relay",
+        "slashCommand": "/relay",
+        "description": "Internal alias redirecting to the primary /fork skill for one-click denoised conversation forking, cross-project relaunch, token-savings stats, and full-text session search in Google Antigravity.",
+        "disableModelInvocation": false,
+        "file": "skills/relay/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/context-relay",
+      "/fork",
+      "/relay"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"88\" height=\"88\" alt=\"Context Relay Logo\" />\n</p>\n\n<h1 align=\"center\">Context Relay</h1>\n\n<p align=\"center\">\n  <strong>Zero-UI native <code>/fork</code> for Google Antigravity</strong><br/>\n  One-click denoised conversation forking · Live sidebar title sync · 0-token bloat nudges · Lossless Git-grounded handoffs · 20-class secret redaction\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/KennyMcSimpson/ContextRelay/actions/workflows/ci.yml\"><img src=\"https://github.com/KennyMcSimpson/ContextRelay/actions/workflows/ci.yml/badge.svg\" alt=\"CI\" /></a>\n  <img src=\"https://img.shields.io/badge/version-v0.2.2-2dd4bf?style=flat\" alt=\"Version v0.2.2\" />\n  <img src=\"https://img.shields.io/badge/node-%3E%3D22.15.0-38bdf8?style=flat\" alt=\"Node >= 22.15.0\" />\n  <img src=\"https://img.shields.io/badge/dependencies-0-a78bfa?style=flat\" alt=\"Zero Dependencies\" />\n  <img src=\"https://img.shields.io/badge/tests-67%20passing-34d399?style=flat\" alt=\"67 Tests Passing\" />\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-64748b?style=flat\" alt=\"MIT License\" /></a>\n</p>\n\n<p align=\"center\">\n  <a href=\"#quick-start\">Quick Start</a> ·\n  <a href=\"#fork-vs-compact\">/fork vs /compact</a> ·\n  <a href=\"#everyday-commands\">Commands</a> ·\n  <a href=\"#security--privacy\">Security</a> ·\n  <a href=\"./CHANGELOG.md\">Changelog</a>\n</p>\n\n<p align=\"center\">\n  <img src=\"./assets/savings-benchmark.svg\" alt=\"Context Relay Token Savings Benchmark\" width=\"820\" />\n</p>\n\n---\n\n## Why Context Relay?\n\nLong AI coding sessions degrade fast: build logs, progress bars, failed retries, and repeated file reads silently bloat your context window to 300k–500k+ tokens. Summarizing in place loses exact code details, while starting from scratch wastes 10 minutes re-explaining your repo state.\n\n**Context Relay** stays completely invisible until you need it — no sidecar web apps, no manual turn-checkbox forms, no cloud LLM summarization:\n\n<p align=\"center\">\n  <img src=\"./assets/workflow-preview.svg\" alt=\"Context Relay Zero-UI Native Workflow Preview\" width=\"820\" />\n</p>\n\n## `/fork` vs `/compact`\n\nWhen a session gets heavy, Context Relay's 0-token `PreInvocation` hook lets you choose between two complementary native paths:\n\n| Need | Command | How It Works |\n| :--- | :--- | :--- |\n| **Compress in-place** (keep the same thread) | `/compact` *(Antigravity built-in)* | Uses an LLM to summarize earlier turns inside the current thread. |\n| **Lossless denoised fresh session** *(zero summarization degradation)* | **`/fork`** *(Context Relay)* | **0-LLM deterministic surgery**: trims bulky tool noise, grounds real `git status`/`git diff`, preserves 100% verbatim goals & conclusions with lossless `transcript_full.jsonl` traceback, redacts 20 secret classes, reads your live renamed sidebar title, inherits your model, and launches `<Title> (fork)` in one click. |\n\n### Highlights (`v0.2.2`)\n\n- **One-Click `/fork`, Zero Popups**: Typing `/fork` opens no modals or webpages — it immediately denoises your active session in the same workspace and replies with a 2-line receipt plus a clickable `[Title (fork)](conversation://<id>)` instant-jump link.\n- **Live Sidebar Title Sync (Zero SQLite)**: Reads Antigravity's plain-text `annotations/<id>.pbtxt` so your renamed sidebar title is preserved verbatim (`Auth Refactor` → `Auth Refactor (fork)` → `Auth Refactor (fork #2)`).\n- **Ultra-Clean `/` Menu**: Only `/fork` appears in Antigravity's slash-command menu (legacy aliases `relay` and `context-relay` stay hidden via `disable-slash-command: true`).\n- **0-Token Context Bloat Nudge**: `hooks/nudge.mjs` injects subtle inline `metadata.user_markdown` reminders with **0 model tokens** only when noise crosses threshold (opt out anytime via `CONTEXT_RELAY_NUDGE=0`).\n- **Cross-Project & Turn-Bounded Forking**: Move curated context straight into another registered workspace (`/fork <project-keyword>`) or branch cleanly from an earlier turn (`/fork until turn N`).\n- **Shareable Token-Savings Card (`stats --svg`)**: Track real cumulative tokens saved with `/fork stats` or generate a crisp GitHub-ready SVG benchmark card via CLI.\n- **Zero Dependencies & 100% Local**: Pure Node.js ESM (`>= 22.15.0`) — no `npm install`, no telemetry, no external API calls.\n\n---\n\n## Quick Start\n\n### Prerequisites\n\n- **Node.js `>= 22.15.0`** (zero runtime dependencies).\n\n### Option A — Direct Clone Into Antigravity Plugins Directory (Recommended)\n\n```bash\ngit clone https://github.com/KennyMcSimpson/ContextRelay.git ~/.gemini/config/plugins/context-relay\n```\n\nAntigravity automatically discovers `plugin.json`, activates the `PreInvocation` bloat-nudge hook and `Stop` incremental indexer (`hooks.json`), and exposes `/fork` in your `/` menu.\n\n### Option B — Local Clone + Installer CLI (Custom Data Directory)\n\n```bash\ngit clone https://github.com/KennyMcSimpson/ContextRelay.git ContextRelay\ncd ContextRelay\n\nnode bin/context-relay.mjs install antigravity --data-dir <custom-dir>\n```\n\n---\n\n## Everyday Commands\n\n| What You Type in Antigravity | What Happens |\n| :--- | :--- |\n| `/fork` | **0 popups** — immediately denoises the current conversation in the original folder, names it `<Live Sidebar Title> (fork)`, inherits the active model, and returns a clickable `conversation://<id>` link. |\n| `/fork <folder-keyword>` | Plans target workspace match (`exact` → instant `--go` with 0 popups; `ambiguous` → 1 native `ask_question` card; `not_found` → explains registering the folder in left `Projects` or exporting). |\n| `/fork until turn N` | Deterministically branches up to turn `N` (`--until <N>`) into a clean session without later detours. |\n| `/fork stats` | Reports cumulative tokens saved across forks and can export a GitHub SVG war-report card (`--svg`). |\n| `/fork search <keyword>` | Full-text searches indexed historical sessions (including live renamed titles) and returns clickable `[<Title>](conversation://<sessionId>)` links. |\n\n### Environment Variables\n\n| Variable | Effect |\n| :--- | :--- |\n| `CONTEXT_RELAY_NUDGE=0` | Disable automatic 0-token `PreInvocation` bloat reminders completely. |\n| `CONTEXT_RELAY_DATA_DIR=<dir>` | Override local index/archive/stats storage directory. |\n\n---\n\n## CLI Reference\n\n```bash\n# 1. One-click in-place denoised fork (original folder, live sidebar title + \"(fork)\")\nnode bin/context-relay.mjs fork --session <conversation-id> --go --json\n\n# 2. Plan / execute cross-project or turn-bounded fork (or --export-only)\nnode bin/context-relay.mjs fork --session <conversation-id> --plan --to \"<project-or-path>\" [--until <N>] --json\nnode bin/context-relay.mjs fork --session <conversation-id> --go [--to \"<project-id>\"] [--preset smart-clean|backbone] [--until <N>] [--note \"<extra-instruction>\"] [--export-only] --json\n\n# 3. View cumulative token savings & export a personal GitHub SVG card\nnode bin/context-relay.mjs stats --json\nnode bin/context-relay.mjs stats --svg ./my-savings.svg --json\n\n# 4. Full-text search across indexed historical Antigravity sessions\nnode bin/context-relay.mjs search \"<query>\" --limit 10 --json\n\n# 5. Inspect turns & export deterministic Git-grounded handoff bundle\nnode bin/context-relay.mjs inspect <conversation-id>\nnode bin/context-relay.mjs export <conversation-id>\n\n# 6. Install / uninstall Antigravity plugin wiring\nnode bin/context-relay.mjs install antigravity --data-dir <custom-dir>\nnode bin/context-relay.mjs uninstall antigravity\n```\n\n<details>\n<summary><strong>Optional: Offline Local Web Debugger (<code>serve</code>)</strong></summary>\n\nNormal Antigravity usage requires **no web UI**. For power users who want an offline browser inspector, an optional loopback-only server is available:\n\n```bash\nnode bin/context-relay.mjs serve --port 3477\n# Open http://127.0.0.1:3477\n```\n\n</details>\n\n---\n\n## Security & Privacy\n\n- **Zero Dependencies, 100% Local**: Pure Node.js ESM (`>= 22.15.0`). No external packages, no telemetry, no cloud LLM calls.\n- **Strict Read-Only Boundary (Zero `.sqlite` Access)**: Reads only local `transcript*.jsonl` logs and plain-text `annotations/<id>.pbtxt` titles, and interacts solely via public local `agentapi` interfaces. **Never** opens, queries, or modifies private `.sqlite` / `.db` files.\n- **20-Category Built-In Secret Redaction**: Automatically scrubs API keys, GitHub/AWS/Slack/HF/npm tokens, bearer/basic auth headers, database URLs, and PEM private keys before exporting or forking context.\n- **Zero-Delete Cross-Process Locking**: Uses kernel-atomic `openSync('wx', 0o600)` + `renameSync` release with stale dead-PID recovery — verified 200/200 zero lost updates across 8 concurrent Windows processes without calling destructive delete APIs.\n- **Loopback & CSRF Hardening**: Optional `serve` binds strictly to `127.0.0.1` with `Host` port verification, `Content-Type` enforcement, `Origin` / `X-Context-Relay` CSRF checks, and CSP headers.\n\n---\n\n## Architecture\n\n```text\nContextRelay/\n├── plugin.json                      # Antigravity root plugin manifest (v0.2.2, strict whitelist)\n├── hooks.json                       # Root PreInvocation (0-token nudge) + Stop (incremental sync)\n├── assets/\n│   ├── logo.svg                     # Square plugin icon\n│   ├── savings-benchmark.svg        # Real-world token-savings benchmark card (820×300)\n│   └── workflow-preview.svg         # Native zero-UI /fork experience preview (820×272)\n├── hooks/\n│   ├── nudge.mjs                    # 0-token PreInvocation context bloat reminder\n│   └── sync-turn.mjs                # Lightweight Stop-hook incremental transcript indexer\n├── skills/\n│   ├── fork/SKILL.md                # Primary one-click /fork slash command\n│   ├── relay/SKILL.md               # Hidden backward-compatible alias\n│   └── context-relay/SKILL.md       # Hidden backward-compatible alias\n├── adapters/                        # Host adapter abstraction (Antigravity + .pbtxt live titles)\n├── core/                            # Turn parser, smart pruning, Git anchor, 20-class redactor, store\n├── bin/context-relay.mjs            # Unified CLI (fork, stats --svg, search, inspect, export, install)\n├── server/ & ui/                    # Optional offline loopback web debugger (serve)\n└── test/                            # 67 unit, redaction, concurrency, hook, CLI & manifest tests\n```\n\nAll host-specific transcript discovery, annotation parsing, and clean-relaunch transport live cleanly inside `adapters/`, keeping the surgical pruning, Git grounding, secret redaction, and indexing engine host-agnostic for future coding agents.\n\n---\n\n## Testing\n\n```bash\nnode --test test/*.test.mjs\n```\n\n## License\n\n[MIT](./LICENSE) © 2026 KennyMcSimpson\n",
+  "latestReleaseNotes": "## Context Relay v0.2.2 — Zero-UI Native `/fork` & Live Sidebar Title Sync\n\n100% local, zero-dependency Node.js ESM (`>= 22.15.0`) plugin for **Google Antigravity**.\n\n### Highlights\n- **One-Click Zero-UI `/fork`**: Cleans bloated tool logs & repeated reads deterministically (0 LLM calls), grounds real local `git status`/`git diff`, preserves 100% verbatim goals & conclusions with lossless `transcript_full.jsonl` traceback, redacts 20 secret classes, inherits your model, and replies with a 2-line receipt + instant `conversation://<id>` jump link.\n- **Live Sidebar Title Sync (Zero `.sqlite`)**: Reads Antigravity's plain-text `annotations/<id>.pbtxt` so renamed sidebar titles are inherited cleanly (`Auth Refactor` -> `Auth Refactor (fork)` -> `Auth Refactor (fork #2)`).\n- **0-Token Context Bloat Nudge**: `PreInvocation` hook nudges subtly with 0 model tokens when context bloats, aligning `/compact` (in-place) vs `/fork` (fresh denoised session).\n- **Shareable Token-Savings War-Report**: `/fork stats` and `node bin/context-relay.mjs stats --svg ./my-savings.svg`.\n\n### Quick Install\n```bash\ngit clone https://github.com/KennyMcSimpson/ContextRelay.git ~/.gemini/config/plugins/context-relay\n```\n\n### Verification\n- `67 / 67` automated unit, redaction, concurrency, hook, CLI & manifest tests passing (`node --test test/*.test.mjs`).\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/agentapi.mjs",
+        "line": 36,
+        "snippet": "execFile(file, args, options, (err, stdout, stderr) => { if (err) { if (err.stderr === undefined && stderr) { err.stderr = stderr; } rejectPromise(err); return; } resolvePromise(ty",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/agentapi.mjs#L36"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/agentapi.mjs",
+        "line": 461,
+        "snippet": "overrides.execFile(file, args, options, (err, stdout, stderr) => { if (err) { if (err.stderr === undefined && stderr) err.stderr = stderr; rejectPromise(err); return; } resolveProm",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/agentapi.mjs#L461"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/agentapi.mjs",
+        "line": 471,
+        "snippet": "return Promise.resolve(overrides.execFile(file, args, options));",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/agentapi.mjs#L471"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/agentapi.mjs",
+        "line": 474,
+        "snippet": "? async (file, args, options) => overrides.execFileSync(file, args, options)",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/agentapi.mjs#L474"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/git-anchor.mjs",
+        "line": 68,
+        "snippet": "return execFileSync('git', [...SAFE_GIT_PREFIX_ARGS, ...args], { ...buildGitExecOptions(cwd, timeoutMs), stdio: ['ignore', 'pipe', 'pipe'], });",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/git-anchor.mjs#L68"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "core/fs-utils.mjs",
+        "line": 71,
+        "snippet": "writeFileSync(filePath, content);",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/fs-utils.mjs#L71"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "core/fs-utils.mjs",
+        "line": 73,
+        "snippet": "writeFileSync(filePath, String(content ?? ''), { encoding: 'utf-8' });",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/core/fs-utils.mjs#L73"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/context-relay/SKILL.md",
+        "line": 11,
+        "snippet": "Always follow the complete procedure in `../relay/SKILL.md`:",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/skills/context-relay/SKILL.md#L11"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/relay/SKILL.md",
+        "line": 11,
+        "snippet": "Always follow the complete procedure in `../fork/SKILL.md`:",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ContextRelay/blob/6e963a2094200c95be4f061af3cddc12882db31d/skills/relay/SKILL.md#L11"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.2",
+      "sha": "6e963a2094200c95be4f061af3cddc12882db31d",
+      "scannedAt": "2026-11-27T18:18:48.940Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

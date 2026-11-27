@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "id": "Consyllus/notebook-antigravity-plugin",
+  "sha": "773b92ec5587c6edb82633d694f81511fd3f8821",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:09.965Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "md-notes",
+    "displayName": "Notebook",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "md-notes-agent-guard",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "node hooks/notebook-guard.mjs",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "notebook",
+        "slashCommand": "/notebook",
+        "description": "Open the right-hand Notebook side pane / sidebar scratchpad (md-notes/notebook), or create, organize, summarize, and append notes and memos in the active workspace's notes directory. Use when the user asks to open the notebook or scratchpad",
+        "disableModelInvocation": false,
+        "file": "skills/notebook/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/notebook"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Notebook (`notebook-antigravity-plugin`)\n\n<p>\n  <a href=\"https://antigravity.google\"><img src=\"https://img.shields.io/badge/Google_Antigravity-Plugin-4285F4?style=flat-square\" alt=\"Google Antigravity Plugin\" height=\"20\" /></a>\n  <a href=\"https://github.com/Consyllus/notebook-antigravity-plugin/blob/main/LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-CB4B16?style=flat-square\" alt=\"License: MIT\" height=\"20\" /></a>\n</p>\n\nEnglish | [简体中文](./README.zh-CN.md)\n\nA minimalist local notebook plugin running in the right-hand side pane of **Google Antigravity** (Antigravity 2.0, IDE, and CLI / `agy`).\n\n## Quick Install\n\n### Antigravity One-Line Install (Recommended)\n\n```bash\nagy plugin install https://github.com/Consyllus/notebook-antigravity-plugin\n```\n\n> Once installed, ask *\"Open the notebook\"* or type `/notebook` in chat to open the right-hand side pane.\n\n---\n\n## Key Features\n\n- **Live Block Editing & Markdown Formatting (`Ctrl+E`)**: Supports direct plain-text editing and toolbar formatting, as well as live Markdown block preview (`H1`–`H4` headings, **multi-level bullet, numbered, and task lists** with `• / ◦ / ▪` markers & auto-renumbering, code blocks, tables, and blockquotes) and instant raw source toggling.\n- **LaTeX Math Rendering & `0ms` Syntax Autocomplete**:\n  - **Full Offline KaTeX Engine**: Supports inline `$...$` and centered display `$$...$$` math blocks (with live formula preview while editing source), bundled with `mhchem` chemical equations (`\\ce{...}`), `physics`-style calculus/vector macros, cross-block `\\gdef` custom macros, and `copy-tex` LaTeX source copying.\n  - **Instant `\\command` Autocomplete & Brace Tab-Jump**: Typing `\\` inside any formula pops up a `0ms` completion menu across **950+ official KaTeX commands and environments** with live rendered symbol previews; press `Tab` / `Enter` to insert and land inside `{}` braces, and press `Tab` to jump across arguments (plus `￥￥` → `$|$` auto-conversion for Chinese IME).\n- **`@@` Context Selection Box (Two Mutually Exclusive Modes)**: Type `@@` in any line to spawn an upward-draggable selection frame and control exactly what the Agent sees:\n  - **Mode A · Single-Turn Line Reference (Default)**: Sends only the file URI and line range for a single chat turn; the blue frame automatically turns gray once consumed.\n  - **Mode B · Persistent Snippet Injection**: Injects only the selected plain text (zero file path or outside content exposure), staying active across turns with per-conversation SHA-1 deduplication to save tokens.\n- **Agent Access Locks (`PreToolUse` Engine Guard)**:\n  - Independent toggles for **Allow Agent to Read Notes** and **Allow Agent to Edit Notes**.\n  - **Dynamic Focus Busy-Lock**: Automatically pauses Agent writes while your cursor is focused inside the notebook with unsaved edits, resuming as soon as you save or move focus away.\n- **Multi-Note Management & Flexible Storage**:\n  - Create, search, switch, inline-rename, and delete notes with automatic local saving.\n  - Follows `<workspace>/notes` by default, or points to any fixed local folder via the built-in directory browser.\n- **Host-Synced Theme Colors & Bilingual UI**: Automatically syncs background surfaces, text, borders, accent colors, and math formula rendering with the Antigravity host's Light / Dark theme in real time, with built-in English and Simplified Chinese switching.\n\n## Keyboard Shortcuts\n\n| Shortcut / Trigger | Action |\n| :--- | :--- |\n| `@@` | Spawn context selection frame at current block; drag upward to select range |\n| `\\` + letters (in math) | Open `0ms` LaTeX command/environment autocomplete (`Tab` / `Enter` to insert & jump `{}` args) |\n| `￥￥` (Chinese IME) | Auto-convert to `$$` and place cursor right in the middle |\n| `Tab` / `Shift+Tab` | Indent / outdent bullet, numbered, or task list items |\n| `Enter` / `Backspace` | Continue current list level; outdent step-by-step on empty nested items |\n| `Ctrl+S` / `Cmd+S` | Save current note immediately |\n| `Ctrl+E` / `Cmd+E` | Toggle between Live Preview and Raw Markdown Source |\n| `Ctrl+B` / `Cmd+B` | Bold selected text |\n| `Ctrl+N` / `Cmd+N` | Create a new note |\n\n## Alternative Installation\n\n### Manual Clone (Antigravity App / IDE)\n\n**Windows (PowerShell)**\n```powershell\ngit clone https://github.com/Consyllus/notebook-antigravity-plugin.git \"$HOME\\.gemini\\config\\plugins\\md-notes\"\n```\n\n**macOS / Linux**\n```bash\ngit clone https://github.com/Consyllus/notebook-antigravity-plugin.git ~/.gemini/config/plugins/md-notes\n```\n\n> For workspace-only installation, clone into `.agents/plugins/md-notes` inside your project root.\n\n## Credits & License\n\n- **Organization**: [Consyllus](https://consyllus.com)\n- **Author**: FalsenJing\n- **License**: [MIT](./LICENSE)\n",
+  "latestReleaseNotes": "Adds full offline **KaTeX** math formula rendering, **`0ms` `\\command` syntax autocomplete**, and Chinese IME math input helpers to **Notebook** (`notebook-antigravity-plugin`).\r\n\r\n### What's New\r\n- **Full Offline KaTeX Math Engine (`katex@0.19.1`)**:\r\n  - Supports inline `$...$` / `\\(...\\)` and centered display `$$...$$` / `\\[...\\]` math blocks with **live formula preview** while editing source (and Markdown/table-pipe protection).\r\n  - Bundled with base64-inlined `.woff2` fonts (zero external CDN requests), **`mhchem`** chemical equations (`\\ce{...}`), **`physics`**-style calculus/vector macros (`\\dd`, `\\dv`, `\\pdv`, `\\grad`, `\\norm`, etc.), cross-block `\\gdef` / `\\newcommand` macro persistence, and **`copy-tex`** (copying rendered formulas outputs raw LaTeX source).\r\n- **LaTeX Syntax Autocomplete**:\r\n  - Typing `\\` inside any formula opens an instant completion popup across **950+ official KaTeX commands and environments** with live rendered symbol previews.\r\n  - Press `Tab` / `Enter` to insert and land directly inside `{}` braces, and press `Tab` to jump across arguments or exit delimiters.\r\n- **Chinese IME Math Input Helpers**:\r\n  - Typing `￥￥` (or `¥¥`) automatically converts to `$$` with the cursor placed in the middle (`$|$`); typing `￥￥` again upgrades to `$$|$$`, and `、` inside math auto-converts to `\\`.\r\n- **Docs**: Highlighted real-time Antigravity host Light / Dark theme color syncing and new math shortcuts in `README.md` & `README.zh-CN.md`.\r\n\r\n---\r\n\r\n### 更新（简体中文）\r\n- **离线完整版 KaTeX 数学引擎**：支持行内 `$...$` 与居中块级 `$$...$$` 公式（编辑源码时下方同步实时预览），内置 `.woff2` 离线数学字体、`mhchem` 化学方程式、常用 `physics` 微分/向量算符、跨块 `\\gdef` 自定义宏，以及 `copy-tex` 选中复制公式源码。\r\n- **数学语法自动补全**：公式内输入 `\\` 即刻弹出 **950+ 个官方命令与环境**候选框（附实时符号预览），按 `Tab` / `Enter` 补全并落位至 `{}` 内，连续按 `Tab` 依次跳空。\r\n- **中文输入法优化与文档完善**：连按 `￥￥` 自动转为英文 `$$` 且光标居中（再按升级为块级公式，公式内误敲顿号 `、` 自动转 `\\`）；补充宿主浅色/深色主题实时跟随说明。\r\n\r\n### Quick Install / Update\r\n```bash\r\nagy plugin install https://github.com/Consyllus/notebook-antigravity-plugin\r\n```\r\n\r\n**Full Changelog**: https://github.com/Consyllus/notebook-antigravity-plugin/compare/v1.0.0...v1.1.0",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "contains_minified",
+      "fs_write_workspace",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"md-notes-agent-guard\" executes a shell command on PreToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 9,
+        "snippet": "node hooks/notebook-guard.mjs",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/hooks.json#L9"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "sidecars/notebook/vendor/katex/katex.min.js",
+        "line": 1,
+        "snippet": "\\u208a\\u208b\\u208c\\u208d\\u208e\\u2080\\u2081\\u2082\\u2083\\u2084\\u2085\\u2086\\u2087\\u2088\\u2089\\u2090\\u2091\\u2095\\u1d62\\u2c7c\\u2096\\u2097\\u2098\\u",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/vendor/katex/katex.min.js#L1"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/notebook-guard.mjs",
+        "line": 208,
+        "snippet": "writeFileSync(join(stateDir, 'selection-state.json'), JSON.stringify(nextSel, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/hooks/notebook-guard.mjs#L208"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/notebook/handlers.mjs",
+        "line": 168,
+        "snippet": "writeFileSync(getSettingsFile(), JSON.stringify(normalized, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/handlers.mjs#L168"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/notebook/handlers.mjs",
+        "line": 180,
+        "snippet": "writeFileSync(getBusyLockFile(), JSON.stringify(state), 'utf8');",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/handlers.mjs#L180"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/notebook/handlers.mjs",
+        "line": 200,
+        "snippet": "writeFileSync(getSelectionFile(), JSON.stringify(next, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/handlers.mjs#L200"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/notebook/handlers.mjs",
+        "line": 731,
+        "snippet": "writeFileSync(fullPath, initialContent, 'utf8');",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/handlers.mjs#L731"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/notebook/handlers.mjs",
+        "line": 757,
+        "snippet": "writeFileSync(fullPath, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/handlers.mjs#L757"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/notebook/handlers.mjs",
+        "line": 813,
+        "snippet": "unlinkSync(fullPath);",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/handlers.mjs#L813"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/notebook/vendor/katex/completions.js",
+        "line": 2,
+        "snippet": "window.KATEX_COMPLETIONS = {\"cmds\":[[\"\\\\ce\",\"\\\\ce{$0}\",\"\\\\ce{H2O}\",2],[\"\\\\dd\",\"\\\\dd \",\"\\\\mathrm{d}x\",2],[\"\\\\dv\",\"\\\\dv{$0}{}\",\"\\\\frac{\\\\mathr",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/vendor/katex/completions.js#L2"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/notebook/vendor/katex/katex.min.js",
+        "line": 1,
+        "snippet": "!function(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=t():\"function\"==typeof define&&define.amd?define([],t):\"obje",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/vendor/katex/katex.min.js#L1"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/notebook/vendor/katex/mhchem.min.js",
+        "line": 1,
+        "snippet": "!function(t,e){if(\"object\"==typeof exports&&\"object\"==typeof module)module.exports=e(require(\"katex\"));else if(\"function\"==typeof define&&de",
+        "githubBlobUrl": "https://github.com/Consyllus/notebook-antigravity-plugin/blob/773b92ec5587c6edb82633d694f81511fd3f8821/sidecars/notebook/vendor/katex/mhchem.min.js#L1"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "773b92ec5587c6edb82633d694f81511fd3f8821",
+      "scannedAt": "2026-11-27T18:14:09.965Z",
+      "riskTier": "high",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

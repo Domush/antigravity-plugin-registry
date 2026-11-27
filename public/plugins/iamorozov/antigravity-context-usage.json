@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "iamorozov/antigravity-context-usage",
+  "sha": "d81578211dc510d4078c5cdee72402f61754264f",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:22:40.748Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-usage",
+    "displayName": "Context Usage",
+    "version": "1.0.2",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "context-usage",
+        "slashCommand": "/context-usage",
+        "description": "Display active context window token usage via the live Context Usage side panel or inline /context-usage text meter.",
+        "disableModelInvocation": true,
+        "file": "skills/context-usage/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/context-usage"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Context Usage for Google Antigravity\n\nA lightweight, 100% local **Google Antigravity** plugin providing a **Live Context Usage Side Panel** in the Auxiliary Pane plus an inline **`/context-usage`** slash command.\n\nMonitor active context window tokens, category breakdowns, prompt cache hit rates, `/compact` checkpoints, and turn-by-turn context growth in real time—with **zero extra LLM calls** in the side panel (`<10 ms` cold parse, `<0.2 ms` cached poll).\n\n---\n\n## Features\n\n- **Live Auxiliary Side Panel (`Context Usage`)**\n  - **Real-Time Gauge**: Active tokens against `Auto` (`200k` -> `1M`), `200k`, or `1M` window scales, remaining capacity, in-flight pending token estimates, and `/compact` alerts at 70% / 85%.\n  - **Stacked Category Breakdown**: Visual share of `System / Rules / Tools`, `Summary / Agent` (or `Agent & Thinking`), `Tool Outputs`, and `User Messages`.\n  - **Session Telemetry**: Prompt cache hit rate (`cached` vs. `new` tokens), `/compact` checkpoint count, model step count, and cumulative session I/O.\n  - **Turn History Sparkline**: Interactive SVG chart across recent turns with compaction markers and hover inspection.\n  - **Auto-Follow & Session Switcher**: Automatically tracks the active workspace conversation even when opened directly from the Auxiliary Pane switcher, with a header dropdown to switch across recent chats or preview a new conversation.\n  - **Native Theme Sync**: Automatically adapts to Antigravity Light and Dark themes.\n- **Inline Slash Command (`/context-usage [200k | 1m]`)**\n  - Precomputed locally in ~30 ms via a `PreInvocation` hook (`context_stats.py`) and rendered as an aligned monospace `[████░░░░]` progress block across Antigravity 2.0, Antigravity IDE, and `agy` CLI.\n\n---\n\n## Installation\n\n### Option 1: Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/iamorozov/antigravity-context-usage\n```\n\n### Option 2: Clone Directly (Global Machine Config)\n\n```bash\ngit clone https://github.com/iamorozov/antigravity-context-usage ~/.gemini/config/plugins/context-usage\n```\n\n### Option 3: Workspace-Scoped (Shared with a Team Repo)\n\n```bash\ngit clone https://github.com/iamorozov/antigravity-context-usage .agents/plugins/context-usage\n```\n\n---\n\n## Usage\n\n### Side Panel\n- Open **Context Usage** from the Auxiliary Pane switcher in Antigravity, or ask the agent to open the Context Usage panel (`[Context Usage](sidecar://context-usage/panel/)`).\n- Switch scales anytime using the **`Auto` / `200k` / `1M`** toggle in the panel header.\n\n### Slash Command\nType any of the following in chat:\n- `/context-usage` — Auto-scales (`200k` up to 200k tokens, `1M` above 200k)\n- `/context-usage 200k` — Pin bar to the 200k compaction threshold\n- `/context-usage 1m` — Pin bar to the full 1M context window\n\n---\n\n## Privacy & Requirements\n\n- **100% Local & Read-Only**: Reads only local Antigravity session transcripts (`<appData>/brain/<conversationId>/.system_generated/logs/transcript_full.jsonl`). Makes zero external network requests and never modifies session state.\n- **Runtime Requirements**:\n  - **Node.js 18+** (for the `sidecar_sdk` Auxiliary Pane web UI)\n  - **Python 3.9+** standard library only (for the `/context-usage` `PreInvocation` hook)\n\n---\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "### Fixed\n- **Prevent stale cached `/app.js` across upgrades**: Appends file-mtime cache-busting query params (`?v=<mtime>`) to `/styles.css` and `/app.js` in `/` and sends `Cache-Control: no-store` on all HTML, asset, and `/api/context` responses so Chromium's webview cache never pairs new HTML with an older `app.js`.\n- **Harden initial dropdown & poll rendering**: Always populates `<select id=\"conv-select\">` on initial load even if auto-focused by the host pane, commits `etag` only after `render()` succeeds, and throttles background `agentapi` metadata lookups to 2 concurrent calls.\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 66,
+        "snippet": "execFile(file, args, { encoding: 'utf-8', timeout: 4000 }, (err, stdout) => { if (err) return resolve({ title: '', workspaces: [] }); try { const md = JSON.parse(stdout || '{}'); c",
+        "githubBlobUrl": "https://github.com/iamorozov/antigravity-context-usage/blob/d81578211dc510d4078c5cdee72402f61754264f/sidecars/panel/main.mjs#L66"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/stats.mjs",
+        "line": 101,
+        "snippet": "const reqMatch = REQ_RE.exec(raw);",
+        "githubBlobUrl": "https://github.com/iamorozov/antigravity-context-usage/blob/d81578211dc510d4078c5cdee72402f61754264f/sidecars/panel/stats.mjs#L101"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/stats.mjs",
+        "line": 110,
+        "snippet": "const reqMatch = REQ_RE.exec(chunk);",
+        "githubBlobUrl": "https://github.com/iamorozov/antigravity-context-usage/blob/d81578211dc510d4078c5cdee72402f61754264f/sidecars/panel/stats.mjs#L110"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/context-usage/SKILL.md",
+        "line": 18,
+        "snippet": "1. Run `python3 \"<directory-of-this-SKILL.md>/scripts/context_stats.py\" \"<Artifact Directory Path>\"` via `run_command`.",
+        "githubBlobUrl": "https://github.com/iamorozov/antigravity-context-usage/blob/d81578211dc510d4078c5cdee72402f61754264f/skills/context-usage/SKILL.md#L18"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.2",
+      "sha": "d81578211dc510d4078c5cdee72402f61754264f",
+      "scannedAt": "2026-11-27T18:22:40.748Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

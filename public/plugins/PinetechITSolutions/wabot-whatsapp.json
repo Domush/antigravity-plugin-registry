@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "PinetechITSolutions/wabot-whatsapp",
+  "sha": "9f3e320cb4c9f2cd0498ae81ca6630b192532a98",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:56.572Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "wabot-whatsapp",
+    "displayName": "WaBot WhatsApp",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "wabot",
+        "runtimeName": "wabot-whatsapp_wabot",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://api.wabot.shop/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "whatsapp-inbox",
+        "slashCommand": "/whatsapp-inbox",
+        "description": "Read and summarise WhatsApp conversations from Wabot, find what customers said, check whether a chat is still inside the 24-hour reply window, and watch for new replies. Use when the user asks what a customer said, wants a summary of recent",
+        "disableModelInvocation": false,
+        "file": "skills/whatsapp-inbox/SKILL.md"
+      },
+      {
+        "name": "whatsapp-outreach",
+        "slashCommand": "/whatsapp-outreach",
+        "description": "Send a WhatsApp message to a customer through Wabot. Use when the user wants to message, notify, follow up with, or reach a customer or lead on WhatsApp, send an approved template, or reply inside the 24-hour window.",
+        "disableModelInvocation": false,
+        "file": "skills/whatsapp-outreach/SKILL.md"
+      },
+      {
+        "name": "whatsapp-templates",
+        "slashCommand": "/whatsapp-templates",
+        "description": "Create, review or check approval of WhatsApp message templates in Wabot. Use when the user wants a new template, asks why a template cannot be sent, wants to know a template's variables, or asks about Meta approval status.",
+        "disableModelInvocation": false,
+        "file": "skills/whatsapp-templates/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/whatsapp-inbox",
+      "/whatsapp-outreach",
+      "/whatsapp-templates"
+    ],
+    "mcpServerNames": [
+      "wabot-whatsapp_wabot"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# WaBot WhatsApp\n\nSend WhatsApp messages and approved templates, read and reply to customer chats, and manage contacts, campaigns and AI agents in your [WaBot](https://wabot.shop) account, from Antigravity or Gemini CLI.\n\nThis repository is a plugin for **Google Antigravity** and an extension for **Gemini CLI**. Both connect to the WaBot MCP server at `https://api.wabot.shop/mcp` (remote, Streamable HTTP, nothing to install) and add skills that explain how WhatsApp messaging works: approved templates, the 24-hour customer-care window, template review by Meta, and reading conversations responsibly.\n\nWaBot is a WhatsApp Business Platform tool by Pinetech IT Solutions.\n\n## Before you start\n\n- A WaBot account. You can create one free at [app.wabot.shop](https://app.wabot.shop).\n- A WhatsApp number connected to that account (Settings, Meta Platforms, WhatsApp). You can keep using the WhatsApp Business app on the same number. See [Connect WhatsApp](https://docs.wabot.shop/getting-started/connect-whatsapp/).\n- WhatsApp message fees are charged by Meta, separately from WaBot.\n\n## Install\n\n**Antigravity**\n\n```\nagy plugin install https://github.com/PinetechITSolutions/wabot-whatsapp\n```\n\nOr add the server yourself in `mcp_config.json`:\n\n```json\n{\n  \"mcpServers\": {\n    \"wabot\": { \"serverUrl\": \"https://api.wabot.shop/mcp\" }\n  }\n}\n```\n\n**Gemini CLI**\n\n```\ngemini extensions install https://github.com/PinetechITSolutions/wabot-whatsapp\n```\n\n## Sign in\n\nThe first time a WaBot tool runs, a WaBot sign-in page opens on `api.wabot.shop`. Sign in with the email and password you use at `app.wabot.shop`, choose the workspace the agent may use if you have more than one, and allow access. The agent gets a token for that workspace only; your password is never shared with it. No API keys to copy.\n\nDevelopers who prefer keys can use the Client ID and Client Secret from WaBot under Settings, Developer, Client Settings, sent as `clientid` and `clientsecret` headers. See the [MCP documentation](https://docs.wabot.shop/developers/mcp/).\n\n## What the agent can do\n\n| Area | Examples |\n| --- | --- |\n| Account | Account and plan status, connected WhatsApp numbers, switch workspace (agencies) |\n| Templates | List, create and check the status of message templates |\n| Contacts | Find, create and tag contacts, import contacts |\n| Messaging | Send an approved template, or a free-form message inside the 24-hour window |\n| Conversations | Recent chats, message history, wait for or subscribe to replies |\n| Campaigns | Send a template to a group or tag and see the results |\n| AI agents | Set up an AI agent per number, teach it from your website or text, turn AI replies on or off |\n| Workflows | Automations such as follow-ups and replies |\n\nTools that send messages or change data are marked as such, and the skills tell the agent to show you the recipient and the exact text before sending.\n\n## Example prompts\n\n- \"Show my WhatsApp chats that are waiting for a reply.\"\n- \"List my approved WhatsApp templates and send one to my newest contact.\"\n- \"Create an AI agent that answers customer questions from my website.\"\n- \"Send our offer template to everyone tagged VIP, and tell me how many were delivered.\"\n\n## Privacy and support\n\n- Privacy policy: https://wabot.shop/privacy-policy/\n- Terms: https://wabot.shop/terms/\n- Documentation: https://docs.wabot.shop/developers/mcp/\n- Support: hello@wabot.shop\n\nMessage content is read live from your WaBot account when the agent asks for it.\n\n## License\n\nMIT\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "9f3e320cb4c9f2cd0498ae81ca6630b192532a98",
+      "scannedAt": "2026-11-27T18:21:56.572Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

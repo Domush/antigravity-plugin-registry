@@ -1,0 +1,600 @@
+{
+  "schemaVersion": 1,
+  "id": "palucdev/agyflow",
+  "sha": "d43f07a75a100bedde8842af748ac2b42aa9b5ad",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:26:05.316Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agyflow",
+    "displayName": "agyflow",
+    "version": "0.1.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "safety-gate",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "node scripts/safety-gate.js",
+        "prompt": null,
+        "timeout": null
+      }
+    ],
+    "skills": [
+      {
+        "name": "codebase-analyzer",
+        "slashCommand": "/codebase-analyzer",
+        "description": "Analyzes codebase using adaptive parallel Explore subagents based on task complexity. Selects agent roles from a pool, launches Explore agents, then delegates report generation to codebase-analysis-reporter subagent.",
+        "disableModelInvocation": false,
+        "file": "skills/codebase-analyzer/SKILL.md"
+      },
+      {
+        "name": "development",
+        "slashCommand": "/development",
+        "description": "Unified orchestrator for all development tasks. ALWAYS execute when invoked — never skip for 'straightforward' tasks. Phases adapt based on detected task characteristics rather than predetermined types. Use for any development work that mod",
+        "disableModelInvocation": false,
+        "file": "skills/development/SKILL.md"
+      },
+      {
+        "name": "diagrams-mermaid",
+        "slashCommand": "/diagrams-mermaid",
+        "description": "Creates Mermaid diagrams for planning flows, component communication, and architecture views with adaptive detail selection (including C4 levels). This skill should be used when the user asks for a workflow, interaction, or architecture vis",
+        "disableModelInvocation": false,
+        "file": "skills/diagrams-mermaid/SKILL.md"
+      },
+      {
+        "name": "docs-manager",
+        "slashCommand": "/docs-manager",
+        "description": "Internal engine for managing project documentation and technical standards in .agyflow/docs/. Handles file operations, INDEX.md generation, and AGENTS.md integration. Invoked by flow-init, standards-update, and standards-discover skills.",
+        "disableModelInvocation": false,
+        "file": "skills/docs-manager/SKILL.md"
+      },
+      {
+        "name": "flow-init",
+        "slashCommand": "/flow-init",
+        "description": "Initialize AI SDLC framework with intelligent project analysis and documentation generation",
+        "disableModelInvocation": false,
+        "file": "skills/flow-init/SKILL.md"
+      },
+      {
+        "name": "html-renderer",
+        "slashCommand": "/html-renderer",
+        "description": "Render a markdown plan, idea, RFC, or design note into a self-contained, share-ready HTML file using the warm editorial visual system bundled under `references/`. Use this skill whenever the user asks to \"render\", \"convert\", \"turn into HTML",
+        "disableModelInvocation": true,
+        "file": "skills/html-renderer/SKILL.md"
+      },
+      {
+        "name": "implementation-plan-executor",
+        "slashCommand": "/implementation-plan-executor",
+        "description": "Execute implementation plans by delegating each task group to task-group-implementer subagent. Main agent coordinates prepares context, invokes subagent, processes output, marks checkboxes, updates work-log. Uses lazy standards loading from",
+        "disableModelInvocation": false,
+        "file": "skills/implementation-plan-executor/SKILL.md"
+      },
+      {
+        "name": "implementation-verifier",
+        "slashCommand": "/implementation-verifier",
+        "description": "Verify completed implementations for quality assurance. Delegates all verification work to specialized subagents - completeness checking, test execution, code review, pragmatic review, production readiness, and reality assessment. Compiles ",
+        "disableModelInvocation": false,
+        "file": "skills/implementation-verifier/SKILL.md"
+      },
+      {
+        "name": "migration",
+        "slashCommand": "/migration",
+        "description": "Orchestrates the complete migration workflow from current state analysis through implementation to compatibility verification. Handles technology migrations, platform changes, and architecture pattern transitions with adaptive risk assessme",
+        "disableModelInvocation": false,
+        "file": "skills/migration/SKILL.md"
+      },
+      {
+        "name": "orchestrator-framework",
+        "slashCommand": "/orchestrator-framework",
+        "description": "Shared orchestration patterns for all workflow orchestrators. NOT an executable skill - provides reference documentation for phase execution, state management, interactive mode, and initialization. All orchestrators reference these patterns",
+        "disableModelInvocation": false,
+        "file": "skills/orchestrator-framework/SKILL.md"
+      },
+      {
+        "name": "performance",
+        "slashCommand": "/performance",
+        "description": "Orchestrates performance optimization workflows using static code analysis to identify bottlenecks (N+1 queries, missing indexes, O(n^2) algorithms, blocking I/O, memory leaks). Accepts optional user-provided profiling data. Reuses standard",
+        "disableModelInvocation": false,
+        "file": "skills/performance/SKILL.md"
+      },
+      {
+        "name": "product-design",
+        "slashCommand": "/product-design",
+        "description": "Interactive product/feature design orchestrator. Transforms fuzzy ideas into structured product briefs through collaborative exploration, iterative refinement, and visual prototyping. Adaptive phases detect design complexity and adjust dept",
+        "disableModelInvocation": false,
+        "file": "skills/product-design/SKILL.md"
+      },
+      {
+        "name": "quick-bugfix",
+        "slashCommand": "/quick-bugfix",
+        "description": "Quick bug fix with TDD red/green gates and complexity escalation",
+        "disableModelInvocation": false,
+        "file": "skills/quick-bugfix/SKILL.md"
+      },
+      {
+        "name": "quick-dev",
+        "slashCommand": "/quick-dev",
+        "description": "Implement task directly with AI SDLC standards awareness (no planning mode)",
+        "disableModelInvocation": false,
+        "file": "skills/quick-dev/SKILL.md"
+      },
+      {
+        "name": "quick-plan",
+        "slashCommand": "/quick-plan",
+        "description": "Enter planning mode with AI SDLC standards awareness",
+        "disableModelInvocation": false,
+        "file": "skills/quick-plan/SKILL.md"
+      },
+      {
+        "name": "research",
+        "slashCommand": "/research",
+        "description": "Orchestrates comprehensive research workflows from question definition through findings documentation. Handles technical, requirements, literature, and mixed research types with adaptive methodology, multi-source gathering, pattern synthesi",
+        "disableModelInvocation": false,
+        "file": "skills/research/SKILL.md"
+      },
+      {
+        "name": "reviews-code",
+        "slashCommand": "/reviews-code",
+        "description": "Run automated code quality, security, and performance analysis on your code",
+        "disableModelInvocation": false,
+        "file": "skills/reviews-code/SKILL.md"
+      },
+      {
+        "name": "reviews-pragmatic",
+        "slashCommand": "/reviews-pragmatic",
+        "description": "Run pragmatic code review to detect over-engineering and ensure code matches project scale",
+        "disableModelInvocation": false,
+        "file": "skills/reviews-pragmatic/SKILL.md"
+      },
+      {
+        "name": "reviews-production-readiness",
+        "slashCommand": "/reviews-production-readiness",
+        "description": "Verify production deployment readiness with comprehensive checks",
+        "disableModelInvocation": false,
+        "file": "skills/reviews-production-readiness/SKILL.md"
+      },
+      {
+        "name": "reviews-reality-check",
+        "slashCommand": "/reviews-reality-check",
+        "description": "Comprehensive reality assessment of completed work to verify it actually works and is production-ready",
+        "disableModelInvocation": false,
+        "file": "skills/reviews-reality-check/SKILL.md"
+      },
+      {
+        "name": "reviews-spec-audit",
+        "slashCommand": "/reviews-spec-audit",
+        "description": "Independent specification audit to verify completeness and clarity before implementation",
+        "disableModelInvocation": false,
+        "file": "skills/reviews-spec-audit/SKILL.md"
+      },
+      {
+        "name": "standards-discover",
+        "slashCommand": "/standards-discover",
+        "description": "Discover coding standards from project configuration files, code patterns, documentation, and external sources (PRs, CI/CD)",
+        "disableModelInvocation": false,
+        "file": "skills/standards-discover/SKILL.md"
+      },
+      {
+        "name": "standards-update",
+        "slashCommand": "/standards-update",
+        "description": "Update or create project standards from conversation context or explicit description",
+        "disableModelInvocation": false,
+        "file": "skills/standards-update/SKILL.md"
+      },
+      {
+        "name": "work",
+        "slashCommand": "/work",
+        "description": "Unified entry point — auto-classifies tasks and routes to appropriate workflow. ALWAYS execute when invoked via slash skill.",
+        "disableModelInvocation": false,
+        "file": "skills/work/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "bottleneck-analyzer",
+        "description": "Static code analysis agent identifying performance bottlenecks by reading source code, schema files, and query patterns. Detects N+1 queries, missing indexes, O(n^2) algorithms, blocking I/O, memory leak patterns, and caching opportunities.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/bottleneck-analyzer.md"
+      },
+      {
+        "name": "code-quality-pragmatist",
+        "description": "Pragmatic code review specialist detecting over-engineering, unnecessary complexity, and developer experience issues. Evaluates pattern appropriateness for project scale, identifies intrusive automation, and recommends simplifications. Stri",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/code-quality-pragmatist.md"
+      },
+      {
+        "name": "code-reviewer",
+        "description": "Automated code quality, security, and performance analysis. Analyzes code for complexity, duplication, security vulnerabilities, performance issues, and best practices compliance. Can run standalone (via skill) or as part of implementation ",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/code-reviewer.md"
+      },
+      {
+        "name": "codebase-analysis-reporter",
+        "description": "Merges raw findings from parallel Explore agents into a structured codebase analysis report. Deduplicates files, cross-references analysis with tests, assesses complexity and risk, and produces actionable recommendations.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/codebase-analysis-reporter.md"
+      },
+      {
+        "name": "docs-operator",
+        "description": "Internal documentation management service. Executes docs-manager operations and returns results to the calling workflow.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/docs-operator.md"
+      },
+      {
+        "name": "e2e-test-verifier",
+        "description": "Executes runtime browser verification using Playwright MCP tools to verify implementation behavior against specifications. Does NOT generate test files — performs live interactive verification with evidence collection.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/e2e-test-verifier.md"
+      },
+      {
+        "name": "gap-analyzer",
+        "description": "Compares current vs desired state, identifies gaps with user journey and data lifecycle analysis. Reports findings for orchestrator to act on. Adapts analysis based on detected task characteristics.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/gap-analyzer.md"
+      },
+      {
+        "name": "implementation-completeness-checker",
+        "description": "Verifies implementation completeness across three dimensions - plan completion with code spot-checks, standards compliance with active reasoning from INDEX.md, and documentation completeness (work-log, spec alignment). Read-only analysis th",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/implementation-completeness-checker.md"
+      },
+      {
+        "name": "implementation-planner",
+        "description": "Creates detailed implementation plans from specifications. Breaks work into task groups by specialty (database, API, frontend, testing), creates implementation steps with test-driven approach (2-8 tests per group), sets dependencies, and de",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/implementation-planner.md"
+      },
+      {
+        "name": "information-gatherer",
+        "description": "Information gathering specialist executing systematic data collection across multiple sources including codebase, documentation, configuration files, and web resources. Maintains source citations and organizes findings with evidence.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/information-gatherer.md"
+      },
+      {
+        "name": "production-readiness-checker",
+        "description": "Automated production deployment readiness verification. Analyzes configuration management, monitoring setup, error handling, performance scalability, security hardening, and deployment considerations. Provides GO/NO-GO deployment recommenda",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/production-readiness-checker.md"
+      },
+      {
+        "name": "project-analyzer",
+        "description": "Analyzes project codebase to detect tech stack, architecture, and conventions for documentation generation. Use for existing/legacy projects to auto-generate meaningful documentation.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/project-analyzer.md"
+      },
+      {
+        "name": "reality-assessor",
+        "description": "Reality assessment specialist orchestrating multi-agent validation workflow. Validates functional reality vs claims, ensures work solves actual problems, detects false completions, and creates pragmatic action plans. Strictly read-only.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/reality-assessor.md"
+      },
+      {
+        "name": "research-planner",
+        "description": "Research planning specialist creating structured research plans from research questions. Analyzes objectives, determines methodology, identifies data sources (codebase, documentation, web), and defines analysis frameworks.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/research-planner.md"
+      },
+      {
+        "name": "research-synthesizer",
+        "description": "Research synthesis specialist transforming collected information into actionable insights. Cross-references findings, identifies patterns and relationships, applies analytical frameworks, and generates comprehensive research reports.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/research-synthesizer.md"
+      },
+      {
+        "name": "solution-brainstormer",
+        "description": "Generates structured solution alternatives from research synthesis and user preferences. Produces multi-perspective trade-off analysis with scope guardrails and convergence recommendation. Non-interactive content generator.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/solution-brainstormer.md"
+      },
+      {
+        "name": "solution-designer",
+        "description": "Transforms selected solution approach into high-level architecture design with C4 diagrams, component mapping, and MADR decision records. Non-interactive content generator.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/solution-designer.md"
+      },
+      {
+        "name": "spec-auditor",
+        "description": "Specification audit specialist with senior auditor perspective. Independently verifies completeness, detects ambiguities, validates implementability with evidence-based assessment. Never trusts claims - examines codebase and uses Azure/GitH",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/spec-auditor.md"
+      },
+      {
+        "name": "specification-creator",
+        "description": "Creates comprehensive specifications from gathered requirements. Searches for reusable code, writes spec.md with reusability analysis, and self-verifies quality. Receives pre-gathered requirements - does not interact with users.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/specification-creator.md"
+      },
+      {
+        "name": "task-classifier",
+        "description": "Task classification specialist analyzing task descriptions and issue references to classify into 5 workflow types (development, performance, migration, research). Supports GitHub/Jira integration, codebase context analysis, and confidence s",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/task-classifier.md"
+      },
+      {
+        "name": "task-group-implementer",
+        "description": "Execute a single task group from an implementation plan with continuous standards discovery. Writes code, runs tests, returns structured execution report. Does NOT mark checkboxes - main agent handles progress tracking.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/task-group-implementer.md"
+      },
+      {
+        "name": "test-suite-runner",
+        "description": "Runs the full test suite and analyzes results. Identifies test command from project config, executes all tests (not just feature tests), reports pass/fail counts, flags regressions in unrelated areas, and categorizes failures. Read-only - r",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/test-suite-runner.md"
+      },
+      {
+        "name": "ui-mockup-generator",
+        "description": "Generates ASCII mockups showing UI layout and integration with existing components. Analyzes codebase to identify current layout patterns, reusable components, and navigation structure. Creates annotated diagrams showing where new UI elemen",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/ui-mockup-generator.md"
+      },
+      {
+        "name": "user-docs-generator",
+        "description": "Generates end-user documentation with screenshots using Playwright. Creates easy-to-understand guides for non-technical users. Use after features are implemented to create user-facing documentation.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/user-docs-generator.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codebase-analyzer",
+      "/development",
+      "/diagrams-mermaid",
+      "/docs-manager",
+      "/flow-init",
+      "/html-renderer",
+      "/implementation-plan-executor",
+      "/implementation-verifier",
+      "/migration",
+      "/orchestrator-framework",
+      "/performance",
+      "/product-design",
+      "/quick-bugfix",
+      "/quick-dev",
+      "/quick-plan",
+      "/research",
+      "/reviews-code",
+      "/reviews-pragmatic",
+      "/reviews-production-readiness",
+      "/reviews-reality-check",
+      "/reviews-spec-audit",
+      "/standards-discover",
+      "/standards-update",
+      "/work"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "bottleneck-analyzer",
+      "code-quality-pragmatist",
+      "code-reviewer",
+      "codebase-analysis-reporter",
+      "docs-operator",
+      "e2e-test-verifier",
+      "gap-analyzer",
+      "implementation-completeness-checker",
+      "implementation-planner",
+      "information-gatherer",
+      "production-readiness-checker",
+      "project-analyzer",
+      "reality-assessor",
+      "research-planner",
+      "research-synthesizer",
+      "solution-brainstormer",
+      "solution-designer",
+      "spec-auditor",
+      "specification-creator",
+      "task-classifier",
+      "task-group-implementer",
+      "test-suite-runner",
+      "ui-mockup-generator",
+      "user-docs-generator"
+    ],
+    "hookEvents": [
+      "PreInvocation",
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "![Agyflow logo](logo.png)\n\n# Agyflow\n\n**Structured, standards-aware development workflows for Google Antigravity CLI**\n\nDescribe what you want to build, and the plugin handles the rest - from specification through implementation to verification - while enforcing your project's coding standards at every step.\n\nStarted as an OpenCode fork of Maister Claude Code plugin (originally known as Owflow), Agyflow is a plugin for Google Antigravity CLI (`agy`) designed to deliver production-ready workflows using Antigravity's plugin architecture.\n\n## What You Get\n\n- **Guided workflows** for features, bug fixes, enhancements, performance, migrations, research, and product design\n- **Auto-discovered standards** from your codebase - config files, source patterns, and documentation are analyzed and enforced throughout every workflow\n- **Test-driven implementation** with automated planning, incremental verification, and full test suite runs before completion\n- **Pause and resume** any workflow - state is preserved across sessions\n- **Production readiness checks** including code review, reality assessment, and pragmatic over-engineering detection\n\n## Getting Started\n\n### Prerequisites\n\n- [Google Antigravity CLI (`agy`)](https://antigravity.google) installed and configured\n- [Node.js](https://nodejs.org/) >= 25\n\n### Installation\n\nInstall Agyflow using the Antigravity CLI:\n\n#### Remote Installation\n\nInstall directly from the GitHub repository:\n\n```sh\nagy plugin install https://github.com/palucdev/agyflow\n```\n\n#### Local Installation\n\nClone the repository and install it from the local directory:\n\n```sh\n# Clone the repository\ngit clone https://github.com/palucdev/agyflow.git\ncd agyflow\n\n# Install dependencies and build (requires Bun)\nbun install\nbun run build\n\n# Install the plugin locally via the CLI\nagy plugin install .\n```\n\n### Managing the Plugin\n\nVerify that the plugin is installed and active:\n\n```sh\nagy plugin list\n```\n\nYou can also enable, disable, or uninstall Agyflow using:\n\n```sh\nagy plugin enable agyflow\nagy plugin disable agyflow\nagy plugin uninstall agyflow\n```\n\n## Initial project setup\n\nInitialize your project to auto-detect coding standards and generate project documentation. Run this inside an active `agy` session:\n\n```bash\n/agyflow:flow-init\n```\n\nThis scans your codebase and creates `.agyflow/` with standards, docs, and task folders. May take a few minutes on larger projects.\n\nIf you have another project already using Agyflow, you can reuse its standards as a starting point:\n\n```bash\n/agyflow:flow-init --standards-from=/path/to/other-project\n```\n\n## First Workflow\n\nStart a workflow by running this inside an active `agy` session:\n\n```bash\n/agyflow:development Add user profile page with avatar upload\n```\n\nOr just discuss your task with Agent and then run:\n\n```bash\n/agyflow:development\n```\n\nThe plugin picks up context from your conversation - no arguments needed.\n\n## How It Works\n\n1. You describe a task - either as an argument or just in conversation\n2. The plugin classifies it (feature, bug, enhancement, etc.) and proposes a workflow\n3. You confirm, and it guides you through phases: **requirements → spec → plan → implement → verify**\n4. At each phase, it asks for your input and decisions\n5. You get tested, verified code with a detailed work log\n\nAll artifacts are saved in `.agyflow/tasks/` organized by type and date.\n\n### Context-Aware Skills\n\nEvery workflow skill works without arguments. The plugin reads your current conversation to extract the task description and auto-detect the task type:\n\n```\nYou: \"The login page throws a 500 error when the session expires\"\nYou: /agyflow:development\n→ Auto-detects: bug fix, extracts description from conversation\n```\n\n```\nYou: /agyflow:standards-update\n→ Scans conversation for patterns like \"we always use...\" or \"prefer X over Y\"\n```\n\nYou can always be explicit when you prefer - arguments and flags simply override the auto-detection.\n\n## Supported Workflows\n\n| Skill             | Use When                                    |\n| ----------------- | ------------------------------------------- |\n| `/agyflow:development` | Features, bug fixes, enhancements           |\n| `/agyflow:research`    | Research with synthesis and solution design |\n| `/agyflow:performance` | Optimizing speed or resource usage          |\n| `/agyflow:migration`   | Changing technologies or patterns           |\n| `/agyflow:product-design` | Product and feature design               |\n\nTask type (feature/bug/enhancement) is auto-detected from context. Override with `--type=feature|bug|enhancement` if needed. Or use `/agyflow:work` as a single entry point that routes to the right workflow.\n\n### Quick Skills\n\nFor smaller tasks that don't need a full workflow:\n\n| Skill           | Use When                                                    | Artifacts                               |\n| --------------- | ----------------------------------------------------------- | --------------------------------------- |\n| `/agyflow:quick-plan` | You want a plan with standards awareness before coding      | `task.yml`, `findings.md`               |\n| `/agyflow:quick-dev`  | You know what to do - just implement with standards applied | `task.yml`, `summary.md`                |\n| `/agyflow:quick-bugfix` | Quick TDD-driven bug fix — write failing test, fix, verify  | `task.yml`, `findings.md`, `summary.md` |\n\nAll quick skills create lightweight task directories under `.agyflow/tasks/quick-{type}/` with a `task.yml` for traceability.\n\n## Standards-Aware Development\n\nThis is the key differentiator. Agyflow doesn't just run workflows - it learns your project's conventions and enforces them:\n\n- **`flow-init`** scans config files, source code, and documentation to auto-detect your coding standards\n- **Continuous checking** - standards are consulted before specification, during planning, and while coding (not just at the start)\n- **`/agyflow:standards-discover`** refreshes standards from your evolving codebase\n- **`/agyflow:standards-update`** lets you add or refine standards manually, or sync from another project with `--from=PATH`\n\nStandards live in `.agyflow/docs/standards/` and are indexed in `.agyflow/docs/INDEX.md`.\n\n**Important**: Do not use planning mode with workflows (see [Best Practices](#best-practices) below).\n\n## Best Practices\n\n**Don't use Antigravity's Planning Mode when starting a workflow.** Planning is a built-in part of every workflow — the orchestrator creates specs, plans, and other files as it goes. Google Antigravity's planning/planning mode restricts file creation, which conflicts with this. Let the workflow handle planning on its own.\n\n**Start workflows in a fresh session.** This is especially useful when chaining workflows (e.g., research → development). Research and product-design artifacts already contain all the context needed, so a clean session avoids noise from prior conversation.\n\n**Chain workflows by passing a task folder.** If you've completed a research or product-design workflow and want to build on those results, pass the task folder directly:\n\n```bash\n/agyflow:development .agyflow/tasks/research/2026-01-12-oauth-research\n```\n\nYou can also append additional instructions to narrow scope or guide the workflow:\n\n```bash\n/agyflow:development .agyflow/tasks/product-design/2026-03-10-dashboard-redesign Implement only phase 1\n```\n\n## Known Issues\n\n**Orchestrator may stall after long phases.** After context compaction (which typically happens after lengthy phases like implementation), the main agent may stop progressing automatically. If you notice it's idle, just type something like \"continue\" or \"proceed\" — it will pick up where it left off. You can also re-invoke the workflow in resume mode to reload the orchestrator state:\n\n```bash\n/agyflow:development .agyflow/tasks/development/2026-03-24-my-feature\n```\n\n## Learn More\n\n- [Workflow Details](docs/workflows.md) - phases, examples, and task structure for each workflow type\n- [Full Skill Reference](docs/skills.md) - all workflow, review, utility, and quick skills\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"safety-gate\" executes a shell command on PreToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 10,
+        "snippet": "node scripts/safety-gate.js",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/hooks.json#L10"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/verify-template.js",
+        "line": 4420,
+        "snippet": "let match = first.exec(source);",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/scripts/verify-template.js#L4420"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/verify-template.js",
+        "line": 4427,
+        "snippet": "while (match = line.exec(source)) {",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/scripts/verify-template.js#L4427"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/verify-template.js",
+        "line": 4443,
+        "snippet": "match = last.exec(source);",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/scripts/verify-template.js#L4443"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/product-design/server/index.ts",
+        "line": 54,
+        "snippet": "fs.writeFileSync(filePath, html, \"utf-8\");",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/product-design/server/index.ts#L54"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/product-design/server/index.ts",
+        "line": 301,
+        "snippet": "fs.writeFileSync(p, String(process.pid), \"utf-8\");",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/product-design/server/index.ts#L301"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/product-design/server/index.ts",
+        "line": 308,
+        "snippet": "fs.unlinkSync(p);",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/product-design/server/index.ts#L308"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/development/SKILL.md",
+        "line": 19,
+        "snippet": "1. `../orchestrator-framework/references/orchestrator-patterns.md` - Delegation rules, interactive mode, state schema, initialization, context passing, issue resolution",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/development/SKILL.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/migration/SKILL.md",
+        "line": 19,
+        "snippet": "1. `../orchestrator-framework/references/orchestrator-patterns.md` - Delegation rules, interactive mode, state schema, initialization, context passing, issue resolution",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/migration/SKILL.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/orchestrator-framework/SKILL.md",
+        "line": 29,
+        "snippet": "1. `../orchestrator-framework/references/orchestrator-patterns.md`",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/orchestrator-framework/SKILL.md#L29"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/performance/SKILL.md",
+        "line": 19,
+        "snippet": "1. `../orchestrator-framework/references/orchestrator-patterns.md` - Delegation rules, interactive mode, state schema, initialization, context passing, issue resolution",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/performance/SKILL.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/product-design/SKILL.md",
+        "line": 19,
+        "snippet": "1. `../orchestrator-framework/references/orchestrator-patterns.md` - Delegation rules, interactive mode, state schema, initialization, context passing, issue resolution",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/product-design/SKILL.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/research/SKILL.md",
+        "line": 19,
+        "snippet": "1. `../orchestrator-framework/references/orchestrator-patterns.md` - Delegation rules, interactive mode, state schema, initialization, context passing, issue resolution",
+        "githubBlobUrl": "https://github.com/palucdev/agyflow/blob/d43f07a75a100bedde8842af748ac2b42aa9b5ad/skills/research/SKILL.md#L19"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.1",
+      "sha": "d43f07a75a100bedde8842af748ac2b42aa9b5ad",
+      "scannedAt": "2026-11-27T18:26:05.316Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

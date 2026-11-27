@@ -1,0 +1,391 @@
+{
+  "schemaVersion": 1,
+  "id": "roundpilot/superpowers-antigravity",
+  "sha": "d953f1585c396133e6447f6233ce34b153dc2e98",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:45.925Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "superpowers",
+    "displayName": "Superpowers",
+    "version": "7.0.2",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "brainstorming",
+        "slashCommand": "/brainstorming",
+        "description": "You MUST use this before any creative work - creating features, building components, adding functionality, modifying behavior, or planning anything new, in software or out of it (a talk, a business, a renovation).",
+        "disableModelInvocation": false,
+        "file": "skills/brainstorming/SKILL.md"
+      },
+      {
+        "name": "browser-testing",
+        "slashCommand": "/browser-testing",
+        "description": "Use when completing frontend or UI work that needs visual verification, before claiming the UI is correct",
+        "disableModelInvocation": false,
+        "file": "skills/browser-testing/SKILL.md"
+      },
+      {
+        "name": "diagnosing-superpowers",
+        "slashCommand": "/diagnosing-superpowers",
+        "description": "Use when a superpowers session went wrong and your human partner wants to know why — repeated work, ignored plans, stumbles, poor results, a skill that didn't fire, \"it took too long\", \"why is it so expensive\", \"what is it doing\" — or wants",
+        "disableModelInvocation": false,
+        "file": "skills/diagnosing-superpowers/SKILL.md"
+      },
+      {
+        "name": "dispatching-parallel-agents",
+        "slashCommand": "/dispatching-parallel-agents",
+        "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
+        "disableModelInvocation": false,
+        "file": "skills/dispatching-parallel-agents/SKILL.md"
+      },
+      {
+        "name": "executing-plans",
+        "slashCommand": "/executing-plans",
+        "description": "Use when executing an implementation plan in the current session as the implementer yourself — your human partner chose inline execution, or no subagent tool is available",
+        "disableModelInvocation": false,
+        "file": "skills/executing-plans/SKILL.md"
+      },
+      {
+        "name": "finishing-a-development-branch",
+        "slashCommand": "/finishing-a-development-branch",
+        "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work",
+        "disableModelInvocation": false,
+        "file": "skills/finishing-a-development-branch/SKILL.md"
+      },
+      {
+        "name": "receiving-code-review",
+        "slashCommand": "/receiving-code-review",
+        "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation",
+        "disableModelInvocation": false,
+        "file": "skills/receiving-code-review/SKILL.md"
+      },
+      {
+        "name": "requesting-code-review",
+        "slashCommand": "/requesting-code-review",
+        "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+        "disableModelInvocation": false,
+        "file": "skills/requesting-code-review/SKILL.md"
+      },
+      {
+        "name": "subagent-driven-development",
+        "slashCommand": "/subagent-driven-development",
+        "description": "Use when executing implementation plans with independent tasks in the current session",
+        "disableModelInvocation": false,
+        "file": "skills/subagent-driven-development/SKILL.md"
+      },
+      {
+        "name": "systematic-debugging",
+        "slashCommand": "/systematic-debugging",
+        "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes",
+        "disableModelInvocation": false,
+        "file": "skills/systematic-debugging/SKILL.md"
+      },
+      {
+        "name": "test-driven-development",
+        "slashCommand": "/test-driven-development",
+        "description": "Use when implementing any feature or bugfix, before writing implementation code",
+        "disableModelInvocation": false,
+        "file": "skills/test-driven-development/SKILL.md"
+      },
+      {
+        "name": "using-git-worktrees",
+        "slashCommand": "/using-git-worktrees",
+        "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools",
+        "disableModelInvocation": false,
+        "file": "skills/using-git-worktrees/SKILL.md"
+      },
+      {
+        "name": "using-superpowers",
+        "slashCommand": "/using-superpowers",
+        "description": "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions",
+        "disableModelInvocation": false,
+        "file": "skills/using-superpowers/SKILL.md"
+      },
+      {
+        "name": "verification-before-completion",
+        "slashCommand": "/verification-before-completion",
+        "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+        "disableModelInvocation": false,
+        "file": "skills/verification-before-completion/SKILL.md"
+      },
+      {
+        "name": "writing-plans",
+        "slashCommand": "/writing-plans",
+        "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+        "disableModelInvocation": false,
+        "file": "skills/writing-plans/SKILL.md"
+      },
+      {
+        "name": "writing-skills",
+        "slashCommand": "/writing-skills",
+        "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+        "disableModelInvocation": false,
+        "file": "skills/writing-skills/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "bundle-scrubber",
+        "description": "Scrubber for superpowers:diagnosing-superpowers exports - rewrites files inside one bundle directory to remove sensitive values and writes nothing outside it. Dispatch only from that skill, with the BUNDLE path and its scrub role file.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/bundle-scrubber.md"
+      },
+      {
+        "name": "code-reviewer",
+        "description": "Reviews one task's code quality - architecture, tests, maintainability - with Critical/Important/Minor severity and file:line evidence. Read-only review; dispatch with the commit range and global constraints.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/code-reviewer.md"
+      },
+      {
+        "name": "final-reviewer",
+        "description": "Whole-branch code review on your session's model - an executor's final review, or a review after a major feature or before merge. Read-only; dispatch with requesting-code-review's code-reviewer.md template, base and whole-branch blocks fill",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/final-reviewer.md"
+      },
+      {
+        "name": "implementer-flash",
+        "description": "Flash-tier implementer for transcription work - the task text already contains the complete code, or a single-file mechanical fix. Dispatch only from superpowers:subagent-driven-development's Model Selection, with the full task text; same j",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/implementer-flash.md"
+      },
+      {
+        "name": "implementer-pro",
+        "description": "Pro-tier implementer for escalation and design tasks in a session that runs below the Pro tier. Dispatch only from superpowers:subagent-driven-development's Model Selection, with the full task text; same job, rules and report format as impl",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/implementer-pro.md"
+      },
+      {
+        "name": "implementer",
+        "description": "Implements one task from an approved implementation plan - writes tests and code, verifies, commits, self-reviews, and reports status. Dispatch with the full task text; do not use for review work.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/implementer.md"
+      },
+      {
+        "name": "re-reviewer",
+        "description": "Verifies a fix round - verdicts each prior finding ADDRESSED or NOT ADDRESSED and inspects only the fix diff for new breakage. Not a fresh review; dispatch with the findings list and fix commit range.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/re-reviewer.md"
+      },
+      {
+        "name": "session-analyst",
+        "description": "Read-only analyst for superpowers:diagnosing-superpowers - examines one session transcript, one candidate session, or a scrubbed bundle, and returns findings that cite path:line. Dispatch only from that skill, with a CASE or BUNDLE path and",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/session-analyst.md"
+      },
+      {
+        "name": "spec-reviewer",
+        "description": "Verifies one task's implementation matches its task text - reports Missing/Extra/Misunderstood with file:line evidence. Read-only review; dispatch with the task text and commit range.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/spec-reviewer.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/brainstorming",
+      "/browser-testing",
+      "/diagnosing-superpowers",
+      "/dispatching-parallel-agents",
+      "/executing-plans",
+      "/finishing-a-development-branch",
+      "/receiving-code-review",
+      "/requesting-code-review",
+      "/subagent-driven-development",
+      "/systematic-debugging",
+      "/test-driven-development",
+      "/using-git-worktrees",
+      "/using-superpowers",
+      "/verification-before-completion",
+      "/writing-plans",
+      "/writing-skills"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "bundle-scrubber",
+      "code-reviewer",
+      "final-reviewer",
+      "implementer",
+      "implementer-flash",
+      "implementer-pro",
+      "re-reviewer",
+      "session-analyst",
+      "spec-reviewer"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"docs/banner.png\" alt=\"Superpowers for Antigravity\" width=\"100%\">\n</p>\n\n<p align=\"center\">\n  <strong>Superpowers for Google Antigravity: a complete software development methodology for your coding agent.</strong><br>\n  Composable skills that trigger automatically — your agent just has Superpowers.\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/roundpilot/superpowers-antigravity#-installation\"><img src=\"https://img.shields.io/badge/Install-Guide-blue?style=for-the-badge\" alt=\"Install\"></a>\n  <a href=\"https://github.com/roundpilot/superpowers-antigravity/blob/main/RELEASE-NOTES.md\"><img src=\"https://img.shields.io/badge/Version-7.0.2-green?style=for-the-badge\" alt=\"Version 7.0.2\"></a>\n  <a href=\"https://github.com/obra/superpowers\"><img src=\"https://img.shields.io/badge/Fork%20of-obra%2Fsuperpowers-purple?style=for-the-badge\" alt=\"Fork of obra/superpowers\"></a>\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge\" alt=\"MIT License\"></a>\n</p>\n\n---\n\n> **This is a fork of [obra/superpowers](https://github.com/obra/superpowers) rebuilt natively for [Google Antigravity](https://antigravity.google): the 2.0 app, the IDE and the CLI (`agy`).** If you need multi-platform support (Claude Code, Codex, Cursor, etc.), use the upstream repo instead.\n\n**Quick install.** CLI:\n\n```bash\nagy plugin install https://github.com/roundpilot/superpowers-antigravity\n```\n\n2.0 app and IDE (macOS / Linux; Windows and workspace installs are under [Installation](#-installation)):\n\n```bash\ngit clone https://github.com/roundpilot/superpowers-antigravity ~/.gemini/config/plugins/superpowers\n```\n\n---\n\n## ✨ How It Works\n\nIt starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do.\n\nHow much ceremony follows depends on what you asked for. A quick, clear task just gets done. Otherwise it draws out what you want, and why, plays its understanding back for correction, and has you pick one of two or three approaches. Then it sizes the work: a small change gets a short design doc, and a project gets the full written design, which a builder check reads before you do. What never scales down is the approval: nothing gets built until you say yes.\n\nAfter you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasises true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY.\n\nNext up, once you say \"go\", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for agents to work autonomously for a couple hours at a time without deviating from the plan you put together.\n\nThere's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers. (See [Activation](#-activation) for how the loading works — and how to scope it if you don't want it everywhere.)\n\n## 🔀 What's Different from Upstream?\n\nThe original superpowers supports 9+ platforms via a tool mapping abstraction layer — skills are written with Claude Code tool names, and per-platform reference files translate at runtime.\n\nThis fork **removes the abstraction entirely**. All skills use native Antigravity tool names directly (`view_file`, `run_command`, `invoke_subagent`, etc.), eliminating translation overhead and making every skill read exactly as the agent will execute it.\n\n<details>\n<summary><strong>Why remove cross-platform support?</strong> (click to expand)</summary>\n\nThe abstraction layer costs tokens on every interaction, and those costs compound across a session:\n\n1. **Tool mapping file loaded every session.** The upstream approach loads a ~500-token tool mapping reference into context at session start. Every turn carries this translation table. This fork eliminates it entirely.\n\n2. **Agent reasoning overhead.** When a skill says \"use the Bash tool,\" the agent must look up the mapping, reason about which native tool to call, and potentially make mistakes. When skills say `run_command` directly, there's zero translation cost.\n\n3. **Platform-conditional branching in skills.** The upstream `using-superpowers` skill points each harness to its own reference file: Claude Code, Codex, Pi, Antigravity, Hermes Agent and Muse (as of v7.0.2). Only one applies.\n\n4. **85 fewer files than upstream (as of v7.0.2 on both sides).** When agents explore the repo, fewer files means less noise in `list_dir` output and faster orientation.\n\n5. **Leaner skills without platform detection.** No harness-detection or fallback branches inside skills — `using-git-worktrees` is 103 lines to upstream's 167 (as of v7.0.2). Shorter skills = less context consumed.\n\n</details>\n\n### Comparison Table\n\n| Area | Upstream (obra/superpowers) | This fork |\n|------|---------------------------|-----------| \n| **Platforms** | 9+ (Claude Code, Codex, Cursor, etc.) | Antigravity only (2.0 app, IDE, CLI) |\n| **Tool names in skills** | Claude Code names + mapping files | Native Antigravity names |\n| **Subagent dispatch** | `Task tool (general-purpose)` | Bundled custom agents + `invoke_subagent` |\n| **Workspace isolation** | `git worktree` with fallback | Native `Workspace: \"branch\"` / `\"inherit\"` (`\"share\"` not recommended: untested) |\n| **Task tracking** | `TodoWrite` tool | `task.md` artifacts |\n| **Visual brainstorming** | Browser-based server | Native `generate_image` (no server needed) |\n| **Plan formatting** | Plain markdown | Mermaid diagrams, file links, diff blocks, GitHub alerts |\n| **Background tasks** | Not documented | `manage_task`, `send_message`, `schedule` (incl. cron) |\n| **UI verification** | Not available | `browser-testing` skill with screenshot evidence |\n| **Read-only subagents** | Full tool set for all | Bundled read-only reviewer agents: `spec-reviewer`, `re-reviewer`, `code-reviewer` (one task or a small range) and `final-reviewer` (whole branch) |\n| **Web research** | Not guided | `search_web` + `read_url_content` integrated |\n\n### Core Enhancements\n\nBeyond the platform port, this fork adds capabilities that don't exist upstream:\n\n- 🎨 **`generate_image` in brainstorming** — native mockup generation with carousel comparisons\n- 📐 **Rich plan formatting** — Mermaid architecture diagrams, clickable `file:///` links, diff blocks\n- 🔄 **Async subagent coordination** — `manage_task` for builds, `send_message` mid-flight, `schedule` for timeouts\n- 🌐 **Browser-testing skill** — evidence-before-assertions discipline for UI work\n- 💰 **Token-saving subagents** — reviewers are read-only bundled agents\n- ✅ **Review gates** — design docs wait for your partner's approval, and plans end with an `ask_question` your partner answers before work goes on\n- 🔀 **Workspace mode guidance** — decision tables for `branch` and `inherit` per role; `share` is not recommended (untested)\n- 🛡️ **Edit-time purity gate** — contributors can enable a `PreToolUse` hook (`hooks/purity-check.mjs`, needs `node`) through their global `hooks.json`; the release gate `tests/antigravity/test-skill-tool-purity.sh` enforces the same law. See CONTRIBUTING.\n- 📋 **Live step checklist** — where the session has a step checklist tool (CLI 1.5.16+ interactive sessions), both executors mirror the plan's tasks to it; the ledger file stays the record\n- 🔍 **Web research integration** — `search_web` woven into debugging, brainstorming, and planning\n\n## 🚀 The Workflow\n\n```\n ┌─────────────┐     ┌──────────────┐     ┌───────────────┐     ┌──────────────────────────┐\n │ Brainstorm  │ ──▶ │ Write Plan   │ ──▶ │ Create Branch │ ──▶ │ Subagent-Driven Dev      │\n │             │     │              │     │               │     │  ┌────────┐ ┌──────────┐ │\n │ • Questions │     │ • Tasks      │     │ • Isolated    │     │  │Implement│▶│  Review  │ │\n │ • Mockups   │     │ • Diagrams   │     │ • Clean base  │     │  └────────┘ └──────────┘ │\n │ • Design    │     │ • Specs      │     │ • Tests pass  │     │       ↺ per task         │\n └─────────────┘     └──────────────┘     └───────────────┘     └──────────────────────────┘\n                                                                             │\n                                                                             ▼\n                                                                ┌──────────────────────────┐\n                                                                │   Finish Branch          │\n                                                                │  • Final review          │\n                                                                │  • Merge / PR / Keep     │\n                                                                └──────────────────────────┘\n```\n\n1. **brainstorming** — Draws out what you want, and why, plays it back, has you pick an approach through `ask_question`, then sizes the work as a short or full design doc with a builder check and `generate_image`/Mermaid visuals\n2. **using-git-worktrees** — Isolates the session on a feature branch; concurrent writing subagents get native `Workspace: \"branch\"`\n3. **writing-plans** — Breaks work into bite-sized tasks with exact file paths and verification steps\n4. **subagent-driven-development** or **executing-plans** — Activates with plan. Either dispatches a fresh subagent per task with a two-stage review after each (most thorough), or implements every task inline in the current session with one fresh review of the whole branch at the end (cheapest).\n5. **test-driven-development** — RED-GREEN-REFACTOR: write failing test → minimal code → pass → commit\n6. **requesting-code-review** — Reviews against plan, reports issues by severity\n7. **finishing-a-development-branch** — Verifies tests, presents merge/PR/keep options\n\n**Where each executor runs.** subagent-driven-development needs `invoke_subagent` and the plugin's bundled agents — documented for 2.0 and the CLI, not available in the IDE (it has no `invoke_subagent`). executing-plans runs on all three; its final review uses a subagent where one is available.\n\n**Skills trigger automatically.** Mandatory workflows, not suggestions.\n\n## 🩺 When Something Goes Wrong\n\nSometimes a session misbehaves: a skill fires when it shouldn't, stays silent when it should, or the agent ignores its plan, repeats work, or burns more tokens than you'd expect. Ask your coding agent to \"figure out what went wrong with superpowers in this session\" and it will invoke the **diagnosing-superpowers** skill. To examine an earlier session, name it: \"figure out what went wrong with superpowers in session `<id>`\".\n\nThe skill reads the session transcript, reports what happened with line-level evidence, and, if you want, packages a scrubbed bundle for a bug report.\n\nYou can also start it directly: `/diagnosing-superpowers` in the 2.0 app or `/superpowers:diagnosing-superpowers` in the CLI.\n\n## Running long plans\n\nBoth executors run a plan to the end, but an approval prompt can park a run. Every task runs read-only git commands (`git rev-parse`, `rev-list`, `merge-base`, `diff`, `log`, `status`), the plan's tests, `git add` and `git commit`.\n\n- **Easiest: Auto mode** (2.0 app 2.23+, 2.26+ on Windows; CLI 1.3.5+, 1.4.4+ on Windows; personal accounts, sandbox required). It asks only about risky or irreversible commands.\n- **Otherwise, allow each git subcommand above and the test command**, for example `command(git diff)`. Never allow all of `command(git)`: that lets `git push` through.\n  - **CLI on Windows:** one rule covers them: `command(regex:git (rev-parse|rev-list|merge-base|diff|log|status|add|commit).*)`. Headless runs (`agy -p`) deny any command not under `permissions.allow`.\n  - **IDE:** add them to the terminal allowlist. Strict mode ignores it.\n- **Don't use `/goal`:** it skips the executors' stops and the finishing menu.\n\nIf a subagent's commit approval times out (60 seconds in the CLI), the controller makes the commit itself.\n\n## 📦 Installation\n\n> **Already installed `obra/superpowers`?** In the CLI, upstream's install most likely uses the same plugin name, `superpowers`, so installing one replaces the other. Run `agy plugin uninstall superpowers` before installing this one. Upstream's install also brings its own session-start bootstrap. In the 2.0 app and the IDE, if a folder named `superpowers` already exists in `~/.gemini/config/plugins/`, move it out of that folder before cloning this one.\n\n### Antigravity 2.0 app and Antigravity IDE\n\nBoth discover plugins in the same folders, so one clone serves both. Install globally unless you want superpowers in chosen projects only.\n\nA workspace install (`.agents/plugins/superpowers`) is project-level. In a 2.0 Project conversation started in New Worktree Mode, check Customizations that superpowers is listed; if it is not, use the global install for those conversations.\n\n#### macOS / Linux\n\n**Global plugin** (available in all projects):\n```bash\ngit clone https://github.com/roundpilot/superpowers-antigravity ~/.gemini/config/plugins/superpowers\n```\n\n**Workspace plugin** (project-level only):\n```bash\ngit clone https://github.com/roundpilot/superpowers-antigravity .agents/plugins/superpowers\n```\n\n**Update later:**\n```bash\ncd ~/.gemini/config/plugins/superpowers && git pull\n```\n\n#### Windows (PowerShell)\n\n**Global plugin** (available in all projects):\n```powershell\ngit clone https://github.com/roundpilot/superpowers-antigravity \"$env:USERPROFILE\\.gemini\\config\\plugins\\superpowers\"\n```\n\n**Workspace plugin** (project-level only):\n```powershell\ngit clone https://github.com/roundpilot/superpowers-antigravity .agents\\plugins\\superpowers\n```\n\n**Update later:**\n```powershell\ncd \"$env:USERPROFILE\\.gemini\\config\\plugins\\superpowers\"; git pull\n```\n\n#### Windows (WSL)\n\n**2.0 app connected to a WSL distribution** (Application Settings): confirm in Settings > Customizations that superpowers is listed. If it is not, clone into `~/.gemini/config/plugins/superpowers` inside the WSL distribution.\n\nIf you run the **Windows Antigravity IDE** but your workspace is in **WSL**:\n\n```bash\n# Global plugin (installed on Windows side):\ngit clone https://github.com/roundpilot/superpowers-antigravity /mnt/c/Users/$USER/.gemini/config/plugins/superpowers\n\n# Workspace plugin (inside your WSL workspace):\ngit clone https://github.com/roundpilot/superpowers-antigravity /path/to/your/wsl/project/.agents/plugins/superpowers\n```\n\n#### Manual installation for the 2.0 app and the IDE (no git required)\n\n<details>\n<summary>Download ZIP instead of cloning (click to expand)</summary>\n\n**macOS / Linux:**\n```bash\ncurl -L https://github.com/roundpilot/superpowers-antigravity/archive/refs/heads/main.zip -o superpowers.zip\nunzip superpowers.zip\nmkdir -p ~/.gemini/config/plugins\nmv superpowers-antigravity-main ~/.gemini/config/plugins/superpowers\nrm superpowers.zip\n```\n\n**Windows (PowerShell):**\n```powershell\nInvoke-WebRequest -Uri \"https://github.com/roundpilot/superpowers-antigravity/archive/refs/heads/main.zip\" -OutFile superpowers.zip\nExpand-Archive superpowers.zip -DestinationPath .\nNew-Item -ItemType Directory -Force -Path \"$env:USERPROFILE\\.gemini\\config\\plugins\"\nMove-Item superpowers-antigravity-main \"$env:USERPROFILE\\.gemini\\config\\plugins\\superpowers\"\nRemove-Item superpowers.zip\n```\n\nTo update later, delete the `superpowers` folder and repeat the steps above.\n\n</details>\n\n#### Migrating a 2.0 app or IDE install from `roundpilot/superpowers`\n\nIf you previously installed from `roundpilot/superpowers`, update your remote:\n\n```bash\ncd ~/.gemini/config/plugins/superpowers\ngit remote set-url origin https://github.com/roundpilot/superpowers-antigravity.git\ngit pull\n```\n\n#### Troubleshooting\n\n**If superpowers is listed but its skills are never followed,** the agent may not be allowed to read files outside your project: check the IDE's non-workspace file access and strict mode, or, in the 2.0 app on Windows, the project's outside-of-folder file access policy. A workspace install keeps the skills inside the project.\n\n### Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/roundpilot/superpowers-antigravity\n```\n\nIf the CLI rejects the URL, clone the repository and install from the folder (to update this way, run `git -C <dir> pull`, then install again):\n\n```bash\ngit clone https://github.com/roundpilot/superpowers-antigravity <dir>\nagy plugin install <dir>\n```\n\nInside an `agy` session, `/plugin install <local-path>` does the same as `agy plugin install <dir>`.\n\n- **List:** `agy plugin list`\n- **Update:** run the same install command again. It replaces the installed copy, so any edits made inside the installed copy are lost.\n- **Disable or enable:** `agy plugin disable superpowers` / `agy plugin enable superpowers`\n- **Uninstall:** `agy plugin uninstall superpowers` (it also removes `plugins.superpowers.enabled` from `~/.gemini/config/config.json`)\n\n> CLI 1.2.17 kept its own copy of installed plugins, but current docs say `agy plugin install` writes to `~/.gemini/config/plugins/superpowers`, the folder the app and IDE clone uses. If `agy plugin list` already shows superpowers after you cloned for the app, skip the CLI install: never run both a clone and `agy plugin install` against that folder.\n\n**If the plugin does not load on Windows** and your project is on a different drive from your user profile, update the CLI (`agy update`): 1.5.18 fixes it.\n\n**If you also installed superpowers for another tool,** check `~/.agents/skills`. Since CLI 1.5.16 the CLI loads skills from that folder too, so remove any superpowers copy there and keep this plugin as the only one.\n\n### ✅ Verify Installation\n\n1. **Check the product's own view** (no model turn):\n   - **2.0 app:** Settings > Customizations lists superpowers under Plugins and its 16 skills under Skills.\n   - **IDE:** the … menu in the agent side panel > Customizations lists superpowers among the active plugin components, with its skills.\n   - **CLI:** `agy plugin list` shows superpowers and its components; `agy -p \"/skills\" --output-format json` lists the skills without starting an agent turn.\n2. **Slash command:** type `/using-superpowers` in the 2.0 app or `/superpowers:using-superpowers` in the CLI. The bootstrap loads for the session.\n3. **Behaviour:** say \"Let's make a react todo list\". The brainstorming skill should trigger and ask design questions instead of writing code.\n\n## 🔌 Activation\n\nOnce installed, the methodology loads itself — no per-session setup:\n\n- **Automatic (default).** The plugin ships the using-superpowers bootstrap as an always-on rule (`rules/using-superpowers.md`), so it loads into every conversation with no setup. Individual skills then trigger on what you ask for: describe a feature and brainstorming starts, report a bug and systematic-debugging starts.\n- **Scoped, if you don't want it everywhere.** In the 2.0 app and the IDE, install as a **workspace plugin** (`.agents/plugins/superpowers`) so only chosen projects get it. In the CLI, `agy plugin disable superpowers` turns it off and `agy plugin enable superpowers` turns it back on.\n\nThe always-loaded footprint is a single ~55-line bootstrap; individual skills are read only when they trigger.\n\n## 📚 Skills Reference\n\n### Testing & Verification\n| Skill | Purpose |\n|-------|---------|\n| **test-driven-development** | RED-GREEN-REFACTOR cycle with the `writing-good-tests` reference (falsifiability rules + mutation check) |\n| **browser-testing** | Evidence-before-assertions for UI work (screenshot → DOM inspect → embed proof) |\n\n### Debugging\n| Skill | Purpose |\n|-------|---------|\n| **systematic-debugging** | 4-phase root cause process with `search_web` for unfamiliar errors |\n| **verification-before-completion** | Ensure it's actually fixed; cron schedules for long test suites |\n| **diagnosing-superpowers** | Work out what went wrong in a session, with evidence; export a scrubbed bundle or file an issue |\n\n### Collaboration\n| Skill | Purpose |\n|-------|---------|\n| **brainstorming** | Draws out intent and why first; approaches picked through `ask_question`; Size the Work (short or full design doc); a builder check; `generate_image` mockups and Mermaid diagrams |\n| **writing-plans** | Detailed plans with Mermaid diagrams, rich formatting, an `ask_question` review gate, and a `Spec:` pointer so the spec travels with the plan |\n| **executing-plans** | Inline plan execution: one context, one final review |\n| **dispatching-parallel-agents** | Concurrent workflows with `Workspace: \"branch\"` / `\"inherit\"` and monitoring |\n| **requesting-code-review** | Bundled `code-reviewer` (one task or a small range) and `final-reviewer` (whole branch), with severity classification |\n| **receiving-code-review** | Responding to feedback with technical rigor |\n| **using-git-worktrees** | Workspace isolation with mode decision table |\n| **finishing-a-development-branch** | Merge/PR decision workflow |\n| **subagent-driven-development** | Fast iteration with two-stage task review and async coordination; resume-based fix loop with five-round cap; records rulings instead of stalling, and batches small same-shape tasks into one dispatch |\n\n### Meta\n| Skill | Purpose |\n|-------|---------|\n| **writing-skills** | Create new skills following best practices |\n| **using-superpowers** | Introduction to the skills system |\n\n### Bundled agents\n\n| Agent | Tier | Role |\n|-------|------|------|\n| `implementer` | inherit | Implements one plan task in subagent-driven development, and fixes review findings |\n| `implementer-flash` | flash | The same, for tasks whose plan gives the complete code and for single-file mechanical fixes |\n| `implementer-pro` | pro | The same, for escalations and design work when your session runs below Pro |\n| `spec-reviewer` | inherit | Read-only: checks one task's implementation against its task text |\n| `code-reviewer` | inherit | Read-only: reviews code quality for one task or a small range |\n| `re-reviewer` | inherit | Read-only: verifies a fix round |\n| `final-reviewer` | inherit | Read-only: reviews the whole branch before merge, for both executors |\n| `session-analyst` | inherit | Read-only: analyses session transcripts for diagnosing-superpowers |\n| `bundle-scrubber` | inherit | Redacts an exported diagnosis bundle for diagnosing-superpowers |\n\n`inherit` runs your session's model, so the reviewers, including the final review, use whatever you pick: Gemini 4 Neon, Carbon, Hydrogen, an Orchestrator, Claude or any other. Agent files can name only `inherit`, `flash` or `pro`, not a model. Which models `flash` and `pro` run is set by Antigravity for each session, not by this plugin, and has changed without a release. On CLI 1.5.18 `flash` ran Gemini 4 Hydrogen at High thinking and `pro` Hydrogen at Extra High; earlier both ran Gemini 3.8 Flash. Your plan may map them differently. So `implementer-pro` is a small step up from `implementer-flash` at most, and both sit below a Neon, Carbon or Claude session.\n\n## 🧭 Philosophy\n\n- **Test-Driven Development** — Write tests first, always\n- **Systematic over ad-hoc** — Process over guessing\n- **Complexity reduction** — Simplicity as primary goal\n- **Evidence over claims** — Verify before declaring success\n\n## 🤝 Contributing\n\nSee [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines, PR requirements, and quality standards.\n\n## 📜 License\n\nMIT License — see [LICENSE](LICENSE) for details.\n\n## 🙏 Acknowledgements\n\nThis project is a fork of [obra/superpowers](https://github.com/obra/superpowers). If Superpowers has helped you, consider [sponsoring the original project](https://github.com/sponsors/obra).\n",
+  "latestReleaseNotes": "A fork hotfix on upstream v7.0.2. The manifest version stays 7.0.2.\n\n### Changes\n\n* `final-reviewer` now runs on your session's model, Orchestrator and Claude included.\n* On Hydrogen or Flash, the agent suggests a stronger model before the final review.\n* `browser-testing`: in the 2.0 app 2.30+, the agent starts the browser check itself.\n* The CLI, the IDE and business accounts still use `/browser`.\n* Both executors mirror plan tasks to the live step checklist where the session has one.\n* `plugin.json` now declares the MIT license.\n* README: notes on `~/.agents/skills` and the Windows cross-drive plugin fix in CLI 1.5.18.\n\n### Platform Notes\n\n* On CLI 1.5.18, `flash` ran Gemini 4 Hydrogen High and `pro` Hydrogen Extra High.\n* Earlier CLIs ran both tiers on Gemini 3.8 Flash, which retires on 2026-11-30.\n* `implementer-pro` is a small step up from `implementer-flash` at most.\n* Antigravity's servers set this mapping per session; no plugin setting changes it.\n* Other plans may map the tiers differently; only `inherit` is predictable.\n* `inherit` follows any session model, including Gemini 4 Neon, the new default.\n* The platform reference records docs to 2.0 2.35.2 and CLI 1.5.18.\n* Dynamic Workflows ran our reviewers in parallel in a test; no skill uses them yet.\n\n---\n\n**Full Changelog**: https://github.com/roundpilot/superpowers-antigravity/compare/v7.0.2...v7.0.2.1\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/purity-check.mjs",
+        "line": 77,
+        "snippet": "const m = /^gitdir:\\s*(.+?)\\s*$/m.exec(fs.readFileSync(dotGit, 'utf8'));",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/hooks/purity-check.mjs#L77"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/purity-check.mjs",
+        "line": 251,
+        "snippet": "const m = g.re.exec(text);",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/hooks/purity-check.mjs#L251"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/writing-skills/render-graphs.js",
+        "line": 25,
+        "snippet": "while ((match = regex.exec(markdown)) !== null) {",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/render-graphs.js#L25"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/writing-skills/render-graphs.js",
+        "line": 72,
+        "snippet": "return execFileSync('dot', ['-Tsvg'], { input: dotContent, encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/render-graphs.js#L72"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/writing-skills/render-graphs.js",
+        "line": 113,
+        "snippet": "execFileSync('dot', ['-V'], { stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/render-graphs.js#L113"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/writing-skills/render-graphs.js",
+        "line": 142,
+        "snippet": "fs.writeFileSync(outputPath, svg);",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/render-graphs.js#L142"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/writing-skills/render-graphs.js",
+        "line": 147,
+        "snippet": "fs.writeFileSync(dotPath, combined);",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/render-graphs.js#L147"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/writing-skills/render-graphs.js",
+        "line": 158,
+        "snippet": "fs.writeFileSync(outputPath, svg);",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/render-graphs.js#L158"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "hooks/purity-check.mjs",
+        "line": 270,
+        "snippet": "// The entry CONTRIBUTING has contributors add to ~/.gemini/config/hooks.json.",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/hooks/purity-check.mjs#L270"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/executing-plans/SKILL.md",
+        "line": 181,
+        "snippet": "Every step that runs a command has an `Expected:` line. Run the command,",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/executing-plans/SKILL.md#L181"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/subagent-driven-development/SKILL.md",
+        "line": 145,
+        "snippet": "The roles ship as bundled agents — `implementer`, `implementer-flash`, `implementer-pro`, `spec-reviewer`, `code-reviewer`, `re-reviewer` and `final-reviewer` (defined in the plugi",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/subagent-driven-development/SKILL.md#L145"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/writing-skills/SKILL.md",
+        "line": 163,
+        "snippet": "Invoke bundled scripts through their interpreter in the prose (`bash scripts/tool.sh`, `node scripts/tool.js`), never by bare path: some harness plugin packagers strip executable b",
+        "githubBlobUrl": "https://github.com/roundpilot/superpowers-antigravity/blob/d953f1585c396133e6447f6233ce34b153dc2e98/skills/writing-skills/SKILL.md#L163"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "7.0.2",
+      "sha": "d953f1585c396133e6447f6233ce34b153dc2e98",
+      "scannedAt": "2026-11-27T18:13:45.925Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

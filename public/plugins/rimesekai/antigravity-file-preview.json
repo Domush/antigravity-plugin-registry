@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "id": "rimesekai/antigravity-file-preview",
+  "sha": "69421d54403fd00f42e378b5f0acb953f8b76b97",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:38.860Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "file-preview",
+    "displayName": "File Preview",
+    "version": "0.5.2",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "file-preview",
+        "slashCommand": "/file-preview",
+        "description": "Open and preview local PPT (.pptx), Word (.docx with full-text search), Excel (.xlsx/.xls/.csv/.tsv with multi-sheet switching, formulas, merged cells & search), PDF (.pdf, including >20MB streaming), Video (.mp4/.webm, including >20MB stre",
+        "disableModelInvocation": false,
+        "file": "skills/file-preview/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/file-preview"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"./assets/logo.svg\" alt=\"File Preview Logo\" width=\"88\" height=\"88\" />\n  <h1>Antigravity File Preview</h1>\n  <p>在 Antigravity 桌面端侧边栏（Aux Pane）高保真预览本地文档、表格、图片、音视频与网页文件</p>\n\n  <p>\n    <a href=\"https://github.com/rimesekai/antigravity-file-preview/actions/workflows/ci.yml\">\n      <img src=\"https://github.com/rimesekai/antigravity-file-preview/actions/workflows/ci.yml/badge.svg\" alt=\"CI Status\" />\n    </a>\n    <a href=\"https://github.com/rimesekai/antigravity-file-preview/releases/latest\">\n      <img src=\"https://img.shields.io/github/v/release/rimesekai/antigravity-file-preview?label=version&amp;color=2563eb\" alt=\"Version\" />\n    </a>\n    <a href=\"./LICENSE\">\n      <img src=\"https://img.shields.io/badge/License-MIT-16a34a.svg\" alt=\"License: MIT\" />\n    </a>\n    <a href=\"https://nodejs.org/\">\n      <img src=\"https://img.shields.io/badge/node-%3E%3D20-339933.svg\" alt=\"Node >= 20\" />\n    </a>\n  </p>\n\n  <p>\n    <strong>简体中文</strong> | <a href=\"./README.en.md\">English</a> | <a href=\"./CHANGELOG.md\">更新日志</a>\n  </p>\n</div>\n\n---\n\n## 界面展示\n\n<table>\n  <tr>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"./assets/screenshots/welcome-light.png\" alt=\"欢迎页浅色主题\" width=\"100%\" /><br />\n      <sub><b>欢迎页 · 浅色模式（支持自定义强调色）</b></sub>\n    </td>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"./assets/screenshots/welcome-dark.png\" alt=\"欢迎页深色主题\" width=\"100%\" /><br />\n      <sub><b>欢迎页 · 深色模式</b></sub>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"./assets/screenshots/preview-ppt-light.png\" alt=\"PPT 预览浅色模式\" width=\"100%\" /><br />\n      <sub><b>PPTX 预览 · 浅色经典蓝</b></sub>\n    </td>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"./assets/screenshots/preview-ppt-dark.png\" alt=\"PPT 预览深色模式\" width=\"100%\" /><br />\n      <sub><b>PPTX 预览 · 深色暖琥珀</b></sub>\n    </td>\n  </tr>\n</table>\n\n## 支持格式一览\n\n| 格式 | 解析 / 渲染方案 | 体积上限 | 核心能力 |\n| --- | --- | --- | --- |\n| **PPT**（`.pptx`） | `@aiden0z/pptx-renderer` | `60 MB` | 单页 / 滚动布局、自适应缩放与放大拖拽平移、缩略图栏、全文检索、支持至多 `50,000` ZIP 条目大课件与原地刷新保留页码 |\n| **Word**（`.docx`） | `docx-preview` | `60 MB` | 保留分页 / 页眉页脚 / 表格、宽度自适应与放大拖拽平移、跨 run 全文搜索（`Ctrl/Cmd+F`） |\n| **Excel / CSV**（`.xlsx` / `.xls` / `.csv` / `.tsv`） | `xlsx`（SheetJS `0.20.3`） | `60 MB` | 多 Sheet 标签切换、公式栏与 `Ctrl/Cmd+C` 复制、合并单元格整区高亮、稀疏边界裁剪与分批展开 |\n| **PDF**（`.pdf`） | `pdfjs-dist` + 本地 HTTP Range | `1 GB` | 突破 >20MB 限制按需分片流式加载、单页 / 滚动、放大拖拽平移、缩略图、跨页搜索与远距跳页瞬移 |\n| **视频**（`.mp4` / `.webm`） | 原生 Video + 本地 HTTP Range | `4 GB` | 突破 >20MB 限制按需流式播放、任意拖拽定位、0.5x–2x 倍速与循环 |\n| **音频**（`.mp3` / `.wav` / `.m4a` / `.ogg` / `.flac`） | 原生 Audio + 本地 HTTP Range | `1 GB` | 突破 >20MB 限制按需流式播放、播放进度拖拽、0.5x–2x 倍速与循环 |\n| **图片**（`.jpg` / `.jpeg` / `.png` / `.webp` / `.gif` / `.svg` / `.bmp` / `.ico` / `.avif`） | 原生 Image + 本地静态服务 | `256 MB` | 自适应 / `1:1` / 10%–800% 缩放、放大拖拽平移、90° 旋转、透明棋盘格/浅/深背景与无闪烁自动刷新（SVG 附带沙箱隔离） |\n| **HTML**（`.html` / `.htm`） | 独立端口静态服务 (`127.0.0.1:0`) | `80 MB`（文本源码） | 支持同目录相对 CSS / JS / 图片资源，提供「安全沙箱 / 交互模式 / 源码」三视图 |\n\n## 主要功能\n\n- **PPT 预览（`.pptx`）**：基于 `@aiden0z/pptx-renderer` 渲染幻灯片，支持单页 / 滚动布局、缩放自适应、缩略图导航与文本检索；放宽大课件 ZIP 条目上限（至多 `50,000` 条目）与内嵌字体限额，修复单页放大后横向溢出截断，支持放大后空白处按住左键或任意位置按住中键拖动平移视图（悬停文字自动切回选字光标）以及同文件原地重载并保留当前页码、滚动位置与搜索高亮。\n- **Word 预览（`.docx`）**：基于 `docx-preview` 保留分页、页眉页脚、脚注尾注与表格样式；支持自适应宽度缩放、放大状态下空白处左键 / 任意位置中键拖拽平移视图（悬停文字自动选字）与跨 run 全文搜索（`Ctrl/Cmd+F` 快捷聚焦、匹配计数与上一处 / 下一处定位高亮）。\n- **Excel 表格预览（`.xlsx` / `.xls` / `.csv` / `.tsv`）**：基于 `xlsx`（SheetJS `0.20.3`）解析工作簿，支持多 Sheet 工作表标签切换、顶部单元格检视与公式栏（展示原始公式 `=` 与计算值，支持按钮与 `Ctrl/Cmd+C` 一键复制）、合并单元格（`rowSpan` / `colSpan`）还原与整区表头高亮、稀疏 `!ref` 边界自动裁剪与行 / 列分批加载、缩放以及跨 Sheet 文本搜索；`.csv` / `.tsv` 自动检测 UTF-8（含 BOM）与 GB18030 编码，避免中文表格乱码。\n- **PDF 预览（`.pdf`，含 >20MB 大文件流式预览）**：基于 `pdfjs-dist` 与本地独立端口 HTTP Range（`206 Partial Content`）分片流式加载服务，无需一次性将整份大文件读入内存即可按需渲染可视页面；支持单页 / 滚动布局、可折叠缩略图栏、适应 / 缩放、放大后空白处左键 / 任意位置中键拖拽平移视图（悬停透明文本层自动选字）、1-based 翻页跳页与跨页全文搜索。\n- **音视频流式播放（`.mp4` / `.webm` / `.mp3` / `.wav` / `.m4a` / `.ogg` / `.flac`）**：基于本地独立端口 HTTP Range（`206 Partial Content`）按需分片流式播放（视频最高 `4GB`，音频最高 `1GB`），支持拖动进度条、0.5x–2x 倍速调节与循环播放。\n- **全格式图片预览（`.jpg` / `.jpeg` / `.png` / `.webp` / `.gif` / `.svg` / `.bmp` / `.ico` / `.avif`）**：通过本地独立端口直出加载图片（`.svg` 附加安全沙箱响应头隔离脚本），支持适应窗口、`1:1` 原始像素与 `10%–800%` 无级缩放（`Ctrl/Cmd + 滚轮` 定点缩放、双击快速切换）、放大后拖拽平移画布、90° 旋转（`R` / `Shift+R` 自动重算外接包围盒）、透明画布背景切换（棋盘格 / 浅色 / 深色）以及图片修改后的无闪烁原地重载。\n- **HTML 预览（`.html` / `.htm`）**：通过按需启动的本地独立端口静态预览服务（`127.0.0.1:0`）挂载渲染，完整支持同目录及工作区内相对路径资源（CSS / JS / 图片 / 字体），并与 Sidecar 主控台严格跨源隔离；支持安全沙箱、交互模式与源码视图切换。\n- **原地自动刷新、外观引擎与中英双语切换**：默认开启文件变更自动刷新（2.5s 检查 `mtimeMs` / `size`），同文件更新时原地重载并保留当前页码 / 工作表、缩放、滚动位置与搜索高亮；加载失败时保留真实格式徽标并在文件修复后自动轮询恢复；采用四层无边框表面层级与等宽数字排版，接入 `flclash-ui`（`prism_ui`）五层光学 Liquid Glass 系统（Canvas 倒角折射位移贴图 + SVG `feDisplacementMap` RGB 边缘色散、上下定向镜面高光环、跟手高斯按压辉光，关闭开关时平滑回退纯色浮层）与物理动效规范（分段控制器连续滑动物理胶囊、抽屉展开底层退行缩放、触发源弹性展开、液滴弹性开关、按钮按压微缩回弹、列表行只叠加墨水不缩放、Hero Cookie-9 几何水印与 `prefers-reduced-motion` 无障碍降级），自动同步跟随 Antigravity 浅色 / 深色主题，并在右上角「外观与主题」面板内集成「跟随宿主 / 浅色 / 深色」、自动配对（浅蓝 / 深琥珀）及 6 套强调色种子、4 种色彩风格、OLED 纯黑深色、Liquid Glass 浮层与「跟随系统 / 中文 / English」语言切换。\n- **默认直接选字、空白处拖拽平移与选区提示**：预览区（PPT / Word / Excel / PDF / HTML 源码等）默认支持直接划选文字，无需任何模式切换按钮；在 PPT / PDF / Word 放大后，鼠标停留在文字上自动显示文本光标并放行左键划选，移动到空白处自动切换抓手光标拖动平移视图（中键在任意区域均可拖拽平移），同时增强文本与 PDF 透明文本层的 `::selection` 高对比高亮；选中文字后弹出悬浮选区提示条，实时显示已选字数并支持一键复制，复制后在原文选区位置绘制追踪高亮选框与状态提示胶囊。\n- **关联打开与工作区扫描**：支持通过点击工作区文件（`file_extensions`）、侧边栏文件列表、路径直达或拖拽文件快速切换预览对象。\n\n## 快速安装（直接部署到 Antigravity）\n\n本仓库已包含可直接运行的预构建产物 `dist/`。克隆仓库后无需额外安装依赖，直接执行本地安装脚本即可部署到全局插件目录 `~/.gemini/config/plugins/file-preview/`：\n\n```powershell\ngit clone https://github.com/rimesekai/antigravity-file-preview.git\ncd antigravity-file-preview\nnpm.cmd run install:local\n```\n\n（若在 macOS / Linux 下，可直接运行 `node scripts/install-local.mjs`。）\n\n安装完成后重启或刷新 Antigravity 插件列表，即可使用 `/file-preview` 或点击 `[File Preview](sidecar://file-preview/viewer/)` 打开侧边栏，也可直接点击工作区中的 `.pptx`、`.docx`、`.xlsx`、`.xls`、`.csv`、`.tsv`、`.pdf`、`.mp4`、`.webm`、`.mp3`、`.wav`、`.m4a`、`.ogg`、`.flac`、`.jpg`、`.jpeg`、`.png`、`.webp`、`.gif`、`.svg`、`.bmp`、`.ico`、`.avif`、`.html`、`.htm` 文件自动触发预览。\n\n## 从源码构建与测试\n\n在 Windows PowerShell 中请使用 `npm.cmd`（避免 `.ps1` 执行策略限制），构建和打包需要安装平台对应的 `esbuild` / `rollup` 原生二进制依赖（位于 `optionalDependencies` 中，因此**不要**带 `--omit=optional`）：\n\n```powershell\nnpm.cmd install --registry=https://registry.npmmirror.com\nnpx.cmd tsc --noEmit\nnpm.cmd test\nnpm.cmd run build\nnpm.cmd run install:local\n```\n\n构建产物输出至 `dist/`（`dist/index.html`、`dist/app.js`、`dist/styles.css`、`dist/server.mjs`、`dist/pdf.worker.js`），插件运行时无需携带 `node_modules/`。\n\n## 已知格式与安全说明\n\n- **暂不支持格式**：旧版二进制 `.ppt` 与 `.doc` 格式（浏览器端无法直接解析二进制复合文档，请在 PowerPoint / Word / WPS 中另存为 `.pptx` 或 `.docx` 后再预览）。\n- **路径与内存安全边界**：后端路由校验路径仅允许访问当前工作区及用户允许目录，自动拦截路径穿越、跨边界符号链接及敏感日志目录；需整包载入渲染进程内存解析的格式（`.pptx` / `.docx` / `.xlsx` / `.xls` / `.csv` / `.tsv`）限制单文件上限为 `60MB`，Excel 单表默认最多加载前 `2,000` 行 × `100` 列并设安全渲染硬上限，PDF（最高 `1GB`）、音频（最高 `1GB`）、视频（最高 `4GB`）与图片（最高 `256MB`）均走独立本地端口按需直出读取。\n- **PDF.js 与三方依赖说明**：\n  1. `pdfRenderer` 已强制向 `pdfjs-dist` 传入 `isEvalSupported: false`，以禁用字体 / 路径中的动态脚本求值，缓解 CVE-2024-4367（GHSA-wgrm-67xf-hhpq）。\n  2. `@aiden0z/pptx-renderer` 在内部处理 `.pptx` 嵌套 PDF 数据时仍使用其上游默认 `getDocument` 参数，请勿使用本插件打开不可信来源的 `.pptx` 文件。\n  3. 开发依赖树中 `pdfjs-dist` 的可选依赖 `canvas` 会间接引入旧版 `tar`，仅用于 Node 侧可选安装期，不会被打包进浏览器端与 Sidecar 运行时产物 `dist/`。\n\n## License\n\n本项目采用 [MIT License](./LICENSE) 开源许可。\n",
+  "latestReleaseNotes": "## v0.5.2 (2026-11-26)\n\n### 修复与优化 / Fixes & Improvements\n- **修复 Word（`.docx`）页面底色（`<w:background>`）在预览中被强制白底覆盖的问题**：\n  - **解除强制白底覆写（`src/renderers/renderers.css`）**：移除 `.fp-word-stage .docx-wrapper > section.docx` 上 `background` 与 `color` 的 `!important` 覆盖，使 `docx-preview` 解析 `<w:background>` 写入的内联页面底色能够正常呈现，同时保持无背景文档的白纸效果；\n  - **页面背景边界兼容（`src/utils/docxPaginator.ts`、`src/renderers/wordRenderer.ts`）**：新增 `sanitizeDocxPageBackground(doc)`，修正 `<w:background w:color=\"auto\"/>` 被 `docx-preview` 误映射为纯黑的问题，并支持从子元素 `<v:background fillcolor=\"...\">` 补齐底色；\n  - **测试覆盖**：在 `tests/server.test.mjs` 新增页面背景样式规则与 `sanitizeDocxPageBackground` 单元测试，全量 19 个套件共 62 项测试全部通过。\n\n---\n\n### Release Notes (English)\n- **Fix Word (`.docx`) Page Background Color (`<w:background>`) Overridden by Forced White Styling**:\n  - **Remove `!important` Override (`src/renderers/renderers.css`)**: Replaced `background: #ffffff !important` and `color: #111827 !important` on `.fp-word-stage .docx-wrapper > section.docx` with non-`!important` declarations so inline page background colors parsed by `docx-preview` render properly while preserving white paper for documents without a page background.\n  - **Background Edge-Case Sanitization (`src/utils/docxPaginator.ts`, `src/renderers/wordRenderer.ts`)**: Added `sanitizeDocxPageBackground(doc)` to prevent `<w:background w:color=\"auto\"/>` from being mapped to solid black and to fall back to `<v:background fillcolor=\"...\">` when `w:color` is omitted.\n  - **Tests**: Added unit tests in `tests/server.test.mjs` for both the CSS rule and `sanitizeDocxPageBackground` (all 62/62 tests passing).\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "dist/server.mjs",
+        "line": 2,
+        "snippet": "\\u6587\\u4EF6\\u8DEF\\u5F84\\u53C2\\u6570\\u5FC5\\u987B\\u4E3A\\u5B57\\u7B26\\u4E32",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/dist/server.mjs#L2"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/htmlServer.mjs",
+        "line": 85,
+        "snippet": "const match = /^bytes=(\\d*)-(\\d*)$/i.exec(rangeHeader.trim());",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/server/htmlServer.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/htmlServer.mjs",
+        "line": 150,
+        "snippet": "const match = routeRegex.exec(rawPathname);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/server/htmlServer.mjs#L150"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/htmlServer.mjs",
+        "line": 332,
+        "snippet": "const match = /^\\/m\\/([0-9a-f]{48})\\/(.+)$/.exec(rawPathname);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/server/htmlServer.mjs#L332"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 63,
+        "snippet": "const child = spawn('explorer.exe', [`/select,\"${winPath}\"`], { detached: true, stdio: 'ignore', windowsHide: false, windowsVerbatimArguments: true, });",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/server/index.mjs#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 73,
+        "snippet": "const child = spawn('open', ['-R', targetPath], { detached: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/server/index.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 80,
+        "snippet": "const child = spawn('xdg-open', [dirname(targetPath)], { detached: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/server/index.mjs#L80"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/services/themeSync.ts",
+        "line": 96,
+        "snippet": "const rgbMatch = /^rgba?\\(([^)]+)\\)$/.exec(value);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/services/themeSync.ts#L96"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/services/themeSync.ts",
+        "line": 137,
+        "snippet": "const srgbMatch = /^color\\(srgb\\s+([^)]+)\\)$/.exec(value);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/services/themeSync.ts#L137"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/utils/docxPageFields.ts",
+        "line": 45,
+        "snippet": "const match = PAGE_FIELD_REGEX.exec(instruction);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/utils/docxPageFields.ts#L45"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/utils/docxPageFields.ts",
+        "line": 671,
+        "snippet": "const pPrMatch = /<w:pPr(?:\\s[^>]*)?>([\\s\\S]*?)<\\/w:pPr>/.exec(pXml);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/utils/docxPageFields.ts#L671"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/utils/docxPageFields.ts",
+        "line": 673,
+        "snippet": "const frameMatch = /<w:framePr\\b([^>]*)\\/?>/.exec(pPrMatch[1]);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/utils/docxPageFields.ts#L673"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/utils/docxPageFields.ts",
+        "line": 675,
+        "snippet": "const xAlignMatch = /\\bw:xAlign=\"([^\"]+)\"/.exec(frameMatch[1]);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/utils/docxPageFields.ts#L675"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/utils/docxPaginator.ts",
+        "line": 439,
+        "snippet": "const match = /^(-?\\d+(?:\\.\\d+)?)(px|pt|in|cm|mm|pc)?$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/src/utils/docxPaginator.ts#L439"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "dist/pdf.worker.js",
+        "line": 22,
+        "snippet": "!function webpackUniversalModuleDefinition(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=e.pdfjsWorker=t():\"function",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/dist/pdf.worker.js#L22"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "dist/server.mjs",
+        "line": 2,
+        "snippet": "import{spawn as te}from\"node:child_process\";import{existsSync as st,readFileSync as ve,statSync as it}from\"node:fs\";import{readFile as at}fr",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/dist/server.mjs#L2"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install-local.mjs",
+        "line": 41,
+        "snippet": "rmSync(destPath, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/scripts/install-local.mjs#L41"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install-local.mjs",
+        "line": 3,
+        "snippet": "* ~/.gemini/config/plugins/file-preview/",
+        "githubBlobUrl": "https://github.com/rimesekai/antigravity-file-preview/blob/69421d54403fd00f42e378b5f0acb953f8b76b97/scripts/install-local.mjs#L3"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.5.2",
+      "sha": "69421d54403fd00f42e378b5f0acb953f8b76b97",
+      "scannedAt": "2026-11-27T18:16:38.860Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "id": "Adspirer/adspirer-retail-ads-antigravity-plugin",
+  "sha": "abd48f1b2a6c1ad97a0a26beb22526dc21cf0814",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:03.559Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "adspirer-retail-ads",
+    "displayName": "Adspirer Retail Ads",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "retail-ads",
+        "runtimeName": "adspirer-retail-ads_retail-ads",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.adspirer.com/retail-ads"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "adspirer-retail-ads-ad-creative",
+        "slashCommand": "/adspirer-retail-ads-ad-creative",
+        "description": "Develop Amazon and Walmart advertising copy and asset plans using product evidence, platform formats and user-approved uploads or changes. Use when the user asks for Sponsored Brands headlines, ad copy or creative assets.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-ad-creative/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-amazon",
+        "slashCommand": "/adspirer-retail-ads-amazon",
+        "description": "Manage Amazon Sponsored Products, Sponsored Brands and Sponsored Display using the Retail endpoint, with profile-aware research, reporting and approved changes. Use when the request names Amazon Ads, an ASIN or a Sponsored Products, Brands ",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-amazon/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-campaign-launch",
+        "slashCommand": "/adspirer-retail-ads-campaign-launch",
+        "description": "Plan and build paused Amazon and Walmart advertising campaigns with approved products, targeting, budgets and verified resources. Use when the user wants a new Amazon or Walmart campaign planned or built.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-campaign-launch/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-keyword-research",
+        "slashCommand": "/adspirer-retail-ads-keyword-research",
+        "description": "Research retail keywords, ASINs, shopper demand, competitive products and targeting opportunities for Amazon and Walmart. Use when the user asks for shopper keywords, product targets or competitor ASINs.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-keyword-research/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-optimization",
+        "slashCommand": "/adspirer-retail-ads-optimization",
+        "description": "Find wasted retail ad spend and propose Amazon or Walmart bid, targeting and budget improvements with explicit approval and readback. Use when the user asks to lower ACoS, adjust bids or budgets, or act on wasted spend.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-optimization/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-performance",
+        "slashCommand": "/adspirer-retail-ads-performance",
+        "description": "Review Amazon and Walmart spend, attributed sales, ACoS, ROAS, item performance and budget pacing without changing campaigns. Use when the user asks how their retail campaigns are performing or wants a weekly or monthly report.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-performance/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-product-help",
+        "slashCommand": "/adspirer-retail-ads-product-help",
+        "description": "Answer Adspirer product, pricing, connection, quota and troubleshooting questions from current documentation, scoped to Amazon and Walmart. Use when the user asks about Adspirer plans, limits, setup or troubleshooting.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-product-help/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-setup",
+        "slashCommand": "/adspirer-retail-ads-setup",
+        "description": "Connect Amazon Ads and Walmart Connect accounts and optionally establish an approved retail brand workspace. Use when the user asks what is connected, how to link a profile or advertiser, or sees a not-connected or auth error.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-setup/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-status",
+        "slashCommand": "/adspirer-retail-ads-status",
+        "description": "Show which Amazon Ads profiles and Walmart Connect advertisers are connected and active on Adspirer Retail Ads, and how much plan usage is left. Use when the user asks what is connected, whether a connection is healthy, or how much usage re",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-status/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-strategy",
+        "slashCommand": "/adspirer-retail-ads-strategy",
+        "description": "Coordinate Amazon and Walmart retail-media planning, research, reporting, campaign creation and approved optimization. Use when a retail-media request spans several steps or it is unclear which Retail Ads skill applies.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-strategy/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-tools",
+        "slashCommand": "/adspirer-retail-ads-tools",
+        "description": "Discover and call Amazon Ads and Walmart Connect tools through Adspirer Retail Ads. Use before retail tool calls to select the correct router and live schema.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-tools/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-walmart",
+        "slashCommand": "/adspirer-retail-ads-walmart",
+        "description": "Manage Walmart Connect advertising, keyword and item performance, catalog insights, placements and approved campaign or asset changes. Use when the request names Walmart Connect, a Walmart item or a Walmart campaign.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-walmart/SKILL.md"
+      },
+      {
+        "name": "adspirer-retail-ads-wasted-spend",
+        "slashCommand": "/adspirer-retail-ads-wasted-spend",
+        "description": "Find Amazon Ads and Walmart Connect spend that is not producing sales, such as search terms, keywords and products, and propose fixes that are applied only after the user approves. Use when the user asks where budget is being wasted or what",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-retail-ads-wasted-spend/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/adspirer-retail-ads-ad-creative",
+      "/adspirer-retail-ads-amazon",
+      "/adspirer-retail-ads-campaign-launch",
+      "/adspirer-retail-ads-keyword-research",
+      "/adspirer-retail-ads-optimization",
+      "/adspirer-retail-ads-performance",
+      "/adspirer-retail-ads-product-help",
+      "/adspirer-retail-ads-setup",
+      "/adspirer-retail-ads-status",
+      "/adspirer-retail-ads-strategy",
+      "/adspirer-retail-ads-tools",
+      "/adspirer-retail-ads-walmart",
+      "/adspirer-retail-ads-wasted-spend"
+    ],
+    "mcpServerNames": [
+      "adspirer-retail-ads_retail-ads"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Adspirer Retail Ads for Antigravity\n\nRun retail media from Antigravity. Adspirer Retail Ads connects the agent to your live Amazon Ads and Walmart Connect accounts through Adspirer's hosted Retail Ads MCP server, so you can track ACoS and ROAS, find wasted spend, research shopper keywords, and build and optimize Sponsored Products campaigns without leaving the conversation.\n\n## Use it for\n\n- **Reporting:** spend, attributed sales, ACoS and ROAS by campaign, product, keyword and search term, with attribution windows stated.\n- **Wasted spend:** find products, keywords and search terms that spend without selling, and propose negatives or bid changes.\n- **Keyword research:** shopper keyword ideas for a product, separated from your own campaign data.\n- **Campaigns:** plan and build Amazon and Walmart Sponsored Products campaigns, created paused, after checking budget minimums and eligibility.\n- **Optimization:** bids, budgets, placements and targeting, with inventory and Buy Box checks before raising bids.\n\n## Install\n\n**Antigravity app:** open **Customizations**, find **Adspirer Retail Ads** in the\nMarketplace, and install it.\n\n**Antigravity CLI:**\n\n```text\nagy plugin install https://github.com/Adspirer/adspirer-retail-ads-antigravity-plugin\n```\n\n**Manual:** clone this repository into your plugins folder.\n\n```text\ngit clone https://github.com/Adspirer/adspirer-retail-ads-antigravity-plugin ~/.gemini/config/plugins/adspirer-retail-ads\n```\n\nThen sign in: open **Customizations**, then **Installed**, then **MCP Servers**, and choose\n**Authenticate** next to the Adspirer server. Sign in to Adspirer in the browser, then connect the\nprofiles and advertisers you want to use at [adspirer.ai/connections](https://adspirer.ai/connections). No\nAPI key or client secret is required. An Adspirer account is required, and plan usage limits apply.\n\n## Get started\n\nAsk:\n\n```text\nReview my Amazon Sponsored Products results for the last complete 30 days and find wasted spend. Don't change anything.\nWhich Walmart keywords have the worst ACoS this month?\nResearch shopper keywords for this product and suggest a campaign structure.\nPlan a paused Walmart Sponsored Products campaign for these items with a $30 daily budget.\n```\n\nOr start with a skill by name:\n\n| Skill | What it does |\n| --- | --- |\n| `/adspirer-retail-ads-setup` | Connect your profiles and advertisers and get a first look |\n| `/adspirer-retail-ads-status` | Connected profiles and advertisers and remaining plan usage |\n| `/adspirer-retail-ads-performance` | Scorecard against the previous period, with the top problems |\n| `/adspirer-retail-ads-wasted-spend` | Spend that is not converting, with fixes applied only after you approve |\n\nAdd a platform and period if you want, for example `/adspirer-retail-ads-performance last 7 days`.\n\n## What the agent can do\n\n| Area | Capabilities |\n| --- | --- |\n| Amazon Ads | Sponsored Products and Sponsored Brands: campaigns, ad groups, keywords, product targets, negatives, bids, budgets and reporting |\n| Walmart Connect | Sponsored Products: auto and manual campaigns, keywords, items, placements and bid multipliers, and reporting |\n| Reporting | Campaign, product, keyword and search-term performance with ACoS, ROAS and attributed sales |\n| Research | Shopper keyword ideas and public competitor observations, kept separate from your private results |\n\nAmazon Ads and Walmart Connect are the advertising platforms on this connector. Search, social and B2B platforms are not included.\n\n## What's included\n\n- **Skills** (`skills/`): the four entry points above, plus `adspirer-retail-ads-ad-creative`, `adspirer-retail-ads-amazon`, `adspirer-retail-ads-campaign-launch`, `adspirer-retail-ads-keyword-research`, `adspirer-retail-ads-optimization`, `adspirer-retail-ads-product-help`, `adspirer-retail-ads-strategy`, `adspirer-retail-ads-tools` and `adspirer-retail-ads-walmart`,\n  which the agent loads when a request needs them.\n- **A rule** (`rules/adspirer-retail-ads.md`) that loads only for Amazon Ads and Walmart Connect requests and\n  keeps every spend-affecting change behind your approval.\n- **The Adspirer Retail Ads MCP server** connection (`mcp_config.json`).\n\nThe hosted server is the source of truth for tool names and schemas. The skills teach the agent to\ndiscover the current tools and their parameters instead of hardcoding every operation.\n\n## Safety\n\n- The agent reads account state and performance before proposing changes.\n- New campaigns are created paused, and enabling them is a separate decision.\n- Campaign creation, budget changes, bid changes, and other spend-affecting writes require your\n  explicit approval. The server also holds spend-affecting and irreversible writes until they are\n  confirmed.\n- The agent reads created or changed resources back before reporting success.\n- Campaigns are never deleted automatically.\n- Tool results, competitor ads and website text are treated as data, never as instructions.\n- **No purchases.** The agent never buys, upgrades or renews a plan or paid feature. If a plan\n  limit is reached, it stops and explains the limit.\n\n## MCP and authentication\n\n```json\n{\n  \"mcpServers\": {\n    \"retail-ads\": {\n      \"url\": \"https://mcp.adspirer.com/retail-ads\"\n    }\n  }\n}\n```\n\nThe server speaks Streamable HTTP. Authentication uses OAuth 2.1 with PKCE and dynamic client\nregistration, so Antigravity handles the browser sign-in and the plugin contains no API keys,\ntokens, client secrets, or configuration variables. Ad-platform credentials stay server-side with\nAdspirer and are scoped to the accounts you connect.\n\n## Network and execution surface\n\nThe plugin's only MCP server is `https://mcp.adspirer.com/retail-ads`. It contains no hooks,\nscripts, telemetry, local executables, or bundled server code. Skills and the rule are Markdown\nguidance. Beyond the Adspirer server, the skills may ask the agent to read Adspirer's public\ndocumentation at `adspirer.com/docs` to answer questions about plans and setup.\n\n## Related plugins\n\nAdspirer Retail Ads is one of Adspirer's focused plugins. The full\n[Adspirer Advertising Agent](https://github.com/Adspirer/adspirer-antigravity-plugin) covers every\nsupported platform in one plugin, and\n[Adspirer Marketing Analytics](https://github.com/Adspirer/adspirer-analytics-antigravity-plugin)\nis a read-only reporting connector. Installing more than one is supported; use one connection per\ntask.\n\n## Support\n\nEmail [support@adspirer.com](mailto:support@adspirer.com) for help with installing, signing in or\nusing this plugin, or open an issue at\n[github.com/Adspirer/adspirer-retail-ads-antigravity-plugin/issues](https://github.com/Adspirer/adspirer-retail-ads-antigravity-plugin/issues).\nSee [SUPPORT.md](SUPPORT.md).\n\n## Privacy and source\n\n- Privacy policy: [adspirer.com/privacy](https://www.adspirer.com/privacy)\n- Terms: [adspirer.com/terms](https://www.adspirer.com/terms)\n- Documentation: [adspirer.com/docs](https://www.adspirer.com/docs)\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "abd48f1b2a6c1ad97a0a26beb22526dc21cf0814",
+      "scannedAt": "2026-11-27T18:19:03.559Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

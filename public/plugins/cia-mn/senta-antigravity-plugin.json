@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "cia-mn/senta-antigravity-plugin",
+  "sha": "89bb02e90b41476b9d2074b6425151103443e8ae",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:37.890Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "senta",
+    "displayName": "Senta ХАБЭА",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "senta",
+        "runtimeName": "senta_senta",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://control.senta.mn/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "senta-hse",
+        "slashCommand": "/senta-hse",
+        "description": "Query and manage workplace health & safety (ХАБЭА / HSE) records in Senta via the Senta remote MCP gateway (work permits, safety observations, inspections, instructions, projects, reference codes, and safe non-signing drafts). Use whenever ",
+        "disableModelInvocation": false,
+        "file": "skills/senta-hse/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/senta-hse"
+    ],
+    "mcpServerNames": [
+      "senta_senta"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Senta ХАБЭА Plugin for Antigravity\n\nOfficial **Antigravity** plugin connecting your agent to **Senta (ХАБЭА / HSE)** via Senta's unified remote MCP gateway (`https://control.senta.mn/mcp`).\n\nWorks for **both** organization members (permits, observations, inspections, instructions, safe drafts) and **standalone users without an organization** (Mongolian HSE laws, `MNS 4969:2000` training standard, `ХАБЭА-н сургалтын журам`, `MNS 5140:2026` official document formatting standard, and HSE document templates).\n\n---\n\n## Install\n\n### Global (all workspaces)\n```bash\ngit clone https://github.com/cia-mn/senta-antigravity-plugin ~/.gemini/config/plugins/senta\n```\n\n### Project-scoped (single workspace)\n```bash\ngit clone https://github.com/cia-mn/senta-antigravity-plugin .agents/plugins/senta\n```\n\nAntigravity automatically discovers the plugin. Open **Additional Options (`...`) → MCP Servers** (or the **Senta ХАБЭА** plugin page in Customizations) to complete the Senta OAuth 2.1 SMS sign-in.\n\nTo update later:\n```bash\ngit -C ~/.gemini/config/plugins/senta pull\n```\n\n---\n\n## What's Included\n\n- **MCP Server (`mcp_config.json`):** Remote Streamable HTTP endpoint `https://control.senta.mn/mcp`\n- **Skill (`skills/senta-hse/SKILL.md`):** Guided workflows for HSE/training standards, `list_organizations`, all 14 read-only HSE tools, and 3 safe non-signing write tools\n- **Rules (`rules/AGENTS.md`):** Always-on MNS 4969:2000 compliance rules, `org_id` scoping, PII masking expectations, and Mongolian/UTC+8 date formatting\n- **Logo & Starter Prompts (`plugin.json`, `assets/logo.png`)**\n\n---\n\n## Managing Organization Access & Revocation\n\nYou control per-organization MCP access live at **[https://app.v2.senta.mn/account](https://app.v2.senta.mn/account)** → **AI / MCP хандалт**:\n\n- **Хаалттай (`off`)** — blocks organization tools immediately (HSE standards remain available)\n- **Зөвхөн унших (`read`)** — default; 14 read-only organization tools\n- **Унших + Ноорог (`write`)** — adds `create_safety_observation`, `add_observation_comment`, and `create_instruction_draft` (`publish: false`)\n- **Revoke anytime** under **Холбогдсон AI апп ба төхөөрөмжүүд**\n\n> **Compliance (MNS 4969:2000):** Phone and national register/passport numbers are masked automatically. Legal signatures (briefings, permits, waivers), approvals, and destructive deletes are never performed over MCP.\n\n---\n\n## Support\n\n- Website: [https://senta.mn](https://senta.mn)\n- Account & MCP Portal: [https://app.v2.senta.mn/account](https://app.v2.senta.mn/account)\n- Contact: `info@cia.mn`\n",
+  "latestReleaseNotes": "Official Senta Antigravity plugin bundling remote MCP (https://control.senta.mn/mcp), senta-hse skill, MNS 4969:2000 & MNS 5140:2026 rules, organization-free HSE & training standards tools, and Senta logo/prompts.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "89bb02e90b41476b9d2074b6425151103443e8ae",
+      "scannedAt": "2026-11-27T18:17:37.890Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

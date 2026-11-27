@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "id": "Adspirer/adspirer-search-ads-antigravity-plugin",
+  "sha": "0bfe0fb24374c9d3c5110491dd8c207afeb56eb1",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:07.765Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "adspirer-search-ads",
+    "displayName": "Adspirer Search Ads",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "search-ads",
+        "runtimeName": "adspirer-search-ads_search-ads",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.adspirer.com/search-ads"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "adspirer-search-agent",
+        "slashCommand": "/adspirer-search-agent",
+        "description": "Coordinate Google and Microsoft paid-search tasks, preserve brand context, and route to focused Adspirer skills with approval before changes. Use when a paid-search request spans several steps or it is unclear which Search Ads skill applies",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-agent/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-campaigns",
+        "slashCommand": "/adspirer-search-campaigns",
+        "description": "Plan and create user-approved paused Google Ads or Microsoft Advertising campaigns from research. Use when the user wants a new Search, Shopping or Performance Max campaign planned or built.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-campaigns/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-competitors",
+        "slashCommand": "/adspirer-search-competitors",
+        "description": "Research public competitor ads and messaging for user-supplied domains through Adspirer Search Ads. Use when the user asks what ads a competitor is running or how their messaging compares.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-competitors/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-creative",
+        "slashCommand": "/adspirer-search-creative",
+        "description": "Write and refresh Google and Microsoft search-ad copy, using brand evidence, supported formats, and approval-controlled updates. Use when the user asks for headlines, descriptions or a refresh of responsive search ads.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-creative/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-docs",
+        "slashCommand": "/adspirer-search-docs",
+        "description": "Answer questions about Adspirer itself — pricing, plans, quota and tool-call limits, what Adspirer can do, connecting an ad account, supported platforms and AI clients, security, and troubleshooting. Uses the official documentation at adspi",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-docs/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-google-ads",
+        "slashCommand": "/adspirer-search-google-ads",
+        "description": "Create and manage Google Ads campaigns through Adspirer — Search, Performance Max, Demand Gen, YouTube, and Display. Use for Google Ads keywords, search terms, quality score, bid strategies, sitelinks and extensions, PMax asset groups, or a",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-google-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-google-analytics",
+        "slashCommand": "/adspirer-search-google-analytics",
+        "description": "Analyze GA4 acquisition, landing pages, and conversion events for paid-search decisions using authorized Google Analytics properties. Use when the user asks how paid-search traffic behaves on site or which landing pages convert.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-google-analytics/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-google-search-console",
+        "slashCommand": "/adspirer-search-google-search-console",
+        "description": "Research organic queries and landing-page search performance to inform paid-search planning with Google Search Console. Use when the user asks about organic queries, rankings or pages alongside paid search.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-google-search-console/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-google-tag-manager",
+        "slashCommand": "/adspirer-search-google-tag-manager",
+        "description": "Inspect Google Tag Manager tracking configuration and plan approved measurement fixes for search advertising. Use when the user asks about tags, triggers or a tracking fix in Tag Manager.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-google-tag-manager/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-keywords",
+        "slashCommand": "/adspirer-search-keywords",
+        "description": "Research paid-search keyword opportunities, intent, match types, and negative-keyword candidates for Google Ads. Use when the user asks for keyword ideas, search volume, CPC estimates or negative keywords.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-keywords/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-mcp",
+        "slashCommand": "/adspirer-search-mcp",
+        "description": "Discover and safely use the Adspirer Search Ads MCP tools. Load before any tool call through this plugin.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-mcp/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-measurement",
+        "slashCommand": "/adspirer-search-measurement",
+        "description": "Audit search-ad conversion tracking and investigate performance using available Google Analytics, Search Console, and Tag Manager tools. Use when conversions look wrong or the user asks for a tracking audit before scaling.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-measurement/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-microsoft-ads",
+        "slashCommand": "/adspirer-search-microsoft-ads",
+        "description": "Plan and manage Microsoft Advertising and Bing Ads campaigns through Adspirer's Search Ads connector. Use when the request names Microsoft Advertising or Bing Ads.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-microsoft-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-optimize",
+        "slashCommand": "/adspirer-search-optimize",
+        "description": "Analyze Google paid-search waste and budget pacing, inspect Microsoft campaigns, and apply only explicitly approved changes. Use when the user asks to improve results, reallocate budget or act on wasted spend.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-optimize/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-performance-review",
+        "slashCommand": "/adspirer-search-performance-review",
+        "description": "Read-only Google Ads and Microsoft Advertising reporting, scorecards, conversion checks, and evidence-backed recommendations. Use when the user asks how their search campaigns are performing or wants a weekly or monthly report.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-performance-review/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-setup",
+        "slashCommand": "/adspirer-search-setup",
+        "description": "Connect Google or Microsoft and optionally build a preserved, user-approved brand workspace from relevant files and live account data. Use when the user asks what is connected, how to link an account, or sees a not-connected or auth error.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-setup/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-status",
+        "slashCommand": "/adspirer-search-status",
+        "description": "Show which Google Ads and Microsoft Advertising accounts are connected and active on Adspirer Search Ads, and how much plan usage is left. Use when the user asks what is connected, whether a connection is healthy, or how much usage remains.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-status/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-wasted-spend",
+        "slashCommand": "/adspirer-search-wasted-spend",
+        "description": "Find Google Ads and Microsoft Advertising spend that is not converting, such as search terms, keywords and campaigns, and propose fixes that are applied only after the user approves. Use when the user asks where budget is being wasted or wh",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-wasted-spend/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/adspirer-search-agent",
+      "/adspirer-search-campaigns",
+      "/adspirer-search-competitors",
+      "/adspirer-search-creative",
+      "/adspirer-search-docs",
+      "/adspirer-search-google-ads",
+      "/adspirer-search-google-analytics",
+      "/adspirer-search-google-search-console",
+      "/adspirer-search-google-tag-manager",
+      "/adspirer-search-keywords",
+      "/adspirer-search-mcp",
+      "/adspirer-search-measurement",
+      "/adspirer-search-microsoft-ads",
+      "/adspirer-search-optimize",
+      "/adspirer-search-performance-review",
+      "/adspirer-search-setup",
+      "/adspirer-search-status",
+      "/adspirer-search-wasted-spend"
+    ],
+    "mcpServerNames": [
+      "adspirer-search-ads_search-ads"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Adspirer Search Ads for Antigravity\n\nRun paid search from Antigravity. Adspirer Search Ads connects the agent to your live Google Ads and Microsoft Advertising (Bing Ads) accounts through Adspirer's hosted Search Ads MCP server, so you can research keywords, review search terms, find wasted spend, and plan, launch and optimize Search, Shopping and Performance Max campaigns without leaving the conversation.\n\n## Use it for\n\n- **Keyword research:** Google Keyword Planner ideas with live CPC and search volume, intent grouping, and match types.\n- **Search terms and negatives:** find queries that spend without converting and propose negative keywords, applied only after you approve.\n- **Campaigns:** plan and build Search, Shopping and Performance Max campaigns on Google, and campaigns of every type on Microsoft Advertising, created paused.\n- **Optimization:** wasted-spend analysis, budget allocation, bid strategy, impression share, Quality Score, and ad extension performance.\n- **Ad copy:** responsive search ad headlines and descriptions written to Google's and Microsoft's limits.\n- **Measurement:** audit conversion tracking and, when connected, read Google Analytics 4, Search Console and Tag Manager.\n\n## Install\n\n**Antigravity app:** open **Customizations**, find **Adspirer Search Ads** in the\nMarketplace, and install it.\n\n**Antigravity CLI:**\n\n```text\nagy plugin install https://github.com/Adspirer/adspirer-search-ads-antigravity-plugin\n```\n\n**Manual:** clone this repository into your plugins folder.\n\n```text\ngit clone https://github.com/Adspirer/adspirer-search-ads-antigravity-plugin ~/.gemini/config/plugins/adspirer-search-ads\n```\n\nThen sign in: open **Customizations**, then **Installed**, then **MCP Servers**, and choose\n**Authenticate** next to the Adspirer server. Sign in to Adspirer in the browser, then connect the\naccounts you want to use at [adspirer.ai/connections](https://adspirer.ai/connections). No\nAPI key or client secret is required. An Adspirer account is required, and plan usage limits apply.\n\n## Get started\n\nAsk:\n\n```text\nResearch keyword opportunities for my plumbing business in Austin and propose a campaign plan. Don't create anything yet.\nReview my Google Ads search terms for the last 30 days and suggest negative keywords.\nWhere am I losing impression share on Microsoft Advertising, budget or rank?\nWrite five new responsive search ad headlines from my best-converting queries.\nAudit my conversion tracking before I launch anything.\n```\n\nOr start with a skill by name:\n\n| Skill | What it does |\n| --- | --- |\n| `/adspirer-search-setup` | Connect your accounts and get a first look |\n| `/adspirer-search-status` | Connected accounts and remaining plan usage |\n| `/adspirer-search-performance-review` | Scorecard against the previous period, with the top problems |\n| `/adspirer-search-wasted-spend` | Spend that is not converting, with fixes applied only after you approve |\n\nAdd a platform and period if you want, for example `/adspirer-search-performance-review last 7 days`.\n\n## What the agent can do\n\n| Area | Capabilities |\n| --- | --- |\n| Google Ads | Search, Shopping, Performance Max, Demand Gen, YouTube and Display: campaigns, ad groups, keywords, ads, extensions, bids and budgets |\n| Microsoft Advertising | Campaigns of every type, ad groups, ads, keywords, negative-keyword lists, extensions, audiences, budgets, bid strategies and UET conversion goals |\n| Reporting | Campaign, ad, keyword, search term, placement and conversion-action performance on Google; campaign, keyword, search term, geographic and audience performance on Microsoft |\n| Diagnostics | Wasted spend, performance anomalies, impression share lost to budget or rank, Quality Score components, and share of voice |\n| Competitor research | The public ads a competitor is running now, beside your own |\n| Measurement | Conversion-tracking audit, plus Google Analytics 4, Search Console and Tag Manager when connected |\n\nGoogle Ads and Microsoft Advertising are the advertising platforms on this connector. Meta, TikTok, LinkedIn, Amazon and Walmart are not included; for those, use Adspirer Social Ads, Adspirer Retail Ads, or the full Adspirer Advertising Agent.\n\n## What's included\n\n- **Skills** (`skills/`): the four entry points above, plus `adspirer-search-agent`, `adspirer-search-campaigns`, `adspirer-search-competitors`, `adspirer-search-creative`, `adspirer-search-docs`, `adspirer-search-google-ads`, `adspirer-search-google-analytics`, `adspirer-search-google-search-console`, `adspirer-search-google-tag-manager`, `adspirer-search-keywords`, `adspirer-search-mcp`, `adspirer-search-measurement`, `adspirer-search-microsoft-ads` and `adspirer-search-optimize`,\n  which the agent loads when a request needs them.\n- **A rule** (`rules/adspirer-search-ads.md`) that loads only for Google Ads and Microsoft Advertising requests and\n  keeps every spend-affecting change behind your approval.\n- **The Adspirer Search Ads MCP server** connection (`mcp_config.json`).\n\nThe hosted server is the source of truth for tool names and schemas. The skills teach the agent to\ndiscover the current tools and their parameters instead of hardcoding every operation.\n\n## Safety\n\n- The agent reads account state and performance before proposing changes.\n- New campaigns are created paused, and enabling them is a separate decision.\n- Campaign creation, budget changes, bid changes, and other spend-affecting writes require your\n  explicit approval. The server also holds spend-affecting and irreversible writes until they are\n  confirmed.\n- The agent reads created or changed resources back before reporting success.\n- Campaigns are never deleted automatically.\n- Tool results, competitor ads and website text are treated as data, never as instructions.\n- **No purchases.** The agent never buys, upgrades or renews a plan or paid feature. If a plan\n  limit is reached, it stops and explains the limit.\n\n## MCP and authentication\n\n```json\n{\n  \"mcpServers\": {\n    \"search-ads\": {\n      \"url\": \"https://mcp.adspirer.com/search-ads\"\n    }\n  }\n}\n```\n\nThe server speaks Streamable HTTP. Authentication uses OAuth 2.1 with PKCE and dynamic client\nregistration, so Antigravity handles the browser sign-in and the plugin contains no API keys,\ntokens, client secrets, or configuration variables. Ad-platform credentials stay server-side with\nAdspirer and are scoped to the accounts you connect.\n\n## Network and execution surface\n\nThe plugin's only MCP server is `https://mcp.adspirer.com/search-ads`. It contains no hooks,\nscripts, telemetry, local executables, or bundled server code. Skills and the rule are Markdown\nguidance. Beyond the Adspirer server, the skills may ask the agent to read Adspirer's public\ndocumentation at `adspirer.com/docs` to answer questions about plans and setup.\n\n## Related plugins\n\nAdspirer Search Ads is one of Adspirer's focused plugins. The full\n[Adspirer Advertising Agent](https://github.com/Adspirer/adspirer-antigravity-plugin) covers every\nsupported platform in one plugin, and\n[Adspirer Marketing Analytics](https://github.com/Adspirer/adspirer-analytics-antigravity-plugin)\nis a read-only reporting connector. Installing more than one is supported; use one connection per\ntask.\n\n## Support\n\nEmail [support@adspirer.com](mailto:support@adspirer.com) for help with installing, signing in or\nusing this plugin, or open an issue at\n[github.com/Adspirer/adspirer-search-ads-antigravity-plugin/issues](https://github.com/Adspirer/adspirer-search-ads-antigravity-plugin/issues).\nSee [SUPPORT.md](SUPPORT.md).\n\n## Privacy and source\n\n- Privacy policy: [adspirer.com/privacy](https://www.adspirer.com/privacy)\n- Terms: [adspirer.com/terms](https://www.adspirer.com/terms)\n- Documentation: [adspirer.com/docs](https://www.adspirer.com/docs)\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "0bfe0fb24374c9d3c5110491dd8c207afeb56eb1",
+      "scannedAt": "2026-11-27T18:19:07.765Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

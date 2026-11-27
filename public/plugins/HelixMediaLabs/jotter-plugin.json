@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "HelixMediaLabs/jotter-plugin",
+  "sha": "d738df0916cb0f9e02cac57ca1717da2446bbc22",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:42.417Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "jotter",
+    "displayName": "Jotter",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "jotter",
+        "runtimeName": "jotter_jotter",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://jotter.fyi/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "jotter_jotter"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Jotter\n\nSave notes and conversation context from one AI assistant and load them into\nanother (ChatGPT, Claude, Gemini). Explicit saves only, text only, private to\nyou — nothing is captured unless you ask, and nothing ever auto-deletes.\n\n## Installing in Cursor\n\n1. Open **Customize** in Cursor's sidebar.\n2. Find **Jotter** in the marketplace.\n3. Select **Install**.\n4. Complete the OAuth sign-in when prompted.\n\nThis plugin only points your agent at the hosted Jotter MCP server\n(`https://jotter.fyi/mcp`) — no code runs locally.\n\n## Installing in Antigravity\n\n```sh\nagy plugin install https://github.com/HelixMediaLabs/jotter-plugin\n```\n\nSign in when the browser opens. Then say \"jot this\" to save, or\n\"Continue my last handoff\".\n\n## Installing in Gemini CLI\n\n```sh\ngemini extensions install https://github.com/HelixMediaLabs/jotter-plugin\n```\n\nSign in when the browser opens on first use.\n\n## Getting started\n\nOnce installed, just talk to it:\n\n> \"Jot this conversation so I can pick it up elsewhere.\"\n\n> \"Load my latest jot and continue where we left off.\"\n\n## Resources\n\n- Site and connect steps: https://jotter.fyi\n- Help: https://jotter.fyi/help\n- Privacy: https://jotter.fyi/privacy\n- Support: jotter@helixmedialabs.com\n",
+  "latestReleaseNotes": "Jotter for Antigravity and Gemini CLI. Connects to the hosted server at https://jotter.fyi/mcp. Sign in when prompted.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "d738df0916cb0f9e02cac57ca1717da2446bbc22",
+      "scannedAt": "2026-11-27T18:24:42.417Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

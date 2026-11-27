@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "id": "auxghlann/pick-me",
+  "sha": "31062cf47025195bed0fc5f54ace94dc91de8348",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:45.348Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "pick-me",
+    "displayName": "Pick Me!",
+    "version": "1.4.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "application-tracker",
+        "slashCommand": "/application-tracker",
+        "description": "Maintains job application records in data/applications.csv, tracks application statuses, schedules follow-ups, and computes pipeline metrics.",
+        "disableModelInvocation": false,
+        "file": "skills/application-tracker/SKILL.md"
+      },
+      {
+        "name": "cover-letter-builder",
+        "slashCommand": "/cover-letter-builder",
+        "description": "Crafts authentic, high-impact cover letters grounded strictly in candidate-profile.yaml without generic AI clichés.",
+        "disableModelInvocation": false,
+        "file": "skills/cover-letter-builder/SKILL.md"
+      },
+      {
+        "name": "get-to-know-me",
+        "slashCommand": "/get-to-know-me",
+        "description": "Candidate onboarding and discovery skill. Extracts authentic career facts, projects, skills, and STAR stories via existing resume import or interactive interview to populate candidate-profile.yaml and star-stories.md. Use when the user want",
+        "disableModelInvocation": false,
+        "file": "skills/get-to-know-me/SKILL.md"
+      },
+      {
+        "name": "interview-helper",
+        "slashCommand": "/interview-helper",
+        "description": "Interactive human-in-the-loop interview coach that extracts authentic candidate stories and crafts personalized 1:1 STAR responses.",
+        "disableModelInvocation": false,
+        "file": "skills/interview-helper/SKILL.md"
+      },
+      {
+        "name": "resume-builder",
+        "slashCommand": "/resume-builder",
+        "description": "Tailors an ATS-optimized single-column Typst resume from candidate-profile.yaml for a target job description and compiles it to PDF.",
+        "disableModelInvocation": false,
+        "file": "skills/resume-builder/SKILL.md"
+      },
+      {
+        "name": "typst-pdf",
+        "slashCommand": "/typst-pdf",
+        "description": "Generic markup assembly and PDF compilation utility using the Typst CLI. Handles document geometry, full justification, typography standards, and error-free PDF compilation for any arbitrary document. Zero domain or business logic.",
+        "disableModelInvocation": false,
+        "file": "skills/typst-pdf/SKILL.md"
+      },
+      {
+        "name": "well-being-coach",
+        "slashCommand": "/well-being-coach",
+        "description": "Grounded mental health and career companion that helps applicants navigate job search burnout, rejection fatigue, and imposter syndrome.",
+        "disableModelInvocation": false,
+        "file": "skills/well-being-coach/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "job-posting-crawler",
+        "description": "Discovers, live-verifies, and scores job openings dynamically calibrated to candidate-profile.yaml (role, seniority, skills, and location priority), with a strict 3-day freshness filter and 100-point rubric.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/job-posting-crawler.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/application-tracker",
+      "/cover-letter-builder",
+      "/get-to-know-me",
+      "/interview-helper",
+      "/resume-builder",
+      "/typst-pdf",
+      "/well-being-coach"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "job-posting-crawler"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Pick Me.\n\nAn Antigravity plugin for job application assistance that compiles ATS-compliant Typst resumes, writes targeted cover letters, crawls job postings, prepares STAR interview answers, and tracks application pipelines in CSV.\n\nAll generated documents are compiled to PDF and stored in `~/Documents/pick-me-output/` for clean organization.\n\n## Architecture\n\n| Component | Type | Responsibility |\n| :--- | :--- | :--- |\n| **`job-posting-crawler`** | Subagent | Discovers and live-verifies job postings across ATS boards (Greenhouse, Lever, Ashby) and job portals with a 3-day freshness filter and a 100-point experience-first rubric. |\n| **`resume-builder`** | Inline Skill | Tailors single-column Typst resumes to job descriptions. Enforces entity boundaries between past roles, requires a pre-generation plan approval, and compiles to PDF. |\n| **`cover-letter-builder`** | Inline Skill | Drafts 3-paragraph (140–220 words) cover letters grounded in verified profile facts. Decouples unrelated technical domains with clean narrative transitions. |\n| **`interview-helper`** | Inline Skill | Mines candidate stories from profile data into STAR talking points and conducts single-question mock interview simulations. |\n| **`application-tracker`** | Inline Skill | Manages application lifecycles and follow-up schedules in RFC 4180 CSV (`data/applications.csv`). |\n| **`well-being-coach`** | Inline Skill | Guides sustainable pacing (2–3 tailored applications per day) and de-personalizes automated rejections. |\n| **`get-to-know-me`** | Inline Skill | Onboards candidates via existing resume import or a 4-phase conversational interview to populate profile facts and STAR stories. |\n\n\n## Prerequisites\n\n- [Google Antigravity](https://github.com/google-deepmind)\n- PowerShell 7+ or Windows PowerShell\n- [Typst CLI](https://typst.app/):\n  ```powershell\n  winget install --id Typst.Typst\n  ```\n\n## Installation\n\nInstall via the Antigravity CLI:\n\n```powershell\nagy plugin install https://github.com/auxghlann/pick-me\n```\n\nOr install from a local clone:\n\n```powershell\ngit clone https://github.com/auxghlann/pick-me.git\ncd pick-me\nagy plugin install .\n```\n\n## Quickstart\n\n### 1. Initialize Candidate Profile\nCreate candidate data files from templates:\n\n```powershell\n.\\scripts\\init-profile.ps1\n```\n\nThis creates:\n- `data/candidate-profile.yaml`: Master work history, skills, target preferences, and explicit `domain` / `scope_boundary` attributes.\n- `data/star-stories.md`: Behavioral interview anecdotes structured into Situation, Task, Action, and Result.\n- `data/applications.csv`: RFC 4180 pipeline tracker.\n\nAlternatively, run `/get-to-know-me` in Antigravity to import an existing resume (`.pdf`, `.md`, `.txt`) or complete guided onboarding.\n\n### 2. Tailor a Resume\nPrompt Antigravity with a target job description:\n\n```text\nTailor my resume for this role: [paste JD]\n```\n\n`resume-builder` will draft a plan artifact with inline source attribution tags (`[Source: ... | Domain: ...]`), request your approval, and compile the resume via `scripts/compile.ps1` to `~/Documents/pick-me-output/applications/<app_id>_<company>/resume_<company>.pdf`.\n\n### 3. Draft a Cover Letter\nPrompt Antigravity:\n\n```text\nDraft a cover letter for this job: [paste JD]\n```\n\n`cover-letter-builder` drafts a 3-paragraph letter (140–220 words) with an entity attribution audit, awaits approval, and compiles via `scripts/compile.ps1` to `~/Documents/pick-me-output/applications/<app_id>_<company>/cover_letter_<company>.pdf`.\n\n### 4. Edit Visually in Pick Me Studio (Zero Tokens)\nTo make quick wording or layout edits to any generated resume or cover letter without spending LLM tokens, launch the local split-screen editor:\n\n```powershell\n.\\scripts\\studio.ps1\n```\n\nThis opens `http://127.0.0.1:8765/` in your browser where you can select any `.typ` file from `~/Documents/pick-me-output/`, upload a `.typ` file from disk, dynamically add or remove sections in the **Visual Form** (or switch to **Raw `.typ`**), and press `Ctrl+S` to recompile and export the PDF via Typst.\n\n### 5. Search & Verify Opportunities\nLaunch the crawler subagent:\n\n```text\nFind active Junior Data Engineer jobs in Manila or Remote posted in the last 3 days\n```\n\n`job-posting-crawler` verifies URL accessibility and score-ranks matching postings.\n\n### 6. Track Applications\nUpdate or inspect application records:\n\n```text\nUpdate APP-003 status to Screening\n```\n\n`application-tracker` computes weekly velocity and alerts when follow-up dates (+7 to +14 days) arrive.\n\n## Data Privacy & Output Layout\n\nAll candidate files in `data/` (`candidate-profile.yaml`, `star-stories.md`, `applications.csv`) are git-ignored. Generated outputs are written to your local documents directory:\n\n```text\n~/Documents/pick-me-output/\n├── applications/\n│   └── <app_id>_<company>/\n│       ├── resume_<company>.typ\n│       ├── resume_<company>.pdf\n│       ├── cover_letter_<company>.typ\n│       └── cover_letter_<company>.pdf\n└── crawls/\n    └── crawl_<timestamp>.pdf\n```\n",
+  "latestReleaseNotes": "## Pick Me v1.4.0: Studio Deduplication, Security Hardening & Unified Package Protocol\r\n\r\n### Security & Hardening\r\n- **Path Traversal Guards (scripts/studio.ps1)**: Added Test-AllowedStudioPath restricting file loading and PDF serving strictly to allowed output directories (~/Documents/pick-me-output/), scratch directories, and read-only template folders.\r\n- **Origin Header Validation**: Enforced strict loopback Origin checks (127.0.0.1 and localhost) to block cross-origin requests from arbitrary browser contexts.\r\n- **DOM XSS Elimination (\templates/studio/editor.js)**: Replaced unsafe innerHTML interpolation of user-supplied section titles and card headers with safe DOM text node assignment (.textContent).\r\n\r\n### Added & Enhanced\r\n- **Visual Section Reordering**: Added Move Up and Move Down controls in section headers with boundary checks to reorder resume sections visually.\r\n- **Page Count Status Indicator**: Displayed compiled PDF page count directly in the Studio status bar upon file load and compilation.\r\n- **Unified Application Package Protocol**: Codified unified package protocol in \r\nesume-builder and cover-letter-builder to share sequential application IDs and review plans across combined requests.\r\n- **Automatic Output Relocation Guard (scripts/compile.ps1)**: Automatically relocates repository-staged .typ files to ~/Documents/pick-me-output/applications/<AppFolder>/ before compiling.\r\n\r\n### Bug Fixes\r\n- **Resume Macro Rendering Drift**: Upgraded truncated #let exp-entry and #let project-entry macro bodies in \r\normalizeStylePreamble so company location and project dates render visibly in compiled PDFs.\r\n- **Typst Array Spread Syntax**: Emitted trailing commas for single-bullet tuples ([bullet],) so Typst ..bullets spread syntax compiles cleanly.\r\n\r\n### Refactored & Removed\r\n- **Frontend Modularization & Deduplication**: Extracted pure AST parsing into \templates/studio/parser.js and visual DOM generation into \templates/studio/editor.js, reducing repetitive card building by 176 lines via createEntityCard.\r\n- **Typst PDF Skill Consolidation**: Removed redundant skills/typst-pdf/ wrapper skill and dead scripts/compile-typst.ps1 script in favor of top-level scripts/compile.ps1 and \r\nules/AGENTS.md.\r\n- **Subagent Tool Alignment**: Added \r\nead_file, write_file, and edit_file to \u0007gents/job-posting-crawler.md tools manifest.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "templates/studio/parser.js",
+        "line": 409,
+        "snippet": "while ((m = pairRe.exec(body)) !== null) {",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/parser.js#L409"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "templates/studio/parser.js",
+        "line": 618,
+        "snippet": "const m = re.exec(preamble);",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/parser.js#L618"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "templates/studio/parser.js",
+        "line": 627,
+        "snippet": "const braceMatch = /^\\s*=\\s*\\{/.exec(afterParams);",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/parser.js#L627"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "templates/studio/parser.js",
+        "line": 634,
+        "snippet": "const lineMatch = /^\\s*=\\s*[^\\r\\n]+/.exec(afterParams);",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/parser.js#L634"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "templates/studio/studio.js",
+        "line": 372,
+        "snippet": "const res = await fetch(\"/api/files\");",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/studio.js#L372"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "templates/studio/studio.js",
+        "line": 404,
+        "snippet": "const res = await fetch(`/api/load?path=${encodeURIComponent(filePath)}`);",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/studio.js#L404"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "templates/studio/studio.js",
+        "line": 439,
+        "snippet": "const res = await fetch(\"/api/compile\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify(payload) });",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/templates/studio/studio.js#L439"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 39,
+        "snippet": "- Minor edits: Run `powershell -ExecutionPolicy Bypass -File .\\scripts\\studio.ps1` to launch Pick Me Studio for zero-token visual editing and PDF recompilation.",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/rules/AGENTS.md#L39"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/cover-letter-builder/SKILL.md",
+        "line": 45,
+        "snippet": "- **For minor edits** (e.g., adjusting a sentence, swapping words, fixing recipient details): Prompt the user to run `powershell -ExecutionPolicy Bypass -File .\\scripts\\studio.ps1`",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/skills/cover-letter-builder/SKILL.md#L45"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/resume-builder/SKILL.md",
+        "line": 45,
+        "snippet": "- **For minor edits** (e.g., word tweaks, phrasing, contact updates, fixing typos): Prompt the user to run `powershell -ExecutionPolicy Bypass -File .\\scripts\\studio.ps1` to launch",
+        "githubBlobUrl": "https://github.com/auxghlann/pick-me/blob/31062cf47025195bed0fc5f54ace94dc91de8348/skills/resume-builder/SKILL.md#L45"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.4.0",
+      "sha": "31062cf47025195bed0fc5f54ace94dc91de8348",
+      "scannedAt": "2026-11-27T18:24:45.348Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

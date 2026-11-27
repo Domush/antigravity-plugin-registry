@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "id": "heywalter/antigravity-context-monitor",
+  "sha": "f3a023196c09082cb0a1ddd74c1fa063f40111ae",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:40.271Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-monitor",
+    "displayName": "Context & Usage",
+    "version": "0.2.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"./assets/logo.svg\" width=\"72\" height=\"72\" alt=\"Context & Usage Monitor Logo\" />\n  <h1>Context &amp; Usage Monitor</h1>\n  <p><strong>A 100% read-only, zero-injection plugin for Google Antigravity (Desktop &amp; CLI) — live context pressure, Prompt Cache savings, output speed (<code>tok/s</code>), First Token Latency (<code>TTFT</code>), and a 12-week heatmap.</strong></p>\n\n  <p>\n    <img src=\"https://img.shields.io/badge/Architecture-Official_Plugin_%2B_Sidecar-0ea5e9?style=flat-square\" alt=\"Official Plugin + Sidecar\" />\n    <img src=\"https://img.shields.io/badge/Telemetry-100%25_Read--Only_%C2%B7_0_Extra_Tokens-10b981?style=flat-square\" alt=\"100% Read-Only · 0 Extra Tokens\" />\n    <img src=\"https://img.shields.io/badge/Security-Zero_Patching_%C2%B7_Zero_CDP-6366f1?style=flat-square\" alt=\"Zero Patching · Zero CDP\" />\n    <img src=\"https://img.shields.io/badge/Platform-macOS_%C2%B7_Linux_%C2%B7_Windows-475569?style=flat-square\" alt=\"macOS · Linux · Windows\" />\n    <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-f59e0b?style=flat-square\" alt=\"License: MIT\" /></a>\n  </p>\n\n  <p><strong>English</strong> | <a href=\"./README.zh-CN.md\">简体中文</a></p>\n</div>\n\n---\n\n## Why This Plugin?\n\n- **No more surprise `256K` compactions**: Most flagship models auto-compact near `256K` (`CHECKPOINT`), not `1M`. **`Auto` mode calibrates directly to `256K` by default** and adapts via observed `CHECKPOINT` peaks and model hints, so you know right when to `/compact`.\n- **See what bloated your context**: Splits usage into **Base** vs. **Growth** tokens and attributes per-turn and per-tool (`read_file`, `run_command`, etc.) deltas.\n- **Know if it's thinking or lagging**: Tracks both session average and latest-step **First Token Latency (`Avg / Last TTFT`)** alongside **End-to-End Output Speed (`Avg / Last tok/s`)**.\n- **Track Cache savings & total usage**: Shows live Prompt Cache hit rate, reference API cost/savings (`USD` / `CNY`), and an **84-day activity heatmap** combining **Antigravity Desktop + CLI**.\n- **Zero app mods, zero risk**: Pure official plugin — `0` extra prompt tokens, Apple code signatures stay intact, and survives every Antigravity client update.\n\n---\n\n## Preview\n\n<p align=\"center\">\n  <img src=\"./docs/images/popover-session.png\" alt=\"macOS Titlebar Floating Capsule and Session Popover\" width=\"880\" />\n  <br />\n  <sub><strong>macOS Titlebar Capsule &amp; Session Popover</strong> — <code>Auto (256K)</code> gauge, Base/Growth breakdown, <code>Avg / Last tok/s</code>, <code>Avg / Last TTFT</code>, and session switcher</sub>\n</p>\n\n<table>\n  <tr>\n    <td width=\"50%\" align=\"center\">\n      <img src=\"./docs/images/popover-history.png\" alt=\"History Popover with 12-Week Activity Heatmap\" />\n      <br />\n      <sub><strong>Global History &amp; 12-Week Heatmap</strong> — Desktop + CLI totals</sub>\n    </td>\n    <td width=\"50%\" align=\"center\">\n      <img src=\"./docs/images/popover-settings.png\" alt=\"Settings Popover with Bilingual and Placement Controls\" />\n      <br />\n      <sub><strong>Instant Settings</strong> — <code>English / 中文</code>, position, density &amp; limit</sub>\n    </td>\n  </tr>\n</table>\n\n<p align=\"center\">\n  <img src=\"./docs/images/aux-pane-dashboard.png\" alt=\"Cross-Platform Auxiliary Pane Web Dashboard\" width=\"880\" />\n  <br />\n  <sub><strong>Cross-Platform Auxiliary Pane Web UI</strong> — Overview (with <code>TTFT</code> &amp; Speed cards), History, Steps, Tools, and Raw</sub>\n</p>\n\n> **Two ways to inspect**: On macOS, left-click the floating titlebar capsule to open the 3-tab popover (right-click for quick controls, drag to reposition). On **all platforms**, click **`+` → Context & Usage** in any conversation header to open the Auxiliary Pane.\n\n---\n\n## Quick Install\n\n```bash\ngit clone https://github.com/heywalter/antigravity-context-monitor.git \\\n  ~/.gemini/config/plugins/context-monitor\n```\n\nRestart Antigravity (or enable **Context & Usage** in **Customizations**), or validate/install via CLI (`agy plugin validate . && agy plugin install .`). On macOS, `hud_bar.swift` auto-compiles locally on first launch when `swiftc` (Xcode Command Line Tools) is installed, or skips the floating HUD cleanly while keeping the Aux Pane active.\n\n---\n\n## How It Works, Security & Compatibility\n\n```mermaid\nflowchart LR\n  Hook[\"Hook + Local Files\\n(track_active.sh · transcript.jsonl · annotations · .db)\"] -->|\"100% Read-Only\"| Sidecar[\"Node Sidecar\\n(main · metrics · ttft · titles · prefs · history)\"]\n  Sidecar -->|\"localhost via sidecar_sdk\"| Aux[\"Aux Pane Web UI\\n(macOS · Linux · Windows)\"]\n  Sidecar -->|\"auto swiftc + token\"| HUD[\"Native HUD Capsule\\n(macOS AppKit)\"]\n```\n\n- **100% Within Official Rules**: Uses only Antigravity's official [`plugin.json`](./plugin.json), [`hooks.json`](./hooks.json), and `sidecar_sdk` ([`sidecar.json`](./sidecars/context_monitor/sidecar.json) with `\"allows_user_interactions\": false`); passes `agy plugin validate` with **0 errors and 0 warnings**, and never edits `config.json`.\n- **Pure Local Read-Only Logic**: A minimal `SessionStart` / `PreInvocation` hook records `active_hook.json`; the sidecar reads Antigravity's own `transcript.jsonl` (tokens, checkpoints, speed), `annotations/*.pbtxt` (live & renamed titles), and read-only SQLite `conversations/*.db` (`created_at` → `viewable_at` TTFT), calibrating `Auto` limits via `256K` default, `CHECKPOINT` peaks, model hints, and overflow promotion.\n- **Security & Privacy**: Zero `Antigravity.app` patching, zero CDP (`--remote-debugging-port`), **zero outbound network requests** (`127.0.0.1` only), per-launch random `CONTEXT_MONITOR_HUD_TOKEN` protecting `/api/hud`, strict `ID_RE` path-traversal checks, and `{ readOnly: true }` SQLite handles ([SECURITY.md](./SECURITY.md)).\n- **Cross-Platform & Graceful Fallback**: Full Aux Pane UI runs on **macOS, Linux, and Windows** (`hudSupported === false` auto-hides Mac controls); macOS adds the native `arm64`/`x86_64` HUD (skips safely if `swiftc` is absent); on Node 20 without `node:sqlite`, `TTFT` falls back cleanly to `—` with zero errors; survives Antigravity app updates intact.\n\n---\n\n## Notes & Development\n\n- **Telemetry & Reference Cost**: Token counts are 100% raw Antigravity telemetry from `transcript.jsonl`; `TTFT` measures request start to first visible output chunk (including extended thinking). USD/CNY estimates use a static benchmark (`Input $2 / Cache $0.2 / Out $10 per 1M`, `1 USD = 7.25 CNY`) for reference intuition only.\n\n<details>\n<summary>Development &amp; Verification Commands (zero external npm dependencies)</summary>\n\n```bash\n# 1. Check hook & JS syntax\nsh -n hooks/track_active.sh\ncd sidecars/context_monitor\nnode --check main.mjs && node --check prefs.mjs && node --check titles.mjs && node --check ttft.mjs && node --check metrics.mjs && node --check history.mjs && node --check app.js\n\n# 2. Run unit tests & validate manifests\nnpm test\ncd ../.. && agy plugin validate .\n\n# 3. Build & self-test macOS Universal Binary (arm64 + x86_64)\n./scripts/build-hud-universal.sh && rm -rf dist\n```\n\nRuntime data lives under `~/.gemini/antigravity/sidecar_data/context-monitor/context_monitor/` (`logs/sidecar.log`, `data/hud_prefs.json`, `data/bin/hud_bar`).\n\n</details>\n\n[CONTRIBUTING.md](./CONTRIBUTING.md) · [SECURITY.md](./SECURITY.md) · [CHANGELOG.md](./CHANGELOG.md) · [MIT](./LICENSE) © 2026 Walter\n",
+  "latestReleaseNotes": "## `antigravity-context-monitor` v0.2.1\n\nMaintenance & reliability release eliminating sidecar event log growth and hardening background runtime behavior.\n\n### Fixed\n- **Eliminated `events/` Disk Bloat (`0 B` sidecar events)**: Removed background `agentapi get-conversation-metadata` CLI fallback polling from `main.mjs`. In `v0.2.0`, polling untitled/subagent conversations every 15s caused Antigravity's `agentapi` runner to log full `conversationMetadata` JSON payloads (up to ~200 KB per subagent call) into `<sidecar_data>/events/`, growing to gigabytes over days. Title resolution now runs 100% locally via `annotations/*.pbtxt`, read-only `conversation_summaries.db`, and `transcript.jsonl` previews with zero subprocess spawns.\n- **Subagent Active-Session Protection (`titles.mjs`, `main.mjs`)**: Reads `parent_conversation_id` and `nesting_depth` from `conversation_summaries.db` so background `browser` / `research` subagents no longer hijack the HUD from the active user conversation or clutter the recent-session picker (global history totals still include all Desktop + CLI transcripts).\n- **SQLite Read-Only Robustness (`titles.mjs`)**: Added `{ readOnly: true, timeout: 1000 }`, switched fallback SQL to standard single-quoted `WHERE title != ''`, and preserved cached entries on transient lock errors.\n- **Idle Repaint & Cache Eviction Hardening (`hud_bar.swift`, `main.mjs`, `history.mjs`, `titles.mjs`)**: Avoided redundant 4 Hz `layoutCapsuleSubviews()` / `needsDisplay` redraws in `hud_bar.swift` when window bounds and metrics are unchanged, avoided redundant `topSessions` enrichment on `/api/hud`, and replaced full-map `.clear()` calls with incremental FIFO eviction.\n\n### Upgrading from `v0.2.0`\nAfter updating the plugin, you can safely reclaim any legacy event logs created by `v0.2.0`:\n\n```bash\nrm -rf ~/.gemini/antigravity/sidecar_data/context-monitor/context_monitor/events\n```\n\n### Optional Prebuilt macOS Universal Binary (`hud_bar`)\nmacOS compiles `hud_bar.swift` automatically on first run when Xcode Command Line Tools (`swiftc`) is installed. If you prefer not to install Command Line Tools:\n\n```bash\nmkdir -p ~/.gemini/config/plugins/context-monitor/sidecars/context_monitor\ntar -xzf hud_bar-v0.2.1-macos-universal.tar.gz -C ~/.gemini/config/plugins/context-monitor/sidecars/context_monitor/\n```",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 562,
+        "snippet": "execFile( 'swiftc', ['-O', '-o', tmpBin, swiftSrc, '-framework', 'Cocoa', '-framework', 'CoreGraphics'], { encoding: 'utf-8', timeout: 90_000 }, (compileErr) => { if (compileErr) {",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L562"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 579,
+        "snippet": "execFile(tmpBin, ['--self-test'], { encoding: 'utf-8', timeout: 10_000 }, (testErr, stdout) => { if (testErr || !String(stdout || '').includes('SELF_TEST_OK')) { try { rmSync(tmpBi",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L579"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 666,
+        "snippet": "hudChild = spawn(hudBin, ['--api', apiUrl, '--prefs', prefsPath, '--ppid', String(process.pid)], { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, CONTEXT_MONITOR_HUD_TOK",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L666"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 177,
+        "snippet": "const out = execFileSync(hookScript, { input: payload, encoding: 'utf-8', env: { ...process.env, HOME: fakeHome }, });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L177"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 304,
+        "snippet": "const out = execFileSync(hookScript, { input: payload, encoding: 'utf-8', env: { ...process.env, HOME: fakeHome, ANTIGRAVITY_EXECUTABLE_DATA_DIR: execDataDir }, });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L304"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 549,
+        "snippet": "db.exec('CREATE TABLE steps (idx INTEGER PRIMARY KEY, step_type INTEGER, status INTEGER, metadata BLOB);');",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L549"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 635,
+        "snippet": "db.exec(` CREATE TABLE conversation_summaries ( conversation_id TEXT PRIMARY KEY, title TEXT NOT NULL DEFAULT '', parent_conversation_id TEXT NOT NULL DEFAULT '', nesting_depth INT",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L635"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 520,
+        "snippet": "writeFileSync(tmp, JSON.stringify(clean, null, 2) + '\\n', 'utf-8');",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L520"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 568,
+        "snippet": "try { rmSync(tmpBin, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L568"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 575,
+        "snippet": "try { rmSync(tmpBin, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L575"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 581,
+        "snippet": "try { rmSync(tmpBin, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L581"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 589,
+        "snippet": "try { rmSync(tmpBin, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L589"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/main.mjs",
+        "line": 622,
+        "snippet": "writeFileSync(hashPath, `${desiredHash}\\n`, 'utf-8');",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/main.mjs#L622"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 189,
+        "snippet": "rmSync(fakeHome, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L189"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 222,
+        "snippet": "writeFileSync( join(desktopBrain, convA, '.system_generated', 'logs', 'transcript.jsonl'), [ JSON.stringify({ step_index: 0, type: 'USER_INPUT', created_at: todayIso, content: 'Fix",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L222"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 239,
+        "snippet": "writeFileSync( join(cliBrain, convB, '.system_generated', 'logs', 'transcript.jsonl'), [ JSON.stringify({ step_index: 0, type: 'USER_INPUT', created_at: olderIso, content: 'Run CLI",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L239"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 288,
+        "snippet": "rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L288"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 318,
+        "snippet": "rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L318"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 430,
+        "snippet": "writeFileSync(annPath, 'title:\"Initial Title\" pinned:false\\n', 'utf-8');",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L430"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 436,
+        "snippet": "writeFileSync(annPath, 'title:\"Renamed \\\\344\\\\270\\\\255\\\\346\\\\226\\\\207 Title\" pinned:false\\n', 'utf-8');",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L436"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 440,
+        "snippet": "rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L440"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 591,
+        "snippet": "rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L591"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/context_monitor/metrics.test.mjs",
+        "line": 657,
+        "snippet": "rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/metrics.test.mjs#L657"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/context_monitor/history.mjs",
+        "line": 4,
+        "snippet": "* Scans Antigravity Desktop (`~/.gemini/antigravity/brain`) and CLI",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/history.mjs#L4"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/context_monitor/history.mjs",
+        "line": 5,
+        "snippet": "* (`~/.gemini/antigravity-cli/brain`) transcripts incrementally using an in-memory",
+        "githubBlobUrl": "https://github.com/heywalter/antigravity-context-monitor/blob/f3a023196c09082cb0a1ddd74c1fa063f40111ae/sidecars/context_monitor/history.mjs#L5"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.1",
+      "sha": "f3a023196c09082cb0a1ddd74c1fa063f40111ae",
+      "scannedAt": "2026-11-27T18:17:40.271Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

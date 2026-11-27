@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "id": "jack-zihan/antigravity-session-vault",
+  "sha": "c7e9c5945833f5345aba5d87656ea7de809844c5",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:37.212Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-session-vault",
+    "displayName": "Session Vault",
+    "version": "0.2.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "session-vault",
+        "slashCommand": "/session-vault",
+        "description": "Inspect Antigravity Session Vault status, review subagent trees per main conversation, curate keep/archive retention rules by importance, search or discard cold archives online, and restore vaulted or archived conversations offline. Use whe",
+        "disableModelInvocation": false,
+        "file": "skills/session-vault/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/session-vault"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Session Vault\n\n> **Keep your Antigravity Desktop main conversations forever while automatically archiving older Swarm & subagent sessions into a searchable cold archive.**\n\n[中文文档](./README_ZH.md)\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)\n[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](https://www.python.org/)\n[![Dependencies: Zero](https://img.shields.io/badge/Dependencies-Zero%20(stdlib)-22C55E.svg)](#)\n[![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-64748B.svg)](#)\n\n---\n\n## Why This Plugin Exists\n\nAntigravity Desktop runs a hardcoded rolling retention pass (`PruneAll(500)`) on startup over `~/.gemini/antigravity/conversations/`. Every Swarm worker and subagent shares that flat 500-session quota alongside your primary conversations.\n\nWhen you run heavy multi-agent workflows:\n1. Hundreds of short-lived Swarm/subagent `.db` files push the total past 500.\n2. On the next launch, `language_server` sorts `.db` files by filesystem `mtime` and deletes the oldest entries — frequently **evicting your older primary conversations** and their `brain/<id>/` artifacts.\n3. Because `PruneAll(500)` does not prune `agyhub_summaries_proto.pb` or `conversation_summaries.db`, deleted conversations remain in the sidebar as **infinite-spinner ghost cards**.\n\n**Antigravity Session Vault** solves this cleanly as a **native Antigravity plugin** — zero binary patching, zero third-party dependencies, and zero resident background processes when Antigravity Desktop is closed.\n\n---\n\n## How It Works\n\n### Lifecycle-Bound Architecture (\"Zero Footprint When Idle\")\n\n1. **Wake via Native Hooks (`hooks.json`)**: On `SessionStart` and `PreInvocation`, a fast hook checks a kernel singleton lock (<2ms when active) and spawns a single detached lifecycle watcher (`watch --exit-after-clean`) immune to parent Job Objects and `taskkill /T /F`.\n2. **While Antigravity Runs**:\n   - **Layer 1 — Online Priority Shield (every 2m)**: Demotes completed/idle subagent `.db` `mtime`s to `2010`/`2015` (invisible in the UI, which sorts by Protobuf `lastModifiedTime`), guaranteeing even a power loss or crash restart never evicts a primary conversation ahead of subagents.\n   - **Layer 3 — WAL-Safe Incremental Vault (every 30m)**: Snapshots all protected main conversations, Side Questions, annotations, and `brain/` trees using SQLite's online `backup()` API + `PRAGMA quick_check`.\n3. **Immediately After Antigravity Exits**:\n   - **Layer 2 — Offline Smart Archival & Ghost Cleanup (<1.5s)**: Passes a fail-closed process & lock gate, skips inline crash/self-restarts, offloads eligible older subagents losslessly into `<archive_dir>/subagents/<cid>/`, updates `<archive_dir>/subagents/index.jsonl`, and atomically cleans purged/ghost entries from `conversation_summaries.db` (including `conversations_fts` integrity-check) and `agyhub_summaries_proto.pb` (preserving CLI rows and untouched fields byte-for-byte).\n   - **Self-Terminates**: Once offline cleanup finishes, the watcher exits cleanly — leaving **0 background processes** until you next open Antigravity.\n\n### Clean 4-Layer Architecture\n\nThe plugin is structured as a strict, zero-dependency 4-layer package (`session_vault/` + `scripts/hook.py`) with no circular imports:\n\n- **Layer 0 (`config.py`, `proto.py`, `platform_ops.py`)**: Strict config loading & logger setup, bounds-checked byte-preserving Protobuf wire codec, per-directory kernel singleton locks, and Job-Object-safe detached process spawning.\n- **Layer 1 (`store.py`)**: Atomic file writes, `index.jsonl` I/O, rolling metadata snapshots, 8-category conversation classifier, `PruneAll(500)` risk simulator, and fail-closed offline gate.\n- **Layer 2 (`shield.py`, `archive.py`, `vault.py`)**: Independent retention layers — online `mtime` shield, offline 4-tier smart archival + dual-store cleanup, and incremental WAL-safe root backup, archive search, and offline restore.\n- **Layer 3 (`watcher.py`, `cli.py`, `scripts/hook.py`)**: Event-driven lifecycle watcher (lazy-loads heavy modules only after acquiring its lock), read-only zero-log CLI queries, and a fast-path hook entrypoint that always emits `{}`.\n\n### Importance-First Retention & Conversational Curation\n\nTime alone does not equal importance: a 5-day-old core research Teamwork tree may matter far more than a 2-hour-old throwaway Swarm. Session Vault supports per-root curation right inside chat (`trees` + `policy`) with oldest-first time fallback:\n\n| Tier | Scope | Action |\n|---|---|---|\n| **Priority 0 (Never Archived)** | Main conversations, Side Questions (`conversation_parents` + `annotations/*.pbtxt`), pinned/annotated chats, unindexed new chats, any running/non-idle task, anything touched within 5 min, and individually pinned `keep_subagents` (restored subagents are auto-pinned here) | Always kept in place; main roots & Side Questions are backed up incrementally to the Vault |\n| **Tier 1 (Explicit Archive)** | Idle/completed subagents of roots tagged in `archive_roots` (`policy archive <id>`) | Archived first on exit to free active slots immediately, regardless of recency |\n| **Tier 2 (Auto Time Fallback)** | Subagents of non-kept (`auto`) roots inactive for **> 2 days** | Losslessly archived oldest-first on exit |\n| **Tier 3 (Safety Valve · `auto`)** | Only if active DBs still exceed **`target_max = 420`** | Archives the oldest `killed == 1`, then oldest idle `killed == 0` subagents of `auto` roots |\n| **Tier 4 (Protected `keep_roots`)** | Subagent trees of important roots tagged in `keep_roots` (`policy keep <id>`) | Kept hot in place regardless of age; only their oldest `killed == 1` subagents overflow if `keep_roots` + Priority 0 alone exceed `target_max` |\n\nEvery archived subagent remains **instantly readable online** without restarting Antigravity via `index.jsonl` and `rules/AGENTS.md`, can be restored offline via `restore <uuid>` (auto-pinned so it is not re-archived on the next quit), or explicitly purged from cold archive via `discard --yes`.\n\n---\n\n## Installation\n\n### Requirements\n- **Antigravity Desktop 2.0+**\n- **Python 3.10+** (standard library only — zero `pip install` dependencies)\n\n### Quick Install\n\nClone or copy this repository directly into Antigravity's native plugins folder:\n\n```bash\n# macOS / Linux\ngit clone https://github.com/jack-zihan/antigravity-session-vault.git \\\n  ~/.gemini/config/plugins/antigravity-session-vault\n```\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/jack-zihan/antigravity-session-vault.git `\n  \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-session-vault\"\n```\n\nVerify discovery with the Antigravity CLI (or check **Settings → Plugins** in Antigravity Desktop):\n\n```bash\nagy plugin list\n```\n\nEnable/disable anytime from Antigravity's Plugins UI — disabling the plugin cleanly turns off its hooks, rules, and skill in one click.\n\n---\n\n## Configuration\n\nSession Vault works out of the box with zero configuration, storing data under `~/.gemini/antigravity-session-vault/`.\n\nTo customize storage paths (e.g., placing your Root Vault on a secondary drive) or retention thresholds, generate and edit `~/.gemini/antigravity-session-vault/config.json` (or set `SESSION_VAULT_CONFIG` to a custom JSON path):\n\n```bash\npython3 -B -m session_vault config --init   # Windows: python -B -m session_vault config --init\n```\n\n```json\n{\n  \"data_dir\": \"~/.gemini/antigravity\",\n  \"archive_dir\": \"~/.gemini/antigravity-session-vault/archive\",\n  \"vault_dir\": \"~/.gemini/antigravity-session-vault/vault\",\n  \"log_file\": \"~/.gemini/antigravity-session-vault/session-vault.log\",\n  \"lock_dir\": \"~/.gemini/antigravity-session-vault/locks\",\n  \"retention\": {\n    \"target_max\": 420,\n    \"root_active_days\": 2,\n    \"keep_idle_days\": 3,\n    \"recent_touch_guard_sec\": 300,\n    \"keep_roots\": [],\n    \"archive_roots\": [],\n    \"keep_subagents\": []\n  },\n  \"watcher\": {\n    \"shield_interval_sec\": 120,\n    \"backup_interval_sec\": 1800\n  }\n}\n```\n\nConfiguration is Fail-Fast validated at load time: booleans in integer fields, out-of-range thresholds, non-object sections, and empty path overrides raise `ValueError` immediately while `_sec` timing keys remain backward-compatible.\n\n---\n\n## CLI Reference\n\nRun from the plugin directory (or install optionally with `pip install -e .` to get the global `session-vault` command). Global flags supported by all subcommands: `--config <path>`, `--data-dir <path>`, `--archive-dir <path>`, `--vault-dir <path>`, `--version`. Read-only commands (`status`, `search`, `clean --dry-run`, `restore --list`, `config` without `--init`) produce **zero** log-file or log-directory side effects.\n\n| Command | Safe Online? | Description |\n|---|---|---|\n| `python -B -m session_vault status` | Yes (read-only) | Active DB count, `PruneAll(500)` risk simulation, watcher state, ghost count, vault stats |\n| `python -B -m session_vault trees [--json] [--limit N]` | Yes (read-only) | Group active & archived subagents by root conversation with size and `keep`/`archive`/`auto` tags |\n| `python -B -m session_vault policy [list \\| keep \\| archive \\| auto <id...>] [--subagent]` | Yes | Inspect or update per-root/subagent retention rules (hot-reloaded by watcher before next offline clean) |\n| `python -B -m session_vault search [query] [--root <id>] [--limit N]` | Yes (read-only) | Search archived subagents via `index.jsonl` and print direct `transcript.jsonl` paths |\n| `python -B -m session_vault clean --dry-run [--verbose] [--target-max N] [--root-active-days N] [--keep-idle-days N]` | Yes (read-only) | Preview a concise summary of what the next offline clean will archive and purge (`--verbose` includes full `offload_ids`) |\n| `python -B -m session_vault discard [--root <id> \\| <cid...>] [--yes]` | Yes (`--yes` deletes archive) | Preview or explicitly delete unwanted cold-archived subagents (never touches live DBs or Root Vault) |\n| `python -B -m session_vault shield` | Yes | Run Layer 1 online `mtime` priority shield immediately |\n| `python -B -m session_vault backup` | Yes | Run Layer 3 WAL-safe incremental backup of all protected roots |\n| `python -B -m session_vault ensure [--force]` | Yes | Ensure the detached lifecycle watcher is running (`--force` spawns even if Desktop LS is offline) |\n| `python -B -m session_vault watch [--shield-sec N] [--backup-sec N] [--exit-after-clean]` | Yes | Run the lifecycle watcher in the foreground (shield + backup online, offline clean on exit) |\n| `python -B -m session_vault clean [--target-max N] [--root-active-days N] [--keep-idle-days N]` | **Offline only** | Execute smart archival & dual-store ghost cleanup (blocked if Desktop is running) |\n| `python -B -m session_vault restore --list` | Yes (read-only) | List all restorable vaulted roots and archived subagents (bare `restore` behaves identically) |\n| `python -B -m session_vault restore <uuid>` | **Offline only** | Restore a vaulted root or archived subagent back into Desktop (with automatic meta backup, `< 480` active DB guard, and path-traversal validation) |\n| `python -B -m session_vault config [--init]` | Yes (`--init` writes) | Print resolved configuration (`--init` atomically writes `config.json`) |\n\n---\n\n## Development & Tests\n\n```bash\npython -B -m unittest discover -s tests -v\n```\n\nThe test suite runs in isolated temporary directories and completes in seconds:\n- Strict config validation and byte-preserving Protobuf wire codec (preserving Field 2 / CLI entries verbatim)\n- 8-category conversation classifier, 4-tier oldest-first retention & `target_max` safety valve, and Layer 1 `mtime` shield\n- Dirty WAL recovery, SQLite + FTS5 integrity verification, `PermissionError` atomic rollback, cross-filesystem moves, incremental dirty-skip backup, and offline restore with path-traversal & `< 480` guards\n- Concurrent atomic file writes, cross-platform kernel singleton locks, and detached process survival across `KILL_ON_JOB_CLOSE` + `taskkill /T /F` (Windows) / `SIGKILL` (POSIX)\n- End-to-end CLI workflows, zero-log read-only queries, lifecycle watcher restart-grace behavior, and fast-path hook execution\n\n---\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "session_vault/platform_ops.py",
+        "line": 111,
+        "snippet": "out = subprocess.check_output([\"ps\", \"-eo\", \"pid=,ppid=,comm=\"], text=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/platform_ops.py#L111"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "session_vault/platform_ops.py",
+        "line": 150,
+        "snippet": "out = subprocess.check_output( [ \"powershell\", \"-NoProfile\", \"-NonInteractive\", \"-Command\", \"Get-CimInstance Win32_Process -Filter \\\"Name='Antigravity.exe'\\\" \" \"| Select-Object Pro",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/platform_ops.py#L150"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "session_vault/platform_ops.py",
+        "line": 173,
+        "snippet": "out = subprocess.check_output([\"ps\", \"-eo\", \"pid=,args=\"], text=True, timeout=5)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/platform_ops.py#L173"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "session_vault/platform_ops.py",
+        "line": 382,
+        "snippet": "proc = subprocess.Popen( argv, cwd=cwd_str, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/platform_ops.py#L382"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "session_vault/platform_ops.py",
+        "line": 401,
+        "snippet": "proc = subprocess.Popen( argv, cwd=cwd_str, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=flags, )",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/platform_ops.py#L401"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "session_vault/platform_ops.py",
+        "line": 432,
+        "snippet": "res = subprocess.run( [\"powershell\", \"-NoProfile\", \"-NonInteractive\", \"-Command\", ps_script], env=env, capture_output=True, text=True, timeout=15, creationflags=_CREATE_NO_WINDOW, ",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/platform_ops.py#L432"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/archive.py",
+        "line": 191,
+        "snippet": "shutil.rmtree(dst)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/archive.py#L191"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/archive.py",
+        "line": 193,
+        "snippet": "shutil.rmtree(src)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/archive.py#L193"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/archive.py",
+        "line": 229,
+        "snippet": "shutil.rmtree(bdest)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/archive.py#L229"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/store.py",
+        "line": 77,
+        "snippet": "with open(tmp, \"wb\") as f:",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/store.py#L77"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/store.py",
+        "line": 159,
+        "snippet": "shutil.rmtree(old, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/store.py#L159"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/vault.py",
+        "line": 288,
+        "snippet": "shutil.rmtree(d)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/vault.py#L288"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "session_vault/vault.py",
+        "line": 411,
+        "snippet": "shutil.rmtree(bdst)",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/session_vault/vault.py#L411"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 6,
+        "snippet": "- **Check the archive index first**: read `<archive_dir>/subagents/index.jsonl` (default `~/.gemini/antigravity-session-vault/archive/subagents/index.jsonl`; if customized, check `",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/rules/AGENTS.md#L6"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 8,
+        "snippet": "- **Curate keep/archive priorities online**: run `python -B -m session_vault trees` to review subagent usage per main conversation and `python -B -m session_vault policy keep|archi",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/rules/AGENTS.md#L8"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 9,
+        "snippet": "- **Restore back into Antigravity Desktop UI (offline only)**: close Antigravity Desktop completely, then run `python -B -m session_vault restore <cid>` (automatically pins restore",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/rules/AGENTS.md#L9"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/hook.py",
+        "line": 37,
+        "snippet": "# Scope automatic watcher activation to Antigravity Desktop 2.0 (~/.gemini/antigravity/).",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/scripts/hook.py#L37"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-vault/SKILL.md",
+        "line": 22,
+        "snippet": "1. Run `python -B -m session_vault trees` (read-only) to show each root conversation's active/archived subagent count, size, last active date, and current tag (`keep` / `archive` /",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/skills/session-vault/SKILL.md#L22"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-vault/SKILL.md",
+        "line": 24,
+        "snippet": "- `python -B -m session_vault policy keep <root_id...>` — keep this root's subagent tree hot in place (overrides the 2-day timeout; only earliest `killed=1` overflow if `keep_roots",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/skills/session-vault/SKILL.md#L24"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-vault/SKILL.md",
+        "line": 25,
+        "snippet": "- `python -B -m session_vault policy archive <root_id...>` — offload this root's idle/completed subagents first on exit.",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/skills/session-vault/SKILL.md#L25"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-vault/SKILL.md",
+        "line": 26,
+        "snippet": "- `python -B -m session_vault policy auto <id...>` — revert back to default time-based rules.",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/skills/session-vault/SKILL.md#L26"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-vault/SKILL.md",
+        "line": 27,
+        "snippet": "- `python -B -m session_vault policy keep --subagent <cid>` — lock an individual subagent in place.",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/skills/session-vault/SKILL.md#L27"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-vault/SKILL.md",
+        "line": 28,
+        "snippet": "3. Verify the updated plan with `python -B -m session_vault clean --dry-run`. The running watcher automatically hot-reloads `config.json` before offline clean.",
+        "githubBlobUrl": "https://github.com/jack-zihan/antigravity-session-vault/blob/c7e9c5945833f5345aba5d87656ea7de809844c5/skills/session-vault/SKILL.md#L28"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.0",
+      "sha": "c7e9c5945833f5345aba5d87656ea7de809844c5",
+      "scannedAt": "2026-11-27T18:19:37.212Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

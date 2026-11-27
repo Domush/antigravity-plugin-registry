@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "formsort/rooks-plugin-agy",
+  "sha": "395d05332a172f7fe5716d0bfe2ba5605f76769b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:43.152Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "rooks",
+    "displayName": "Rooks",
+    "version": "0.2.3",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "rooks",
+        "runtimeName": "rooks_rooks",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://app.rooks.ai/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "rooks",
+        "slashCommand": "/rooks",
+        "description": "Create, edit, preview, or publish hosted online forms, surveys, questionnaires, and intake forms with Rooks, a HIPAA-compliant AI form builder. Use when the user wants a form that people fill out on the web, asks to change, test, or publish",
+        "disableModelInvocation": false,
+        "file": "skills/rooks/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/rooks"
+    ],
+    "mcpServerNames": [
+      "rooks_rooks"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Rooks\n\nRooks is an AI form builder from Formsort. Describe the form you need, and your\nAI builds it in Rooks: online forms, surveys, questionnaires, intake forms and\nregistration forms. Add conditional logic, calculations, validation, file\nuploads, signatures and your branding. Review the draft in a preview, then\npublish. Rooks hosts the form, collects the responses and gives your team a\ndashboard to manage them.\n\nThe plugin contains a skill and the address of the Rooks MCP server. The skill\ntells your AI how to use the Rooks tools and how to keep credentials and\nrespondent data out of chat.\n\n## Examples\n\n- \"Use Rooks, check my connection, and show my workspaces.\"\n- \"Create a consultation form with contact details on the first page.\"\n- \"Show the follow-up question only when someone chooses Other.\"\n- \"Use our colors and add this logo to the header.\"\n- \"Save a draft and give me the preview link. Wait for my approval before\n  publishing.\"\n\n## Requirements\n\n- A Rooks account. Sign up at [rooks.ai](https://rooks.ai).\n- Sign in to Rooks when your AI asks you to connect. Never paste tokens or\n  passwords into a conversation.\n- For form editing, a code execution environment that can reach the file\n  transfer hosts. See [File transfers](#file-transfers).\n\n## Install\n\nInstall the plugin in Antigravity:\n\n```sh\nagy plugin install https://github.com/formsort/rooks-plugin-agy\n```\n\nThen open `/plugin`, expand Rooks and choose **Sign in**.\n\nIf your AI can't reach the file transfer hosts, it can still list your\nworkspaces and forms and answer questions about Rooks, but it can't change a\nform.\n\n## File transfers\n\nTo edit a form, your AI downloads the form files and uploads the changed files\nthrough short-lived links that the Rooks tools return. Images, fonts and PDFs\nthat you add to a form are uploaded the same way. Each link goes to Rooks and\nthen redirects to a temporary signed URL for the Amazon S3 storage that Rooks\nuses. The files travel between your AI's environment and that storage,\nseparately from the requests to the Rooks MCP server.\n\nYour AI publishes a form only when you ask it to.\n\n## Responses and data protection\n\nRooks collects and stores form responses, including uploaded files. The Rooks\ntools in this plugin can't read submitted responses: you review them in the\nRooks dashboard.\n\nRooks supports HIPAA-compliant response storage and is SOC 2 Type II\ncertified. Sign a Business Associate Agreement (BAA) with Rooks before you\ncollect protected health information.\n\n## Documentation and support\n\nRead the [Rooks documentation](https://docs.rooks.ai). Report problems in the\n[issue tracker](https://github.com/formsort/rooks-plugin-agy/issues). Do not\ninclude credentials, respondent data or private form content.\n\n## Privacy and terms\n\nUse of Rooks through this plugin is subject to the\n[Rooks Terms of Service](https://rooks.ai/terms). The\n[Rooks Privacy Policy](https://rooks.ai/privacy) explains how Rooks collects,\nuses and shares information.\n\n## License\n\nThe plugin is licensed under the MIT License.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "0.2.3",
+      "sha": "395d05332a172f7fe5716d0bfe2ba5605f76769b",
+      "scannedAt": "2026-11-27T18:18:43.152Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "id": "cxgit12138/codex-supervisor",
+  "sha": "6e8708dcefcc11ede79c0c5f96a81358956bd6fe",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:35.177Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-supervisor",
+    "displayName": "Codex Supervisor",
+    "version": "1.4.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-supervisor",
+        "slashCommand": "/codex-supervisor",
+        "description": "Use when the user asks to delegate work or plan tasks with OpenAI Codex, supervise/monitor Codex while it works, send mid-turn steering instructions to a running Codex session, resume or fork a Codex Desktop thread, or list local Codex mode",
+        "disableModelInvocation": false,
+        "file": "skills/codex-supervisor/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-supervisor"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Codex Supervisor for Antigravity\n\n[![Release](https://img.shields.io/github/v/release/cxgit12138/codex-supervisor?color=blue)](https://github.com/cxgit12138/codex-supervisor/releases)\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-green.svg)](https://nodejs.org/)\n[![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-brightgreen.svg)](#)\n\n[中文文档](#中文文档) | [English](#english) | [更新日志 / Changelog](CHANGELOG.md)\n\n让 **Google Antigravity** 把你本机的 **OpenAI Codex** 当作原生子代理来派活、监工、实时插队纠偏与验收——基于官方 `codex app-server` JSON-RPC 协议构建，**零外部依赖、零轮询低 Token 消耗**，并自带 Antigravity 原生右侧**实时双边聊天气泡面板**。\n\n![Codex Supervisor 实时监工与双边对话演示](assets/demo.gif)\n\n---\n\n## 中文文档\n\n### 核心特性\n\n- **原生侧边栏实时对话面板（Sidecar UI）**\n  - 左 Codex / 右 Antigravity 双边气泡流，实时同步派单、插队、主动汇报、审批问答、执行出错与最终回复；\n  - 支持 **三档详略切换**（`简洁` 仅核心对话 / `默认` 含过程说明、计划与系统状态 / `详细` 展开全部读取文件、搜索代码、列出目录、执行命令、修改文件、查看图片、网页搜索、MCP 工具、协作子代理等工具调用与可折叠输出）；\n  - 顶部显示工作区目录、模型名与沙箱标签，每条 Codex 气泡自动标注当前回合的模型名与思考深度（`model · effort`）；\n  - 自动跟随 Antigravity 宿主亮/暗色主题，采用 ETag 增量轮询与磁盘缓存，查看面板 **零 LLM Token 消耗**。\n- **零轮询事件唤醒（Reactive Wait）+ 工具轮次间隙自动通知（Lifecycle Hooks）**\n  - 常驻本地桥接守护进程 `bridge-daemon.mjs` 维持 `codex app-server --stdio` 长连接；\n  - Antigravity 挂起后台 `wait` 后仅在关键节点（主动汇报/请示、审批请求、回合完成、出错或**智能静默卡死检测**：连续 10 分钟无桥接层活动才触发 `stall`，单次等待硬上限 30 分钟防活锁，健康长任务零多余唤醒）唤醒，大幅节省 Token；\n  - 即使 Antigravity **未挂 `wait`、正在忙其他任务**，插件自带的 `hooks.json`（`PreInvocation` 与条件启用的 `Stop`）也会在下一轮工具间隙注入精简固定模板系统提醒（防 Prompt Injection 提权），引导通过 `codex-ctl.mjs inbox` 按普通工具权限分页读取正文（含后台卡死/超限去重告警 `turn_watchdog`，单页 ≤16 KiB，存在 `hasMore` 时继续拉取；内存保留随当前 daemon 实例最长 60 分钟，确认边界为 CLI 完整写出 stdout）；在支持 `Stop` 停机原因与 `continuationActive: false` 字段的客户端上，准备彻底停机而 Codex 仍在跑且未挂 `wait` 时会自动兜底提醒一次（完全空闲的会话无法由外部主动推醒）。\n- **原生双向通信工具 `message_supervisor`**\n  - 新建会话时自动向 Codex 注入动态工具 `message_supervisor(message, wait_for_reply)`：\n    - `wait_for_reply: false`：Codex 边干活边向 Antigravity 发送阶段汇报或风险提示；\n    - `wait_for_reply: true`：遇到方案分歧或关键决策时暂停等待 Antigravity 拍板回复。\n- **中途插队纠偏（`turn/steer`）与审批接管**\n  - 不用等当前回合结束，随时给运行中的 Codex 注入纠偏指令（`steer`）或立即喊停（`interrupt`）；\n  - 完整接管 Codex 的命令执行审批、文件补丁审批、额外权限审批与用户提问（`requestApproval` / `requestUserInput`）。\n- **接管与分叉现有会话（`resume` / `fork`）**\n  - 自动复用本机 `~/.codex` 登录态、配置与历史记录，**无需打开 Codex Desktop App 即可工作**；\n  - 若 Codex Desktop App 正占用某会话写锁，可使用 `fork` 无冲突分叉续聊。\n- **开箱即用 & 安全隔离**\n  - **0 外部 npm 依赖**，纯 Node.js 内置模块 + Antigravity 内置 `sidecar_sdk`；\n  - 桥接服务仅监听 `127.0.0.1` 随机端口 + 随机 Bearer Token，运行态与日志统一落在 `~/.gemini/cache/codex-supervisor/`（Windows 自动收紧 NTFS DACL，macOS/Linux 为 `0o700` / `0o600`），不污染任何项目仓库；\n  - Sidecar API 使用 `POST` + `X-Sidecar-Token` 鉴权。\n\n---\n\n### 环境要求\n\n- **Antigravity**（支持 Plugins 与 Aux Pane Sidecar UI）\n- **Node.js >= 22**\n- 本机已安装并登录 **OpenAI Codex**（以下任一即可）：\n  - **Codex Desktop App**（Windows 自动发现 `%LOCALAPPDATA%\\OpenAI\\Codex\\bin\\*\\codex.exe`，macOS 自动发现 `/Applications/Codex.app/Contents/Resources/codex`）\n  - **Codex CLI**（`codex` 已加入系统 `PATH`，或通过环境变量 `CODEX_BIN` 手动指定可执行文件路径）\n\n---\n\n### 安装与升级\n\n#### 方式一：使用 Antigravity CLI 一键安装（推荐）\n\n```bash\nagy plugin install https://github.com/cxgit12138/codex-supervisor\n```\n\n#### 方式二：手动克隆到全局插件目录（支持锁定 Release 版本）\n\n**Windows（PowerShell）：**\n\n```powershell\n# 安装最新主分支（如需锁定稳定 Release 版本，追加 --branch v1.4.1）\ngit clone https://github.com/cxgit12138/codex-supervisor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-supervisor\"\n```\n\n**macOS / Linux：**\n\n```bash\n# 安装最新主分支（如需锁定稳定 Release 版本，追加 --branch v1.4.1）\ngit clone https://github.com/cxgit12138/codex-supervisor.git \"$HOME/.gemini/config/plugins/codex-supervisor\"\n```\n\n也可以直接从 [GitHub Releases](https://github.com/cxgit12138/codex-supervisor/releases) 下载对应版本的源码压缩包，解压到上述 `codex-supervisor` 插件目录中。\n\n#### 升级插件\n\n- **通过 `git clone` 安装**：在插件目录执行 `git pull`（或 `git fetch --tags && git checkout v1.4.1`）；\n- **通过 CLI 安装**：重新运行安装命令或拉取最新 Release；\n- 升级完成后，若已有旧版桥接进程在运行，待当前任务结束执行一次 `codex-ctl.mjs stop`，然后**重启一次 Antigravity 客户端**（使新版 Sidecar 面板与 `hooks.json` 生效）。\n\n安装完成后：\n1. 在 Antigravity 的 **Plugins / Customizations** 页面确认 **Codex Supervisor** 已启用（首次安装或升级后建议重启一次客户端）；\n2. 点击右侧边栏的 **`+`** 按钮，选择 **Codex Supervisor** 即可打开实时监工对话面板。\n\n---\n\n### 快速上手\n\n启用插件后，直接在 Antigravity 对话中用自然语言指挥即可：\n\n- **派活并全程监工**：\n  > 派 Codex 在当前仓库里实现 XXX 功能，你来全程监工验收\n- **指定模型 / 思考深度 / 权限模式**：\n  > 用 Codex 的最高思考深度帮我只读审查这个 PR 的边界问题\n- **中途插队纠偏**：\n  > 给正在干活的 Codex 发一条插队指令：不要改公共接口签名，先补单测\n- **查看本地模型与会话 / 接管或分叉历史会话**：\n  > 列出我本地 Codex 可用的模型和最近 10 个会话，分叉最近的那个继续改\n\n---\n\n### 工作原理与目录结构\n\n```text\ncodex-supervisor/\n├── plugin.json                         # Antigravity 插件清单\n├── hooks.json                          # 插件级生命周期钩子（PreInvocation + Stop）\n├── CHANGELOG.md                        # 版本更新日志\n├── hooks/\n│   └── codex-hook.mjs                  # 零依赖快路径 Hook（独立 hook-daemon.json 鉴权 + 固定模板提醒）\n├── assets/\n│   ├── logo.svg                        # 插件图标\n│   └── demo.gif                        # 实时监工与双边对话演示动图\n├── sidecars/codex_panel/               # 原生右侧边栏面板（Sidecar UI）\n│   ├── sidecar.json                    # Aux Pane 入口配置\n│   ├── main.mjs                        # 只读本地后端（解析日志 + 叠加实时状态 + ETag）\n│   ├── index.html                      # 面板结构\n│   ├── styles.css                      # 跟随宿主亮/暗主题样式\n│   └── app.js                          # 三档过滤与实时气泡渲染\n├── skills/codex-supervisor/            # 渐进式披露 Skill（低上下文开销）\n│   ├── SKILL.md                        # Antigravity 监工操作协议\n│   └── scripts/\n│       ├── bridge-daemon.mjs           # 本地 127.0.0.1 桥接守护进程 + codex app-server 客户端\n│       ├── watchdog-core.mjs           # 纯函数单调时钟卡死看门狗与有界变更摘要模块\n│       └── codex-ctl.mjs               # 精简 CLI 控制端\n└── tests/                              # 可移植 E2E 回归测试（仅开发验证，不被宿主加载）\n    ├── verify-hooks-e2e.mjs            # `node tests/verify-hooks-e2e.mjs` 一键跑 26 组端到端测试\n    └── fixtures/app-server             # 模拟 codex app-server --stdio 测试桩\n```\n\n核心 CLI 子命令（由 Antigravity 按需调用 `skills/codex-supervisor/scripts/codex-ctl.mjs`）：\n\n| 命令 | 说明 |\n| :--- | :--- |\n| `models` / `threads` | 列出本地 Codex 可用模型、历史会话与默认配置 |\n| `start` / `send` | 新建会话并派发任务，或在原线程继续追问/返工（支持 `--model` / `--effort` / `--mode plan\\|default` / `--sandbox` / `--approval`） |\n| `resume` / `fork` | 接管或无冲突分叉本地已有 Codex 会话（支持 `resume --claim` 对干净线程显式转移自动通知路由） |\n| `steer` / `interrupt` | 向运行中的回合中途插队纠偏，或请求立即中断 |\n| `wait` / `respond` | 零轮询阻塞等待关键事件；显式回复审批、提问或 `message_supervisor` 请示 |\n| `inbox` / `inbox ack` | 非阻塞读取本会话未确认关键通知与存活阻塞请求（默认完整写出 stdout 后自动 ACK，可选 `--no-ack`） |\n| `status` / `history` / `stop` | 查看实时状态快照、拉取分页历史、清理停止常驻桥接进程 |\n\n---\n\n### 注意事项与常见问题（避坑指南）\n\n1. **Codex Desktop App 的会话写锁（`already has an active writer`）**\n   - 在 Windows 上，Codex Desktop App 只要在**本次启动后打开或切到过某个会话**，即便后来切去了其他会话，底层文件写锁（`~/.codex/thread-writer-locks/*.lock`）也会一直保持到 **Codex Desktop App 完全退出**。\n   - **解决方式**：\n     - **推荐**：直接让 Antigravity 用 `fork` 从该会话分叉续聊（保留完整历史且与桌面端互不冲突，无需关闭桌面端）；\n     - 或者完全退出 Codex Desktop App 后再使用 `resume` 续聊原会话。\n   - 另外，日常派发新任务**不需要打开 Codex Desktop App**——关闭桌面端也能正常复用 `~/.codex` 登录态与历史记录。\n\n2. **为什么右侧面板里看不到我在 Codex Desktop App 里聊过的旧会话？**\n   - 侧边栏下拉列表**仅展示通过 Codex Supervisor 派发、接管（`resume`）或分叉（`fork`）过的监管会话**（日志存放在 `~/.gemini/cache/codex-supervisor/logs/`），不会把你桌面端所有的私人历史会话混进来。\n   - 如果想在右侧面板跟进某个桌面端旧会话，先让 Antigravity 列出本地会话并对它执行一次 `resume` 或 `fork` 即可出现在下拉框中。\n\n3. **旧会话与新会话的功能差异（`message_supervisor`）**\n   - `codex app-server` 协议仅支持在新建线程（`start`）时注册动态工具，因此只有通过本插件**新建的会话**才会自动拥有原生 `message_supervisor`（主动阶段汇报 / 阻塞请示）工具；\n   - 通过 `resume` / `fork` 接管的桌面端旧会话仍完整支持派单追问、中途 `steer` 插队、`interrupt` 喊停、审批与提问接管以及侧边栏实时展示。\n\n4. **安装或更新插件后侧边栏空白 / 入口未出现 / Hook 未生效**\n   - Sidecar 后端进程、前端缓存与根目录 `hooks.json` 均在客户端启动时初始化（部分 Antigravity 版本热重载插件时不会重新注册 Hook 或重启 Sidecar）；首次安装或升级后，请**重启一次 Antigravity 客户端**。\n   - 若升级前已有旧版 `bridge-daemon.mjs` 在运行，旧实例仍兼容现有 `wait` 流程；待当前任务结束后执行 `codex-ctl.mjs stop` 即可平滑切换到支持 Hook 与 `inbox` 的新版守护进程。\n\n5. **常驻桥接进程与写锁释放**\n   - 桥接进程 `bridge-daemon.mjs` 会在空闲 **60 分钟后自动退出**；如果结束后想立刻切回 Codex Desktop App 编辑同一会话，可让 Antigravity 执行 `stop`（或运行 `codex-ctl.mjs stop`）立即释放线程写锁。\n\n6. **权限与模型默认行为**\n   - 未显式指定 `--model` 或 `--effort` 时，默认继承你本机 `~/.codex/config.toml` 的配置；\n   - 权限模式由 Antigravity 根据任务风险自动选择（可信仓库开发 / 需审批 / 只读审查），你也可以在对话中随时明确指定（例如「只读模式审查」「改文件前先让我审批」）。\n\n7. **如何自定义 `codex` 可执行文件路径？**\n   - 如果你的 `codex` 不在系统 `PATH` 或默认安装路径下，设置环境变量 `CODEX_BIN` 指向 `codex` / `codex.exe` 即可覆盖自动发现逻辑。\n\n---\n\n## English\n\n**Codex Supervisor** is a zero-dependency **Antigravity** plugin that lets Antigravity dispatch, supervise, mid-turn steer, approve, and review local **OpenAI Codex** sessions over the official `codex app-server` JSON-RPC protocol — paired with a native live side-pane chat viewer.\n\n### Highlights\n\n- **Native Side-Pane Chat Viewer (`sidecars/codex_panel`)**: Live left (Codex) / right (Antigravity) conversation stream with a 3-tier detail switcher (`Minimal` / `Default` / `Detailed`), workspace & model badges, per-bubble `model · effort` indicators, collapsible command/diff/tool outputs, Antigravity light/dark theme sync, and ETag polling at **zero LLM token cost**.\n- **Zero-Polling Reactive Supervision + Activity-Aware Stall Watchdog + Hook Notifications**: A local `127.0.0.1` bridge daemon (`bridge-daemon.mjs`) holds the `codex app-server --stdio` session (verified against `codex-cli 0.169.1`) and wakes background `wait` calls only on milestones, requests, completion, errors, or genuine turn silence (default 10 min stall watchdog + 30 min per-request hard ceiling, eliminating spurious wakeups on healthy long runs; graceful fallback to 600s fixed wait on older daemons). Even when Antigravity is busy without an active `wait`, bundled `hooks.json` (`PreInvocation` and conditional `Stop` on clients emitting `NO_TOOL_CALL` + `continuationActive: false`) injects fixed-template reminders between tool turns — including deduplicated `turn_watchdog` inbox alerts when an owned running turn stalls or hits the 30 min no-contact ceiling — so Antigravity can safely inspect paginated untrusted Codex payloads (≤16 KiB/page, auto-ACK on complete CLI stdout) via `codex-ctl.mjs inbox` and arm `wait` before going idle.\n- **Native Bidirectional `message_supervisor` Tool**: Codex can proactively push non-blocking progress updates (`wait_for_reply: false`) or pause to ask the supervisor for decisions (`wait_for_reply: true`).\n- **Mid-Turn Steering (`turn/steer`), Approvals & Thread Forking**: Inject corrections while Codex is still working, handle command/patch/permission approvals explicitly, and `fork` Codex Desktop threads cleanly without writer-lock conflicts.\n- **Secure & Self-Contained**: Zero npm dependencies, loopback-only bridge with random Bearer token, owner-only state/logs under `~/.gemini/cache/codex-supervisor/` (NTFS DACL hardening on Windows, `0o700`/`0o600` on POSIX), and token-authenticated `POST` sidecar API.\n\n### Requirements\n\n- **Antigravity** with plugin & sidecar UI support\n- **Node.js >= 22**\n- Local **OpenAI Codex** installed and authenticated (Codex Desktop App or `codex` CLI on `PATH`, or `CODEX_BIN` env var)\n\n### Install & Upgrade\n\n```bash\nagy plugin install https://github.com/cxgit12138/codex-supervisor\n```\n\nOr clone manually into Antigravity's global plugins directory (append `--branch v1.4.1` to pin a stable release, or download a source archive from [GitHub Releases](https://github.com/cxgit12138/codex-supervisor/releases)):\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/cxgit12138/codex-supervisor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-supervisor\"\n```\n\n```bash\n# macOS / Linux\ngit clone https://github.com/cxgit12138/codex-supervisor.git \"$HOME/.gemini/config/plugins/codex-supervisor\"\n```\n\nTo upgrade, run `git pull` (or check out the latest release tag), stop any older running bridge daemon via `codex-ctl.mjs stop` after active tasks finish, and restart **Antigravity** once so `hooks.json` and the Sidecar reload cleanly.\n\nThen open the live chat panel via the sidecar **`+`** button → **Codex Supervisor**, and ask Antigravity to delegate a task to Codex. See [CHANGELOG.md](CHANGELOG.md) for release history, and run `node tests/verify-hooks-e2e.mjs` / `node tests/verify-watchdog.mjs` to execute the portable E2E suites.\n\n### Notes & Troubleshooting\n\n- **Codex Desktop writer locks (`already has an active writer`)**: On Windows, once Codex Desktop App opens a thread during a run, it holds the file writer lock until the Desktop App exits. Use **`fork`** to branch the thread cleanly without closing Desktop App, or exit Desktop App before calling `resume`. New sessions do not require Codex Desktop App to be running.\n- **Why older Desktop threads aren't in the side-pane dropdown**: The panel only lists sessions supervised via this plugin (`~/.gemini/cache/codex-supervisor/logs/`). `resume` or `fork` any Desktop thread once to bring it into the panel.\n- **`message_supervisor` availability**: Dynamic tools are registered on `thread/start`, so native `message_supervisor` pings/questions apply to newly started threads (resumed/forked threads still support full `send`, `steer`, `interrupt`, approvals, and live side-pane viewing).\n- **Panel missing or Hooks didn't activate after install/update**: Restart the **Antigravity** client once so `hooks.json`, the sidecar backend process, and webview cache initialize cleanly (toggling the plugin in-place may not re-register hooks or re-spawn sidecar processes on some Antigravity builds). If an older daemon was running, run `codex-ctl.mjs stop` after current tasks finish to switch to the v1.4.1 daemon.\n- **Releasing locks after supervision**: The bridge daemon auto-exits after 60 minutes of idle time, or run `codex-ctl.mjs stop` to release thread locks immediately.\n\n---\n\n## License\n\n[MIT](LICENSE) © 2026 cxgit12138\n",
+  "latestReleaseNotes": "## 中文更新说明\n\n### 新增特性\n- **活跃度感知卡死检测（`watchdog-core.mjs`、`bridge-daemon.mjs`、`codex-ctl.mjs`）**\n  - 用双阈值活跃度看门狗替代固定间隔盲目心跳：默认 **10 分钟（`600s`）静默卡死阈值** + **30 分钟（`1800s`）硬上限保底**。\n  - 基于三正交单调时钟（`performance.now()`：`turnRunningSince` / `lastProgress` / `lastDeliveredContact`）追踪 Codex 真实执行进展（`item/started`、`item/completed`、流式输出增量、schema 级有界 `plan/updated` 与 `patchUpdated` 摘要、阻塞审批/提问），每次确认唤醒后自动刷新计时。\n  - `codex-ctl.mjs wait` 新增 `--stall-timeout <sec>`（`0..1800`，`0` 禁用静默检测），通过 `/health` 严格协商 `capabilities.stallWatchdog === true` 并保持与旧版 `v1.4.0` 守护进程双向兼容。\n  - 超时唤醒与 `/status` 摘要附带脱敏诊断字段（`timeoutReason: \"stall\" | \"max_wait\"`、`silentSec`、`lastActivityKind`、`lastActivityAt`、白名单 `activeItems` 与非重试错误码枚举）。\n- **未 `wait` 模式的后台 Hook / Inbox 看门狗**\n  - 当活跃回合未挂载前台 `wait` 时，后台独立看门狗（`CODEX_BRIDGE_BG_STALL_SEC=600`、`CODEX_BRIDGE_BG_MAX_RUN_SEC=1800`）会在卡死或触及硬上限时通过既有 `PreInvocation` / `Stop` 钩子与 `codex-ctl.mjs inbox` 投递去重后的 `inboxOnly` `turn_watchdog` 告警（保持高权限固定模板隔离不变）。\n  - 单回合采用单写告警槽与 `fg_timeout_receipt` 租约确认（`auto` 5s / `manual` 30s），前台 CLI 遭遇 `EPIPE` 时无缝降级到后台 Inbox，避免漏报或重复刷屏。\n- **可移植 11 组卡死检测自动化测试（`tests/verify-watchdog.mjs`）**\n  - 覆盖纯调度单元测试、持续流式输出防误报、静默卡死唤醒、`EPIPE` 降级、多 waiter 槽位竞争、满队自驱逐、回合隔离与 `0.169.1` 精确取消载荷、Hook 后台注入与混合版本兼容矩阵。\n\n### 侧边栏体验与协议优化\n- **自定义会话下拉菜单与弹性动效（`sidecars/codex_panel/*`、`bridge-daemon.mjs`）**\n  - 用自定义美化无障碍下拉面板替代原生 `<select>`：内置实时状态圆点、动态相对时间、工作区/模型/条数双行信息、完整键盘导航与矮视口限高，轮询期不关闭菜单且保留焦点与滚动位置。\n  - 改为 O(1) 增量 DOM 追加（隐藏工具写日志不影响可见列表时直接跳过 DOM 重建，消除渐隐行闪动），新增 GPU 合成方向性弹性弹入动画、吸底时同步 `easeOutQuart` 平滑上推（查看历史时绝不打扰，滚轮/点击/键盘即刻接管）与平滑可逆高度展开/收起过渡，并尊重 `prefers-reduced-motion`。\n  - 通过精确 `itemId` 关联（`inFlightDraftItemIds` / `completedMessageItemIds`）与 `activeTurnFinalized` 追踪，实现流式草稿原地无缝定型（不二次弹出），并消除 `final_answer` 落盘到 `turn/completed` 短暂窗口中的幽灵「执行中」气泡。\n- **长消息气泡自动折叠**\n  - 对非工具类超长气泡限制 `260px` 显示高度（含 `56px` 防尴尬滞后余量），配合按气泡底色自适应的渐隐遮罩与极简 `显示更多` / `收起` 按钮（无气泡内滚动条、记忆展开态与键盘焦点、收起防跳屏锚定）。\n- **Codex `0.169.1` App-Server 协议加固**\n  - 严格 `threadId + turnId` 隔离防过期/被取代回合复活；强制服务端请求单回复权与精确 `0.169.1` 取消载荷，区分非阻塞 `item/tool/requestUserInput`；`POST /wait` 采用严格非隐式转换 JSON 整数校验与两阶段多线断连清理。\n\n### 问题修复\n- **多轮会话推理强度（`effort`）跟踪与侧边栏显示修复**\n  - 分离线程级 `(model, effort)` 与活跃回合快照（`activeTurnModel` / `activeTurnEffort`），从 `thread/start|resume|fork` 提取 `reasoningEffort`，跨模型切换清零旧 effort，防止同回合追加输入或被拒 `turn/start` 覆写进行中回合标签。\n  - 侧边栏日志解析升级为两遍扫描按回合索引（解决乱序到达与历史日志后续轮次丢失 `effort` 显示问题），live 气泡按作用域原子解析并将 `effort` / `lastModelSub` 纳入 ETag。\n\n### 升级注意\n- 若升级前已有旧版 `bridge-daemon.mjs` 在运行，待当前任务完成后执行一次 `codex-ctl.mjs stop`（并按需重启一次 **Antigravity** 加载新版 Sidecar 面板）即可切换至 `v1.4.1`。\n\n---\n\n## English Release Notes\n\n### Added\n- **Activity-Aware Stall Watchdog (`watchdog-core.mjs`, `bridge-daemon.mjs`, `codex-ctl.mjs`)**:\n  - Replaces blind fixed-interval heartbeat polling with dual-threshold activity-aware stall detection: **10 min (`600s`) silence stall threshold** + **30 min (`1800s`) hard ceiling** by default.\n  - Tracks real Codex progress (`item/started`, `item/completed`, streaming text/reasoning/command/file deltas, `plan/updated` & `patchUpdated` schema-bounded digests, and blocking approvals/questions) using three orthogonal monotonic (`performance.now()`) clocks (`turnRunningSince`, `lastProgress`, `lastDeliveredContact`) that refresh cleanly after every confirmed supervisor wakeup.\n  - Added `--stall-timeout <sec>` (`0..1800`, `0` disables silence detection) to `codex-ctl.mjs wait`, with strict `/health` `capabilities.stallWatchdog === true` negotiation and bidirectional compatibility with older v1.4.0 daemons.\n  - Includes sanitized diagnostic metadata (`timeoutReason: \"stall\" | \"max_wait\"`, `silentSec`, `lastActivityKind`, `lastActivityAt`, allowlisted `activeItems`, and sanitized `lastNonRetryableError.code`) in timeout wakeups and `status` summaries.\n- **Unwaited Hook / Inbox Background Watchdog**:\n  - Runs an independent background watchdog (`CODEX_BRIDGE_BG_STALL_SEC=600`, `CODEX_BRIDGE_BG_MAX_RUN_SEC=1800`) for active turns with no attached foreground `wait`, delivering deduplicated `inboxOnly` `turn_watchdog` notifications via existing `PreInvocation` / `Stop` hooks and `codex-ctl.mjs inbox` (keeping the fixed security-isolated hook templates untouched).\n  - Enforces a single-writer alert slot per turn with `fg_timeout_receipt` lease confirmation (`auto` 5s / `manual` 30s), seamlessly handing off failed foreground `EPIPE` deliveries to the background inbox without duplicate storms.\n- **Portable 11-Group Watchdog Verification Suite (`tests/verify-watchdog.mjs`)**:\n  - Covers unit scheduling/sanitization, active streaming suppression, silent stall detection, `EPIPE` handoff, multi-waiter slot contention, full-queue self-eviction, turn isolation & `0.169.1` cancel payloads, unwaited Hook/Inbox delivery, `--force` rescheduling, and mixed-version compatibility.\n\n### Changed\n- **Sidecar Panel UX Polish: Custom Session Picker, Spring Animations & Seamless Streaming (`sidecars/codex_panel/*`, `bridge-daemon.mjs`)**:\n  - Replaced native OS `<select>` with a custom accessible session dropdown featuring live status dots, dynamic relative timestamps, two-line workspace/model/count metadata, full keyboard navigation, viewport height clamping, and poll-stable menu focus/scroll.\n  - Added O(1) incremental DOM bubble appends (skipping redundant DOM rebuilds when hidden tool writes don't affect visible messages), GPU-composited directional spring pop-in animations, synchronized `easeOutQuart` bottom push-up scrolling (untouched while reading history; immediately cancellable by wheel/touch/pointer/keyboard), smooth reversible `max-height` expand/collapse transitions, and `prefers-reduced-motion` support.\n  - Added exact `itemId` correlation (`inFlightDraftItemIds` / `completedMessageItemIds`) and `activeTurnFinalized` tracking so streaming drafts settle in-place without replaying entrance animations or flashing brief post-`final_answer` ghost \"running\" bubbles.\n- **Sidecar Panel Collapsible Long Bubbles (`sidecars/codex_panel/app.js`, `styles.css`, `index.html`)**:\n  - Caps tall non-tool chat bubbles at `260px` (with a `56px` hysteresis buffer so short overflows stay natural) using a theme-aware bottom fade mask and a minimalist `显示更多` / `收起` toggle with zero inner scrollbars.\n  - Preserves expanded bubble state and keyboard focus across poll re-renders, anchors scroll cleanly on collapse (keeping the toggle visible in short viewports), links buttons via `aria-controls`, and adapts smoothly to panel width/height resizes.\n- **Codex `0.169.1` App-Server Protocol Hardening**:\n  - Strict `threadId + turnId` scoping prevents late notifications or superseded turns from resurrecting completed turns or poisoning active stall timers.\n  - Enforces single-reply authority on server requests with exact `0.169.1` retirement/cancel payloads (`{ permissions: {}, scope: \"turn\" }` for permissions, `{ decision: \"abort\" }` for legacy approvals, `{ decision: \"cancel\" }` for v2 approvals, `-32602` on malformed requests) and distinguishes non-blocking `item/tool/requestUserInput` (`isBlocking: false`).\n  - Upgraded `POST /wait` validation to strict non-coercing JSON integers and two-phase disconnect cleanup across multi-thread teardown.\n\n### Fixed\n- **Per-Turn Reasoning Effort Tracking & Sidecar Display (`bridge-daemon.mjs`, `sidecars/codex_panel/main.mjs`, `sidecars/codex_panel/app.js`)**:\n  - Tracks thread-level `(model, effort)` separately from active-turn snapshots (`activeTurnModel`, `activeTurnEffort`), reading `reasoningEffort` from `thread/start|resume|fork`, clearing stale effort on cross-model switches, and preventing same-turn appends or rejected `turn/start` responses from relabeling an already-running turn.\n  - Upgraded sidecar log parsing to a two-pass per-turn index with explicit `effortExplicit`/`committed`/`turnConfigApplied` handling, atomic live-bubble scope resolution, and ETag inclusion of `effort` / `lastModelSub` so follow-up turns and legacy logs consistently display their true reasoning effort.\n\n### Upgrade Notes\n- Finish active tasks and run `codex-ctl.mjs stop` (and restart **Antigravity** once to reload the updated Sidecar panel) so the bridge restarts on the v1.4.1 daemon advertising `capabilities.stallWatchdog: true`.\r\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 209,
+        "snippet": "const res = spawnSync(psBin, [\"-NoProfile\", \"-NonInteractive\", \"-EncodedCommand\", WINDOWS_ACL_ENCODED], { encoding: \"utf8\", env: childEnv, windowsHide: true, timeout: 15_000, });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L209"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 3208,
+        "snippet": "codexProc = spawn(codexBin, [\"app-server\", \"--stdio\"], { stdio: [\"pipe\", \"pipe\", \"pipe\"], windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L3208"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 4956,
+        "snippet": "const tk = spawnSync(\"taskkill\", [\"/T\", \"/F\", \"/PID\", String(codexProc.pid)], { stdio: \"ignore\", windowsHide: true, timeout: 4000, });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L4956"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/codex-supervisor/scripts/codex-ctl.mjs",
+        "line": 310,
+        "snippet": "const child = spawn(process.execPath, [DAEMON_SCRIPT], { detached: true, stdio: [\"ignore\", \"pipe\", \"pipe\"], windowsHide: true, env: process.env, });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/codex-ctl.mjs#L310"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "hooks/codex-hook.mjs",
+        "line": 130,
+        "snippet": "req = http.request( { host: \"127.0.0.1\", port: state.port, method: \"POST\", path: \"/hook/poll\", headers: { Authorization: `Bearer ${state.hookToken}`, \"Content-Type\": \"application/j",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/hooks/codex-hook.mjs#L130"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/codex_panel/main.mjs",
+        "line": 129,
+        "snippet": "req = http.request( { host: \"127.0.0.1\", port: state.port, method: \"GET\", path: \"/status\", headers: { Authorization: `Bearer ${state.token}` }, }, (res) => { const chunks = []; res",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/sidecars/codex_panel/main.mjs#L129"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 285,
+        "snippet": "fs.appendFileSync(DAEMON_LOG, line, \"utf8\");",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L285"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 349,
+        "snippet": "fs.writeFileSync( fd, JSON.stringify({ pid: process.pid, instanceId: INSTANCE_ID, startedAt: new Date().toISOString() }), \"utf8\" );",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L349"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 360,
+        "snippet": "try { fs.unlinkSync(LOCK_FILE); } catch {}",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L360"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 470,
+        "snippet": "fs.writeFileSync(rfd, JSON.stringify({ pid: process.pid, instanceId: INSTANCE_ID }), \"utf8\");",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L470"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 485,
+        "snippet": "fs.unlinkSync(LOCK_FILE);",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L485"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 501,
+        "snippet": "try { fs.unlinkSync(RECLAIM_LOCK_FILE); } catch {}",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L501"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 553,
+        "snippet": "fs.rmSync(full, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L553"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 766,
+        "snippet": "fs.writeFileSync(filePath, \"\", { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L766"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 769,
+        "snippet": "fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L769"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 1666,
+        "snippet": "fs.appendFileSync(st.logPath, JSON.stringify({ ts: new Date().toISOString(), ...record }) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L1666"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 4981,
+        "snippet": "fs.writeFileSync(fd, JSON.stringify(obj, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L4981"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 4995,
+        "snippet": "fs.unlinkSync(tmpFile);",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L4995"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 5006,
+        "snippet": "fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L5006"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 5021,
+        "snippet": "fs.rmSync(INSTANCE_HOOKS_DIR, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L5021"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/codex-supervisor/scripts/bridge-daemon.mjs",
+        "line": 5039,
+        "snippet": "fs.unlinkSync(LOCK_FILE);",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/bridge-daemon.mjs#L5039"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/codex-supervisor/scripts/codex-ctl.mjs",
+        "line": 185,
+        "snippet": "req = http.request( { host: \"127.0.0.1\", port, method, path: route, headers: reqHeaders }, (res) => { const chunks = []; res.on(\"data\", (c) => chunks.push(Buffer.isBuffer(c) ? c : ",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/skills/codex-supervisor/scripts/codex-ctl.mjs#L185"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/codex_panel/main.mjs",
+        "line": 4,
+        "snippet": "* Reads persisted JSONL logs from ~/.gemini/cache/codex-supervisor/logs/,",
+        "githubBlobUrl": "https://github.com/cxgit12138/codex-supervisor/blob/6e8708dcefcc11ede79c0c5f96a81358956bd6fe/sidecars/codex_panel/main.mjs#L4"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.4.1",
+      "sha": "6e8708dcefcc11ede79c0c5f96a81358956bd6fe",
+      "scannedAt": "2026-11-27T18:13:35.177Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

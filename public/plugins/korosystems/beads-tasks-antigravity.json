@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "id": "korosystems/beads-tasks-antigravity",
+  "sha": "d3b641b895d97cead7045032811d08389df3d6e1",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:21.077Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "beads-tasks",
+    "displayName": "Beads Tasks",
+    "version": "0.1.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "tasks",
+        "runtimeName": "beads-tasks_tasks",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/dist/server.mjs",
+          "--data-dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "beads-task-links",
+        "slashCommand": "/beads-task-links",
+        "description": "Format Beads issue links and use interactive Beads Tasks cards and side panel navigation in Antigravity.",
+        "disableModelInvocation": false,
+        "file": "skills/beads-task-links/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/beads-task-links"
+    ],
+    "mcpServerNames": [
+      "beads-tasks_tasks"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Beads Tasks\n\nInspect and manage Beads issues in Antigravity using interactive MCP Apps cards, a full-page board, and a clickable side panel. [简体中文](README.zh-CN.md)\n\n## Prerequisites\n\n- Antigravity App / CLI / IDE\n- Node.js >= 18\n- `bd` (Beads CLI) installed and available on PATH\n\n## Install\n\nPreferred Marketplace installation:\n\n```sh\nagy plugin install https://github.com/korosystems/beads-tasks-antigravity\n```\n\nFor a local checkout, run `agy plugin install ./beads-tasks-antigravity`. Alternatively run `./scripts/install.sh` from this directory to copy the plugin to `~/.gemini/config/plugins/beads-tasks`; use `--symlink` for live development or `--uninstall` to remove it. Build first using `npm ci --prefix mcp` and `node scripts/build-mcp.mjs` when building from source.\n\n## Features\n\n- Inspect issue details, dependencies and notes; update status, priority, labels and notes.\n- `show_task_card`, `show_task_batch` and `open_tasks_board` render interactive views.\n- Open individual issues or a review queue via `sidecar://beads-tasks/tasks/` links.\n\n## Zero-Config Usage\n\nOpen a Beads repository in Antigravity and ask to inspect its issues. The official Antigravity `sidecar_sdk` supplies the conversation context; the plugin resolves workspace paths through the host `agentapi` metadata and uses the Beads CLI for issue data, with no direct database access. Project configuration is optional.\n\n## Multi-Project Config\n\nOptionally create `~/.config/beads-tasks/projects.json`:\n\n```json\n{\"activeProject\":\"work\",\"projects\":[{\"id\":\"work\",\"name\":\"Work\",\"repo\":\"/path/to/repo\"}]}\n```\n\nEach project can also specify `bdDir`; links and tools accept `project` or `repo` to select another workspace.\n\n## Built-in Settings Page\n\nOpen settings in the board or side panel to control whether replies include side panel links. The setting persists in `~/.config/beads-tasks/settings.json`; the hook communicates changes to the assistant.\n\n## Environment Variables\n\n- `BD_BIN`: path to the Beads CLI.\n- `BEADS_TASKS_PROJECTS_FILE`, `BEADS_TASKS_SETTINGS_FILE`: override configuration paths.\n- `BEADS_TASKS_HOOK_STATE_DIR`: override the hook's per-conversation state directory.\n- `BEADS_TASKS_MCP_APP_HTML`: override the bundled MCP app HTML.\n- `AGENTAPI_BIN`, `ANTIGRAVITY_AGENTAPI_EXE`: override host API executable discovery.\n- `ANTIGRAVITY_PLUGINS_DIR`: override the manual installation directory.\n\n## Testing\n\n```sh\nnpm ci --prefix mcp\nnode scripts/build-mcp.mjs\nnode --test sidecars/tasks/tests/*.test.mjs mcp/tests/*.test.mjs\nagy plugin validate --strict .\n```\n\n## Support\n\nReport issues at https://github.com/korosystems/beads-tasks-antigravity/issues.\n\n## License\n\nMIT; see [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "Initial open-source release of **Beads Tasks** (`beads-tasks`) for Google Antigravity.\n\n### Highlights\n- **MCP Apps**: Inline task cards (`show_task_card`), turn-batch cards (`show_task_batch`), and full-page global board (`open_tasks_board`)\n- **Sidecar Side Panel**: Persistent `sidecar://beads-tasks/tasks/` viewer with review queue, in-page search, and built-in settings\n- **Zero-Config & Cross-Platform**: Official `sidecar_sdk` workspace discovery (no `sqlite3` or private DB access) and native `bd` CLI integration\n\n### Install\n```sh\nagy plugin install https://github.com/korosystems/beads-tasks-antigravity\n```",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-mcp.mjs",
+        "line": 63,
+        "snippet": "const inline = /<script type=\"module\">\\n([\\s\\S]*?)\\n<\\/script>\\n<\\/body>/.exec(html)?.[1];",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/scripts/build-mcp.mjs#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-mcp.mjs",
+        "line": 73,
+        "snippet": "const check = spawnSync(process.execPath, ['--check', checkFile], { encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/scripts/build-mcp.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/tasks/web/app.js",
+        "line": 340,
+        "snippet": "const blockMatch = /^@@CODE_BLOCK_(\\d+)@@$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/sidecars/tasks/web/app.js#L340"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/tasks/web/app.js",
+        "line": 353,
+        "snippet": "const hMatch = /^(#{1,4})\\s+(.+)$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/sidecars/tasks/web/app.js#L353"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "site/scripts/build-standalone.mjs",
+        "line": 23,
+        "snippet": "const match = /^(?:\\.\\/)?([\\w-]+)\\.js$/.exec(specifier);",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/site/scripts/build-standalone.mjs#L23"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "mcp/dist/server.mjs",
+        "line": 2,
+        "snippet": "var Mm=Object.create;var Hn=Object.defineProperty;var Fm=Object.getOwnPropertyDescriptor;var Lm=Object.getOwnPropertyNames;var Um=Object.get",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/mcp/dist/server.mjs#L2"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/src/server_factory.mjs",
+        "line": 92,
+        "snippet": "await writeFile(queueFile, JSON.stringify(memoryQueue));",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/mcp/src/server_factory.mjs#L92"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-mcp.mjs",
+        "line": 60,
+        "snippet": "await writeFile(resolve(dist, 'app.html'), html);",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/scripts/build-mcp.mjs#L60"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-mcp.mjs",
+        "line": 72,
+        "snippet": "await writeFile(checkFile, inline);",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/scripts/build-mcp.mjs#L72"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-mcp.mjs",
+        "line": 76,
+        "snippet": "await rm(checkDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/scripts/build-mcp.mjs#L76"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/hook-settings.mjs",
+        "line": 24,
+        "snippet": "await writeFile(file, JSON.stringify({ emitSidecarLinks: current }));",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/scripts/hook-settings.mjs#L24"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/tasks/settings.mjs",
+        "line": 30,
+        "snippet": "await writeFile(temporary, `${JSON.stringify(settings, null, 2)}\\n`, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/sidecars/tasks/settings.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/tasks/settings.mjs",
+        "line": 33,
+        "snippet": "await unlink(temporary).catch(() => {});",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/sidecars/tasks/settings.mjs#L33"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "site/js/plugin_bundle.js",
+        "line": 3,
+        "snippet": "const source = {\"html\":\"<!doctype html>\\n<html lang=\\\"zh-CN\\\">\\n<head>\\n <meta charset=\\\"utf-8\\\" />\\n <meta name=\\\"viewport\\\" content=\\\"widt",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/site/js/plugin_bundle.js#L3"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "site/js/workbench.js",
+        "line": 223,
+        "snippet": "root.innerHTML = `<div class=\"workbench\"><div class=\"workbench-grid ${ui.sidebar ? \"\" : \"no-sidebar\"} ${ui.auxiliary ? \"\" : \"no-aux\"}\"><asid",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/site/js/workbench.js#L223"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "site/scripts/build-standalone.mjs",
+        "line": 120,
+        "snippet": "await writeFile(output, outputHtml, \"utf8\");",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/site/scripts/build-standalone.mjs#L120"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "site/scripts/sync-plugin.mjs",
+        "line": 89,
+        "snippet": "await writeFile(resolve(root, 'js/plugin_bundle.js'), output);",
+        "githubBlobUrl": "https://github.com/korosystems/beads-tasks-antigravity/blob/d3b641b895d97cead7045032811d08389df3d6e1/site/scripts/sync-plugin.mjs#L89"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "d3b641b895d97cead7045032811d08389df3d6e1",
+      "scannedAt": "2026-11-27T18:17:21.077Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

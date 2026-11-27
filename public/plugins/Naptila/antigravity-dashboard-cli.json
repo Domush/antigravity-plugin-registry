@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "id": "Naptila/antigravity-dashboard-cli",
+  "sha": "b71b4af351842d70c5e648013e23bb4741444cc4",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:13.431Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "dash",
+    "displayName": "dash",
+    "version": "0.1.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "lang",
+        "slashCommand": "/lang",
+        "description": "Show or switch the active language for both the minimalist statusLine and /dash:stats usage reports between English (en, default), Simplified Chinese (zh / zh-CN), and Traditional Chinese (tw / zh-TW).",
+        "disableModelInvocation": false,
+        "file": "skills/lang/SKILL.md"
+      },
+      {
+        "name": "stats",
+        "slashCommand": "/stats",
+        "description": "Display on-demand Antigravity CLI cumulative token usage, cached token totals, estimated API-equivalent spend, cache savings, 12-week activity heatmap, and breakdowns by date, week, month, or model.",
+        "disableModelInvocation": false,
+        "file": "skills/stats/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/lang",
+      "/stats"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Dashboard CLI (`dash`)\n\nEnglish | [简体中文](README.zh-CN.md)\n\nLightweight, zero-dependency **Google Antigravity CLI (`agy`)** plugin providing:\n\n1. **Minimalist bottom `statusLine`** — stacks cleanly alongside `agy`'s built-in status bar with zero progress-bar clutter:\n   ```text\n   ctx 38% of 512K | cache 94% | 5h 72% (resets 18:30) | 7d 94% (resets 12/03)\n   ```\n2. **On-demand usage & spend reports** — view Today / 7d / Month / All-Time token totals, cache hit rates, a 12-week activity heatmap, and date/week/month/model API-equivalent spend (`Est.$`) via `/dash:stats` (0-token local execution), and switch language live for **both `statusLine` and `/dash:stats`** via `/dash:lang` (`en`, `zh-CN`, `zh-TW`).\n\n## Install\n\nRequires **Node.js 20+** and **Antigravity CLI (`agy`)**.\n\n```sh\n# 1. Install minimalist stacked statusLine (backs up existing settings.json)\nnode bin/cli.mjs install\n\n# 2. Install the agy plugin for /dash:stats & /dash:lang\nagy plugin install .\n```\n\nReopen `agy` (or run `/statusline on`) to activate.\n\n## Usage\n\n### In `agy` Console\n\n```text\n/dash:stats                      # Last 14 days + 12w heatmap + model breakdown + Est.$\n/dash:stats 30                   # Last 30 days\n/dash:stats all week             # Full history grouped by ISO week\n/dash:stats --by month           # Grouped by month\n/dash:stats --from 2026-11-01 --to 2026-11-26\n/dash:stats --model carbon       # Filter by model substring\n/dash:stats --tz utc+8 zh        # Custom timezone & language override\n\n/dash:lang                       # Show active language for statusLine & /dash:stats (default: en)\n/dash:lang en | zh | tw | toggle # Switch between English, 简体中文, and 繁體中文\n```\n\n### Standalone CLI\n\n```sh\nnode bin/cli.mjs stats\nnode bin/cli.mjs stats --days 30 --by week\nnode bin/cli.mjs stats --from 2026-11-01 --to 2026-11-26 --tz Asia/Shanghai\nnode bin/cli.mjs stats --markdown\nnode bin/cli.mjs stats --json\nnode bin/cli.mjs lang toggle\nnode bin/cli.mjs preview\nnode bin/cli.mjs preview --show-cost true\n```\n\n## Configuration\n\n### StatusLine Options\n\n- **Display toggles**: `showCache` defaults to `true`; `showCost` defaults to `false`. Enabling `--show-cost true` appends `| $0.18` to `statusLine` **only when `agy` reports a session cost** in its live status payload (omitted on quota-only sessions or narrow terminals):\n  ```sh\n  node bin/cli.mjs config --show-cost true\n  node bin/cli.mjs config --show-cache false\n  node bin/cli.mjs install --no-stack   # Replace native bar instead of stacking\n  ```\n- **Context compaction ceiling**: Automatically respects `AGY_CLI_AUTO_COMPACT_OVERRIDE` (e.g. `512K`, `80%`, `off`) and `\"contextWindow\"` in `settings.json`.\n\n### `/dash:stats` Custom Model Pricing (`pricing.json`)\n\n`stats` computes `Est.$` and `Saved$` from local token usage (separate from `statusLine` `--show-cost`; unpriced models display `--`). To override or add rates (USD per 1M tokens, matched by exact model ID first, then case-insensitive substring), create `~/.gemini/antigravity-cli/dashboard-cli-data/pricing.json`:\n\n```json\n{\n  \"models\": {\n    \"gemini-4-carbon\": {\n      \"input\": 2.0,\n      \"cacheRead\": 0.2,\n      \"cacheWrite\": 2.0,\n      \"output\": 12.0\n    }\n  }\n}\n```\n\n## Uninstall\n\n```sh\nnode bin/cli.mjs uninstall\nagy plugin uninstall dash\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "**Full Changelog**: https://github.com/Naptila/antigravity-dashboard-cli/compare/v0.1.0...v0.1.1",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/lifecycle.mjs",
+        "line": 154,
+        "snippet": "const output = execFileSync(candidate, ['--version'], { encoding: 'utf8' }).trim();",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/src/lifecycle.mjs#L154"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/release-bump.mjs",
+        "line": 125,
+        "snippet": "fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/scripts/release-bump.mjs#L125"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/release-bump.mjs",
+        "line": 126,
+        "snippet": "fs.writeFileSync(pluginPath, JSON.stringify(plugin, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/scripts/release-bump.mjs#L126"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/release-bump.mjs",
+        "line": 127,
+        "snippet": "fs.writeFileSync(constantsPath, updatedConstants, 'utf8');",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/scripts/release-bump.mjs#L127"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/lifecycle.mjs",
+        "line": 100,
+        "snippet": "fs.unlinkSync(lockFile);",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/src/lifecycle.mjs#L100"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/lifecycle.mjs",
+        "line": 351,
+        "snippet": "fs.rmSync(resolved, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/src/lifecycle.mjs#L351"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/lifecycle.mjs",
+        "line": 354,
+        "snippet": "fs.unlinkSync(paths.backupFile);",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/src/lifecycle.mjs#L354"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/store.mjs",
+        "line": 144,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/src/store.mjs#L144"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 157,
+        "snippet": "- **CI (`.github/workflows/ci.yml`)**: Runs on `push` to `main` and `pull_request` across Node.js `20` and `22` (`npm run check`, `node scripts/release-bump.mjs --check`, `npm test",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/AGENTS.md#L157"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 161,
+        "snippet": "1. Run `npm run release:bump -- X.Y.Z`.",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/AGENTS.md#L161"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 162,
+        "snippet": "2. Run `npm run check && npm run release:check && npm test && npm pack --dry-run`.",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/AGENTS.md#L162"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "bin/cli.mjs",
+        "line": 44,
+        "snippet": "install Install minimalist statusLine into ~/.gemini/antigravity-cli/settings.json",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/bin/cli.mjs#L44"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/store.mjs",
+        "line": 20,
+        "snippet": "* Resolves the Antigravity CLI configuration base directory (`~/.gemini/antigravity-cli`).",
+        "githubBlobUrl": "https://github.com/Naptila/antigravity-dashboard-cli/blob/b71b4af351842d70c5e648013e23bb4741444cc4/src/store.mjs#L20"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.1",
+      "sha": "b71b4af351842d70c5e648013e23bb4741444cc4",
+      "scannedAt": "2026-11-27T18:17:13.431Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

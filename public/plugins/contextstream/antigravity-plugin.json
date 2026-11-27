@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "contextstream/antigravity-plugin",
+  "sha": "f26436c205e8e637e33cb1a0ed02d7c8a9f8a92d",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:47.369Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "contextstream",
+    "displayName": "ContextStream",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "contextstream",
+        "runtimeName": "contextstream_contextstream",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.contextstream.io/mcp"
+      }
+    ],
+    "hooks": [
+      {
+        "group": "contextstream",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "contextstream-mcp hook agy-post-tool-use --contextstream-managed-hook=v1 2>/dev/null || echo '{}'",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "contextstream",
+        "slashCommand": "/contextstream",
+        "description": "Full ContextStream reference: every tool and action, the notices context() returns, plans, tasks, lessons, decisions, docs, handoffs, past sessions and code search. Use it when a ContextStream call or notice needs more detail than the plugi",
+        "disableModelInvocation": false,
+        "file": "skills/contextstream/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/contextstream"
+    ],
+    "mcpServerNames": [
+      "contextstream_contextstream"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [
+      {
+        "name": "CONTEXTSTREAM_API_KEY",
+        "title": "ContextStream API key",
+        "required": true,
+        "description": "Referenced by MCP server \"contextstream\".",
+        "link": "https://contextstream.io/account/api-keys"
+      }
+    ],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# ContextStream for Antigravity\n\nPersistent memory for your Antigravity sessions: decisions, lessons, plans and\nindexed code search from [ContextStream](https://contextstream.io), through the\nhosted MCP server at `https://mcp.contextstream.io/mcp`.\n\n## Install\n\n```sh\nagy plugin install https://github.com/contextstream/antigravity-plugin\n```\n\nThe plugin stays off until you give it your ContextStream API key. Open\n`/plugin` in Antigravity, turn **contextstream** on and enter the key. Create\none at <https://contextstream.io/account/api-keys>.\n\n## What it holds\n\n| File | What it does |\n| --- | --- |\n| `rules/AGENTS.md` | Compact always-on rules: ground each request with `context`, search ContextStream before `grep_search` and `find_by_name`, and save decisions and lessons |\n| `skills/contextstream/` | The full reference, loaded only when the agent asks for it |\n| `mcp_config.json` | The hosted ContextStream server; your API key is asked for when you turn the plugin on |\n| `hooks.json` | Reminders to call `init` and `context`, and to search ContextStream first |\n\n## The hooks need `contextstream-mcp`\n\nThe hooks run the local `contextstream-mcp` binary. Everything else works\nwithout it: with no binary on your `PATH`, or one that is not signed in, the\nhooks add nothing (they answer `{}`, an empty hook result, and print no\nerror). To add it, run `npx -y @contextstream/mcp-server setup`, which also\nsigns the binary in. The hooks use a POSIX shell; on Windows run `setup`, which\nwrites hooks for Windows.\n\nIf you already ran `contextstream-mcp setup` for Antigravity, you have this\nplugin and don't need to install it again.\n\n## Privacy\n\nWhat ContextStream collects, and how to turn each part off, is in\n[docs/data-handling.md](https://github.com/contextstream/mcp-server/blob/main/docs/data-handling.md).\nHooks and indexing send nothing until `contextstream-mcp` is set up and signed in.\n\n## Where this comes from\n\nThis repository is generated from\n[contextstream/mcp-server](https://github.com/contextstream/mcp-server) by the\nsame code `setup` uses to write the plugin on your machine, so the two do not\ndrift. Please don't edit files here; open issues and pull requests on\n`mcp-server`.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "network_external_mcp",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"contextstream\" executes a shell command on PostToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 7,
+        "snippet": "contextstream-mcp hook agy-post-tool-use --contextstream-managed-hook=v1 2>/dev/null || echo '{}'",
+        "githubBlobUrl": "https://github.com/contextstream/antigravity-plugin/blob/f26436c205e8e637e33cb1a0ed02d7c8a9f8a92d/hooks.json#L7"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "f26436c205e8e637e33cb1a0ed02d7c8a9f8a92d",
+      "scannedAt": "2026-11-27T18:24:47.369Z",
+      "riskTier": "high",
+      "capabilities": [
+        "network_external_mcp",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

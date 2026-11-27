@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "id": "hongge-ai/codex-orchestrator",
+  "sha": "f9c9ca62ada32b05778d653862fd2a8b95a80944",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:58.340Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-orchestrator",
+    "displayName": "Codex Orchestrator",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "codex-orchestrator-edit-guard",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "python3 ./scripts/guard_file_edits.py",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "codex-dispatch",
+        "slashCommand": "/codex-dispatch",
+        "description": "Standard operating procedure for Antigravity to decompose tasks, dispatch all code/project edits to local Codex CLI via dispatch_codex.py, resume sessions for rework, run reviews, verify changes, and report to the user.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-dispatch/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-dispatch"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\"><img src=\"assets/logo.svg\" alt=\"Codex Orchestrator logo\" width=\"72\" height=\"72\" /></p>\n\n# Codex Orchestrator\n\nPlan and verify in Antigravity. Send project edits to your local Codex CLI and keep the session ID for follow-up work.\n\n[![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Antigravity Plugin](https://img.shields.io/badge/Antigravity-plugin-6366f1)](https://antigravity.google/docs/build-plugins) [![Codex CLI](https://img.shields.io/badge/Codex-CLI-0f172a)](https://github.com/openai/codex)\n\nEnglish | [简体中文](README.zh-CN.md)\n\n## How it works\n\nA passing executor run tells you Codex finished. The coordinator still needs to inspect the patch and test what the user asked for. This plugin gives those jobs separate owners and preserves the context needed to fix a failed check.\n\n```mermaid\nflowchart LR\n    U[User request] --> A[Antigravity plans]\n    A --> D[Dispatch a task brief]\n    D --> C[Local Codex edits]\n    C --> V[Antigravity inspects diff and tests]\n    V -->|Accepted| R[Report to user]\n    V -->|Rework| S[Resume session]\n    S --> C\n```\n\n### Key features\n\n- A PreToolUse hook gates five direct file-edit tools. The coordinator rule also covers shell writes. Native scratch artifacts and explicit current-turn bypasses stay available.\n- Four reasoning tiers use the configured Codex model. Each task has a working directory and a sandbox. Independent Git tasks can use managed worktrees.\n- The dispatcher reports the final response, session ID and exit status. Local records let you find the session again. Reviews cover a working tree, branch diff or commit.\n\n## Install\n\nYou need Antigravity with plugin support, Python 3.9 or newer, and OpenAI Codex CLI on your PATH. Install the CLI and authenticate from your terminal.\n\n```sh\nnpm install -g @openai/codex\ncodex login\ngit clone https://github.com/hongge-ai/codex-orchestrator.git\ncd codex-orchestrator\nagy plugin validate .\nagy plugin install .\nagy plugin list\n```\n\n**Manual global or workspace install.** From the clone, choose one destination. For a workspace install, set `project` to the absolute path of the project that should load the plugin.\n\n```sh\ndest=\"$HOME/.gemini/config/plugins/codex-orchestrator\"\n# Workspace install: dest=\"$project/.agents/plugins/codex-orchestrator\"\nmkdir -p \"$dest\"\ncp -R plugin.json hooks.json assets rules scripts skills \"$dest/\"\n```\n\n**Verify the installed copy.** In the project root, select the active installation and check its local dependencies.\n\n```sh\nplugin=\"${PLUGIN_ROOT:-$HOME/.gemini/config/plugins/codex-orchestrator}\"\n# For a manual workspace install: plugin=\"$PWD/.agents/plugins/codex-orchestrator\"\ndispatch=\"$plugin/scripts/dispatch_codex.py\"\n\"$dispatch\" doctor\n```\n\n## Use it\n\nAsk Antigravity to “Review my uncommitted changes” or give it a change and an acceptance check. It can explore directly, then use the dispatcher for all project modifications. The same commands work from a terminal with the `dispatch` variable set above.\n\n| Command | Example | Result |\n| --- | --- | --- |\n| `run` | `\"$dispatch\" run --cwd . --tier medium --prompt \"Add a test for empty input and run it.\"` | Start a session and print its ID |\n| `resume` | `\"$dispatch\" resume \"$session_id\" --cwd . --prompt \"Fix the failing empty-input test.\"` | Continue a saved session using the ID from run or sessions |\n| `review` | `\"$dispatch\" review --cwd . --uncommitted` | Review staged, unstaged and untracked changes |\n| `sessions` | `\"$dispatch\" sessions --limit 5 --json` | Read recent execution records, newest first |\n| `doctor` | `\"$dispatch\" doctor` | Check Python, binary, CLI version, login and log directory |\n\nRun and resume also accept `--prompt-file brief.txt` or piped stdin. For custom review instructions, pipe a brief into `review` without a scope flag. For a branch or commit review, use `--base main` or `--commit SHA`. Run `\"$dispatch\" run --help` for options or consult the [full command reference and brief template](skills/codex-dispatch/SKILL.md).\n\n### Complexity tiers\n\n| Tier | Typical task |\n| --- | --- |\n| `low` | Mechanical rename, documentation correction |\n| `medium` | Bounded feature or fix with a clear check (run/resume default) |\n| `high` | Cross-component diagnosis or code review (review default) |\n| `xhigh` | Migration or redesign with interacting constraints |\n\nThe tier sets `model_reasoning_effort`. Omitting `--model` uses the user's Codex configuration in `~/.codex/config.toml`.\n\n### Sandbox and permissions\n\n| Setting | Coordinator policy |\n| --- | --- |\n| `--sandbox read-only` | Use for analysis |\n| `--sandbox workspace-write` | Default for run and resume, with `approval_policy=\"never\"` |\n| `--network` | Explain the destination and operation, then obtain explicit approval before dispatch |\n| `--add-dir DIR` | Obtain explicit approval for the exact additional writable path |\n| `--sandbox danger-full-access` | Explain why unrestricted access is necessary and obtain explicit approval |\n\nOn resume, the dispatcher explicitly sets the sandbox through Codex configuration. Use the original working directory. For parallel tasks, pass `--worktree` on separate runs and verify changes in each worktree. Use persistent sessions when follow-up work is expected.\n\n### Current-turn bypass\n\n| Language | Phrases accepted in the latest user message |\n| --- | --- |\n| English | `skip codex`, `bypass codex`, `no codex`, `direct edit` |\n| 简体中文 | `跳过 codex`, `跳过codex`, `不用 codex`, `不用codex`, `不走 codex`, `不走codex`, `你直接改`, `直接修改` |\n\nA bypass allows direct project edits for that turn. Antigravity can always write inside its artifact directory and supported brain directories.\n\n### Environment and history\n\n| Resolution order | Location |\n| --- | --- |\n| 1 | `CODEX_ORCHESTRATOR_LOG_DIR` selects the dispatch record directory |\n| 2 | `PLUGIN_DATA` selects Antigravity's plugin data directory |\n| 3 | `~/.cache/codex-orchestrator` is the fallback |\n\nEmpty variables are skipped. Choose a directory outside the plugin installation. Records contain execution metadata including the working directory and session ID. Codex manages its own session history. Passing `--ephemeral` skips Codex session persistence for the invocation. The dispatcher still records the outcome.\n\n## Repository layout\n\n```text\ncodex-orchestrator/\n├── plugin.json                    Marketplace manifest\n├── hooks.json                     PreToolUse registration\n├── assets/logo.svg                Square badge\n├── rules/AGENTS.md                Coordinator policy\n├── skills/codex-dispatch/SKILL.md  Dispatch procedure and CLI reference\n├── scripts/\n│   ├── dispatch_codex.py          CLI entry point\n│   └── guard_file_edits.py        Edit guard\n├── tests/test_plugin.py           Offline tests\n├── .github/workflows/ci.yml       Main branch checks\n├── .gitignore\n├── README.md\n├── README.zh-CN.md\n└── LICENSE\n```\n\n## Local validation\n\n```sh\nagy plugin validate .\npython3 -m unittest discover -s tests -v\npython3 scripts/dispatch_codex.py doctor\n```\n\nThe test suite runs offline. Doctor uses the installed CLI to check login status. After a real dispatch, inspect `git status --short`, staged and unstaged diffs, new files, and the relevant test results before accepting the change.\n\n## Toggle or uninstall\n\n```sh\nagy plugin disable codex-orchestrator\nagy plugin enable codex-orchestrator\nagy plugin uninstall codex-orchestrator\n```\n\nFor a manual workspace install, remove the installed plugin folder from that project's `.agents/plugins/` to unload it.\n\n## License\n\nCopyright © 2026 hongge-ai. Distributed under the [MIT License](LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"codex-orchestrator-edit-guard\" executes a shell command on PreToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content).",
+        "file": "hooks.json",
+        "line": 9,
+        "snippet": "python3 ./scripts/guard_file_edits.py",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/hooks.json#L9"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/dispatch_codex.py",
+        "line": 140,
+        "snippet": "child = subprocess.run(command, cwd=str(cwd), input=prompt, stdout=subprocess.PIPE, encoding=\"utf-8\", errors=\"replace\")",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/scripts/dispatch_codex.py#L140"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/dispatch_codex.py",
+        "line": 183,
+        "snippet": "return subprocess.run(command, cwd=str(cwd), input=prompt, encoding=\"utf-8\").returncode",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/scripts/dispatch_codex.py#L183"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/dispatch_codex.py",
+        "line": 220,
+        "snippet": "version = subprocess.run([binary, \"--version\"], capture_output=True, text=True)",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/scripts/dispatch_codex.py#L220"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/dispatch_codex.py",
+        "line": 222,
+        "snippet": "login = subprocess.run([binary, \"login\", \"status\"], capture_output=True, text=True)",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/scripts/dispatch_codex.py#L222"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 8,
+        "snippet": "2. Never use `run_command` to write around the hook, including `sed -i`, `cat >`, `tee`, Python writes such as `python -c`, or `git apply`.",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/rules/AGENTS.md#L8"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/guard_file_edits.py",
+        "line": 26,
+        "snippet": "roots.extend(f\"~/.gemini/{app}/brain\" for app in (",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/scripts/guard_file_edits.py#L26"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/guard_file_edits.py",
+        "line": 34,
+        "snippet": "plugin = os.environ.get(\"PLUGIN_ROOT\") or \"~/.gemini/config/plugins/codex-orchestrator\"",
+        "githubBlobUrl": "https://github.com/hongge-ai/codex-orchestrator/blob/f9c9ca62ada32b05778d653862fd2a8b95a80944/scripts/guard_file_edits.py#L34"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "f9c9ca62ada32b05778d653862fd2a8b95a80944",
+      "scannedAt": "2026-11-27T18:18:58.340Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

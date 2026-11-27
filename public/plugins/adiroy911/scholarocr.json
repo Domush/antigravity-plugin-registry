@@ -1,0 +1,767 @@
+{
+  "schemaVersion": 1,
+  "id": "adiroy911/scholarocr",
+  "sha": "88932f909606a400f46d4faf833b0189f1283c60",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:26.727Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "scholarocr",
+    "displayName": "ScholarOCR",
+    "version": "0.4.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "scholarocr",
+        "runtimeName": "scholarocr_scholarocr",
+        "transport": "stdio",
+        "command": "scholarocr-mcp",
+        "args": [],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "ocr-export",
+        "slashCommand": "/ocr-export",
+        "description": "Export a document ScholarOCR has already processed to json, markdown, searchable-pdf, docx, latex, csv or xlsx. Use when the user wants a file from an extraction.",
+        "disableModelInvocation": false,
+        "file": "skills/ocr-export/SKILL.md"
+      },
+      {
+        "name": "ocr-verify",
+        "slashCommand": "/ocr-verify",
+        "description": "Verify a ScholarOCR extraction and check its uncertain elements against the original page image. Use before relying on extracted content for solutions, grading or conversions, or when the user asks whether an extraction is accurate.",
+        "disableModelInvocation": false,
+        "file": "skills/ocr-verify/SKILL.md"
+      },
+      {
+        "name": "ocr",
+        "slashCommand": "/ocr",
+        "description": "Extract a scanned PDF, page photos, handwritten notes, an exam paper or a textbook with the ScholarOCR MCP server. Use when the user asks to OCR, read, digitize or extract a document, or types /ocr followed by a path.",
+        "disableModelInvocation": false,
+        "file": "skills/ocr/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ocr",
+      "/ocr-export",
+      "/ocr-verify"
+    ],
+    "mcpServerNames": [
+      "scholarocr_scholarocr"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# ScholarOCR\n\nA reusable academic-document OCR and intelligence engine for AI agents. You extract a document once\ninto a structured, source-traceable representation, then retrieve, verify and export it in any\nformat without running OCR again. The main agent integration is an **Antigravity CLI plugin**:\ninstall it, sign in with your own Google account, and Antigravity's model reads the pages. Other agents\nconnect through the same **MCP server** or the **CLI**, and a **Claude Code skill** teaches Claude how to\nuse it.\n\n**No API key is needed.** By default the model doing the reading is the one in your own chat client\n(Antigravity, Claude Code, Claude Desktop, and ChatGPT through the hosted app): the server\ndoes every deterministic step and hands that model one page image at a time (**host mode**). A Gemini or\nOpenRouter key is optional and switches to ScholarOCR's dedicated server-side OCR pipeline.\n\n```\nAntigravity CLI (plugin) · Claude Code · ChatGPT (hosted) · web app · other MCP clients · scripts\n        │ MCP (stdio/HTTP)          │ CLI          │ Python\n        └────────────► ScholarOCR service ◄────────┘\n     ingestion → routing → text layer (no model)\n                         → visual pages: render, crop, deskew →  host mode: your client's model\n                                                                    (get_page_image → submit_page_content)\n                                                                 key mode: Gemini / OpenRouter\n     → validation → IR checkpoints → verification → exports (JSON, Markdown, searchable PDF, DOCX, LaTeX, CSV/XLSX)\n```\n\n## What it does\n\n- **Per-page hybrid extraction.** Reliable PDF text layers are extracted deterministically with no\n  model call. Scans, photos, math-font pages and image-heavy pages need vision. Screenshots and photos\n  are cropped to the document region (app/screen chrome removed), skew and rotation are corrected and\n  dark-mode notes are handled before any model sees the page. Blank pages are skipped. Duplicate pages\n  are flagged, never dropped.\n- **Two ways to read the visual pages.**\n  - *Host mode (default)*: the MCP client's model gets one page image with the rules and the exact\n    JSON shape, transcribes it, and submits it. The server validates the submission strictly (every\n    problem reported with its path and a fix) and stores it like any other extraction.\n  - *Key mode*: Gemini or OpenRouter with a profile per page type (general, math, handwriting),\n    structured output, and a targeted review of flagged elements by a second model.\n- **Academic structure.**\n  - LaTeX for equations and mhchem for chemistry.\n  - Tables with spans; figures and diagrams with crops, labels and descriptions.\n  - Questions, sub-questions and marks.\n  - Headings, captions, footnotes and bibliography entries.\n- **Traceability.** Every element has page, source file, bounding box and a source crop.\n  `get_source_region` returns the original pixels.\n- **Honest uncertainty.** Labels are ordinal (low/medium/high/unresolved). Unreadable regions are\n  marked, never guessed. LaTeX, tables and legibility are checked deterministically.\n- **Operations.**\n  - Page-level checkpoints and a content-hash cache.\n  - Background jobs with cancel, resume and crash recovery.\n  - Retries, rate limiting and usage tracking (key mode).\n  - Path allow-listing and retention.\n\n**Quality trade-off.** Host mode is a single pass by a general chat model, at whatever resolution the\nclient passes to it, and its optional review pass is the same model looking at a crop again. Key mode\nuses a dedicated OCR prompt, the PDF text layer as a hint and an independent review model. Validation,\nuncertainty rules, traceability and verification are the same in both. Accuracy on real scans has not\nbeen measured for either mode yet.\n\n## Status\n\n| Area | State |\n|---|---|\n| Core engine, IR, storage, ingestion, preprocessing, routing, jobs, verification | implemented, tested |\n| Host mode (client model transcribes, no key) | implemented; tested in-process and over a real stdio subprocess with the MCP SDK client. Run live once in Antigravity CLI (one scanned page, no key, 2026-11-03); not yet run live in Claude or ChatGPT |\n| Antigravity plugin | `agy plugin validate --strict` passes (agy 1.4.12). One live headless run with `gemini-3.8-flash-medium` and no key transcribed a scanned page exactly and passed `verify_document` (2026-11-03). Multi-page and LaTeX-resubmission runs not tested yet (docs/ANTIGRAVITY_PLUGIN.md) |\n| Gemini and OpenRouter providers (key mode) | implemented; tested with mocked responses; exercised live in benchmark runs (`benchmarks/results/`, 2026-11-02); opt-in live tests in `tests/live` |\n| MCP sampling | not used: no target client supports it (see docs/ARCHITECTURE.md); a hook is kept |\n| Exports: JSON, Markdown, searchable PDF, DOCX, LaTeX, CSV, XLSX | implemented, tested (LaTeX compiled with XeLaTeX; DOCX native equations via pandoc; both skipped when not installed) |\n| Local MCP server (14 tools) | implemented; tested in-process and over a real stdio subprocess |\n| Hosted ChatGPT app server (`scholarocr-remote`, OAuth, optional key) | implemented; tested in-process and over ASGI HTTP. **No live ChatGPT test yet**; the page-image widget path for host mode is unverified (docs/CHATGPT_APP.md) |\n| CLI | implemented; tested via subprocess |\n| Web app (`scholarocr-app`) | implemented; API, engine selection, agy runner (subprocess mocked) and key path (fake transport) tested; driven in a real browser; one live Antigravity run on a 2-page scan (161.8k tokens, 5 min 46 s, docs/WEB_APP.md) |\n| Claude Code skill | written; tested with headless Claude Code 2.1.316 (Linux) in key mode |\n| Windows | developed and tested on Windows 11; one known test failure (`test_path_policy_blocks_outside_and_traversal`) |\n| Accuracy on real scans | **not measured yet**; evaluation framework ready |\n\nTests: `pytest --ignore=tests/live`, see docs/QUALITY_ASSURANCE.md for the current count.\n\n## Quick start: Antigravity CLI (no key)\n\n```bash\nuv tool install \"git+https://github.com/adiroy911/scholarocr\"     # the server: scholarocr-mcp on PATH\nagy plugin install https://github.com/adiroy911/scholarocr         # the plugin\n```\n\nAntigravity starts the server in the plugin folder, so list the folders it may read in\n`%LOCALAPPDATA%\\ScholarOCR\\scholarocr.env` (`~/.local/share/scholarocr/scholarocr.env` on macOS/Linux):\n\n```\nSCHOLAROCR_ALLOWED_DIRS=C:\\Users\\you\\Documents;D:\\Study\n```\n\nStart `agy` and ask it to read a document (\"extract the scanned exam in D:\\Study\\chem and list anything\nunreadable\"). Keys are optional. Details, headless runs and the verified result:\n[docs/ANTIGRAVITY_PLUGIN.md](docs/ANTIGRAVITY_PLUGIN.md).\n\n## Quick start: web app (no key)\n\n```bash\npip install -e \".[webapp]\"      # from a checkout; see Quick start: CLI and Python\nscholarocr-app --open           # http://127.0.0.1:8765/ on this computer only\n```\n\nA chat-style page: attach PDFs, page photos or DOCX files, add instructions, and read the result page by page\n(math, chemistry, tables, question numbers and marks, doubtful parts highlighted, source crop on click),\nwith verification, exports and follow-up questions answered from the extracted content. By default the pages are\nread by Antigravity CLI (`agy`) signed in with your Google account, one headless `agy -p` call per page; a Gemini\nor OpenRouter key saved in Settings switches to the server-side pipeline. Details and measured cost per page:\n[docs/WEB_APP.md](docs/WEB_APP.md).\n\n## Quick start: CLI and Python\n\n```bash\ngit clone https://github.com/adiroy911/scholarocr && cd scholarocr\npython -m venv .venv && . .venv/bin/activate     # Windows: .\\.venv\\Scripts\\Activate.ps1\npip install -e \".[dev]\"\nscholarocr process path/to/paper.pdf --type exam-paper   # text-layer PDFs work without any key\nscholarocr content <document_id>\nscholarocr export <document_id> --format searchable-pdf\n```\n\nThe CLI has no model of its own: for scans it needs a key (`cp .env.example .env`, set `GEMINI_API_KEY`\nor `OPENROUTER_API_KEY`), otherwise it stops with exit code 6 and lists the pages awaiting\ntranscription. Through MCP, your client's model transcribes them instead.\n\nConnect Claude Code (no key needed):\n\n```bash\npython scripts/install_skill.py      # copies claude-skill/scholarocr to ~/.claude/skills\nclaude mcp add --scope user scholarocr -e SCHOLAROCR_ALLOWED_DIRS=\"<folders>\" -- \"<venv>/bin/scholarocr-mcp\"\n# optional key mode: add -e GEMINI_API_KEY=\"<key>\"\n```\n\nExamples: `examples/01_python_api.py`, `examples/02_cli_workflow.sh`, `examples/03_mcp_client.py`,\nand the config snippet `examples/claude_code.mcp.json`.\n\n## Documentation\n\n| Doc | Contents |\n|---|---|\n| [ARCHITECTURE](docs/ARCHITECTURE.md) | layers, data flow, threading, decisions |\n| [INSTALLATION](docs/INSTALLATION.md) | Windows / Linux / macOS setup |\n| [CONFIGURATION](docs/CONFIGURATION.md) | every environment variable |\n| [GEMINI_INTEGRATION](docs/GEMINI_INTEGRATION.md) | key mode: SDK usage, routing, prompts, retries, usage, verification status |\n| [ANTIGRAVITY_PLUGIN](docs/ANTIGRAVITY_PLUGIN.md) | the Antigravity CLI plugin: install, config, headless runs, layout, Marketplace |\n| [MCP_INTEGRATION](docs/MCP_INTEGRATION.md) | tools, host mode loop, client support, Antigravity, Claude Code, shared HTTP server |\n| [WEB_APP](docs/WEB_APP.md) | the local web app: engines, the Antigravity page loop, measured cost, security |\n| [CHATGPT_APP](docs/CHATGPT_APP.md) | hosted server for ChatGPT: OAuth, optional key, host mode in ChatGPT, deployment |\n| [CLAUDE_CODE_SKILL](docs/CLAUDE_CODE_SKILL.md) | skill content, install, test |\n| [CLI_REFERENCE](docs/CLI_REFERENCE.md) | commands and exit codes |\n| [DOCUMENT_SCHEMA](docs/DOCUMENT_SCHEMA.md) | the universal IR and storage layout |\n| [EXPORT_FORMATS](docs/EXPORT_FORMATS.md) | formats, options, verification, limitations |\n| [QUALITY_ASSURANCE](docs/QUALITY_ASSURANCE.md) | uncertainty rules, quality metrics, verification, evaluation, tests |\n| [SECURITY](docs/SECURITY.md) | file access, secrets, deletion, network |\n| [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | common problems |\n| [ROADMAP](docs/ROADMAP.md) | open items, starting with live Gemini and Windows validation |\n\n## Repository layout\n\nThe repository root is also the Antigravity plugin root: `.antigravity-plugin/plugin.json`,\n`mcp_config.json`, `rules/`, `skills/` and `assets/` are the plugin. `src/scholarocr/` is the Python\npackage and `claude-skill/scholarocr/` is the Claude Code skill. Changes are listed in\n[CHANGELOG.md](CHANGELOG.md).\n\n## Licence\n\nMIT, see [LICENSE](LICENSE). The DejaVu test fonts in `tests/fixtures/fonts/` keep their own licence\n(`LICENSE_DEJAVU`).\n",
+  "latestReleaseNotes": "\n- **Reading with Antigravity is about 7 times faster** (web app). Measured on pages 1-4 of a real handwritten\n  notebook (`gemini-3.8-flash-medium` selected): 483 s and 223.6k tokens before, 70 s and 130.0k tokens now; every\n  page accepted on the first attempt in both runs.\n  - Several pages at once: Settings \"Pages at once\" (1-6, default 3), one agy process each, with one limit shared\n    by every document the app reads. Progress says \"Reading pages 4-6 of 12\"; pages appear as each finishes and\n    are stored by page number. Stop kills every agy process of the run.\n  - Pipelining: reading starts as soon as page 1 is prepared, while the job prepares the rest (first page call\n    after 1.2 s instead of 12 s). Box refinement, figure crops and cleaned text run in the page's worker right\n    after it is accepted.\n  - Throttling: when agy reports a rate limit or an exhausted quota (`429`, `RESOURCE_EXHAUSTED`, quota, rate\n    limit, `503`), or two pages in a row fail, the reader pauses (20 s, doubling), halves its concurrency for the\n    rest of the run and reads those pages again (at most 3 times).\n  - Effort: Settings \"Effort for reading pages\" (default Low) and \"Effort for questions and Redraw\" (default\n    Medium). agy refuses `--model gemini-3.8-flash-medium --effort low` as a conflict, so the app passes the\n    model family with `--effort` when `agy models` lists that variant. Low thinks 0 tokens instead of 6-12k per\n    page; compared with the earlier transcription it dropped one phrase on one of four pages (8 of 276 prose words\n    missing, against 6 for the old run and 4 for a medium run), so Medium remains one click away.\n  - Fewer model calls: an image cannot be attached to the first message in headless mode (`--input-format\n    stream-json` takes only `text` blocks; `@path` passes only the path). Instead each page uses a workspace\n    agent (`--agent scholarocr-reader`, written into the run folder) with only `read_file` and `finish`, told to\n    return the JSON through `finish`: two model calls with a short system prompt instead of three with agy's\n    ~12k-token prompt (a probe: 39.1k -> 16.8k input tokens; medium pages: about 43k -> 21k). Unknown to agy:\n    falls back to the default agent.\n  - A compact page brief for the app (2.6k instead of 6.4k characters): the JSON schema already defines the\n    fields, element types and doubt levels. `host_page_image(instructions=\"none\")` returns the route, hints\n    and text layer for a caller that writes its own brief.\n- **Layout PDF: one font size.** Instead of fitting each element to its own box (paragraphs came out at different\n  sizes), one body size is chosen per document from the paragraphs' fitted sizes (the size at which three in four\n  fit; the median over pages, a clearly different page keeps its own) and every paragraph is set at it; headings,\n  captions, page numbers and equations at fixed ratios. A box too small for its text first extends right (one-line\n  boxes, equations) and down into free paper, checking the next element; only then is the text shrunk, down to a\n  floor (equations 0.9x the body), with a warning. Punctuation touching inline math and a leading bullet stay on\n  the math's line. `layout_fidelity` now reports `body_size` per page, `shared_size_share` (also as `fit_share`),\n  `moved` (grown boxes), `shrunk`, `overflowed` and `fitted_to_box`. On the real pages 1-4: one size (13.6 pt) on\n  pages 2-4, 20 pt on the landscape page 1; 34 of 37 text elements at the shared size, 3 shrunk by 3-8 %, none\n  overflowing; before, 68-81 % per page were at the page's common size.\n- **Update layout for documents read before refinement existed**: `ScholarOCR.refine_document()` now also adds\n  cleaned text with the deterministic rule normaliser where an element has none (no model call) and reports\n  totals; `layout_outdated()` says whether a document needs it (pages carry `layout_refined_at`). Web app: an\n  \"Older reading\" row with **Update layout** on such documents (`POST /api/documents/{id}/refine`); MCP:\n  `update_layout(document_id, pages)`; CLI: `scholarocr refine DOC [--pages R] [--no-clean-text]`.\n- Box refinement: the \"Thermal resistance\" element on a real page (an arrow whose head sits under the equation\n  above, then the words) did keep its words; the refined boxes overlap and the review overlay drew the label in\n  the shared band. A regression test on a synthetic page checks the words stay in the text's box, out of the\n  equation's, and survive the layout PDF's overlap split.\n- Redraw through Antigravity: 10-minute timeout per call (a real 3D slab took 4-5 minutes per attempt at medium\n  effort), and when the retry fails (timeout, quota) the first attempt's verdict is returned instead of an error.\n  The response lists each attempt's fidelity (`history`). Real test (3D slab, page 3): attempt 1 recall 0.90,\n  precision 0.89, failed on misplaced regions; attempt 2 recall 0.84, stored as not faithful; 105k tokens. The\n  thresholds were left as they are: the rejected copies were visibly displaced.\n- Web app design fixes: AA contrast everywhere (white on the dark-theme red Delete button; the muted ink tokens in\n  both themes, checked in a browser on every visible text), padding in the drop zone and dialogs, no clipping\n  container around positioned layers, no card inside a card (the Settings switches and the figure blocks are\n  flat), doubtful equations marked with a tint or dotted outline instead of a side stripe, a steady \"working\"\n  dot in history instead of a pulsing one, and progress bars that scale instead of animating width.\n- Windows: replacing a stored file retries briefly when another thread has it open.\n\n- **Layout PDF export (`layout-pdf`).** A typeset remake of the document: each page at the original size and\n  orientation, every element (headings, paragraphs, equations, tables, lists, figures, page numbers, question\n  numbers and marks) placed at its box. Text is set at one body size per document (see above), equations are\n  typeset with the vendored KaTeX and mhchem, Hindi is set in Noto Serif Devanagari, and figures use the cleaned\n  crop (or the original crop, the redrawn SVG, a crop cut from the page image, or a described placeholder).\n  Options `text_variant`, `figures`, `background`, `show_boxes`, `pages`, `renderer`. Overlapping boxes are\n  nudged apart; text that cannot fit overflows downward with a warning. Verification adds `layout_fidelity`\n  (share set at the target size, shrunk and overflowed elements, words found inside their boxes). Printed by a\n  headless Chromium-family browser (Edge, Chrome, Chromium, Brave, Playwright's Chromium or\n  `SCHOLAROCR_BROWSER`), with a basic PyMuPDF fallback. Available in the CLI, MCP `export_document` (local and\n  remote) and the web app's export links. The existing `searchable-pdf` is unchanged.\n- **Boxes snapped to the ink.** After a page's elements are stored (host submissions and key-provider\n  extractions), every `model_estimate` box is refined deterministically (`pipeline/layout_refine.py`, no model):\n  the page is binarised relative to its paper level after dividing out shadows, ruled notebook lines and margin\n  rules are found (straight seeds, a robust curve fit, then tracing to follow slant and page curl; faint dotted\n  rules too) and removed while strokes crossing them are kept, and each box is fitted to the ink components it\n  owns. A component goes to one element only (best pixel share, then depth inside the box, then reading order,\n  with ink covered by overlapping boxes going to the element whose own ink is nearest). Figures grow along\n  their strokes and nearby labels (`T_A`, `dx`, `θ₁`) but not into another element's ink or into a text line, and\n  drawings that touch are split between their figures. The model box is kept when refinement is unreliable (no\n  ink, growth past a cap, ink belonging to a larger structure). Refined boxes have `bbox_source: \"refined\"` and\n  keep the model's box in `bbox_model`. `ScholarOCR.refine_document()` re-runs it on stored pages.\n- **Figure images.** Every figure, diagram or image gets a full-resolution crop\n  (`pages/NNNN/figures/<id>.png`, `source.region_image",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/scholarocr/export/docx.py",
+        "line": 93,
+        "snippet": "proc = subprocess.run([pandoc, \"-f\", \"markdown\", \"-t\", \"docx\", \"-o\", str(dst), str(src)], capture_output=True, text=True, timeout=PANDOC_TIMEOUT_S, check=False)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/docx.py#L93"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/scholarocr/export/latex.py",
+        "line": 86,
+        "snippet": "proc = subprocess.run([exe, name], capture_output=True, text=True, timeout=30, check=False)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/latex.py#L86"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/scholarocr/export/latex.py",
+        "line": 357,
+        "snippet": "proc = subprocess.run(cmd, cwd=workdir, capture_output=True, text=True, timeout=COMPILE_TIMEOUT_S, env=env, errors=\"replace\", check=False)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/latex.py#L357"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/scholarocr/export/layout_html.py",
+        "line": 143,
+        "snippet": "proc = subprocess.run(cmd, capture_output=True, timeout=BROWSER_TIMEOUT_S, check=False)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/layout_html.py#L143"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/scholarocr/webapp/agy.py",
+        "line": 136,
+        "snippet": "subprocess.run([\"taskkill\", \"/T\", \"/F\", \"/PID\", str(proc.pid)], capture_output=True, timeout=15, creationflags=getattr(subprocess, \"CREATE_NO_WINDOW\", 0))",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/agy.py#L136"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scholarocr/webapp/static/app.js",
+        "line": 155,
+        "snippet": "while ((m = re.exec(text))) {",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/static/app.js#L155"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scholarocr/webapp/static/app.js",
+        "line": 169,
+        "snippet": "while ((m = re.exec(text))) {",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/static/app.js#L169"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "src/scholarocr/webapp/static/vendor/katex/katex.min.js",
+        "line": 1,
+        "snippet": "\\u208a\\u208b\\u208c\\u208d\\u208e\\u2080\\u2081\\u2082\\u2083\\u2084\\u2085\\u2086\\u2087\\u2088\\u2089\\u2090\\u2091\\u2095\\u1d62\\u2c7c\\u2096\\u2097\\u2098\\u",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/static/vendor/katex/katex.min.js#L1"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "tests/remote/test_sandbox.py",
+        "line": 10,
+        "snippet": "\\x00\\x00\\x00\\x01\\x00\\x00\\x00\\x01\\x08\\x06\\x00\\x00\\x00\\x1f\\x15\\xc4\\x89",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/tests/remote/test_sandbox.py#L10"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "benchmarks/run_benchmark.py",
+        "line": 80,
+        "snippet": "(gt_dir / f\"{name}.json\").write_text(json.dumps({\"source\": str(files[name]), **gt}), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/benchmarks/run_benchmark.py#L80"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "benchmarks/run_benchmark.py",
+        "line": 97,
+        "snippet": "path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/benchmarks/run_benchmark.py#L97"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/check_remote_deploy.py",
+        "line": 65,
+        "snippet": "with httpx.Client(timeout=timeout, follow_redirects=False) as c:",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/scripts/check_remote_deploy.py#L65"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/stage_antigravity_plugin.py",
+        "line": 41,
+        "snippet": "shutil.rmtree(out)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/scripts/stage_antigravity_plugin.py#L41"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/stage_antigravity_plugin.py",
+        "line": 52,
+        "snippet": "(out / MARKER).write_text(\"staged by scripts/stage_antigravity_plugin.py\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/scripts/stage_antigravity_plugin.py#L52"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/cli/main.py",
+        "line": 230,
+        "snippet": "out.write_bytes(png)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/cli/main.py#L230"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/cli/main.py",
+        "line": 301,
+        "snippet": "Path(args.report).write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/cli/main.py#L301"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/base.py",
+        "line": 532,
+        "snippet": "out.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/base.py#L532"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/docx.py",
+        "line": 91,
+        "snippet": "src.write_text(\"\\n\\n\".join(parts) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/docx.py#L91"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/json_export.py",
+        "line": 16,
+        "snippet": "write_text(out, ctx.document.model_dump_json(indent=2))",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/json_export.py#L16"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/latex.py",
+        "line": 403,
+        "snippet": "write_text(tex_path, tex)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/latex.py#L403"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/layout_pdf.py",
+        "line": 734,
+        "snippet": "src.write_text(doc, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/layout_pdf.py#L734"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/layout_pdf.py",
+        "line": 762,
+        "snippet": "fitted.write_text(layout_html.static_dom(dom), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/layout_pdf.py#L762"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/markdown.py",
+        "line": 251,
+        "snippet": "write_text(out, text)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/markdown.py#L251"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/export/spreadsheet.py",
+        "line": 60,
+        "snippet": "with open(path, \"w\", encoding=\"utf-8\", newline=\"\") as f:",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/export/spreadsheet.py#L60"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/ingestion/validation.py",
+        "line": 16,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/ingestion/validation.py#L16"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/scholarocr/intelligence/gemini_client.py",
+        "line": 164,
+        "snippet": "self._client = httpx.Client( base_url=base_url.rstrip(\"/\"), timeout=timeout_s, headers={\"Authorization\": f\"Bearer {api_key}\", \"X-Title\": \"ScholarOCR\"}, )",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/intelligence/gemini_client.py#L164"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/retention.py",
+        "line": 42,
+        "snippet": "shutil.rmtree(path, onexc=onerror)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/retention.py#L42"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/retention.py",
+        "line": 44,
+        "snippet": "shutil.rmtree(path, onerror=onerror)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/retention.py#L44"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/scholarocr/remote/sandbox.py",
+        "line": 103,
+        "snippet": "with httpx.Client(timeout=timeout_s, follow_redirects=False) as client:",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/sandbox.py#L103"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/sandbox.py",
+        "line": 172,
+        "snippet": "probe.write_bytes(data[:64])",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/sandbox.py#L172"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/sandbox.py",
+        "line": 177,
+        "snippet": "probe.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/sandbox.py#L177"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/sandbox.py",
+        "line": 191,
+        "snippet": "target.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/sandbox.py#L191"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/sandbox.py",
+        "line": 196,
+        "snippet": "shutil.rmtree(batch, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/sandbox.py#L196"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/remote/sandbox.py",
+        "line": 205,
+        "snippet": "shutil.rmtree(d, ignore_errors=True) if d.is_dir() else d.unlink(missing_ok=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/remote/sandbox.py#L205"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/storage/artifacts.py",
+        "line": 78,
+        "snippet": "shutil.rmtree(p)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/storage/artifacts.py#L78"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/storage/artifacts.py",
+        "line": 93,
+        "snippet": "shutil.rmtree(d)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/storage/artifacts.py#L93"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/storage/artifacts.py",
+        "line": 118,
+        "snippet": "os.unlink(tmp)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/storage/artifacts.py#L118"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/storage/artifacts.py",
+        "line": 133,
+        "snippet": "os.unlink(tmp)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/storage/artifacts.py#L133"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/utils.py",
+        "line": 23,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/utils.py#L23"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/agy.py",
+        "line": 201,
+        "snippet": "path.write_text(doc, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/agy.py#L201"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/agy.py",
+        "line": 240,
+        "snippet": "settings_file.write_text(json.dumps(settings_document(read_dirs or []), indent=1), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/agy.py#L240"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/agy.py",
+        "line": 244,
+        "snippet": "schema_file.write_text(json.dumps(schema), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/agy.py#L244"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/config.py",
+        "line": 146,
+        "snippet": "tmp.write_text(prefs.model_dump_json(indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/config.py#L146"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/keys.py",
+        "line": 81,
+        "snippet": "tmp.write_text(\"\\n\".join(lines) + (\"\\n\" if lines else \"\"), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/keys.py#L81"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/redraw.py",
+        "line": 60,
+        "snippet": "image.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/redraw.py#L60"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/redraw.py",
+        "line": 96,
+        "snippet": "shutil.rmtree(run_dir, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/redraw.py#L96"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/runs.py",
+        "line": 476,
+        "snippet": "image_path.write_bytes(img)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/runs.py#L476"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/runs.py",
+        "line": 564,
+        "snippet": "shutil.rmtree(run_dir, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/runs.py#L564"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/runs.py",
+        "line": 620,
+        "snippet": "shutil.rmtree(run_dir, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/runs.py#L620"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/scholarocr/webapp/static/app.js",
+        "line": 90,
+        "snippet": "try { r = await fetch(path, opts); } catch { throw new Error(\"The app is not responding. Is scholarocr-app still running?\"); }",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/static/app.js#L90"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "src/scholarocr/webapp/static/vendor/katex/katex.min.js",
+        "line": 1,
+        "snippet": "!function(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=t():\"function\"==typeof define&&define.amd?define([],t):\"obje",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/static/vendor/katex/katex.min.js#L1"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "src/scholarocr/webapp/static/vendor/katex/mhchem.min.js",
+        "line": 1,
+        "snippet": "!function(t,e){if(\"object\"==typeof exports&&\"object\"==typeof module)module.exports=e(require(\"katex\"));else if(\"function\"==typeof define&&de",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/static/vendor/katex/mhchem.min.js#L1"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 49,
+        "snippet": "probe.write_bytes(data)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L49"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 52,
+        "snippet": "shutil.rmtree(d, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L52"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 58,
+        "snippet": "shutil.rmtree(d, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L58"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 63,
+        "snippet": "(d / name).write_bytes(data)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L63"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 66,
+        "snippet": "(d / \"upload.json\").write_text(json.dumps(meta), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L66"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 81,
+        "snippet": "shutil.rmtree(self._dir(upload_id), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L81"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/scholarocr/webapp/uploads.py",
+        "line": 89,
+        "snippet": "shutil.rmtree(d, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/src/scholarocr/webapp/uploads.py#L89"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 13,
+        "snippet": "**Never run shell commands** (`dir`, `ls`, `Get-ChildItem`, `type`, `cat`, scripts) and never list or",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/rules/AGENTS.md#L13"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/ocr/SKILL.md",
+        "line": 29,
+        "snippet": "Never run shell commands or read the plugin's or server's files to learn the format: if unsure,",
+        "githubBlobUrl": "https://github.com/adiroy911/scholarocr/blob/88932f909606a400f46d4faf833b0189f1283c60/skills/ocr/SKILL.md#L29"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.4.0",
+      "sha": "88932f909606a400f46d4faf833b0189f1283c60",
+      "scannedAt": "2026-11-27T18:24:26.727Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

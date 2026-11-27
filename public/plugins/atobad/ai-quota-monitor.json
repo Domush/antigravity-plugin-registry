@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "atobad/ai-quota-monitor",
+  "sha": "d6cc1e0776d3ccfb1c6b42f423a927d2f0cc5275",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:22:45.693Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "ai-quota-monitor",
+    "displayName": "AI 模型額度監控",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "ai-quota-monitor",
+        "slashCommand": "/ai-quota-monitor",
+        "description": "Displays real-time AI model usage quotas, remaining percentages, and reset countdowns in the Auxiliary Pane sidecar. Use when the user asks to check or monitor their model usage quota.",
+        "disableModelInvocation": false,
+        "file": "skills/ai-quota-monitor/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ai-quota-monitor"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AI Model Quota Monitor (`ai-quota-monitor`)\n\nEnglish | [繁體中文](README.zh-TW.md)\n\nAn **Antigravity UI Sidecar** plugin that displays real-time AI model quota pools (such as Gemini 4 Hydrogen, Gemini 4 Argon, Claude, GPT-OSS, etc.), remaining percentages, progress bars, and reset countdowns directly in the Antigravity Auxiliary Pane, with persistent customizable display ordering.\n\n## Features\n\n- **Shared Quota Pool Overview & Tabs**: Automatically groups model variants that share the same quota pool and lets you switch between **Gemini** and **All Models** views.\n- **Customizable Display Order**: Click **Reorder** to move model families to the top, up/down, or drag-and-drop cards. Custom order is persisted locally in `order-config.json` (excluded from Git).\n- **Real-Time Reset Countdown**: Shows both the remaining time (`days / hours / minutes`) and the local reset timestamp.\n- **Auto Language Switching & Theme Sync**: Automatically switches between English and Traditional Chinese based on the host locale (falling back to English for other languages), inherits Antigravity light/dark theme variables via `sidecar_sdk`, refreshes every 30 seconds, and supports manual instant refresh.\n\n## Installation\n\n### Option 1: Install via Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/atobad/ai-quota-monitor\n```\n\n### Option 2: Manual Installation\n\nClone this repository into your global Antigravity plugins directory and restart Antigravity:\n\n```bash\ngit clone https://github.com/atobad/ai-quota-monitor.git ~/.gemini/config/plugins/ai-quota-monitor\n```\n\nOn Windows PowerShell:\n\n```powershell\ngit clone https://github.com/atobad/ai-quota-monitor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\ai-quota-monitor\"\n```\n\n## Project Structure\n\n```text\nai-quota-monitor/\n├── plugin.json\n├── README.md\n├── README.zh-TW.md\n├── LICENSE\n├── assets/logo.svg\n├── rules/AGENTS.md\n├── skills/ai-quota-monitor/SKILL.md\n└── sidecars/quota-monitor/\n    ├── sidecar.json\n    ├── main.mjs\n    └── main.test.mjs\n```\n\n## Development & Verification\n\nRun the unit test suite (requires Node.js):\n\n```bash\nnode --test sidecars/quota-monitor/main.test.mjs\n```\n\nValidate plugin schema and structure with Antigravity CLI before publishing:\n\n```bash\nagy plugin validate --strict .\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "dynamic_code_exec",
+      "fs_write_workspace"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "sidecars/quota-monitor/main.test.mjs",
+        "line": 196,
+        "snippet": "const compute = new Function( 'latestData', 'currentFilter', `${fnMatch[0]}; return computeReorderedList;` )(",
+        "githubBlobUrl": "https://github.com/atobad/ai-quota-monitor/blob/d6cc1e0776d3ccfb1c6b42f423a927d2f0cc5275/sidecars/quota-monitor/main.test.mjs#L196"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/quota-monitor/main.mjs",
+        "line": 79,
+        "snippet": "writeFileSync( filePath, JSON.stringify({ order: sanitized, updatedAt: new Date().toISOString() }, null, 2), 'utf-8' );",
+        "githubBlobUrl": "https://github.com/atobad/ai-quota-monitor/blob/d6cc1e0776d3ccfb1c6b42f423a927d2f0cc5275/sidecars/quota-monitor/main.mjs#L79"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/quota-monitor/main.test.mjs",
+        "line": 101,
+        "snippet": "rmSync(dir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/atobad/ai-quota-monitor/blob/d6cc1e0776d3ccfb1c6b42f423a927d2f0cc5275/sidecars/quota-monitor/main.test.mjs#L101"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/quota-monitor/main.test.mjs",
+        "line": 173,
+        "snippet": "rmSync(dir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/atobad/ai-quota-monitor/blob/d6cc1e0776d3ccfb1c6b42f423a927d2f0cc5275/sidecars/quota-monitor/main.test.mjs#L173"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "d6cc1e0776d3ccfb1c6b42f423a927d2f0cc5275",
+      "scannedAt": "2026-11-27T18:22:45.693Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "dynamic_code_exec",
+        "fs_write_workspace"
+      ]
+    }
+  ]
+}

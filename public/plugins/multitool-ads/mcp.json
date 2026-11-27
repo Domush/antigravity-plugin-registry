@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "multitool-ads/mcp",
+  "sha": "eb57e904741b30dc7f25d055611cd317a99e248d",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:07.044Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "multitool",
+    "displayName": "Multitool Ads",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "multitool",
+        "runtimeName": "multitool_multitool",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.multitools.pro/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "multitool-ads",
+        "slashCommand": "/multitool-ads",
+        "description": "Answer questions about the user's Meta ad accounts, campaigns, ad sets, ads and creatives, and make changes to them, through the Multitool MCP server.",
+        "disableModelInvocation": false,
+        "file": "skills/multitool-ads/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/multitool-ads"
+    ],
+    "mcpServerNames": [
+      "multitool_multitool"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Multitool Ads\n\n[Multitool](https://multitools.pro) is an operational Meta Ads manager for media buyers who run\nmany ad accounts and Facebook profiles. This plugin connects your Multitool workspace to\nAntigravity, so the agent can read and manage your ads from chat.\n\n## After you add the plugin\n\nAntigravity opens Multitool in your browser: sign in, choose a workspace and click Allow.\n\nIf the browser does not open, press `Ctrl+Shift+P` (`Cmd+Shift+P` on Mac), run\n**Manage MCP Servers**, click **Authenticate** next to Multitool, sign in, then paste the code\nshown in the browser into **Enter authorization code** and click **Submit**. In the Antigravity App\nthe same button is under **Customizations → Installed → MCP Servers**.\n\n## What you can ask\n\n- \"Show today's spend and results across all my ad accounts\"\n- \"Which campaigns spent more than $50 today with no results?\"\n- \"Why is this ad set not delivering?\"\n- \"Rank my creatives by cost per result over the last 7 days\"\n- \"Pause every ad in campaign X\" — the agent shows a preview and waits for your confirmation\n\n## Safe by design\n\nEvery change to your ads is previewed first; nothing is sent to Meta until you confirm it. Multitool\nonly sees the ad accounts your connected Facebook profiles can access.\n\n## Requirements\n\nA Multitool account with your Facebook profiles connected — [multitools.pro](https://multitools.pro).\n\n[Privacy Policy](https://multitools.pro/privacy) · [Terms of Service](https://multitools.pro/terms) ·\n[support@multitools.pro](mailto:support@multitools.pro)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "eb57e904741b30dc7f25d055611cd317a99e248d",
+      "scannedAt": "2026-11-27T18:21:07.044Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "id": "riverxorange/agy-monowatch",
+  "sha": "1aedf71c03280cc7d775748639d4fb1922daa1f9",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:06.952Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "monowatch",
+    "displayName": "monowatch",
+    "version": "2.2.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "monowatch",
+        "slashCommand": "/monowatch",
+        "description": "Open the monowatch side panel to show Antigravity usage, including equivalent API cost, subscription payback, per-model cache hit rate, TTFT and tok/s, context window usage and compactions, subagent costs, runtime events, and model routing.",
+        "disableModelInvocation": false,
+        "file": "skills/monowatch/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/monowatch"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"./assets/logo.svg\" width=\"64\" height=\"64\" alt=\"monowatch logo\" />\n  <h1>monowatch</h1>\n  <p>A local usage dashboard for Google Antigravity, in the side panel.</p>\n  <p><strong>English</strong> · <a href=\"./README.zh-CN.md\">简体中文</a></p>\n</div>\n\n<p align=\"center\">\n  <img src=\"./docs/screenshots/overview.png\" width=\"32%\" alt=\"Overview\" />\n  <img src=\"./docs/screenshots/detail.png\" width=\"32%\" alt=\"Conversation detail\" />\n  <img src=\"./docs/screenshots/conversations.png\" width=\"32%\" alt=\"Conversations (dark)\" />\n</p>\n\n## Features\n\n- **Subscription value**: see what your usage would cost at API prices, and how many times over your plan has paid for itself in the current billing cycle.\n- **Per-model performance**: cost, cache hit rate, time to first token and output speed for every model you use.\n- **Conversations, projects and CLI runs**: each one shows its cost, context usage and speed, and you can sort them by workspace.\n- **Conversation detail**: context window usage, compaction history, subagent costs and a per-turn breakdown.\n- **Local and read-only**: reads Antigravity's local data and never writes to it. No data is uploaded.\n- **Light / dark, English / Chinese**: follows the host theme and language automatically.\n\n## Install\n\n### Option 1: Let Antigravity install it (Agentic)\n\nSend this prompt to Antigravity in a chat:\n\n```text\nInstall https://github.com/riverxorange/agy-monowatch as a plugin, enable it, and open monowatch for me.\n```\n\nOnce installed, you can mention `@[plugin:monowatch]` in any conversation (or ask Antigravity to open it) to bring up the dashboard.\n\n### Option 2: Manual install\n\n```bash\ngit clone https://github.com/riverxorange/agy-monowatch.git ~/.gemini/config/plugins/monowatch\n```\n\nOn Windows (PowerShell):\n\n```powershell\ngit clone https://github.com/riverxorange/agy-monowatch.git \"$HOME\\.gemini\\config\\plugins\\monowatch\"\n```\n\nThen enable **monowatch** on Antigravity's Customizations page and open it from the side panel.\n\n## Update\n\nWhen a new version is available, an **Update** link appears in the panel header. You can also run `git pull` in the plugin directory. Your settings are stored separately and survive updates.\n\n## Privacy\n\nmonowatch makes one kind of network request: a version check against GitHub at most once an hour. You can turn it off in Settings.\n\n## Development\n\nRequires only Node.js built-ins (no npm dependencies).\n\n```bash\nnpm --prefix sidecars/monitor_board test\n```\n\nHow the data is read and calculated: [docs/TELEMETRY_SPEC.md](./docs/TELEMETRY_SPEC.md).\n\n## License\n\n[MIT](./LICENSE). Bundled Geist fonts are licensed under the [SIL Open Font License](./sidecars/monitor_board/fonts/OFL.txt).\n\nThanks to the [LINUX DO](https://linux.do) community. This is an unofficial community project and is not affiliated with Google.\n",
+  "latestReleaseNotes": "### What's New\n- Added **Token Activity** heatmap on the Overview page adapting to each time window: 24-hour strip (`Today`), 7-day strip (`7d`), 7-column calendar heatmap (`Cycle` / `Month`), and GitHub-style weekly contribution grid (`All`) with hover token/cost breakdowns.\n- Added **Month** (`本月`) time window alongside `Today`, `7d`, `Cycle` (or `30d`), and `All`.\n- Moved **Plan** inline on the left of the Overview facts row and added a dedicated top-right **Settings** button opening a sharp-cornered modal dialog (with `Esc` and backdrop dismiss).\n- Fixed two-row header layout with balanced vertical rhythm across narrow and wide panes.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/main.mjs",
+        "line": 567,
+        "snippet": "const m = CONV_ID_RE.exec(String(filename || ''));",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/main.mjs#L567"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/main.mjs",
+        "line": 576,
+        "snippet": "const m = CONV_ID_RE.exec(name);",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/main.mjs#L576"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/main.mjs",
+        "line": 597,
+        "snippet": "const m = CONV_ID_RE.exec(firstSeg);",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/main.mjs#L597"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/telemetry/discovery.mjs",
+        "line": 944,
+        "snippet": "const roleMatch = ROLE_WORKER_RE.exec(rosterName);",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/telemetry/discovery.mjs#L944"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/telemetry/ledger.mjs",
+        "line": 149,
+        "snippet": "db.exec('PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL;');",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/telemetry/ledger.mjs#L149"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/telemetry/ledger.mjs",
+        "line": 150,
+        "snippet": "db.exec(SCHEMA_SQL);",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/telemetry/ledger.mjs#L150"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/telemetry/proto.mjs",
+        "line": 1278,
+        "snippet": "const anchorMatch = ERROR_ANCHOR_RE.exec(cleaned);",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/telemetry/proto.mjs#L1278"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 174,
+        "snippet": "execFile('git', args, { timeout: timeoutMs, windowsHide: true }, (err, stdout, stderr) => { if (err) { rejectPromise(new Error(String(stderr || err.message || err).trim())); return",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L174"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/monitor_board/main.mjs",
+        "line": 349,
+        "snippet": "writeFileSync(tmp, JSON.stringify(next, null, 2), 'utf-8');",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/main.mjs#L349"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/monitor_board/ui/state.js",
+        "line": 150,
+        "snippet": "return fetch(url, { ...fetchOptions, headers });",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/ui/state.js#L150"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 267,
+        "snippet": "writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf-8');",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L267"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 303,
+        "snippet": "const res = await fetch(apiUrl, { headers, signal: AbortSignal.timeout(5000), });",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L303"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 335,
+        "snippet": "const res = await fetch(rawUrl, { headers, signal: AbortSignal.timeout(5000), });",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L335"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 451,
+        "snippet": "const res = await fetch(tarUrl, { headers: { 'User-Agent': `monowatch/${local.version}` }, signal: AbortSignal.timeout(25_000), });",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L451"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 480,
+        "snippet": "writeFileSync(tmp, entry.data);",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L480"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 7,
+        "snippet": "* - Safe self-update: mutates `pluginRoot` ONLY when installed under `.gemini/config/plugins/`;",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L7"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/monitor_board/updater.mjs",
+        "line": 433,
+        "snippet": "message: 'Running outside ~/.gemini/config/plugins/; skipped overwriting workspace.',",
+        "githubBlobUrl": "https://github.com/riverxorange/agy-monowatch/blob/1aedf71c03280cc7d775748639d4fb1922daa1f9/sidecars/monitor_board/updater.mjs#L433"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.2.0",
+      "sha": "1aedf71c03280cc7d775748639d4fb1922daa1f9",
+      "scannedAt": "2026-11-27T18:18:06.952Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

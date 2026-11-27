@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 1,
+  "id": "tcbhls/visual-canvas-studio",
+  "sha": "f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:52.309Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "visual-canvas-studio",
+    "displayName": "Visual Canvas Studio（按需侧栏拆层微调 / PDF 直编）",
+    "version": "2.3.1",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "vcs",
+        "runtimeName": "visual-canvas-studio_vcs",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server/index.mjs",
+          "--data_dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "visual-canvas-studio",
+        "slashCommand": "/visual-canvas-studio",
+        "description": "零干扰按需侧栏可视化编辑插件：保留 Antigravity 原生图片/PDF/Markdown 预览与圈选评论，需要微调时从侧栏或对话按需打开平面图离线智能拆层、前景/底图独立换色、零越界框选抠图、多页 PDF 原位改字与中文矢量写回、HTML/SVG 鼠标直编及 .canvas.json 分层画布。",
+        "disableModelInvocation": false,
+        "file": "skills/visual-canvas-studio/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/visual-canvas-studio"
+    ],
+    "mcpServerNames": [
+      "visual-canvas-studio_vcs"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Visual Canvas Studio\n\n专为 **Google Antigravity 2.0** 打造的极简、零干扰侧栏交互式可视化微调插件（MCP App）。\n\n遵循**零干扰原则**：不接管常规图片、PDF、Markdown、HTML 的默认打开方式，100% 保留 Antigravity 原生预览、超大文件直开与原生圈选评论；仅专属接管 `.canvas.json` 分层设计文件。当你需要动手微调时，从右侧栏 **`+` → 插件 → 可视化画布编辑**（或对 AI 说「在侧栏打开这张图/这份 PDF 给我微调」）即可按需进入交互式画布，直接拆层、拖拽、摆正、换色、原位改字并写回源文件。\n\n## 核心特性\n\n- **零干扰原生共存 + 会话级自动关联**\n  - 日常点击 `.png` / `.jpg` / `.pdf` / `.md` / `.html` 等通用格式完全交还 Antigravity 原生查看器（零 10 MiB 限制、保留原生圈选评论）。\n  - 打开插件侧栏时自动识别**当前对话会话**刚生成或引用的图片、PDF、HTML、SVG 与 `.canvas.json`，顶部会话条一键切换，不再串台到旧会话文件。\n  - 专属接管 `.canvas.json` / `.vcs.json` 分层设计文件，点击直开画布。\n- **平面图离线智能拆层 & 换色（零云端依赖）**\n  - 自动识别 AI 生成平面图 / Logo / 海报中的独立元素（`< 50ms` 离线运行），支持**一键全图拆层**与**点选提层**，附带抗锯齿去杂色抠图与无痕背景修补。\n  - **严格零越界框选抠图**：仅处理框内区域，选区外 1 像素不改动；支持 `Ctrl+Z` / `Ctrl+Y` 像素级精确回滚。\n  - **前景与背景底图独立换色**：无论是抠出的独立元素还是底层背景图，均支持无损换色（黑底可直接精准换纯白或任意色）。\n- **多页 PDF 原位改字与矢量中文写回**\n  - 基于 MuPDF (WASM) 2× 高清渲染与逐字排版解析：单击原文字无损查看真实字号/字体，双击才进入原位改字，未改动自动还原原貌。\n  - 支持双击空白处快速填表、白色遮盖框、插入本地图片/签名，保存时自动执行真实文本擦除与中文字体子集嵌入矢量写回。\n- **HTML / SVG 鼠标直编 & Markdown 内嵌图联动**\n  - Shadow DOM 隔离渲染 HTML/SVG，支持鼠标拖拽居中吸附、8 点缩放、旋转摆正 `0°`、双击改字并保留原始相对路径写回源码。\n  - 打开含多张本地图片的 `.md` 文档时，可直接从 `⋮` 菜单或悬停图片按钮切入微调其中任意一张原图，保存后返回预览立即刷新。\n- **极简单色 UI & 会话级文件隔离**\n  - 单行顶栏 + 画布悬浮毛玻璃胶囊 + Figma 风格属性栏，自动同步 Antigravity 浅色/深色主题。\n  - 严格隔离各对话会话的上下文文件，支持一键在系统文件管理器中定位打开文件所在位置。\n\n## 安装与使用\n\n### 1. 克隆到 Antigravity 插件目录\n\n```bash\n# macOS / Linux\ngit clone https://github.com/tcbhls/visual-canvas-studio.git ~/.gemini/config/plugins/visual-canvas-studio\n\n# Windows (PowerShell)\ngit clone https://github.com/tcbhls/visual-canvas-studio.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\visual-canvas-studio\"\n```\n\n### 2. 安装依赖并构建单文件 MCP App UI\n\n```bash\ncd ~/.gemini/config/plugins/visual-canvas-studio\nnpm install\nnpm run build:ui\n```\n\n> 若 Windows 上 `npm install` 跳过了 `esbuild` 二进制安装，运行一次 `node node_modules/esbuild/install.js` 后再执行 `npm run build:ui`。\n\n### 3. 启用\n\nAntigravity 会自动发现 `~/.gemini/config/plugins/visual-canvas-studio/`。在 **Customizations → Installed** 中确认 **Visual Canvas Studio** 已启用（若之前已运行旧版本，点 MCP 菜单中的 **Restart** 热重载即可）。\n\n- **按需微调当前会话文件**：需要拆层/换色/改 PDF 时，从右侧栏 **`+` → 插件 → 可视化画布编辑** 或左侧边栏打开（自动加载本会话最新图/PDF），或直接对 AI 说「在侧栏打开这张图给我微调」。\n- **分层设计文件**：点击工作区中的 `.canvas.json` 直接进入画布编辑。\n\n## 常用快捷键\n\n| 快捷键 | 功能 |\n| --- | --- |\n| `Ctrl + S` / `Cmd + S` | 保存回源文件（本地落盘自动留 `.vcs.bak` 备份） |\n| `Ctrl + Z` / `Ctrl + Y` | 撤销 / 重做（含底图像素级回滚） |\n| `Ctrl + D` / `Delete` | 复制 / 删除选中元素 |\n| `方向键` / `Shift + 方向键` | 1px / 10px 精调元素位置 |\n| `Ctrl + 滚轮` | 缩放画布或预览图 |\n| `←` / `→` | PDF 纯净预览模式下翻页 |\n\n## 项目结构\n\n```text\nvisual-canvas-studio/\n├── plugin.json                  # Antigravity 插件清单\n├── mcp_config.json              # MCP Server 配置 (visual-canvas-studio_vcs)\n├── hooks.json                   # 生命周期钩子配置\n├── assets/logo.svg              # 插件图标\n├── server/\n│   ├── index.mjs                # MCP App Server（15 个工具 + file/aux_pane/global 入口）\n│   ├── conv-context.mjs         # 会话级视觉文件隔离与上下文扫描\n│   └── pdf-engine.mjs           # MuPDF 渲染/文字提取 + pdf-lib 中文矢量写回\n├── ui/\n│   ├── index.html               # 极简单色预览与编辑双视图模板\n│   ├── styles.css               # 原生浅/暗主题设计系统与悬浮胶囊样式\n│   ├── app.js                   # MCP App 宿主桥接、纯净预览与主控逻辑\n│   ├── canvas-engine.js         # Fabric.js v7 分层画布 / 平面拆层 / PDF 编排引擎\n│   ├── image-segmenter.js       # 离线平面图元素识别、去杂色抠图、修补与换色引擎\n│   ├── dom-engine.js            # HTML / SVG Shadow DOM 鼠标直编引擎\n│   └── markdown-renderer.js     # 零依赖 GFM Markdown 渲染器\n├── scripts/build-ui.mjs         # esbuild 单文件 MCP App 打包脚本\n├── hooks/auto-open-visual.mjs   # Stop 钩子\n├── rules/AGENTS.md              # 插件行为规范\n└── skills/visual-canvas-studio/ # 配套 Agent Skill\n```\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/conv-context.mjs",
+        "line": 192,
+        "snippet": "while ((m = ANY_WIN_PATH_RE.exec(unescaped)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/conv-context.mjs#L192"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/conv-context.mjs",
+        "line": 288,
+        "snippet": "while ((m = PATH_REGEX.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/conv-context.mjs#L288"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/conv-context.mjs",
+        "line": 414,
+        "snippet": "const wsMatch = /Active Workspaces:\\s*[\\r\\n]+-\\s*([A-Za-z]:[^\\r\\n\"]+)/i.exec(head);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/conv-context.mjs#L414"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 481,
+        "snippet": "while ((m = attrRe.exec(markup)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L481"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 487,
+        "snippet": "while ((m = urlRe.exec(markup)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L487"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 669,
+        "snippet": "const uuidMatch = /^antigravity-file:\\/\\/([0-9a-f-]{16,})\\//i.exec(resourceUri || '');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L669"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 803,
+        "snippet": "while ((m = mdImgRe.exec(markdown)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L803"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 809,
+        "snippet": "while ((m = htmlImgRe.exec(markdown)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L809"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 811,
+        "snippet": "const altMatch = /\\balt\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')/i.exec(m[0]);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L811"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 818,
+        "snippet": "while ((m = mdLinkRe.exec(markdown)) !== null) {",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L818"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 1528,
+        "snippet": "const match = /^data:([^;]+);base64,(.+)$/s.exec(dataUrl);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1528"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 1753,
+        "snippet": "const child = spawn('explorer.exe', [dirToOpen], { detached: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1753"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 1760,
+        "snippet": "const child = spawn('explorer.exe', ['/select,', winPath], { detached: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1760"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 1768,
+        "snippet": "const child = spawn('open', args, { detached: true, stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1768"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 1772,
+        "snippet": "const child = spawn('xdg-open', [dirToOpen], { detached: true, stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1772"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/index.mjs",
+        "line": 1948,
+        "snippet": "const m = /^data:image\\/(png|jpe?g|webp);base64,(.+)$/i.exec(dataUrl || '');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1948"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/pdf-engine.mjs",
+        "line": 91,
+        "snippet": "const m = /rgba?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)/i.exec(s);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/pdf-engine.mjs#L91"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/pdf-engine.mjs",
+        "line": 264,
+        "snippet": "const m = /^data:image\\/(png|jpe?g);base64,(.+)$/i.exec(layer.dataUrl);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/pdf-engine.mjs#L264"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/app.js",
+        "line": 986,
+        "snippet": "const m = /\\bis\\s+(\\d+)\\s+bytes\\b/i.exec(String(errMsg || ''));",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/app.js#L986"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/app.js",
+        "line": 1111,
+        "snippet": "const h1 = /^#\\s+(.+)$/m.exec(fb.content || '');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/app.js#L1111"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/app.js",
+        "line": 1216,
+        "snippet": "const h1 = /^#\\s+(.+)$/m.exec(mdText);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/app.js#L1216"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/app.js",
+        "line": 1293,
+        "snippet": "const h1 = /^#\\s+(.+)$/m.exec(data.content || '');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/app.js#L1293"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/dom-engine.js",
+        "line": 27,
+        "snippet": "const m = /rgba?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)/i.exec(colorStr);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/dom-engine.js#L27"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/dom-engine.js",
+        "line": 40,
+        "snippet": "const m = /^matrix\\(([^)]+)\\)/.exec(tf);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/dom-engine.js#L40"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/dom-engine.js",
+        "line": 139,
+        "snippet": "const doctypeMatch = /^(\\s*<!doctype[^>]*>)/i.exec(rawHtml);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/dom-engine.js#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/dom-engine.js",
+        "line": 166,
+        "snippet": "const wMatch = /(?:\\.poster|\\.canvas|\\.artboard|body)\\s*\\{[^}]*?width\\s*:\\s*(\\d+)px/i.exec(combinedCss);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/dom-engine.js#L166"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/dom-engine.js",
+        "line": 167,
+        "snippet": "const hMatch = /(?:\\.poster|\\.canvas|\\.artboard|body)\\s*\\{[^}]*?height\\s*:\\s*(\\d+)px/i.exec(combinedCss);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/dom-engine.js#L167"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/markdown-renderer.js",
+        "line": 74,
+        "snippet": "const altM = /\\balt\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')/i.exec(full);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/markdown-renderer.js#L74"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/markdown-renderer.js",
+        "line": 125,
+        "snippet": "const fenceMatch = /^(`{3,}|~{3,})\\s*([\\w-]*)\\s*$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/markdown-renderer.js#L125"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/markdown-renderer.js",
+        "line": 169,
+        "snippet": "const hMatch = /^(#{1,6})\\s+(.+?)\\s*#*$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/markdown-renderer.js#L169"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/markdown-renderer.js",
+        "line": 184,
+        "snippet": "const alertM = /^\\[!(TIP|NOTE|IMPORTANT|WARNING|CAUTION)\\]\\s*$/i.exec(qLines[0] || '');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/markdown-renderer.js#L184"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/markdown-renderer.js",
+        "line": 225,
+        "snippet": "const taskM = /^\\[([ xX])\\]\\s+(.*)$/.exec(rawItem);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/markdown-renderer.js#L225"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui/markdown-renderer.js",
+        "line": 251,
+        "snippet": "const soloImg = /^!\\[([^\\]]*)\\]\\(([^)\\r\\n]+)\\)$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/markdown-renderer.js#L251"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-ui.mjs",
+        "line": 44,
+        "snippet": "writeFileSync(outPath, finalHtml, 'utf-8');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/scripts/build-ui.mjs#L44"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 164,
+        "snippet": "writeFileSync(STATE_PATH, JSON.stringify(next, null, 2), 'utf-8');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L164"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1261,
+        "snippet": "writeFileSync(absPath, JSON.stringify(doc, null, 2), 'utf-8');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1261"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1490,
+        "snippet": "writeFileSync(absPath, content, 'utf-8');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1490"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1534,
+        "snippet": "writeFileSync(absOut, buf);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1534"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1542,
+        "snippet": "writeFileSync(sourceCanvasPath, JSON.stringify(doc, null, 2), 'utf-8');",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1542"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1842,
+        "snippet": "writeFileSync(tempPath, Buffer.from(blobBase64, 'base64'));",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1842"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1932,
+        "snippet": "if (now - statSync(p).mtimeMs > 48 * 3600 * 1000) unlinkSync(p);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1932"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 1952,
+        "snippet": "writeFileSync(outPath, Buffer.from(m[2], 'base64'));",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/index.mjs#L1952"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/pdf-engine.mjs",
+        "line": 547,
+        "snippet": "writeFileSync(absOut, finalBytes);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/server/pdf-engine.mjs#L547"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "ui/app.js",
+        "line": 2501,
+        "snippet": "const resp = await fetch(state.preview.dataUrl);",
+        "githubBlobUrl": "https://github.com/tcbhls/visual-canvas-studio/blob/f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c/ui/app.js#L2501"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.3.1",
+      "sha": "f8c09bc3d6e3a37dcf9e4fe63861bf3a9d95907c",
+      "scannedAt": "2026-11-27T18:15:52.309Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

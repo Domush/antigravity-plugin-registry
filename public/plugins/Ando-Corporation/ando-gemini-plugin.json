@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "id": "Ando-Corporation/ando-gemini-plugin",
+  "sha": "89da6a769a385106a351228024174880276f0990",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:23:55.665Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "ando",
+    "displayName": "Ando",
+    "version": "0.1.15",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "ando",
+        "runtimeName": "ando_ando",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.ando.so/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "ando-alert-channel",
+        "slashCommand": "/ando-alert-channel",
+        "description": "Set up or refine alerts and event feeds from connected apps in an Ando channel. Use when a user wants to route external events to a channel, adjust filters and delivery, or troubleshoot an existing feed.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-alert-channel/SKILL.md"
+      },
+      {
+        "name": "ando-build-mini-app",
+        "slashCommand": "/ando-build-mini-app",
+        "description": "Build or refine an Ando miniapp for a team workflow, such as triage, structured input, or a shared interactive view. Use to design, validate, and publish a miniapp to the intended audience.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-build-mini-app/SKILL.md"
+      },
+      {
+        "name": "ando-catch-up",
+        "slashCommand": "/ando-catch-up",
+        "description": "Summarize activity in an Ando channel, project, or bounded time window, including decisions, blockers, and requests. Use for catch-ups, project updates, and what changed since a specified time.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-catch-up/SKILL.md"
+      },
+      {
+        "name": "ando-connect-apps",
+        "slashCommand": "/ando-connect-apps",
+        "description": "Connect the apps an Ando team uses, choose account ownership and agent access, and verify permissions with a real read. Use for first app setup, adding a required account, or connecting Claude Code or Codex on someone's computer so Ando age",
+        "disableModelInvocation": false,
+        "file": "skills/ando-connect-apps/SKILL.md"
+      },
+      {
+        "name": "ando-connect-first-agent",
+        "slashCommand": "/ando-connect-first-agent",
+        "description": "Connect a first Ando agent, choose its conversation and app access, and verify a real exchange. Use for agent onboarding or a first working connection with an external runtime such as Grok Bot, Hermes or a custom harness. For Claude Code or",
+        "disableModelInvocation": false,
+        "file": "skills/ando-connect-first-agent/SKILL.md"
+      },
+      {
+        "name": "ando-coordinate-work",
+        "slashCommand": "/ando-coordinate-work",
+        "description": "Turn Ando discussions into next steps, owners, and tasks. Use for planning follow-ups, tracking commitments, updating existing work, or drafting and sending agreed coordination messages.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-coordinate-work/SKILL.md"
+      },
+      {
+        "name": "ando-find-answers",
+        "slashCommand": "/ando-find-answers",
+        "description": "Answer questions using Ando shared knowledge and conversations with source links. Use to find a decision, explain why it was made, locate evidence, or reconcile conflicting project information.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-find-answers/SKILL.md"
+      },
+      {
+        "name": "ando-first-team-workflow",
+        "slashCommand": "/ando-first-team-workflow",
+        "description": "Complete a first useful Ando team workflow with people and an agent, such as a decision, handoff, or task. Use when onboarding should produce a real shared outcome.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-first-team-workflow/SKILL.md"
+      },
+      {
+        "name": "ando-give-agent-your-setup",
+        "slashCommand": "/ando-give-agent-your-setup",
+        "description": "Give an Ando agent the coding setup you use here, with the same repository, setup script and secret names, so teammates can ask it for code changes. Use when a user wants their Ando agent to work like their coding agent.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-give-agent-your-setup/SKILL.md"
+      },
+      {
+        "name": "ando-looped-channel",
+        "slashCommand": "/ando-looped-channel",
+        "description": "Set up or refine an Ando channel where an agent follows ongoing work through events, recurring checks, or agent judgment. Use for requests to loop in an agent, watch a channel or source, or keep a workflow moving over time.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-looped-channel/SKILL.md"
+      },
+      {
+        "name": "ando-maintain-context",
+        "slashCommand": "/ando-maintain-context",
+        "description": "Keep Ando workspace and channel knowledge current. Use when asked to save durable decisions, update a Wiki or channel context, or reconcile outdated shared knowledge.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-maintain-context/SKILL.md"
+      },
+      {
+        "name": "ando-migrate-buzz",
+        "slashCommand": "/ando-migrate-buzz",
+        "description": "Move a Buzz relay community into Ando with the maintained Buzz importer, local validation, identity mapping, resumable uploads, and import readback. Use for Buzz history migration requests.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-migrate-buzz/SKILL.md"
+      },
+      {
+        "name": "ando-migrate-messaging",
+        "slashCommand": "/ando-migrate-messaging",
+        "description": "Assess and carry out a bounded move from another messaging platform into Ando, selecting a maintained importer, history API adapter, or attributed forwarding route. Use when no dedicated platform migration skill applies.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-migrate-messaging/SKILL.md"
+      },
+      {
+        "name": "ando-migrate-slack",
+        "slashCommand": "/ando-migrate-slack",
+        "description": "Move Slack history and ongoing conversations into Ando using available MCP tools or documented APIs, verified mappings, and a bounded pilot. Use for Slack migration, channel discovery, history backfill, or sync setup.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-migrate-slack/SKILL.md"
+      },
+      {
+        "name": "ando-setup-workspace",
+        "slashCommand": "/ando-setup-workspace",
+        "description": "Create or improve an Ando workspace's starting structure and invite the intended team. Use for new-team onboarding, initial channels, and workspace setup.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-setup-workspace/SKILL.md"
+      },
+      {
+        "name": "ando-troubleshoot-setup",
+        "slashCommand": "/ando-troubleshoot-setup",
+        "description": "Diagnose missing Ando access, silent agents, failed notifications, or broken app and MCP connections. Use when setup exists but the intended workflow does not work.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-troubleshoot-setup/SKILL.md"
+      },
+      {
+        "name": "ando-tune-notifications",
+        "slashCommand": "/ando-tune-notifications",
+        "description": "Tune a person's Ando notification preferences to preserve useful attention and reduce noise. Use for first notification setup, excessive alerts, or choosing delivery devices and events.",
+        "disableModelInvocation": false,
+        "file": "skills/ando-tune-notifications/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ando-alert-channel",
+      "/ando-build-mini-app",
+      "/ando-catch-up",
+      "/ando-connect-apps",
+      "/ando-connect-first-agent",
+      "/ando-coordinate-work",
+      "/ando-find-answers",
+      "/ando-first-team-workflow",
+      "/ando-give-agent-your-setup",
+      "/ando-looped-channel",
+      "/ando-maintain-context",
+      "/ando-migrate-buzz",
+      "/ando-migrate-messaging",
+      "/ando-migrate-slack",
+      "/ando-setup-workspace",
+      "/ando-troubleshoot-setup",
+      "/ando-tune-notifications"
+    ],
+    "mcpServerNames": [
+      "ando_ando"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Ando\n\nAndo is team messaging for people and AI agents. This plugin connects Google Antigravity and Gemini CLI to\nyour Ando workspace through Ando's hosted MCP server so your agent can read the\nconversations you can read, find decisions with links back to the source\ndiscussion, catch up on a channel or project, keep shared context current, and\ndraft or send team messages when you ask it to.\n\n## What you get\n\n- **One MCP connector**: `https://mcp.ando.so/mcp`, Ando's hosted Model Context\n  Protocol server. Nothing runs on your machine and no code is installed.\n- **17 skills** that teach Antigravity and Gemini CLI Ando workflows, grouped by task:\n  - Find and summarize: `ando-find-answers`, `ando-catch-up`,\n    `ando-coordinate-work`, `ando-maintain-context`\n  - Set up a team: `ando-setup-workspace`, `ando-first-team-workflow`,\n    `ando-connect-first-agent`, `ando-connect-apps`, `ando-tune-notifications`,\n    `ando-give-agent-your-setup`\n  - Automate a channel: `ando-alert-channel`, `ando-looped-channel`,\n    `ando-build-mini-app`\n  - Move from another tool: `ando-migrate-slack`, `ando-migrate-buzz`,\n    `ando-migrate-messaging`\n  - Fix problems: `ando-troubleshoot-setup`\n- **Shared references** under `references/` that the skills link to for\n  identity, access and write authorization rules.\n\n## How it connects\n\nInstall with `agy plugin install https://github.com/Ando-Corporation/ando-gemini-plugin`\nin Antigravity or `gemini extensions install https://github.com/Ando-Corporation/ando-gemini-plugin`\nin Gemini CLI. When you first call an Ando tool (or run `/mcp auth ando` in\nGemini CLI), your client opens Ando's sign-in and approval screen in your\nbrowser. That screen lets you choose the workspace and whether the session acts\nas **you** or as an **agent you manage**. Choose **Connect as me** for interactive\nAntigravity and Gemini CLI sessions: they work while you're using them. Every\nread and write then uses that identity's permissions and attribution. A prompt,\ntool argument or client name cannot change who the session acts as. Messages are\nsent only when you ask for them.\n\nAndo uses OAuth 2.0 with PKCE. The plugin bundles no API key, token, client ID\nor secret.\n\n## What the plugin runs, sends and fetches\n\n- It calls tools on `https://mcp.ando.so/mcp` over HTTPS, authenticated with the\n  OAuth token obtained at sign-in. The tool list and schemas come from\n  that server; Ando's [MCP tool reference](https://docs.ando.so/docs/ando-mcp/tools)\n  documents every tool, including which are read-only and which write.\n- Skills may call `record_skill_usage` once when a bundled skill is selected,\n  sending only the skill's name so Ando can tell which workflows are used.\n- The plugin itself installs no code and declares no hooks, scripts or\n  background processes. The MCP connector talks only to `mcp.ando.so`.\n- Three migration skills (`ando-migrate-slack`, `ando-migrate-buzz`,\n  `ando-migrate-messaging`) guide the agent through tools you install separately\n  and your own exports, which can involve other hosts. `ando-migrate-buzz`, for\n  example, runs Ando's published `@andocorp/buzz-import` CLI with `npx` and\n  reads your Buzz relay. Each such step is shown to you first and runs only\n  with your approval in a client that permits local commands.\n\n## Requirements\n\nAn Ando account and membership in at least one workspace. Create one at\n[ando.so](https://www.ando.so/).\n\n## Support and policies\n\n- Documentation: <https://docs.ando.so/docs/ando-mcp>\n- Support: <https://www.ando.so/support>\n- Privacy policy: <https://www.ando.so/security/privacy-policy>\n- Terms of service: <https://www.ando.so/security/terms-of-service>\n\nThis plugin's skills and documentation are released under the MIT License (see\n`LICENSE`). The Ando service itself is governed by Ando's terms of service.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "credential_access",
+      "network_external_mcp"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/ando-give-agent-your-setup/SKILL.md",
+        "line": 22,
+        "snippet": "- **Secret names**: the environment variables the setup and the code read that hold credentials, such as `STRIPE_SECRET_KEY`. Names only. Never read, print, or send a secret's valu",
+        "githubBlobUrl": "https://github.com/Ando-Corporation/ando-gemini-plugin/blob/89da6a769a385106a351228024174880276f0990/skills/ando-give-agent-your-setup/SKILL.md#L22"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.15",
+      "sha": "89da6a769a385106a351228024174880276f0990",
+      "scannedAt": "2026-11-27T18:23:55.665Z",
+      "riskTier": "high",
+      "capabilities": [
+        "credential_access",
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

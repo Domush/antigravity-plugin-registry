@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "id": "whanyu1212/agy-codex-plugin",
+  "sha": "4a208b2035d77173a39cc62c4a1af207be8b97e2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:27.298Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-cli",
+    "displayName": "Codex CLI",
+    "version": "0.2.1",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "codex",
+        "runtimeName": "codex-cli_codex",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-adversarial",
+        "slashCommand": "/codex-adversarial",
+        "description": "Run a skeptical, adversarial challenge review against local git changes using `codex exec -s read-only review` with a custom stress-test prompt. Use when the user invokes `/codex-adversarial` or asks Codex to challenge assumptions, hunt for",
+        "disableModelInvocation": false,
+        "file": "skills/codex-adversarial/SKILL.md"
+      },
+      {
+        "name": "codex-rescue",
+        "slashCommand": "/codex-rescue",
+        "description": "Delegate a tricky bug investigation, second-opinion diagnosis, or substantial implementation task to the local OpenAI Codex CLI (`codex exec`). Use when the user invokes `/codex-rescue` or asks Codex to diagnose, fix, implement, or continue",
+        "disableModelInvocation": false,
+        "file": "skills/codex-rescue/SKILL.md"
+      },
+      {
+        "name": "codex-review",
+        "slashCommand": "/codex-review",
+        "description": "Run a read-only code review against local git changes using the OpenAI Codex CLI (`codex exec -s read-only review`). Use when the user invokes `/codex-review` or asks for a Codex review of uncommitted changes, a branch diff (`--base`), or a",
+        "disableModelInvocation": false,
+        "file": "skills/codex-review/SKILL.md"
+      },
+      {
+        "name": "codex-setup",
+        "slashCommand": "/codex-setup",
+        "description": "Verify that the OpenAI Codex CLI is installed, authenticated, and healthy. Use when the user invokes `/codex-setup` or encounters missing binary, authentication, or runtime errors from Codex commands.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-setup/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "codex-delegate",
+        "description": "Background delegation wrapper for the local OpenAI Codex CLI (`codex exec`). Invoke when the parent agent wants an independent Codex second opinion, code review, root-cause investigation, or isolated implementation pass.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/codex-delegate.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-adversarial",
+      "/codex-rescue",
+      "/codex-review",
+      "/codex-setup"
+    ],
+    "mcpServerNames": [
+      "codex-cli_codex"
+    ],
+    "agentNames": [
+      "codex-delegate"
+    ],
+    "hookEvents": [
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-codex-plugin\n\nA zero-dependency **Antigravity (`agy`)** plugin for delegating code reviews, adversarial audits, and debugging or implementation tasks to your local OpenAI **Codex CLI** (`codex`), built on Antigravity's native primitives with no background broker.\n\n## Quick Start\n\n### Prerequisites\n\n- **OpenAI Codex CLI** (`codex`) installed (`brew install --cask codex` or `npm install -g @openai/codex`) and authenticated (`codex login`)\n- **Antigravity** (`agy` CLI, Antigravity App, or Antigravity IDE)\n- **Node.js 22.15+** on `PATH` (for the bundled CLI runner, MCP server, and optional Stop hook)\n\n### Install\n\n```bash\n# Install directly from GitHub\nagy plugin install https://github.com/whanyu1212/agy-codex-plugin\n\n# Or install from a local clone\ngit clone https://github.com/whanyu1212/agy-codex-plugin.git\nagy plugin install ./agy-codex-plugin\n```\n\nVerify the plugin is enabled, then run `/codex-setup` inside Antigravity to verify `codex doctor`:\n\n```bash\nagy plugin list\n```\n\n## Slash Commands\n\n| Command | Purpose | Example |\n| :--- | :--- | :--- |\n| `/codex-review` | Read-only review of uncommitted changes, a base branch, or a commit | `/codex-review --base main` |\n| `/codex-adversarial` | Skeptical review probing invariants, concurrency, edge cases, and security | `/codex-adversarial focus on auth and race conditions` |\n| `/codex-rescue` | Delegate diagnosis (`read-only`), fixes (`workspace-write`), or follow-ups | `/codex-rescue diagnose why tests/auth.test.ts is flaky` |\n| `/codex-setup` | Check `codex` binary, version, and authentication health | `/codex-setup` |\n\nThe skills run [`scripts/codex-run.mjs`](scripts/codex-run.mjs) for background work. Use `node /path/to/plugin/scripts/codex-run.mjs` with `review`, `exec`, `resume`, or `doctor` from your repository. For bounded runs, pass `--effort medium`. To continue a specific session, run `resume --session <sessionId>` with the follow-up prompt on stdin (pass `--cwd <worktreePath>` when resuming a managed worktree, or opt in to the latest session with `--last`).\n\n## MCP Tools\n\nAntigravity starts the bundled zero-dependency Node.js stdio MCP server via [`mcp_config.json`](mcp_config.json).\n\n| Tool | Key parameters | Output |\n| :--- | :--- | :--- |\n| `codex_review` | `cwd`, optional `target` (`uncommitted` default, `base`, `commit`), `base`/`commit`, `prompt` | Read-only review output |\n| `codex_exec` | `cwd`, `prompt`, optional `sandbox` (`read-only` default or `workspace-write`), `model`, `worktree`, `ephemeral` | JSON with `sessionId`, `resumable`, `repoRoot`, `worktreePath`, `finalMessage` |\n| `codex_resume` | `cwd` (pass prior `worktreePath` if present), `prompt`, `sessionId` (or `last: true` opt-in), optional `sandbox` | JSON with `sessionId`, `resumable`, `repoRoot`, `worktreePath`, `finalMessage` |\n| `codex_doctor` | Optional `cwd` | Codex version and diagnostic output |\n\nCommon options & notes:\n- `effort`: optional `low`, `medium`, or `high` on `codex_review`, `codex_exec`, and `codex_resume`.\n- `timeoutMs`: optional integer from `1000` to `1800000` ms (defaults: 10 minutes for review/exec/resume, 1 minute for doctor).\n- `worktree` requires `sandbox: \"workspace-write\"` and cannot be combined with `ephemeral` on `codex_exec`.\n- Set `params._meta.progressToken` on `codex_exec` or `codex_resume` calls to receive session and throttled item updates via `notifications/progress`.\n\n**When to use MCP tools vs. slash commands:** Use MCP tools for structured, token-efficient, session-tracked invocations across Antigravity CLI, App, and IDE; use `/codex-*` skills or `codex-delegate` when you want explicit slash workflows or background wakeup on long-running tasks.\n\n## Background Subagent (`codex-delegate`)\n\n[`agents/codex-delegate.md`](agents/codex-delegate.md) registers a `flash` background subagent so Antigravity can offload second opinions, code reviews, or `codex exec` runs without blocking your main conversation.\n\n## Optional Stop Review Gate\n\n[`hooks.json`](hooks.json) defines an opt-in `Stop` hook (`codex-stop-review-gate`) that runs a read-only ephemeral Codex check on uncommitted changes before Antigravity ends a turn. It is disabled by default (`\"enabled\": false`) and fails open on errors, timeouts, clean repos, or when `continuationActive` is `true` to avoid loops.\n\nTo enable it, set `\"enabled\": true` in your installed plugin copy at `~/.gemini/config/plugins/codex-cli/hooks.json`.\n\n## Development & Testing\n\nRun `agy plugin install .` after edits to refresh the locally installed plugin.\n\n```bash\n# Run unit tests (uses a fake codex fixture on PATH)\nnode --test tests/manifest.test.mjs tests/codex-run.test.mjs tests/stop-review-gate.test.mjs tests/mcp-server.test.mjs\n\n# Strictly validate the plugin manifest and MCP server registration\nagy plugin validate --strict .\n```\n\nCI runs these tests on Node.js 22 across Linux, macOS, and Windows via [`.github/workflows/ci.yml`](.github/workflows/ci.yml).\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-command.mjs",
+        "line": 139,
+        "snippet": "const event = /^\\{\\s*\"type\"\\s*:\\s*\"([^\"]+)\"/.exec(text);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-command.mjs#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-command.mjs",
+        "line": 147,
+        "snippet": "const itemType = type === \"item.completed\" ? (completedItem.exec(text.slice(prefix.length))?.[1] ?? type) : type;",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-command.mjs#L147"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-command.mjs",
+        "line": 242,
+        "snippet": "await new Promise((done) => execFile(taskkill, args, { timeout: windowsTaskkillTimeoutMs, windowsHide: true }, done));",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-command.mjs#L242"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-command.mjs",
+        "line": 266,
+        "snippet": "const child = spawn(command, args, { cwd, ...(env ? { env } : {}), stdio: [\"pipe\", \"pipe\", ignoreStderr ? \"ignore\" : \"pipe\"], detached: useProcessGroups, windowsHide: true });",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-command.mjs#L266"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 117,
+        "snippet": "const match = /^worktree ([\\s\\S]+)$/.exec(record);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L117"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 158,
+        "snippet": "const match = /^gitdir:[ \\t]*([^\\r\\n]+)$/m.exec(dotGit);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L158"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 250,
+        "snippet": "return rolloutFilenameUuidPattern.exec(filePath)?.[1] ?? null;",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L250"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 533,
+        "snippet": "const match = /^(?:\"((?:\\\\.|[^\"\\\\])*)\"|'([^']*)')\\s*(?:#.*)?$/.exec(raw);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L533"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 564,
+        "snippet": "const match = keyPattern.exec(line);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L564"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 592,
+        "snippet": "const section = /^\\[projects\\.(?:\"((?:\\\\.|[^\"\\\\])*)\"|'([^']*)')\\]$/.exec(line);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L592"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 604,
+        "snippet": "const trustMatch = /^trust_level\\s*=\\s*(.+)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L604"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 648,
+        "snippet": "const match = /^state_(\\d+)\\.sqlite$/.exec(name);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L648"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-ops.mjs",
+        "line": 834,
+        "snippet": "const match = /^gitdir:[ \\t]*([^\\r\\n]+)$/m.exec(content);",
+        "githubBlobUrl": "https://github.com/whanyu1212/agy-codex-plugin/blob/4a208b2035d77173a39cc62c4a1af207be8b97e2/scripts/codex-ops.mjs#L834"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.1",
+      "sha": "4a208b2035d77173a39cc62c4a1af207be8b97e2",
+      "scannedAt": "2026-11-27T18:20:27.298Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

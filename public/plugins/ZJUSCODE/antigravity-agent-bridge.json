@@ -1,0 +1,676 @@
+{
+  "schemaVersion": 1,
+  "id": "ZJUSCODE/antigravity-agent-bridge",
+  "sha": "2f2679e50d06e511f1663d180fb8e4565d8a4f12",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:20.067Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-bridge",
+    "displayName": "AI 协同对讲室",
+    "version": "5.1.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agent-bridge",
+        "slashCommand": "/agent-bridge",
+        "description": "Orchestrate and collaborate with multiple local coding agents — OpenAI Codex, Pi Agent, Claude Code, Gemini CLI, OpenCode, or parallel Multi-Agent Council — streaming live into Antigravity's native Aux-Pane Roundtable. Activate when the use",
+        "disableModelInvocation": false,
+        "file": "skills/agent-bridge/SKILL.md"
+      },
+      {
+        "name": "codex-chat",
+        "slashCommand": "/codex-chat",
+        "description": "与本地 OpenAI Codex 进行专业多轮工程协商、架构方案碰撞（RFC）、主从派工执行、对抗式交叉代码审查（Code Review）与疑难排障，并将全过程实时同步至右侧辅助栏「Codex 对讲室」。当用户要求与 Codex 讨论、让 Codex 执行改码、互审代码、双 AI 辩论或打开对讲室时激活此技能。",
+        "disableModelInvocation": false,
+        "file": "skills/codex-chat/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agent-bridge",
+      "/codex-chat"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/hero-banner.svg\" alt=\"Antigravity Agent Bridge Banner\" width=\"100%\" />\n\n<br/>\n\n**English** | [简体中文](./README.zh-CN.md)\n\n[![CI](https://github.com/ZJUSCODE/antigravity-agent-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ZJUSCODE/antigravity-agent-bridge/actions/workflows/ci.yml)\n[![Node.js >= 22.5](https://img.shields.io/badge/node-%3E%3D22.5.0-5fa04e)](https://nodejs.org/)\n[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-007acc)](#)\n[![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-informational)](#)\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)\n[![LINUX DO](https://img.shields.io/badge/Community-LINUX%20DO-f0a500?logo=discourse&logoColor=white)](https://linux.do/)\n\n**Turn Google Antigravity into a Multi-Agent Command Center & Peer-Review Roundtable.**\nConnect **OpenAI Codex**, **Pi Coding Agent**, **Anthropic Claude Code**, **Google Gemini CLI**, **OpenCode**, and **any custom CLI coding agent** inside Antigravity's native right-hand Auxiliary Pane — with **0 external npm dependencies**.\n\n</div>\n\n---\n\n## Why `antigravity-agent-bridge`?\n\nTalking directly to GPT / Codex with rough, conversational prompts often feels clunky — whereas brainstorming naturally with **Gemini inside Google Antigravity**, letting Gemini synthesize a rigorous, context-complete engineering prompt, and then handing that spec to **OpenAI Codex** (or **Claude Code** / **Pi**) to execute produces dramatically better results. Previously, doing this meant manually copy-pasting prompts and `git diff`s across multiple windows.\n\n**`antigravity-agent-bridge`** automates this exact workflow natively inside **Google Antigravity**:\n\n- **Native Aux-Pane Roundtable UI**: Embeds directly into Antigravity's right-hand Sidecar pane, binding live to Antigravity's `:root` theme CSS variables (`Light`, `Dark`, and custom themes update in the exact same frame with zero visual seam) and following your active Antigravity conversation **1:1**.\n- **5 Built-In Streaming Agent Drivers + Extensible Custom Adapters**:\n  | Agent | CLI Binary | Streaming Protocol | Stateful Session Resume | Read-Only / Write Sandboxing |\n  | :--- | :--- | :--- | :--- | :--- |\n  | **OpenAI Codex** | `codex` | Persistent `app-server --stdio` JSON-RPC v2 | `thread/resume` + safe `thread/fork` | `--sandbox` + live approval cards |\n  | **Pi Agent** | `pi` | `pi --mode json -p` NDJSON | `--session-id <uuid>` | `--tools read,grep,find,ls` vs full |\n  | **Claude Code** | `claude` | `claude -p --output-format stream-json` | `--resume <session_id>` | `--permission-mode plan` vs `acceptEdits` |\n  | **Gemini CLI** | `gemini` | `gemini -p --output-format stream-json` | `--resume <session_id>` | Read-only vs `--yolo` |\n  | **OpenCode** | `opencode` | `opencode run --format json` | `-s <session_id>` | Scoped workspace execution |\n  | **Custom CLI** | *Any CLI* | Declarative `agents.custom.json` | Optional template | Custom args (`Aider`, `Qwen`, `Goose`…) |\n- **Parallel Multi-Agent Council (\"群策圆桌\")**: Broadcast one architectural RFC or uncommitted `git diff` to **all installed agents in parallel** (`--agent council` or `--agents codex,pi,claude`), watching each agent stream its independent verdict into the same room.\n- **Adaptive Convergence-Driven Rounds (`1..N`)**: No rigid \"2-round\" or \"3-round\" limits — Antigravity autonomously governs the number of discussion or review-fix-verify rounds based on task complexity and peer convergence signals (`[PEER_STATUS: CONVERGED | NEEDS_ROUND]`, `[PEER_VERDICT: PASS | CHANGES_REQUIRED]`), stopping in 1 round when aligned or iterating 4+ rounds until every `P0/P1` issue is resolved.\n- **Architect → Executor Dispatch**: Tell Antigravity in plain language: *\"Design the plan yourself, dispatch implementation & tests to Codex / Pi / Claude, and iterate review-and-fix rounds until the diff passes.\"*\n- **Bidirectional Peer Skills**: Installs `agent-bridge` & `codex-chat` into Antigravity **and** automatically installs the reverse `antigravity-chat` skill into `~/.codex/skills/`, `~/.pi/agent/skills/`, and `~/.claude/skills/` so external agents can consult local Antigravity (`agy`) too — guarded by `AGY_CODEX_PEER_CALL=1` hardware-level anti-recursion locks.\n\n---\n\n## 30-Second Quickstart (Windows / macOS / Linux / WSL 2)\n\n**Prerequisites**:\n- **Node.js `>= 22.5.0`** (uses built-in `node:sqlite` — zero C++ native compilation or `npm install` bloat!)\n- [Google Antigravity](https://antigravity.google) + **at least one** coding agent CLI (`codex`, `pi`, `claude`, `gemini`, or `opencode`).\n\n### macOS / Linux / WSL 2\n```bash\ngit clone https://github.com/ZJUSCODE/antigravity-agent-bridge.git \"$HOME/.gemini/config/plugins/codex-bridge\"\ncd \"$HOME/.gemini/config/plugins/codex-bridge\"\nnpm run setup\nnpm run doctor\n```\n\n### Windows (PowerShell)\n```powershell\ngit clone https://github.com/ZJUSCODE/antigravity-agent-bridge.git \"$HOME\\.gemini\\config\\plugins\\codex-bridge\"\ncd \"$HOME\\.gemini\\config\\plugins\\codex-bridge\"\nnpm run setup\nnpm run doctor\n```\n\nThen simply talk to Antigravity in plain language:\n- *\"Open the Aux-Pane Roundtable and debate our database sharding design with **Codex** until you both converge on the schema.\"*\n- *\"Design the API contract yourself, dispatch implementation and unit tests to **Pi** (or **Claude Code**), and iterate until your diff review passes.\"*\n- *\"Run a parallel **Council** code review (`Codex + Pi + Claude`) on my uncommitted Git changes.\"*\n\n---\n\n## Architecture Overview\n\n```mermaid\nflowchart LR\n    A[\"Google Antigravity\\n(Main Chat + Architect)\"] <-->|\"agent-bridge / codex-chat\\n+ Aux-Pane Sidecar HTTP\"| B[\"Universal Bridge Kernel\\n(PID Leases · Epoch Fencing · SQLite WAL)\"]\n    B <--> C1[\"OpenAI Codex\\n(app-server RPC)\"]\n    B <--> C2[\"Pi Agent\\n(--mode json)\"]\n    B <--> C3[\"Claude Code\\n(stream-json)\"]\n    B <--> C4[\"Gemini CLI / OpenCode\\n+ Custom JSON Adapters\"]\n```\n\n### Adding Any Custom CLI Agent in 10 Lines (`agents.custom.json`)\n\nCopy [`agents.example.json`](./agents.example.json) to `agents.custom.json` inside the plugin root to register **Aider**, **Qwen Code**, **Goose**, **Cursor Agent**, or internal enterprise tools — they immediately light up in both the Sidecar UI picker and `talk_agent.mjs`!\n\n---\n\n## CLI Usage & Diagnostics\n\n```bash\n# Inspect all detected coding agents, models, and health checks:\nnpm run doctor\n\n# Run the 17 automated concurrency, path-sandbox, NDJSON streaming & HTTP long-polling tests:\nnpm test\n\n# Cleanly remove reverse peer skills from ~/.codex, ~/.pi, and ~/.claude:\nnpm run uninstall-bridge\n```\n\n---\n\n## Community, Contributing & License\n\n- **Community Acknowledgment**: Proudly shared with and supported by the **[LINUX DO](https://linux.do/)** developer community.\n- **Contributing**: Contributions, new agent adapters, and issue reports are warmly welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md).\n- **License**: Released under the [MIT License](./LICENSE).\n",
+  "latestReleaseNotes": "### Bug Fixes\n- **Eliminate Duplicate Codex Threads Across Multi-Round Discussions**: Fixed a sticky `meta.cwd` bug (`prevMeta.cwd || chosenCwd`) when CLI peer turns (`talk_agent.mjs` / `talk_codex.mjs`) run with `persistPrefs: false`. Previously, once a room switched from Project Folder A to Project Folder B, `meta.cwd` stayed frozen at Folder A, causing Round 2, Round 3...N in Folder B to falsely detect `cwdChanged === true` and spawn a brand-new Codex thread on every round.\n- **Per-CWD Thread Memory (`codexThreadsByCwd`)**: Rooms now index active Codex threads (and CLI agent sessions) per canonical project directory, so even cross-repo discussions (`Repo A -> Repo B -> Repo A`) seamlessly resume each repo's existing thread.\n- **Accurate Mid-Room Thread Naming**: When genuinely opening a new thread for a different project folder mid-room, its Codex Desktop title now derives from the new topic prompt instead of repeating the room's initial Day-1 title.\n- **Regression Suite**: Expanded automated test suite to `18/18` passing tests.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/agent_providers.mjs",
+        "line": 136,
+        "snippet": "const out = execFileSync(finder, [cmdName], { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 3000, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/agent_providers.mjs#L136"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/agent_providers.mjs",
+        "line": 283,
+        "snippet": "const m = /(?:%~?dp0%?[\\\\/])([^\\r\\n\"]+\\.(?:c?m?js))/i.exec(raw);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/agent_providers.mjs#L283"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/agent_providers.mjs",
+        "line": 346,
+        "snippet": "const out = execFileSync('git', ['diff', 'HEAD'], { cwd, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 4000, windowsHide: true, }).trim();",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/agent_providers.mjs#L346"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/agent_providers.mjs",
+        "line": 523,
+        "snippet": "const child = spawn(command, spawnArgs, { cwd: chosenCwd, env: childEnv, stdio: ['pipe', 'pipe', 'pipe'], shell, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/agent_providers.mjs#L523"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/agent_providers.mjs",
+        "line": 1110,
+        "snippet": "const c = spawn(exe, codexArgs, { cwd: chosenCwd, env: childEnv, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/agent_providers.mjs#L1110"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/app.js",
+        "line": 276,
+        "snippet": "const m = /b\\/(.+)$/.exec(l);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/app.js#L276"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/app.js",
+        "line": 438,
+        "snippet": "const hd = /^(#{1,4})\\s+(.+)$/.exec(t);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/app.js#L438"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/app.js",
+        "line": 447,
+        "snippet": "const task = /^[-*•]\\s+\\[([ xX])\\]\\s+(.+)$/.exec(t);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/app.js#L447"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/app.js",
+        "line": 457,
+        "snippet": "const ul = /^[-*•]\\s+(.+)$/.exec(t);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/app.js#L457"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/app.js",
+        "line": 466,
+        "snippet": "const ol = /^\\d+\\.\\s+(.+)$/.exec(t);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/app.js#L466"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 453,
+        "snippet": "cdb.exec('BEGIN IMMEDIATE');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L453"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 513,
+        "snippet": "cdb.exec('COMMIT');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L513"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 523,
+        "snippet": "try { cdb.exec('ROLLBACK'); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L523"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 631,
+        "snippet": "const m = /^turn_(\\d+)_/.exec(d.name);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L631"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 1075,
+        "snippet": "const loc = execFileSync( 'powershell.exe', ['-NoProfile', '-Command', \"(Get-AppxPackage -Name 'OpenAI.Codex' | Sort-Object Version -Descending | Select-Object -First 1).InstallLoc",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L1075"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 1149,
+        "snippet": "const out = execFileSync(cmd, ['codex'], { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L1149"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 1213,
+        "snippet": "proc = spawn(spawnCmd, spawnArgs, { ...(cwd ? { cwd } : {}), env: childEnv, stdio, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L1213"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2282,
+        "snippet": "const match = /^\\s*model\\s*=\\s*['\"]([^'\"]+)['\"]/m.exec(topSection);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2282"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2407,
+        "snippet": "while ((m = re.exec(toml)) !== null) {",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2407"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3520,
+        "snippet": "const status = execFileSync('git', ['status', '--short'], { cwd, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true, }).trim();",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3520"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3526,
+        "snippet": "const diff = execFileSync('git', ['diff', 'HEAD'], { cwd, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true, }).trim();",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3526"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3672,
+        "snippet": "const out = execFileSync(cmd, ['agy'], { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3672"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3816,
+        "snippet": "const child = spawn(agyExe, args, { cwd: chosenCwd, env: childEnv, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3816"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 79,
+        "snippet": "const loc = execFileSync( 'powershell.exe', ['-NoProfile', '-Command', \"(Get-AppxPackage -Name 'OpenAI.Codex' | Select-Object -First 1).InstallLocation\"], { encoding: 'utf-8', stdi",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L79"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 528,
+        "snippet": "execFile('explorer.exe', [deepUrl], { windowsHide: true }, () => {});",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L528"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 530,
+        "snippet": "execFile('open', [deepUrl], () => {});",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L530"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 532,
+        "snippet": "execFile('xdg-open', [deepUrl], () => {});",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L532"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 560,
+        "snippet": "execFile(exe, ['agentapi', ...args], { encoding: 'utf-8', env, timeout: 25000, windowsHide: true }, (err, stdout, stderr) => { if (err) { rejectOut(new Error(stderr || err.message)",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L560"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 667,
+        "snippet": "const uuidMatch = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.exec(rawCreatedStr);",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L667"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 89,
+        "snippet": "writeFileSync(codexAgentsMd, updated, 'utf-8');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/scripts/install.mjs#L89"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 97,
+        "snippet": "writeFileSync(codexAgentsMd, `${prefix}${ruleBlock}\\n`, 'utf-8');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/scripts/install.mjs#L97"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/uninstall.mjs",
+        "line": 21,
+        "snippet": "rmSync(sp, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/scripts/uninstall.mjs#L21"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/uninstall.mjs",
+        "line": 36,
+        "snippet": "writeFileSync(codexAgentsMd, cleaned ? `${cleaned}\\n` : '', 'utf-8');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/scripts/uninstall.mjs#L36"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 628,
+        "snippet": "rmSync(sub, { force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L628"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 634,
+        "snippet": "rmSync(sub, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L634"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 923,
+        "snippet": "writeFileSync(lockPath, ownerToken, { encoding: 'utf-8', flag: 'wx', flush: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L923"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 935,
+        "snippet": "rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L935"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 940,
+        "snippet": "rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L940"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 959,
+        "snippet": "rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L959"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 973,
+        "snippet": "writeFileSync(tmpPath, text, { encoding: 'utf-8', flush: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L973"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 979,
+        "snippet": "try { writeFileSync(`${filePath}.bak`, text, 'utf-8'); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L979"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 990,
+        "snippet": "try { rmSync(tmpPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L990"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 1651,
+        "snippet": "appendFileSync(msgPath, serialized, 'utf-8');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L1651"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 1857,
+        "snippet": "rmSync(dir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L1857"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2209,
+        "snippet": "try { rmSync(join(dir, 'messages.jsonl'), { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2209"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2535,
+        "snippet": "writeFileSync(fullPath, buf, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2535"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2551,
+        "snippet": "try { rmSync(target, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2551"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2617,
+        "snippet": "writeFileSync(candidate, markdown, { encoding: 'utf-8', flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2617"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 2636,
+        "snippet": "try { rmSync(join(dir, 'messages.jsonl'), { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L2636"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3691,
+        "snippet": "try { rmSync(join(dir, 'messages.jsonl'), { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3691"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3785,
+        "snippet": "writeFileSync(tempPromptFile, rawText, { encoding: 'utf-8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3785"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/codex_core.mjs",
+        "line": 3932,
+        "snippet": "try { rmSync(spillDir, { recursive: true, force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/codex_core.mjs#L3932"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 144,
+        "snippet": "try { writeFileSync(join(cacheDir, `openai-sans-${key}.woff2`), buf); } catch {}",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L144"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_room/main.mjs",
+        "line": 655,
+        "snippet": "writeFileSync(transcriptPath, mdExport.markdown, 'utf-8');",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/sidecars/codex_room/main.mjs#L655"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 6,
+        "snippet": "* 1. Syncs plugin into `~/.gemini/config/plugins/codex-bridge` (if cloned elsewhere).",
+        "githubBlobUrl": "https://github.com/ZJUSCODE/antigravity-agent-bridge/blob/2f2679e50d06e511f1663d180fb8e4565d8a4f12/scripts/install.mjs#L6"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "5.1.1",
+      "sha": "2f2679e50d06e511f1663d180fb8e4565d8a4f12",
+      "scannedAt": "2026-11-27T18:19:20.067Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

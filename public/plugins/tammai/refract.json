@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "id": "tammai/refract",
+  "sha": "65771e4bdf62390b1abc858f4fab34fb90986f41",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:33.656Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "refract",
+    "displayName": "Refract",
+    "version": "0.2.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "audit-ui-ontology",
+        "slashCommand": "/audit-ui-ontology",
+        "description": "Audit, refine, or diff extracted UI ontologies and design token bundles, check WCAG contrast and structural invariants, or synthesize agent-ready DESIGN.md and coding-agent UI rules from referent captures. Use when the user wants to inspect",
+        "disableModelInvocation": false,
+        "file": "skills/audit-ui-ontology/SKILL.md"
+      },
+      {
+        "name": "extract-referent",
+        "slashCommand": "/extract-referent",
+        "description": "Extract measured W3C design tokens (DTCG JSON), CSS custom properties, Tailwind v4/v3 theme configs, structured UI ontologies (YAML/JSON), and an agent-ready DESIGN.md specification from a live website referent URL. Use when the user wants ",
+        "disableModelInvocation": false,
+        "file": "skills/extract-referent/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "referent-analyst",
+        "description": "Specialist Design Systems and UI Ontology Architect. Delegate to this agent to extract measured design tokens (W3C DTCG, CSS variables, Tailwind themes), structured UI ontologies (YAML/JSON), and agent-ready DESIGN.md specifications from li",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/referent-analyst.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/audit-ui-ontology",
+      "/extract-referent"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "referent-analyst"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.svg\" alt=\"Refract logo\" width=\"96\" height=\"96\" />\n  <h1>Refract</h1>\n  <p>\n    <strong>Reverse-engineer any live website into W3C Design Tokens, CSS variables, Tailwind v4/v3 themes, structured UI ontologies, and agent-ready <code>DESIGN.md</code> specs.</strong>\n  </p>\n  <p>\n    Multi-provider plugin for <strong>Claude Code</strong>, <strong>Antigravity</strong>, <strong>Codex</strong>, and <strong>Cursor</strong> &mdash; plus a zero-dependency Node.js CLI.\n  </p>\n\n  <p>\n    <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-blue.svg\" alt=\"MIT License\" height=\"20\" /></a>\n    <a href=\"#prerequisites\"><img src=\"https://img.shields.io/badge/node-%3E%3D18-339933.svg\" alt=\"Node.js >= 18\" height=\"20\" /></a>\n    <a href=\"#prerequisites\"><img src=\"https://img.shields.io/badge/dependencies-0%20npm-10B981.svg\" alt=\"Zero npm dependencies\" height=\"20\" /></a>\n    <a href=\"#claude-code\"><img src=\"https://img.shields.io/badge/Claude%20Code-supported-D97706.svg\" alt=\"Claude Code supported\" height=\"20\" /></a>\n    <a href=\"#antigravity\"><img src=\"https://img.shields.io/badge/Antigravity-supported-6366F1.svg\" alt=\"Antigravity supported\" height=\"20\" /></a>\n    <a href=\"#codex\"><img src=\"https://img.shields.io/badge/Codex-supported-10A37F.svg\" alt=\"Codex supported\" height=\"20\" /></a>\n    <a href=\"#cursor\"><img src=\"https://img.shields.io/badge/Cursor-supported-111827.svg\" alt=\"Cursor supported\" height=\"20\" /></a>\n    <a href=\"docs/output-formats.md#1-tokensdtcgjson-w3c-dtcg\"><img src=\"https://img.shields.io/badge/W3C-DTCG-06B6D4.svg\" alt=\"W3C DTCG\" height=\"20\" /></a>\n  </p>\n</div>\n\n---\n\n## Why Refract?\n\nAsking an AI agent to \"copy this website's style\" from a single screenshot hallucinates hex codes, misses dark-mode overrides, guesses hover/focus transitions, and blurs visual tokens with layout structure. **Refract** measures first and refines second:\n\n| Capability | Screenshot-Only Prompting | **Refract** |\n| --- | --- | --- |\n| **Color & Contrast** | Approximated hex values | Exact CSS variables + computed colors + WCAG 2.1 contrast pairing |\n| **Themes & Viewports** | Single static frame | Multi-state matrix (`desktop-light`, `desktop-dark`, `mobile-light`) |\n| **Interactive States** | Ignored or invented | Live Playwright `:hover` & `:focus-visible` style delta probing |\n| **UI Ontology** | Unstructured prose | Formal YAML/JSON regions, component slots, composition & invariants |\n| **Output Portability** | One-off CSS | W3C DTCG JSON, CSS vars, Tailwind v4 `@theme`, Tailwind v3 config, `DESIGN.md` |\n\n## How It Works\n\n```mermaid\nflowchart LR\n  URL[\"Live Referent URL\"] --> CAP[\"capture-referent.mjs (playwright-cli)\"]\n  CAP --> RAW[\"raw/capture.json + *.png + *.snapshot.yaml\"]\n  RAW --> COMPILE[\"compile-artifacts.mjs\"]\n  COMPILE --> OUT[\"tokens.dtcg.json · tokens.css · tailwind · ui-ontology · DESIGN.md\"]\n  OUT --> VAL[\"validate-artifacts.mjs\"]\n  VAL --> AGENT[\"Agent Visual & Semantic Refinement\"]\n```\n\n---\n\n## Prerequisites\n\n- **Node.js `>= 18`** (uses built-in `node:*` APIs only — **zero external npm packages**)\n- **`playwright-cli`** available on `PATH` (or via `PLAYWRIGHT_CLI_BIN`) with Chromium installed\n\n---\n\n## Quick Start\n\n### Claude Code\n\nRun directly with a local checkout:\n\n```bash\nclaude --plugin-dir /path/to/refract\n```\n\nOr install from a GitHub marketplace (on Claude Code 2.1.275+):\n\n```text\n/plugin install refract --marketplace tammai/refract\n```\n\nValidate strictly:\n\n```bash\nclaude plugin validate --strict /path/to/refract\n```\n\nInvoke inside Claude Code:\n- `/refract:extract-referent https://example.com --out ./design-referent`\n- `/refract:audit-ui-ontology ./design-referent`\n- Delegate to the **`referent-analyst`** subagent\n\n### Antigravity\n\nValidate and install locally:\n\n```bash\nagy plugin validate --strict /path/to/refract\nagy plugin install /path/to/refract\n```\n\nInvoke inside Antigravity:\n- `/extract-referent` or `/audit-ui-ontology`\n- `agy --agent referent-analyst`\n\n### Codex\n\nInstall from a Codex marketplace repository (using `.codex-plugin/plugin.json`) or install skills locally into `~/.agents/skills/`:\n\n```bash\nmkdir -p ~/.agents/skills\nln -s /path/to/refract/skills/extract-referent ~/.agents/skills/extract-referent\nln -s /path/to/refract/skills/audit-ui-ontology ~/.agents/skills/audit-ui-ontology\n```\n\nInvoke inside Codex:\n- `$extract-referent https://example.com --out ./design-referent`\n- `$audit-ui-ontology ./design-referent`\n\n### Cursor\n\nInstall as a Cursor plugin (configured via `.cursor-plugin/plugin.json`), or copy `.cursor/rules/refract-guardrails.mdc` and `skills/` into a project:\n\n- Invoke skills in Agent chat via `/extract-referent` or `/audit-ui-ontology`\n- Delegate to the bundled **`referent-analyst`** agent\n- Guardrails in `.cursor/rules/refract-guardrails.mdc` apply automatically when working with referent extractions or `DESIGN.md`\n\n### Standalone CLI\n\nRun the full capture + compile + validation pipeline from any terminal:\n\n```bash\nnode skills/extract-referent/scripts/capture-referent.mjs https://example.com \\\n  --out ./referent-output \\\n  --compile\n```\n\n---\n\n## Output Artifacts\n\nEvery run produces raw multi-state captures in `raw/` plus **7 validated artifacts** (see [Output Formats](docs/output-formats.md) for full schemas):\n\n| Artifact | Purpose |\n| --- | --- |\n| `tokens.dtcg.json` | Three-tier (`primitive` &rarr; `semantic` &rarr; `component` + `modes.dark`) W3C DTCG JSON |\n| `tokens.css` | CSS custom properties with `:root`, `prefers-color-scheme: dark`, and `.dark` |\n| `tailwind.theme.css` | Tailwind CSS v4 `@theme` configuration |\n| `tailwind.config.mjs` | Tailwind CSS v3 `theme.extend` ESM configuration |\n| `ui-ontology.yaml` | Human-readable regions, surfaces, component slots, state deltas & invariants |\n| `ui-ontology.json` | Machine-readable JSON mirror of the UI ontology |\n| `DESIGN.md` | Agent-ready design specification with concrete DO / DON'T reproduction rules |\n\n---\n\n## Documentation & Guides\n\n- [**Getting Started**](docs/getting-started.md) — Setup, CLI flags, and workflows for Claude Code, Antigravity, Codex, Cursor, and standalone CLI\n- [**Architecture**](docs/architecture.md) — Multi-state capture matrix, color clustering, WCAG pairing, and multi-provider layout\n- [**Output Formats**](docs/output-formats.md) — Detailed reference and integration snippets for all 7 output artifacts\n- [**Troubleshooting**](docs/troubleshooting.md) — Resolving `PATH`, SPA hydration delays, CORS stylesheets, and alias checks\n- [**GitHub SEO & Launch Guide**](docs/github-seo.md) — Repository topics, About description, `social-preview.svg`, and marketplace checklist\n- [**Wiki**](wiki/Home.md) — Complete multi-page knowledge base (also publishable to [GitHub Wiki](https://github.com/tammai/refract/wiki))\n\n---\n\n## FAQ\n\n<details>\n<summary><strong>Does Refract support Tailwind CSS v4 and v3?</strong></summary>\n\nYes. Every extraction emits both `tailwind.theme.css` (`@theme { ... }` for Tailwind v4) and `tailwind.config.mjs` (`theme.extend` ESM config for Tailwind v3).\n\n</details>\n\n<details>\n<summary><strong>Does it work on React, Next.js, or client-rendered SPAs?</strong></summary>\n\nYes. `capture-referent.mjs` drives a real headless Chromium browser via `playwright-cli`, waits for `document.fonts.ready` plus a configurable `--wait` delay, and reads live computed styles and DOM/ARIA trees after hydration.\n\n</details>\n\n<details>\n<summary><strong>How are light and dark themes captured?</strong></summary>\n\nBy default, Refract captures `desktop-light` (`1440×900`, `light`), `desktop-dark` (`1440×900`, `dark`), and `mobile-light` (`390×844`, `light`). Measured dark-mode differences are emitted automatically under `modes.dark` in `tokens.dtcg.json` and `@media (prefers-color-scheme: dark)` / `.dark` in `tokens.css`.\n\n</details>\n\n<details>\n<summary><strong>Does Refract check WCAG contrast and accessibility?</strong></summary>\n\nYes. Refract alpha-composites the effective opaque background behind sampled text elements to compute WCAG 2.1 contrast ratios, audits heading level order (`h1`&ndash;`h6`), probes `:focus-visible` outlines, and counts mobile interactive touch targets under `44×44px`.\n\n</details>\n\n---\n\n## Contributing, Security & License\n\n- Read [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines and CI checks.\n- Read [SECURITY.md](SECURITY.md) for safe capture practices and vulnerability reporting.\n- See [CHANGELOG.md](CHANGELOG.md) for release history.\n- Released under the [MIT License](LICENSE).\n",
+  "latestReleaseNotes": "Multi-provider release expanding **Refract** to **OpenAI Codex** and **Cursor** alongside **Claude Code** and **Antigravity**, with enriched guides and a full GitHub Wiki.\n\n### Highlights\n- **OpenAI Codex support**: Added `.codex-plugin/plugin.json` mapping `skills/` with marketplace `interface` metadata, `$extract-referent` / `$audit-ui-ontology` invocation docs, and local `~/.agents/skills/` setup instructions\n- **Cursor support**: Added `.cursor-plugin/plugin.json` and `.cursor/rules/refract-guardrails.mdc` (`alwaysApply: false` intelligent rule) wired cleanly alongside `skills/` and `agents/` without conflicting with Antigravity's `rules/AGENTS.md`\n- **Multi-provider CI validation**: Extended `.github/workflows/validate.yml` to verify all 4 provider manifests, referenced assets/directories, Codex field constraints, and Cursor `.mdc` frontmatter\n- **Docs, Guides & GitHub Wiki**: Added Provider Support Matrix, component discovery isolation guide, `DESIGN.md` wiring instructions, Codex/Cursor troubleshooting, and a 9-page [GitHub Wiki](https://github.com/tammai/refract/wiki)\n- **README badge rendering fix**: Wrapped all shields.io badges with section links and explicit `height=\"20\"` for consistent inline rendering across local Markdown viewers and GitHub\n\n**Full Changelog**: https://github.com/tammai/refract/compare/v0.1.0...v0.2.0",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 138,
+        "snippet": "const which = spawnSync('which', ['playwright-cli'], { env, encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L138"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 149,
+        "snippet": "const res = spawnSync(bin, fullArgs, { env, cwd: cwd || process.cwd(), encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, });",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L149"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 388,
+        "snippet": "const comp = spawnSync( process.execPath, [compileScript, capturePath, '--out', opts.out], { env, stdio: 'inherit' } );",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L388"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 397,
+        "snippet": "const val = spawnSync(process.execPath, [validateScript, opts.out], { env, stdio: 'inherit', });",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L397"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/extract-referent/scripts/validate-artifacts.mjs",
+        "line": 154,
+        "snippet": "const check = spawnSync(process.execPath, ['--check', mjsPath], { encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/validate-artifacts.mjs#L154"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 344,
+        "snippet": "fs.writeFileSync( scriptPath, buildRunCodeScript({ waitMs: opts.wait, runHoverProbe: runHover }), 'utf8' );",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L344"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 377,
+        "snippet": "fs.rmSync(tmpDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L377"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/capture-referent.mjs",
+        "line": 381,
+        "snippet": "fs.writeFileSync(capturePath, JSON.stringify(captureBundle, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/capture-referent.mjs#L381"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1500,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'tokens.dtcg.json'), JSON.stringify(compiled.dtcg, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1500"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1501,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'tokens.css'), tokensCss, 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1501"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1502,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'tailwind.theme.css'), tailwindThemeCss, 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1502"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1503,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'tailwind.config.mjs'), tailwindConfigMjs, 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1503"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1504,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'ui-ontology.json'), JSON.stringify(ontology, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1504"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1505,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'ui-ontology.yaml'), ontologyYaml, 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1505"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/extract-referent/scripts/compile-artifacts.mjs",
+        "line": 1506,
+        "snippet": "fs.writeFileSync(path.join(outDir, 'DESIGN.md'), designMd, 'utf8');",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/scripts/compile-artifacts.mjs#L1506"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/extract-referent/SKILL.md",
+        "line": 39,
+        "snippet": "- `--out <dir>`: Output directory (defaults to `./referent-extract/<host>-<timestamp>`)",
+        "githubBlobUrl": "https://github.com/tammai/refract/blob/65771e4bdf62390b1abc858f4fab34fb90986f41/skills/extract-referent/SKILL.md#L39"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.0",
+      "sha": "65771e4bdf62390b1abc858f4fab34fb90986f41",
+      "scannedAt": "2026-11-27T18:17:33.656Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

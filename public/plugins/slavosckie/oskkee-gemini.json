@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "slavosckie/oskkee-gemini",
+  "sha": "0ac0a7b4a6042f7a019a4b95dcb8c27c4c29d508",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:30.322Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "oskkee",
+    "displayName": "Oskkee",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "oskkee",
+        "runtimeName": "oskkee_oskkee",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://oskkee.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "vet-a-creator",
+        "slashCommand": "/vet-a-creator",
+        "description": "Price and vet an Indian creator before a paid deal. Use estimate_rate to see what a creator of a given size charges in INR, and check_creator to read the authenticity signals on their audience. Use when someone asks what a creator charges, ",
+        "disableModelInvocation": false,
+        "file": "skills/vet-a-creator/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/vet-a-creator"
+    ],
+    "mcpServerNames": [
+      "oskkee_oskkee"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Oskkee for Gemini and Antigravity\n\nOskkee prices and vets Indian creators. This folder connects Oskkee's free MCP\nserver, `https://oskkee.com/mcp`, to Google's agent tools. It needs no\naccount, no key and no sign-in.\n\n| Tool | What it does |\n|---|---|\n| `estimate_rate` | What an Instagram or YouTube creator of a given size charges, in INR, per deliverable. It computes only from the numbers given. |\n| `check_creator` | Authenticity signals on a creator's audience, from a handle or link. Each fresh check saves a report page on oskkee.com (kept out of search engines) and counts toward a daily limit. |\n\nNeither tool returns contact details, sends a message or contacts anyone.\n\n## Install\n\n**Gemini CLI**\n\n```\ngemini extensions install https://github.com/slavosckie/oskkee-gemini\n```\n\n**Antigravity**: from the plugin Marketplace, once it is listed. Until then,\nload this folder as a local plugin.\n\nTry: \"What should a 50k-follower Instagram creator charge for a Reel?\"\n\n## What is in this folder\n\n| File | Read by |\n|---|---|\n| `plugin.json` | Antigravity: the plugin manifest (schema `antigravity.google/schemas/v1/plugin.json`) |\n| `mcp_config.json` | Antigravity: the server, as `serverUrl` (Streamable HTTP) |\n| `skills/vet-a-creator/SKILL.md` | Antigravity: when and how to use the two tools |\n| `assets/logo.png` | Antigravity: the icon, 512×512 with a transparent margin of about 10% |\n| `gemini-extension.json` | Gemini CLI: the extension manifest, the server as `httpUrl` |\n| `GEMINI.md` | Gemini CLI: context loaded with the extension |\n\nSupport: https://oskkee.com/contact · Privacy: https://oskkee.com/privacy ·\nTerms: https://oskkee.com/terms\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "0ac0a7b4a6042f7a019a4b95dcb8c27c4c29d508",
+      "scannedAt": "2026-11-27T18:15:30.322Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

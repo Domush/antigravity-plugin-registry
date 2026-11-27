@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "id": "jinxingtaire/antigravity-slash-fork",
+  "sha": "d1ae72ed6e2a256e3d3b8be9929adb5b22ff72e2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:28.890Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "conversation-fork",
+    "displayName": "会话 Fork 分支",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "fork",
+        "runtimeName": "conversation-fork_fork",
+        "transport": "stdio",
+        "command": "bash",
+        "args": [
+          "${PLUGIN_ROOT}/bin/fork-server",
+          "--data_dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "fork",
+        "slashCommand": "/fork",
+        "description": "将当前对话从最新轮次或指定历史轮次分裂（Fork）为一个新的独立会话，并自动继承上下文与已修改文件清单（可选新建 Git Worktree）。当用户输入 /fork 或要求“从这里 fork / 分裂新会话 / 从第 N 轮分支”时触发。",
+        "disableModelInvocation": false,
+        "file": "skills/fork/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/fork"
+    ],
+    "mcpServerNames": [
+      "conversation-fork_fork"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Slash Fork (`antigravity-slash-fork`)\n\n把 **Antigravity CLI（`agy`）的 `/fork` 会话分支体验**带到 **Antigravity 桌面端 / IDE** 的零依赖插件：在对话中直接输入 **`/fork`**，即可从最新轮次或任意历史轮次分裂出一条独立新会话，并自动继承上下文与已修改文件清单（可选同时创建隔离的 Git Worktree）。\n\n---\n\n## 一、为什么做这个插件？\n\nAntigravity CLI（`agy`）内置了 `/fork` 斜杠指令，但在桌面端 / IDE 对话框里没有直接可用的 `/fork` 命令。本插件通过 **Skill（`/fork` 斜杠指令）+ 零依赖本地 MCP Server** 补齐了这一工作流，且支持更细粒度的分支控制：\n\n1. **一键从当前进度分叉**：输入 `/fork` 即可开启新会话，不污染原对话主线。\n2. **回溯到任意历史轮次分叉**：支持 `/fork 从第 2 轮开始，改用方案 B`，只继承第 `1 ~ N` 轮上下文。\n3. **直达新分支方向**：支持 `/fork <新方向>`，在新会话首条上下文里直接注入分支目标。\n4. **可选 Git Worktree 代码隔离**：支持 `/fork --worktree`，自动为新分支创建独立的 Git worktree 与分支，避免并行实验互相覆盖文件。\n5. **三种上下文继承模式**：`hybrid`（默认，近期轮次保留完整原文 + 早期精简）、`full`（尽量完整原文）、`summary`（精简交接摘要）。\n\n---\n\n## 二、工作原理\n\n由于 Antigravity 插件机制目前不提供直接克隆底层原始轨迹（Trajectory）的接口，本插件采用**本地日志解析 + 上下文重构 + `ConversationService/CreateConversation`** 实现：\n\n```mermaid\nflowchart LR\n  User[\"用户输入 /fork ...\"] -->|\"激活 Skill\"| Skill[\"skills/fork/SKILL.md\"]\n  Skill -->|\"MCP tools/call: fork_conversation\"| Server[\"零依赖 Node.js MCP Server<br/>(server/index.mjs)\"]\n  Server -->|\"解析 transcript.jsonl + 产物清单\"| Transcript[\"server/transcript.mjs\"]\n  Transcript -->|\"组装分叉上下文 Prompt\"| Server\n  Server -->|\"CreateConversation API<br/>(或回退到 Agent curl 调用)\"| LS[\"Antigravity Language Server\"]\n  LS -->|\"生成独立新会话\"| NewChat[\"新分支会话（继承上下文）\"]\n```\n\n1. **零外部依赖**：仅依赖系统内置的 Node.js（v18+），无需 `npm install`。\n2. **安全读取会话日志**：MCP Server 运行在独立进程中，直接读取 `~/.gemini/antigravity/brain/<conversationId>/.system_generated/logs/transcript.jsonl` 与产物列表，按 `USER_INPUT` / `PLANNER_RESPONSE` 还原每一轮对话及涉及文件路径。\n3. **自动创建新会话**：优先由 MCP Server 直连 `ConversationService/CreateConversation`；若进程环境未注入本地连接信息，则返回完整上下文载荷由 Skill 通过本地 `ConversationService` 接口完成创建。\n\n---\n\n## 三、安装与使用\n\n### 前置要求\n- **Antigravity Desktop App / IDE**\n- **Node.js**（建议 v18+）\n\n### 一键安装\n\n将本仓库克隆到 Antigravity 的全局插件目录：\n\n```bash\ngit clone https://github.com/jinxingtaire/antigravity-slash-fork.git ~/.gemini/config/plugins/antigravity-slash-fork\nchmod +x ~/.gemini/config/plugins/antigravity-slash-fork/bin/fork-server\n```\n\n安装后 Antigravity 会自动发现并启用插件（无需手动编辑 `config.json`）。\n\n### 使用示例\n\n在任意对话输入框中键入 `/fork`：\n\n```text\n/fork\n/fork 改用 Go 重写并发模块\n/fork 从第 3 轮开始，换成 Redis 缓存方案\n/fork --worktree 尝试重构路由层\n/fork --full 保留完整上下文继续排查\n```\n\n---\n\n## 四、目录结构\n\n```text\nantigravity-slash-fork/\n├── plugin.json               # 插件清单（名称、描述、图标、推荐提示词）\n├── mcp_config.json           # MCP 服务配置（${PLUGIN_ROOT} / ${PLUGIN_DATA}）\n├── bin/fork-server           # 启动脚本\n├── server/\n│   ├── index.mjs             # 零依赖 Node.js MCP Server\n│   └── transcript.mjs        # transcript.jsonl 解析与上下文重构引擎\n├── skills/\n│   └── fork/SKILL.md         # /fork 斜杠指令定义\n├── assets/logo.svg           # 插件图标\n├── .gitignore\n└── LICENSE\n```\n\n---\n\n## 五、License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 64,
+        "snippet": "fs.writeFileSync(STATE_FILE, JSON.stringify(nextState, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/jinxingtaire/antigravity-slash-fork/blob/d1ae72ed6e2a256e3d3b8be9929adb5b22ff72e2/server/index.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/index.mjs",
+        "line": 107,
+        "snippet": "const res = await fetch(`http://${address}/product.v1.ConversationService/${method}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Connect-Protocol-Version': '",
+        "githubBlobUrl": "https://github.com/jinxingtaire/antigravity-slash-fork/blob/d1ae72ed6e2a256e3d3b8be9929adb5b22ff72e2/server/index.mjs#L107"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "d1ae72ed6e2a256e3d3b8be9929adb5b22ff72e2",
+      "scannedAt": "2026-11-27T18:16:28.890Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound"
+      ]
+    }
+  ]
+}

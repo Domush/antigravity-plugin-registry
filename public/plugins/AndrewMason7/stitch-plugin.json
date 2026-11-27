@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 1,
+  "id": "AndrewMason7/stitch-plugin",
+  "sha": "7225f6c034bf15b871c8e319f7956220764554b2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:46.586Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "stitch",
+    "displayName": "Google Stitch",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "stitch",
+        "runtimeName": "stitch_stitch",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://stitch.googleapis.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "stitch-code-to-design",
+        "slashCommand": "/stitch-code-to-design",
+        "description": "Convert frontend code (Vite, React, Angular, Vue, etc.) to a Stitch Design by chaining static HTML extraction, design system extraction, and file upload. **ALWAYS** use this skill when the user's intent is to move existing web apps or React",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-code-to-design/SKILL.md"
+      },
+      {
+        "name": "stitch-design-md",
+        "slashCommand": "/stitch-design-md",
+        "description": "Analyze Stitch projects and synthesize a semantic design system into DESIGN.md files",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-design-md/SKILL.md"
+      },
+      {
+        "name": "stitch-enhance-prompt",
+        "slashCommand": "/stitch-enhance-prompt",
+        "description": "Transforms vague UI ideas into polished, Stitch-optimized prompts. Enhances specificity, adds UI/UX keywords, injects design system context, and structures output for better generation results.",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-enhance-prompt/SKILL.md"
+      },
+      {
+        "name": "stitch-extract-design-md",
+        "slashCommand": "/stitch-extract-design-md",
+        "description": "Extract a comprehensive design system (DESIGN.md) directly from frontend source code — React, Vue, Svelte, Angular, plain HTML/CSS, or any web framework. Analyzes component files, stylesheets, Tailwind configs, theme definitions, and design",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-extract-design-md/SKILL.md"
+      },
+      {
+        "name": "stitch-extract-static-html",
+        "slashCommand": "/stitch-extract-static-html",
+        "description": "Extract self-contained static HTML from a built web application or React components by inlining CSS and images. Use this skill whenever you need to capture a specific UI state, share a static version of a page, or prepare assets for Stitch ",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-extract-static-html/SKILL.md"
+      },
+      {
+        "name": "stitch-generate-design",
+        "slashCommand": "/stitch-generate-design",
+        "description": "Generate new screens from text prompts or images, edit existing screens with prompts and design system tokens, and generate design variants using Stitch MCP. Includes prompt enhancement pipeline, design mappings, professional UI/UX terminol",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-generate-design/SKILL.md"
+      },
+      {
+        "name": "stitch-loop",
+        "slashCommand": "/stitch-loop",
+        "description": "Teaches agents to iteratively build websites using Stitch with an autonomous baton-passing loop pattern",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-loop/SKILL.md"
+      },
+      {
+        "name": "stitch-manage-design-system",
+        "slashCommand": "/stitch-manage-design-system",
+        "description": "Manage design systems in Stitch using MCP tools. Includes retrieval of assets, creating/updating design systems in Stitch, and applying them to screens.",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-manage-design-system/SKILL.md"
+      },
+      {
+        "name": "stitch-react-components",
+        "slashCommand": "/stitch-react-components",
+        "description": "Converts Stitch designs into modular Vite and React components, or syncs/updates existing React components to align with the latest Stitch designs, using system-level networking and AST-based validation.",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-react-components/SKILL.md"
+      },
+      {
+        "name": "stitch-react-native",
+        "slashCommand": "/stitch-react-native",
+        "description": "Convert Stitch HTML designs to React Native components, or syncs/updates existing native components to align with the latest Stitch designs, using StyleSheet.",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-react-native/SKILL.md"
+      },
+      {
+        "name": "stitch-react-vite-dashboard",
+        "slashCommand": "/stitch-react-vite-dashboard",
+        "description": "Convert Stitch designs into production React + Vite dashboards with TanStack Query, accessible tokens from DESIGN.md, and Web3-ready patterns (ethers/viem).",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-react-vite-dashboard/SKILL.md"
+      },
+      {
+        "name": "stitch-remotion",
+        "slashCommand": "/stitch-remotion",
+        "description": "Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-remotion/SKILL.md"
+      },
+      {
+        "name": "stitch-shadcn-ui",
+        "slashCommand": "/stitch-shadcn-ui",
+        "description": "Expert guidance for integrating and building applications with shadcn/ui components, including component discovery, installation, customization, and best practices.",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-shadcn-ui/SKILL.md"
+      },
+      {
+        "name": "stitch-site-md",
+        "slashCommand": "/stitch-site-md",
+        "description": "Analyze a project description or site requirements and synthesize a project constitution into SITE.md for the Stitch Build Loop",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-site-md/SKILL.md"
+      },
+      {
+        "name": "stitch-taste-design",
+        "slashCommand": "/stitch-taste-design",
+        "description": "Semantic Design System Skill for Google Stitch. Generates agent-friendly DESIGN.md files that enforce premium, anti-generic UI standards — strict typography, calibrated color, asymmetric layouts, perpetual micro-motion, and hardware-acceler",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-taste-design/SKILL.md"
+      },
+      {
+        "name": "stitch-upload-to-stitch",
+        "slashCommand": "/stitch-upload-to-stitch",
+        "description": "Upload local assets (images, mockups, extracted HTML, design markdown) to a Stitch project. ALWAYS use this skill when you need to upload visual assets, HTML pages, or design docs to Stitch, particularly when direct MCP tool calls fail or t",
+        "disableModelInvocation": false,
+        "file": "skills/stitch-upload-to-stitch/SKILL.md"
+      },
+      {
+        "name": "stitch",
+        "slashCommand": "/stitch",
+        "description": "Creates a new Google Stitch project, initializes its design system foundation, and bootstraps initial UI mockups. Triggered by /stitch or user requests to start a new Stitch project.",
+        "disableModelInvocation": false,
+        "file": "skills/stitch/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "stitch-designer",
+        "description": "Expert AI UI/UX Designer and Frontend Prototyper specializing in Google Stitch, design systems (DESIGN.md), and modern React/Vite/Tailwind component generation.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/stitch-designer.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/stitch",
+      "/stitch-code-to-design",
+      "/stitch-design-md",
+      "/stitch-enhance-prompt",
+      "/stitch-extract-design-md",
+      "/stitch-extract-static-html",
+      "/stitch-generate-design",
+      "/stitch-loop",
+      "/stitch-manage-design-system",
+      "/stitch-react-components",
+      "/stitch-react-native",
+      "/stitch-react-vite-dashboard",
+      "/stitch-remotion",
+      "/stitch-shadcn-ui",
+      "/stitch-site-md",
+      "/stitch-taste-design",
+      "/stitch-upload-to-stitch"
+    ],
+    "mcpServerNames": [
+      "stitch_stitch"
+    ],
+    "agentNames": [
+      "stitch-designer"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [
+      {
+        "name": "STITCH_API_KEY",
+        "title": "Google Stitch API Key",
+        "required": true,
+        "description": "Referenced by MCP server \"stitch\".",
+        "link": "https://stitch.withgoogle.com"
+      }
+    ],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Google Stitch\n\nAI-assisted cloud UI/UX prototyping, 18 verified MCP tools, 17 standardized design-to-code skills, and the `@google/design.md` token engine.\n\n[![Antigravity](https://img.shields.io/badge/Antigravity-Plugin-4285F4?logo=google&logoColor=white)](https://antigravity.google)\n[![Google Stitch](https://img.shields.io/badge/Google-Stitch-EA4335?logo=google&logoColor=white)](https://stitch.withgoogle.com)\n[![Status](https://img.shields.io/badge/Status-Beta-34A853)](#overview)\n[![MCP Tools](https://img.shields.io/badge/MCP%20Tools-18%20Verified-FBBC05)](#mcp-server-tools)\n[![Skills](https://img.shields.io/badge/Skills-17%20Standardized-4285F4)](#bundled-skills)\n[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)\n\n> [!NOTE]\n> **Community Disclaimer:** This project is an independent community adaptation based on open-source Stitch skills originally developed by Google Labs. It is not an officially supported Google product, and is not affiliated with, sponsored by, or endorsed by Google LLC.\n\n---\n\n## Table of contents\n\n- [Overview](#overview)\n- [Key features](#key-features)\n- [Directory structure](#directory-structure)\n- [Prerequisites](#prerequisites)\n- [Installation](#installation)\n- [Quickstart](#quickstart)\n- [Configuration and security](#configuration-and-security)\n- [MCP server tools](#mcp-server-tools)\n- [Bundled skills](#bundled-skills)\n- [Bundled knowledge base and tooling](#bundled-knowledge-base-and-tooling)\n- [Custom agent: stitch-designer](#custom-agent-stitch-designer)\n- [Design token workflow](#design-token-workflow)\n- [License](#license)\n- [Disclaimer](#disclaimer)\n\n---\n\n## Overview\n\nThe Stitch Plugin enables AI agents in Google Antigravity to design, prototype, and build production-ready user interfaces using Google Stitch. It bridges high-level natural language intent with cloud-rendered UI mockups and extracts those mockups into modular frontend code (React, Vite, Tailwind CSS, and React Native).\n\nBy combining Stitch's remote Model Context Protocol (MCP) server with token specifications from `@google/design.md`, this plugin enables autonomous design loops, semantic token synchronization, and high-fidelity component generation without manual design-to-code translation.\n\n---\n\n## Key features\n\n- **Cloud UI generation**: Create, edit, and generate variants of web and mobile interface mockups through Google Stitch.\n- **18 verified MCP tools**: Direct integration with Stitch's hosted endpoint (`stitch.googleapis.com/mcp`) audited against upstream schemas.\n- **Prompt enhancement pipeline**: Automatically expands brief UI requests into professional design briefs with typographic hierarchy, micro-interactions, and contrast ratios.\n- **Semantic token architecture**: Full support for Google's `@google/design.md` standard with automated WCAG AA contrast verification and token export.\n- **Production code conversion**: Export generated screens directly into modular React + Vite components, styled React Native views, or shadcn/ui components.\n- **Specialized custom agent**: Includes the `stitch-designer` custom agent and the `/stitch` slash command for conversational design workflows.\n- **Bundled documentation and references**: Comprehensive technical guides, tool schemas, prompt recipes, and `DESIGN.md` templates are bundled directly inside respective skill directories (`references/` and `templates/`) for instant agent and developer access.\n- **Zero-secret configuration**: Uses runtime environment variable resolution (`${STITCH_API_KEY}`) to prevent credential exposure.\n\n---\n\n## Directory structure\n\nThis repository follows the official Antigravity plugin directory layout, bundling all reference schemas, starter templates, and validation scripts locally for zero-latency offline agent access:\n\n```text\nstitch/\n├── plugin.json                 # Plugin manifest ($schema validated)\n├── installed_version.json      # Version tracking (v1.1.0)\n├── mcp_config.json             # Remote Google Stitch HTTP MCP endpoint & credential prompt\n├── README.md                   # Documentation and architecture guide\n├── assets/\n│   └── logo.png                # 512x512 plugin icon\n├── agents/\n│   └── stitch-designer.md      # Specialized UI/UX & prototyping custom agent\n├── rules/\n│   └── AGENTS.md               # Always-on design-to-code & anti-slop guardrails\n└── skills/                     # 17 self-contained skills with bundled docs & scripts\n    ├── stitch/                 # Master /stitch orchestrator & 4-step project lifecycle\n    ├── stitch-design-md/       # Dual-layer DESIGN.md synthesis (YAML tokens + prose)\n    │   ├── references/         #   └── design-systems.md (Spec & 3-step cloud sync)\n    │   ├── templates/          #   └── DESIGN.md (WCAG AA lint-verified starter)\n    │   └── examples/           #   └── DESIGN.md (Full annotated token + prose sample)\n    ├── stitch-generate-design/ # Screen generation, editing & variant exploration\n    │   ├── references/         #   ├── mcp-tools.md (15 tool schemas & payload rules)\n    │   │                       #   ├── design-mappings.md & prompt-keywords.md\n    │   └── examples/           #   └── enhanced-prompt.md\n    ├── stitch-enhance-prompt/  # Structural prompt enhancement pipeline\n    │   └── references/         #   └── KEYWORDS.md & prompt-enhancement-recipes.md\n    ├── stitch-extract-design-md/ # Reverse-engineers DESIGN.md from source code\n    │   ├── references/         #   └── Framework guides (React, Vue, Svelte, Angular, CSS)\n    │   └── examples/           #   └── DESIGN.md (47-token Material 3 extraction sample)\n    ├── stitch-extract-static-html/ # Inlines live DOM/CSS into standalone HTML\n    │   └── scripts/            #   └── snapshot.ts, extract_inline_html.ts, post_process.ts\n    ├── stitch-manage-design-system/ # Cloud design system CRUD & screen application\n    │   └── references/         #   └── tool-schema.md (Server-validated font/theme enums)\n    ├── stitch-react-components/# Stitch HTML → modular React + Vite components\n    │   ├── references/         #   └── design-to-code.md (Dead-link & responsive nav fixes)\n    │   ├── resources/          #   └── architecture-checklist.md, style-guide.json, template\n    │   └── scripts/            #   └── fetch-stitch.sh & validate.js (@swc/core AST linter)\n    ├── stitch-react-native/    # Stitch HTML → React Native StyleSheet components\n    │   ├── resources/          #   └── architecture-checklist.md & component-template.tsx\n    │   └── scripts/            #   └── fetch-stitch.sh & validate.js\n    ├── stitch-shadcn-ui/       # shadcn/ui discovery, theming & block composition\n    │   ├── resources/          #   └── setup, catalog, customization & migration guides\n    │   ├── examples/           #   └── auth-layout.tsx, data-table.tsx, form-pattern.tsx\n    │   └── scripts/            #   └── verify-setup.sh\n    ├── stitch-remotion/        # Programmatic walkthrough videos from Stitch screens\n    │   ├── resources/          #   └── composition-checklist.md & screen-slide-template.tsx\n    │   ├── examples/           #   └── WalkthroughComposition.tsx & screens.json\n    │   └── scripts/            #   └── download-stitch-asset.sh\n    ├── stitch-loop/            # Autonomous baton-passing multi-page site builder\n    │   ├── resources/          #   └── baton-schema.md & site-template.md\n    │   └── examples/           #   └── SITE.md & next-prompt.md\n    ├── stitch-upload-to-stitch/# In-process base64 asset & DESIGN.md uploader\n    │   └── scripts/            #   └── upload_to_stitch.py\n    ├── stitch-code-to-design/  # End-to-end codebase → Stitch cloud migration chain\n    ├── stitch-react-vite-dashboard/ # TanStack Query + token-bridged data dashboards\n    ├── stitch-site-md/         # Synthesizes SITE.md project constitutions\n    └── stitch-taste-design/    # Enforces calibrated anti-generic UI standards\n        └── resources/          #   └── DESIGN.md (4 style dials & WCAG AA token baseline)\n```\n\n---\n\n## Prerequisites\n\nBefore using the plugin, verify that your environment meets the following requirements:\n\n1. **Google Antigravity CLI (`agy`)**: Installed and available on your system path.\n2. **Node.js**: Version 18.0.0 or later.\n3. **`@google/design.md` CLI**: Install globally using npm:\n   ```bash\n   npm install -g @google/design.md\n   ```\n4. **Stitch API Key**: An active API key obtained from the [Google Stitch website](https://stitch.withgoogle.com).\n\n---\n\n## Installation\n\nInstall the plugin directly from GitHub into Google Antigravity:\n\n### Via Shell / Terminal\n\n```bash\nagy plugin install https://github.com/AndrewMason7/stitch-plugin\n```\n\n### Via Antigravity CLI / TUI\n\n```text\n/plugin install https://github.com/AndrewMason7/stitch-plugin\n```\n\n---\n\n## Quickstart\n\nFollow these steps to configure and use the Stitch plugin:\n\n### 1. Configure your API key\n\nObtain your API key from the [Stitch website](https://stitch.withgoogle.com).\n\nAdd your API key to your shell profile (`~/.zshrc` or `~/.bashrc`):\n\n```bash\nexport STITCH_API_KEY=\"YOUR_STITCH_API_KEY\"\n```\n\nThen reload your shell configuration (e.g. `source ~/.zshrc` or `source ~/.bashrc`).\n\n### 2. Generate your first UI screen\n\nIn your Antigravity chat session, run the `/stitch` command:\n\n```text\n/stitch Design a modern dark-mode fintech mobile app\n```\n\nThe agent will expand your request, create a project container via the Stitch MCP, generate screen variants, and present the preview.\n\n---\n\n## Configuration and security\n\n### Remote MCP configuration\n\nThe plugin connects to Stitch through `mcp_config.json`:\n\n```json\n{\n  \"mcpServers\": {\n    \"stitch\": {\n      \"serverUrl\": \"https://stitch.googleapis.com/mcp\",\n      \"headers\": {\n        \"X-Goog-Api-Key\": \"${STITCH_API_KEY}\"\n      },\n      \"variables\": [\n        {\n          \"name\": \"STITCH_API_KEY\",\n          \"title\": \"Google Stitch API Key\",\n          \"description\": \"Personal API key used to authenticate requests to the remote Google Stitch MCP server.\",\n          \"link\": \"https://stitch.withgoogle.com\"\n        }\n      ]\n    }\n  }\n}\n```\n\n### Credential safety\n\n- **Environment variables only**: Never commit raw API keys to repository files or markdown documents. The plugin resolves credentials at runtime via `${STITCH_API_KEY}`.\n- **Git protection**: A pre-configured `.gitignore` prevents logs, caches, and scratch files from being tracked.\n\n---\n\n## MCP server tools\n\nThe plugin exposes 18 tools through the `stitch` server name (`ServerName: \"stitch\"`):\n\n| Tool name | Description | Key parameters |\n| :--- | :--- | :--- |\n| `create_project` | Creates a new Stitch workspace project container. | `title` *(optional)* |\n| `list_projects` | Lists all Stitch projects accessible to the authenticated user. | `filter` (`view=owned` or `view=shared`) |\n| `get_project` | Retrieves project metadata, screen lists, and design systems. | `name` (`projects/{project_id}`) |\n| `update_project` | Updates project metadata (`title`, `backgroundTheme`, `visibility`) and canvas `screenInstances`. | `name`, `title`, `screenInstances`, `updateMask` |\n| `delete_project` | Permanently deletes a Stitch project. | `name` (`projects/{project_id}`) |\n| `list_screens` | Lists all UI screens associated with a project. | `projectId` |\n| `get_screen` | Retrieves screen HTML source, preview images, and metadata. | `name` (`projects/{project_id}/screens/{screen_id}`) |\n| `update_screen` | Updates the HTML code or screenshot of a specific screen. | `name`, `htmlCodeBase64`, `screenshotBase64`, `updateMask` |\n| `download_file` | Downloads a screen's raw HTML code or base64 screenshot image. | `name` (`projects/{project_id}/files/{file_id}`) |\n| `generate_screen_from_text` | Generates a new UI screen mockup from a natural language prompt. | `projectId`, `prompt`, `deviceType`, `designSystem`, `modelId` |\n| `edit_screens` | Modifies existing screens using iterative prompts. | `projectId`, `selectedScreenIds`, `prompt`, `deviceType`, `modelId` |\n| `generate_variants` | Creates visual design alternatives of existing screens. | `projectId`, `selectedScreenIds`, `prompt`, `variantOptions` |\n| `upload_design_md` | Uploads a base64-encoded `DESIGN.md` file to a project. | `projectId`, `designMdBase64` |\n| `create_design_system_from_design_md` | Creates a formal Stitch design system from an uploaded `DESIGN.md`. | `projectId`, `selectedScreenInstance`, `deviceType` |\n| `list_design_systems` | Lists available design systems globally or for a specific project. | `projectId` *(optional)* |\n| `create_design_system` | Creates a custom design system with explicit token definitions. | `designSystem`, `projectId` *(optional)* |\n| `update_design_system` | Updates token values for an existing design system asset. | `name` (`assets/{asset_id}`), `projectId`, `designSystem` |\n| `apply_design_system` | Applies a design system across designated screen instances. | `assetId`, `projectId`, `selectedScreenInstances` |\n\nFor detailed payload schemas and response structures, see the [MCP tools reference guide](skills/stitch-generate-design/references/mcp-tools.md).\n\n---\n\n## Bundled skills\n\nThe plugin includes 17 standardized skills, organized by functional area:\n\n### Orchestration and ideation\n\n- **`stitch`**: Handles project creation (`create_project`), design system initialization, initial UI bootstrapping, and the `/stitch` command.\n- **`stitch-generate-design`**: Full generation pipeline with prompt expansion and MCP tool calls.\n- **`stitch-enhance-prompt`**: Expands brief user inputs into complete design briefs. Consult the [prompt enhancement recipes](skills/stitch-enhance-prompt/references/prompt-enhancement-recipes.md) for domain-specific patterns.\n- **`stitch-loop`**: Autonomous baton-passing loop for building complete multi-page web applications.\n- **`stitch-site-md`**: Synthesizes a structured project constitution into `SITE.md`.\n\n### Design system and tokens\n\n- **`stitch-design-md`**: Synthesizes design tokens into markdown specifications using the [DESIGN.md starter template](skills/stitch-design-md/templates/DESIGN.md).\n- **`stitch-manage-design-system`**: Creates, updates, and applies design systems in the Stitch cloud. Consult the [design system synchronization guide](skills/stitch-design-md/references/design-systems.md) and [tool schema reference](skills/stitch-manage-design-system/references/tool-schema.md).\n- **`stitch-taste-design`**: Enforces strict typographic contrast, color calibration, and micro-motion standards.\n- **`stitch-upload-to-stitch`**: Encodes and uploads local assets and documentation to Stitch projects.\n\n### Code conversion and export\n\n- **`stitch-code-to-design`**: Reverse-engineers existing frontend code into Stitch cloud mockups.\n- **`stitch-extract-design-md`**: Extracts token definitions from existing codebases (React, Vue, Svelte, Angular, CSS).\n- **`stitch-extract-static-html`**: Inlines styles and assets to capture self-contained static HTML.\n- **`stitch-react-components`**: Converts generated Stitch HTML into modular React + Vite components following the [design-to-code conversion guide](skills/stitch-react-components/references/design-to-code.md).\n- **`stitch-react-native`**: Converts Stitch HTML mockups into native React Native StyleSheet components.\n- **`stitch-react-vite-dashboard`**: Generates production dashboards integrated with TanStack Query.\n- **`stitch-shadcn-ui`**: Integrates shadcn/ui components with extracted Stitch design systems.\n- **`stitch-remotion`**: Generates automated video tours and animated walkthroughs of Stitch screens.\n\n---\n\n## Bundled knowledge base and tooling\n\nEvery skill in this plugin is engineered for **zero-latency offline context**. Instead of relying on runtime web fetches to external documentation, all tool schemas, framework heuristics, starter templates, and AST validators are co-located inside their respective skill directories:\n\n| Category | Bundled Asset | Purpose |\n| :--- | :--- | :--- |\n| **MCP & API Schemas** | [`mcp-tools.md`](skills/stitch-generate-design/references/mcp-tools.md) | Complete reference for all 15 Stitch MCP tools, resource name formats (`projects/{id}` vs numeric `projectId`), polling intervals, and payload examples. |\n| | [`tool-schema.md`](skills/stitch-manage-design-system/references/tool-schema.md) | Server-validated `designSystem` object schemas, `colorVariant` enums, and supported typography families. |\n| | [`stitch-api-reference.md`](skills/stitch-react-components/resources/stitch-api-reference.md) | Reference for Stitch screen metadata, GCS asset download URLs, and token mapping. |\n| **Design System & `@google/design.md` Spec** | [`design-systems.md`](skills/stitch-design-md/references/design-systems.md) | Dual-layer `DESIGN.md` specification (normative YAML frontmatter + semantic prose), 4 configuration dials, and 3-step cloud synchronization workflow. |\n| | [`templates/DESIGN.md`](skills/stitch-design-md/templates/DESIGN.md) | Starter `DESIGN.md` template pre-validated against `npx @google/design.md lint` (`0 errors, 0 warnings`, WCAG AA contrast verified). |\n| | [`taste-design/DESIGN.md`](skills/stitch-taste-design/resources/DESIGN.md) & [`examples/DESIGN.md`](skills/stitch-design-md/examples/DESIGN.md) | Lint-verified `DESIGN.md` baselines featuring configurable Creativity, Density, Variance, and Motion Intent dials. |\n| **Prompt Engineering** | [`prompt-enhancement-recipes.md`](skills/stitch-enhance-prompt/references/prompt-enhancement-recipes.md) | Structural prompt templates (SaaS Executive Dashboard, Mobile DeFi Tracker, Developer Landing Page) enforcing strict theme separation. |\n| | [`design-mappings.md`](skills/stitch-generate-design/references/design-mappings.md), [`prompt-keywords.md`](skills/stitch-generate-design/references/prompt-keywords.md) & [`KEYWORDS.md`](skills/stitch-enhance-prompt/references/KEYWORDS.md) | UI/UX component vocabulary, layout hierarchies, and atmosphere descriptors. |\n| **Framework Extraction Guides** | [`react-tailwind.md`](skills/stitch-extract-design-md/references/react-tailwind.md), [`vue.md`](skills/stitch-extract-design-md/references/vue.md), [`svelte.md`](skills/stitch-extract-design-md/references/svelte.md), [`angular.md`](skills/stitch-extract-design-md/references/angular.md), [`plain-css.md`](skills/stitch-extract-design-md/references/plain-css.md) | Framework-specific heuristics for reverse-engineering design tokens from existing frontend repositories, paired with a [47-token Material 3 extraction sample](skills/stitch-extract-design-md/examples/DESIGN.md). |\n| **Code Remediation & AST Validation** | [`design-to-code.md`](skills/stitch-react-components/references/design-to-code.md) & [`architecture-checklist.md`](skills/stitch-react-components/resources/architecture-checklist.md) | Runbooks for decomposing monolithic Stitch HTML, fixing placeholder `href=\"#\"` links, and resolving `md:hidden` desktop navigation gaps. |\n| | [`validate.js`](skills/stitch-react-components/scripts/validate.js), [`extract_inline_html.ts`](skills/stitch-extract-static-html/scripts/extract_inline_html.ts) & [`upload_to_stitch.py`](skills/stitch-upload-to-stitch/scripts/upload_to_stitch.py) | `@swc/core` AST validator for catching hardcoded hex values, DOM snapshot/CSS inlining scripts, and in-process base64 asset uploader. |\n\n---\n\n## Custom agent: stitch-designer\n\nFor complex, multi-screen, or end-to-end prototyping tasks, select the specialized **`stitch-designer`** custom agent directly from the agent picker inside the Antigravity application:\n\n1. Open the agent picker dropdown in the chat input area.\n2. Choose **`stitch-designer`** (UI/UX Prototyper).\n3. Enter your design prompt or product brief (for example: *\"Design a multi-screen healthcare telemetry dashboard with dark mode and export to React components\"*).\n\nThe custom agent operates autonomously using the prompt enhancement pipeline and design system rules defined in [agents/stitch-designer.md](agents/stitch-designer.md).\n\n---\n\n## Design token workflow\n\nManage and export design tokens using the official `@google/design.md` toolsuite:\n\n### 1. Validate token syntax and accessibility\n\nRun the linter to verify formatting, token references, and WCAG AA contrast, or diff two versions for regressions:\n\n```bash\ndesign.md lint skills/stitch-design-md/templates/DESIGN.md\ndesign.md diff DESIGN.md DESIGN-v2.md\n```\n\n### 2. Export tokens to Tailwind CSS v4\n\nExport directly to modern CSS `@theme` variables:\n\n```bash\ndesign.md export DESIGN.md --format css-tailwind > src/theme.css\n```\n\n### 3. Export tokens to Tailwind CSS v3\n\nExport to `tailwind.config.js` theme extension format:\n\n```bash\ndesign.md export DESIGN.md --format json-tailwind > tailwind.tokens.json\n```\n\nFor the complete 3-step cloud synchronization procedure, see the [cloud design system guide](skills/stitch-design-md/references/design-systems.md).\n\n---\n\n## License\n\nDistributed under the Apache License 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE) for details.\n\n---\n\n## Disclaimer\n\nThis project is provided \"as is\", without warranties or conditions of any kind, either express or implied. This repository is an independent community project and is not an official product, service, or distribution of Google LLC or Alphabet Inc. Google, Google Stitch, and Google Antigravity are trademarks of Google LLC. Use of these trademarks in this project is strictly nominative and does not imply any affiliation, sponsorship, endorsement, or approval by Google LLC.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_external_mcp",
+      "network_outbound",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/stitch-extract-static-html/scripts/extract_inline_html.ts",
+        "line": 996,
+        "snippet": "fs.writeFileSync(dst, fullHtml, 'utf-8');",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-extract-static-html/scripts/extract_inline_html.ts#L996"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/stitch-extract-static-html/scripts/snapshot.ts",
+        "line": 466,
+        "snippet": "const resp = await fetch(url, { mode: 'cors', credentials: 'same-origin', });",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-extract-static-html/scripts/snapshot.ts#L466"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/stitch-extract-static-html/scripts/snapshot.ts",
+        "line": 1032,
+        "snippet": "const resp = await fetch(href);",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-extract-static-html/scripts/snapshot.ts#L1032"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/stitch-extract-static-html/scripts/snapshot.ts",
+        "line": 1330,
+        "snippet": "const resp = await fetch(data);",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-extract-static-html/scripts/snapshot.ts#L1330"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/stitch-extract-static-html/scripts/snapshot.ts",
+        "line": 1420,
+        "snippet": "fs.writeFileSync(outputPath, html, 'utf-8');",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-extract-static-html/scripts/snapshot.ts#L1420"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/stitch-upload-to-stitch/scripts/upload_to_stitch.py",
+        "line": 62,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-upload-to-stitch/scripts/upload_to_stitch.py#L62"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-code-to-design/SKILL.md",
+        "line": 29,
+        "snippet": "- A running local dev server (e.g. `npm run dev`, `ng serve`) OR a built web application directory containing `index.html` and assets.",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-code-to-design/SKILL.md#L29"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-extract-static-html/SKILL.md",
+        "line": 44,
+        "snippet": "- App running locally (e.g., `npm run dev`)",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-extract-static-html/SKILL.md#L44"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-components/SKILL.md",
+        "line": 31,
+        "snippet": "- **HTML**: `bash scripts/fetch-stitch.sh \"[htmlCode.downloadUrl]\" \".stitch/designs/{page}.html\"`",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-components/SKILL.md#L31"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-components/SKILL.md",
+        "line": 32,
+        "snippet": "- **Screenshot**: Append `=w{width}` to the screenshot URL first, where `{width}` is the `width` value from the screen metadata (Google CDN serves low-res thumbnails by default). T",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-components/SKILL.md#L32"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-components/SKILL.md",
+        "line": 66,
+        "snippet": "> **GATE: Every component MUST satisfy ALL of the following rules. Violations will cause `npm run validate` to fail.**",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-components/SKILL.md#L66"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-components/SKILL.md",
+        "line": 97,
+        "snippet": "* Run `npm run validate <file_path>` for **EVERY** `.tsx` file in `src/components/` and `src/pages/` to report component validity.",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-components/SKILL.md#L97"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-components/SKILL.md",
+        "line": 100,
+        "snippet": "* Obtain permission before starting the dev server with `npm run dev` or initiating visual browser audits to verify the live result.",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-components/SKILL.md#L100"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-native/SKILL.md",
+        "line": 30,
+        "snippet": "- **HTML**: `bash scripts/fetch-stitch.sh \"[htmlCode.downloadUrl]\" \".stitch/designs/{page}.html\"`",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-native/SKILL.md#L30"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-native/SKILL.md",
+        "line": 31,
+        "snippet": "- **Screenshot**: Append `=w{width}` to the screenshot URL first, where `{width}` is the `width` value from the screen metadata (Google CDN serves low-res thumbnails by default). T",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-native/SKILL.md#L31"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-native/SKILL.md",
+        "line": 66,
+        "snippet": "> **GATE: Every component MUST satisfy ALL of the following rules. Violations will cause `npm run validate` to fail.**",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-native/SKILL.md#L66"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/stitch-react-native/SKILL.md",
+        "line": 158,
+        "snippet": "* Run `npm run validate <file_path>` for **EVERY** `.tsx` file in components and screens to report component validity.",
+        "githubBlobUrl": "https://github.com/AndrewMason7/stitch-plugin/blob/7225f6c034bf15b871c8e319f7956220764554b2/skills/stitch-react-native/SKILL.md#L158"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "7225f6c034bf15b871c8e319f7956220764554b2",
+      "scannedAt": "2026-11-27T18:21:46.586Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_external_mcp",
+        "network_outbound",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

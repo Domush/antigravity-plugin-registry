@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 1,
+  "id": "Apollyonin/billion-context-antigravity",
+  "sha": "86b43fe723b312f709cd09725758a4369c366582",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:12:53.297Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "billion-context",
+    "displayName": "Billion Context",
+    "version": "1.0.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "billion-context",
+        "runtimeName": "billion-context_billion-context",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server/mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "acp-cache",
+        "slashCommand": "/acp-cache",
+        "description": "Inspect prompt-cache hit rate, fold payback economics, and miss attribution (/acp-cache). Use when the user runs /acp-cache or asks about prompt cache hit rate, prefix cache misses, or token savings economics.",
+        "disableModelInvocation": false,
+        "file": "skills/acp-cache/SKILL.md"
+      },
+      {
+        "name": "acp",
+        "slashCommand": "/acp",
+        "description": "Show Billion Context compression status (/acp): token usage, context window ratio, compressed blocks, compressible ranges, and Antigravity wire-routing state. Use when the user types /acp or asks about context size, compression status, or f",
+        "disableModelInvocation": false,
+        "file": "skills/acp/SKILL.md"
+      },
+      {
+        "name": "bili-setup",
+        "slashCommand": "/bili-setup",
+        "description": "Diagnose and set up Antigravity wire-level lossless context compression routing on Windows (/bili-setup). Use when the user asks how to enable live compression, troubleshoot routing, launch Antigravity through the proxy, or roll back CLOUD_",
+        "disableModelInvocation": false,
+        "file": "skills/bili-setup/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/acp",
+      "/acp-cache",
+      "/bili-setup"
+    ],
+    "mcpServerNames": [
+      "billion-context_billion-context"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostInvocation",
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Billion Context for Antigravity\n\n> **声明 / Notice**：本项目仅为在开源项目 [`ranxianglei/billion-context`](https://github.com/ranxianglei/billion-context) 原有基础上，**使用 AI 移植适配至 Google Antigravity** 的衍生插件，并**新增了类 Fork 会话延续功能**（普通/极致交接 · 开新会话）。\n\n---\n\n## 核心特性\n\n### 1. 官方直连 · 零代理安全模式（默认）\n- **无代理、无环境篡改**：默认运行在 **Official Safe Mode**（`BILI_ENABLE_LEGACY_PROXY !== \"1\"`），不会自动拉起本地 MITM 代理，也不会修改 `CLOUD_CODE_URL`，确保 Antigravity 通过官方原生通道直连 Google 上游。\n- **官方遥测上下文占用**：通过 Antigravity 官方 `transcript.jsonl`（读取 `PLANNER_RESPONSE` token 用量与 `CHECKPOINT` 压缩边界）及 `hooks.json`（`SessionStart`、`PreInvocation`、`PostInvocation`、`Stop` -> `hooks/session-hook.mjs`）精确监控会话上下文占用率。\n- **双端交互面板**：提供原生 MCP App 界面（`ui://billion-context/dashboard.html`），集成于 Antigravity 右侧辅助面板（`aux_pane`）与左侧全局边栏，支持查看 `/acp` 状态、`/acp-cache` 统计、历史归档搜索与安全操作台。\n\n### 2. 新增：类 Fork 会话延续功能（Fresh Session Handoff）\n- 针对上下文接近上限但希望保留关键成果继续推进的场景，右侧面板提供 **「普通交接 · 开新会话」** 与 **「极致交接 · 开新会话」** 按钮：\n  - 通过 `server/transcript-fallback.mjs` 中的 `buildTranscriptHandoff` 从当前会话 `transcript.jsonl` 蒸馏结构化上下文摘要（`normal` / `extreme` 两档粒度）；\n  - 通过 `server/mcp-server.mjs` 暴露的 `app_prepare_handoff` 与官方 MCP Apps SDK `app.sendMessage`（`_meta: { \"com.google.antigravity/message\": { target: \"new\" } }`），**一键开启干净的新官方会话并注入交接上下文**，实现类似 Fork 的无缝接力工作流。\n\n### 3. 原地原生 `/compact` 压缩辅助\n- 侧边栏提供 **「普通压缩 (/compact)」** 与 **「极致压缩 (/compact)」** 按钮（底层调用 `app_prepare_compress`）：\n  - 一键生成并复制对应的 `/compact ...` 定制指令到剪贴板，同时在面板内显示自动全选的兜底文本框（`#bc-compact-preview`）；\n  - 由于 Antigravity 插件权限边界无法静默代发斜杠命令，用户只需在对话输入框中 `Ctrl+V` 粘贴并按回车，即可触发 Antigravity 原生上下文压缩。\n\n### 4. 遗留代理适配代码说明\n- 仓库中保留了 `server/v1internal-bridge.mjs`、`server/proxy-manager.mjs`、`server/antigravity-models.mjs` 与 `scripts/*.ps1`，**默认处于关闭状态**，仅在用户显式设置 `BILI_ENABLE_LEGACY_PROXY=1` 时才会启用本地代理/桥接路径。\n\n---\n\n## 目录结构\n\n| 路径 | 职责 |\n|---|---|\n| `hooks/session-hook.mjs` | 生命周期钩子，绑定当前会话 `conversationId` 与 `transcriptPath` |\n| `server/mcp-server.mjs` | MCP Server 与安全模式控制（`acp_status`、`acp_cache`、`acp_sessions`、`acp_inspect_block`、`acp_proxy_control`、`app_prepare_compress`、`app_prepare_handoff`） |\n| `server/transcript-fallback.mjs` | 官方 `transcript.jsonl` 遥测解析与 `buildTranscriptHandoff` 交接生成器 |\n| `ui/src/app.ts` / `ui/dist/dashboard.html` | 侧边面板交互前端与打包产物 |\n| `skills/` | `/acp`、`/acp-cache`、`/bili-setup` 技能定义 |\n| `rules/AGENTS.md` | 官方零代理安全模式行为约束 |\n| `tests/` | 冒烟测试（`smoke-test.mjs`）与 `v1internal` 预检测试（`v1internal-preflight.test.mjs`） |\n\n---\n\n## 安装与验证\n\n1. 将仓库克隆至 Antigravity 插件目录：\n   - **Windows**：`%USERPROFILE%\\.gemini\\config\\plugins\\billion-context`\n   - **macOS / Linux**：`~/.gemini/config/plugins/billion-context`\n2. 安装依赖并运行验证测试：\n   ```bash\n   cd ~/.gemini/config/plugins/billion-context\n   npm install\n   npm test\n   ```\n   如需重新构建前端面板产物：\n   ```bash\n   npm run build:ui\n   ```\n3. 在 Antigravity 的 **Plugins Manager** 中启用 `billion-context`（或重启 Antigravity），即可在右侧辅助面板看到 **Billion Context**。\n\n---\n\n## 致谢与许可（Attribution & License）\n\n- 本项目核心上下文压缩思想、分层块概念、CloudCode `v1internal` 协议适配与缓存账本引擎基于开源项目 **[`ranxianglei/billion-context`](https://github.com/ranxianglei/billion-context)**（及 `acp-kernel`），**在此基础上使用 AI 完成针对 Google Antigravity 的移植与类 Fork 会话延续扩展**。\n- 遵循原项目 **MIT License + 附加产品出处标注条款（Additional Term — Attribution on Product Surfaces）**，详见 [`LICENSE`](./LICENSE)。\n",
+  "latestReleaseNotes": "Initial self-contained release for Google Antigravity (Official Safe Mode + fork-like Fresh Session Handoff).",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/session-hook.mjs",
+        "line": 44,
+        "snippet": "const child = spawn( entry.command, [...entry.prefixArgs, \"--host\", \"127.0.0.1\", \"--port\", String(port), \"--no-auto-update\"], { cwd: getPluginRoot(), env: { ...process.env, ACP_AUT",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/hooks/session-hook.mjs#L44"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pack-release.mjs",
+        "line": 17,
+        "snippet": "const uiRes = spawnSync(process.execPath, [path.join(repoRoot, \"ui\", \"build.mjs\")], { cwd: repoRoot, stdio: \"inherit\", });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/scripts/pack-release.mjs#L17"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pack-release.mjs",
+        "line": 129,
+        "snippet": "const tarRes = spawnSync(\"tar\", [\"-czf\", outTar, \"-C\", stageParent, wrapperName], { stdio: \"inherit\", });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/scripts/pack-release.mjs#L129"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/mcp-server.mjs",
+        "line": 1418,
+        "snippet": "const match = /Compressible ranges[^\\n]*(?:\\n[^\\n]+)*/i.exec(panelText);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/mcp-server.mjs#L1418"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/proxy-manager.mjs",
+        "line": 190,
+        "snippet": "const out = execFileSync(\"reg.exe\", [\"query\", \"HKCU\\\\Environment\", \"/v\", varName], { encoding: \"utf8\", timeout: 1500, windowsHide: true, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L190"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/proxy-manager.mjs",
+        "line": 196,
+        "snippet": "const m = new RegExp(`${varName}\\\\s+REG_(?:SZ|EXPAND_SZ)\\\\s+(.+)`, \"i\").exec(out);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L196"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/proxy-manager.mjs",
+        "line": 439,
+        "snippet": "child = spawn(entry.command, args, { cwd: getPluginRoot(), env: { ...process.env, ACP_AUTO_UPDATE: \"0\" }, stdio: [\"ignore\", logFd, logFd], windowsHide: true, shell: process.platfor",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L439"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/transcript-fallback.mjs",
+        "line": 476,
+        "snippet": "while ((m = re.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/transcript-fallback.mjs#L476"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 98,
+        "snippet": "const out = execFileSync( \"reg.exe\", [\"query\", \"HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\"], { encoding: \"utf8\", timeout: 1200, windowsHide: true, stdio",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L98"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 103,
+        "snippet": "const enabledMatch = /ProxyEnable\\s+REG_DWORD\\s+0x([0-9a-f]+)/i.exec(out);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L103"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 105,
+        "snippet": "const serverMatch = /ProxyServer\\s+REG_SZ\\s+([^\\r\\n]+)/i.exec(out);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L105"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 106,
+        "snippet": "const overrideMatch = /ProxyOverride\\s+REG_SZ\\s+([^\\r\\n]+)/i.exec(out);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L106"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pack-release.mjs",
+        "line": 108,
+        "snippet": "fs.writeFileSync( path.join(stageDir, \"package.json\"), JSON.stringify( { name: pkg.name, version: manifest.version, private: true, type: \"module\", }, null, 2 ) + \"\\n\", \"utf8\" );",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/scripts/pack-release.mjs#L108"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pack-release.mjs",
+        "line": 127,
+        "snippet": "if (fs.existsSync(outTar)) fs.unlinkSync(outTar);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/scripts/pack-release.mjs#L127"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pack-release.mjs",
+        "line": 139,
+        "snippet": "fs.rmSync(stageParent, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/scripts/pack-release.mjs#L139"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/antigravity-models.mjs",
+        "line": 161,
+        "snippet": "fs.writeFileSync(tmpPath, payload, \"utf8\");",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/antigravity-models.mjs#L161"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/antigravity-models.mjs",
+        "line": 176,
+        "snippet": "fs.writeFileSync(filePath, payload, \"utf8\");",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/antigravity-models.mjs#L176"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/antigravity-models.mjs",
+        "line": 183,
+        "snippet": "try { fs.unlinkSync(tmpPath); } catch {}",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/antigravity-models.mjs#L183"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/bili-client.mjs",
+        "line": 23,
+        "snippet": "const res = await fetch(`${this.origin}${pathAndQuery}`, { method, headers, body: payload, signal: AbortSignal.timeout(timeoutMs), });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/bili-client.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/proxy-manager.mjs",
+        "line": 60,
+        "snippet": "fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L60"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/proxy-manager.mjs",
+        "line": 63,
+        "snippet": "try { fs.unlinkSync(tmpPath); } catch {}",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L63"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/proxy-manager.mjs",
+        "line": 132,
+        "snippet": "const res = await fetch(`${cleanOrigin}/__bili/health`, { signal: AbortSignal.timeout(timeoutMs), });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L132"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/proxy-manager.mjs",
+        "line": 315,
+        "snippet": "fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, ts: Date.now() }), \"utf8\");",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L315"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/proxy-manager.mjs",
+        "line": 326,
+        "snippet": "fs.unlinkSync(lockPath);",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L326"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/proxy-manager.mjs",
+        "line": 340,
+        "snippet": "fs.unlinkSync(getLockFilePath());",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L340"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/proxy-manager.mjs",
+        "line": 352,
+        "snippet": "const res = await fetch(`${cleanOrigin}/__bili/watcher`, { method: \"POST\", headers: { \"content-type\": \"application/json\" }, body: JSON.stringify({ pid }), signal: AbortSignal.timeo",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L352"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/proxy-manager.mjs",
+        "line": 529,
+        "snippet": "try { fs.unlinkSync(getStateFilePath()); } catch {}",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L529"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/proxy-manager.mjs",
+        "line": 541,
+        "snippet": "await fetch(`${existing.origin}/__bili/shutdown`, { method: \"POST\", signal: AbortSignal.timeout(1500), });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L541"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/proxy-manager.mjs",
+        "line": 583,
+        "snippet": "const res = await fetch(`${cleanOrigin}/__bili_bridge/health`, { signal: AbortSignal.timeout(timeoutMs), });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/proxy-manager.mjs#L583"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 50,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(obj, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L50"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 381,
+        "snippet": "const req = https.request({ hostname: targetUrl.hostname, port: targetPort, path: targetUrl.pathname + targetUrl.search, method, headers, agent: false, createConnection: () => tlsS",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L381"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/v1internal-bridge.mjs",
+        "line": 405,
+        "snippet": "return http.request({ hostname: proxyUrl.hostname, port: proxyPort, path: targetUrl.toString(), method, headers, timeout: 180_000, });",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/server/v1internal-bridge.mjs#L405"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "ui/build.mjs",
+        "line": 46,
+        "snippet": "fs.writeFileSync(outHtml, html, \"utf8\");",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/ui/build.mjs#L46"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/bili-setup/SKILL.md",
+        "line": 21,
+        "snippet": "3. Explain the two clean Windows activation modes (never mutate Windows environment variables unless the user explicitly asks you to run the script):",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/skills/bili-setup/SKILL.md#L21"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/bili-setup/SKILL.md",
+        "line": 23,
+        "snippet": "- Single launch: `powershell -ExecutionPolicy Bypass -File \"<PLUGIN_ROOT>\\scripts\\launch-antigravity.ps1\"` (or pass `-Restart` to restart a running desktop instance cleanly).",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/skills/bili-setup/SKILL.md#L23"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/bili-setup/SKILL.md",
+        "line": 24,
+        "snippet": "- Desktop shortcut: `powershell -ExecutionPolicy Bypass -File \"<PLUGIN_ROOT>\\scripts\\setup-routing.ps1\" -CreateShortcut`.",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/skills/bili-setup/SKILL.md#L24"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/bili-setup/SKILL.md",
+        "line": 26,
+        "snippet": "- Enable: `powershell -ExecutionPolicy Bypass -File \"<PLUGIN_ROOT>\\scripts\\setup-routing.ps1\" -Enable` (syncs 1M windows, starts bridge + proxy, adds hidden Startup `.vbs` launcher",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/skills/bili-setup/SKILL.md#L26"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/bili-setup/SKILL.md",
+        "line": 27,
+        "snippet": "- Rollback anytime: `powershell -ExecutionPolicy Bypass -File \"<PLUGIN_ROOT>\\scripts\\setup-routing.ps1\" -Disable`.",
+        "githubBlobUrl": "https://github.com/Apollyonin/billion-context-antigravity/blob/86b43fe723b312f709cd09725758a4369c366582/skills/bili-setup/SKILL.md#L27"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "86b43fe723b312f709cd09725758a4369c366582",
+      "scannedAt": "2026-11-27T18:12:53.297Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

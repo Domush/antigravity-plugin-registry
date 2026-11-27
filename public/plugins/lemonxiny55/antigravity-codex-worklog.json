@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "id": "lemonxiny55/antigravity-codex-worklog",
+  "sha": "9da58118d568e56bf82c83cf7ae7b78b99bcd7bc",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:36.465Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-worklog",
+    "displayName": "Codex Worklog Commentary",
+    "version": "0.2.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Codex Worklog Commentary\n\n[![npm version](https://img.shields.io/npm/v/antigravity-codex-worklog.svg)](https://www.npmjs.com/package/antigravity-codex-worklog)\n[![GitHub release](https://img.shields.io/github/v/release/lemonxiny55/antigravity-codex-worklog)](https://github.com/lemonxiny55/antigravity-codex-worklog/releases)\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)\n\nEnglish | [简体中文](./README.zh-CN.md)\n\n> **Stop watching your AI agent run 15 silent tool calls inside collapsed `Thought` blocks just to say \"Done!\"**  \n> Bring OpenAI Codex-style live progress commentary and evidence-anchored engineering worklogs between tool batches to Google Antigravity — so you can verify facts live and steer mid-run.\n\n<!-- TODO: Replace with recorded 20s demo -->\n<!-- ![Codex Worklog Demo](./assets/demo.gif) -->\n\n---\n\n## Quick Start (10 Seconds)\n\n```bash\nnpx antigravity-codex-worklog@latest\n```\n\nRestart Antigravity (or start a new session), then toggle **Codex Worklog Commentary** in **Skills & Customizations**.\n\n---\n\n## Before vs. After\n\n**Without plugin (default silent chain):**\n```text\n[Collapsed Thought block]\n> Ran 12 tools silently...\n\"Done! I updated the files and checked everything.\"\n```\n\n**With `codex-worklog` enabled (live interleaved evidence):**\n```text\nInitial Preamble:\nI'll create an isolated worktree from origin/main for the documentation fix\nwithout touching existing dirty media files, then verify link checks and CI.\n\n> Ran 3 commands (git status, git worktree add, link check)\n\nUpdated both READMEs in the isolated worktree while leaving 4 unrelated local\nchanges untouched. Local check verified 76 internal links; 2 external URLs hit\ntimeouts and are being re-checked individually. Next, I'll verify the external\nURLs and open the PR.\n\n> Ran 2 commands (curl verify, gh pr create)\n\nPR #18 created and CI is green on Node 22/24. No pending review comments remain.\n```\n\n> **Tip — Steering Mid-Execution**: Because every update previews the exact next step, if you see the agent heading in the wrong direction, simply send a message while it is still working. Antigravity queues your message and redirects immediately after the current tool call finishes.\n\n---\n\n## Why & Inspiration\n\nIn OpenAI's open-source [`openai/codex`](https://github.com/openai/codex) and [`openai/harmony`](https://github.com/openai/harmony) specifications, coding agents separate output into three distinct layers:\n\n1. **Internal Reasoning (`analysis`)**: Hidden scratchpad thinking.\n2. **Interleaved Commentary (`commentary` / `MessagePhase::Commentary`)**: Short, factual progress updates (`default.md` *Preamble messages*, `gpt_5_codex_prompt.md` *Sharing progress updates*) placed directly between grouped tool executions.\n3. **Final Answer (`final_answer`)**: Clean delivery without dumping raw file contents (*Presenting your work*).\n\nBy default, Antigravity models tend to place intermediate notes into collapsible `Thought` blocks and execute long tool chains silently. **Codex Worklog Commentary v0.2.0** brings that open-source Codex commentary protocol into Antigravity's native plugin rule system, including guardrails against common failure modes like premature turn termination (`openai/codex#7900`) and Plan-to-Execution drift.\n\n---\n\n## Key Features (v0.2.0)\n\n1. **Visible Channel Discipline**: Enforces writing progress updates into visible assistant message text alongside tool calls — never hidden solely inside `thought` blocks.\n2. **Smart Cadence & Logical Batching**: Skips chatter on trivial Q&A or single reads; groups 1–4 related tool calls per batch and always sends a brief preamble before heavy or state-mutating operations.\n3. **Evidence-Anchored 3-Part Micro-Cycle**: Every update covers concrete **Facts & Evidence** (counts, paths, exact errors, CI status), **Decision & Guardrail** (parameter tweaks, untouched files), and **Next Action Preview**.\n4. **Anti-Premature-Termination Guardrail**: Prevents the `openai/codex#7900` failure pattern where an agent stops its turn right after outputting an interim status sentence.\n5. **Plan-to-Execution Continuity**: Preserves interleaved commentary across Antigravity's dual-stage workflow (`exit_plan_mode` handoff from planning to execution).\n6. **Language Mirroring & Dry Worklog Tone**: Automatically writes in the user's language (English, Chinese, etc.) with zero conversational filler and no full-file dumping at the end.\n\n---\n\n## Alternative Installation & Status Check\n\n### Check `npx` Installation Status\n\n```bash\nnpx antigravity-codex-worklog@latest status\n```\n\n### Install via `git clone`\n\nClone directly into your global Antigravity plugins directory (`~/.gemini/config/plugins/codex-worklog`):\n\n#### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/lemonxiny55/antigravity-codex-worklog.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-worklog\"\n```\n\n#### macOS / Linux\n\n```bash\ngit clone https://github.com/lemonxiny55/antigravity-codex-worklog.git ~/.gemini/config/plugins/codex-worklog\n```\n\n### Activation\n\n1. Restart Antigravity (or reload the agent service / start a new session) so the plugin rules are discovered.\n2. Open **Skills & Customizations** in the sidebar to confirm **Codex Worklog Commentary** is enabled. You can toggle it on or off globally anytime without deleting files.\n\n---\n\n## Updating & Uninstalling\n\n### Update\n\n```bash\n# Via npx\nnpx antigravity-codex-worklog@latest update\n```\n\n```powershell\n# Or via git (Windows PowerShell)\ngit -C \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-worklog\" pull\n```\n\n```bash\n# Or via git (macOS / Linux)\ngit -C ~/.gemini/config/plugins/codex-worklog pull\n```\n\n### Uninstall\n\n```bash\n# Via npx\nnpx antigravity-codex-worklog@latest uninstall\n```\n\n```powershell\n# Or manually (Windows PowerShell)\nRemove-Item -Recurse -Force \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-worklog\"\n```\n\n```bash\n# Or manually (macOS / Linux)\nrm -rf ~/.gemini/config/plugins/codex-worklog\n```\n\n---\n\n## Repository Structure\n\n```text\nantigravity-codex-worklog/\n├── package.json        # npm package & npx CLI entry\n├── plugin.json         # Antigravity plugin manifest\n├── bin/\n│   └── cli.mjs         # Zero-dependency cross-platform plugin installer CLI\n├── rules/\n│   └── AGENTS.md       # Always-on global worklog commentary rule (no frontmatter)\n├── assets/\n│   └── logo.svg        # Dual-theme vector icon\n├── README.md           # English documentation\n├── README.zh-CN.md     # Chinese documentation\n├── LICENSE             # MIT License\n└── .gitignore\n```\n\n---\n\n## License\n\n[MIT](./LICENSE) © 2026 [lemonxiny55](https://github.com/lemonxiny55)\n",
+  "latestReleaseNotes": "## Codex Worklog Commentary v0.2.1\n\nMetadata, README conversion, and npm packaging optimization release.  \n元数据、README 首屏转化与 npm 打包白名单优化版本。\n\n---\n\n### What's Changed / 更新内容\n\n1. **Marketplace & npm Metadata Optimization（插件清单与 npm 元数据优化）**\n   - Updated `plugin.json` `description` (151 chars, focused on eliminating silent tool chains) and refreshed `suggestedPrompts` with 3 audit/debug/refactor workflows.\n   - Expanded `package.json` `keywords` from 8 to 12 terms (`interleaved-commentary`, `progress-updates`, `transparency`, `tool-preamble`).\n2. **Above-the-Fold README Redesign（中英文 README 首屏重构）**\n   - Restructured `README.md` and `README.zh-CN.md` to highlight the one-line value proposition, 10-second `npx antigravity-codex-worklog@latest` Quick Start, **Before vs. After** comparison, and a reserved `assets/demo.gif` preview slot.\n3. **Leaner npm Package Allowlist（精简 npm 打包白名单）**\n   - Narrowed `package.json` `files` from `\"assets\"` to `\"assets/logo.svg\"` so future demo GIFs/videos stay excluded from `npx` downloads (`8` files total, `11.1 kB` packed).\n   - Added `.launch-kit/` to `.gitignore`.\n\n---\n\n### Install / 安装方式\n\n```bash\nnpx antigravity-codex-worklog@latest\n```\n\n**Full Changelog**: https://github.com/lemonxiny55/antigravity-codex-worklog/compare/v0.2.0...v0.2.1\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/cli.mjs",
+        "line": 107,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/lemonxiny55/antigravity-codex-worklog/blob/9da58118d568e56bf82c83cf7ae7b78b99bcd7bc/bin/cli.mjs#L107"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/cli.mjs",
+        "line": 146,
+        "snippet": "fs.rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/lemonxiny55/antigravity-codex-worklog/blob/9da58118d568e56bf82c83cf7ae7b78b99bcd7bc/bin/cli.mjs#L146"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "bin/cli.mjs",
+        "line": 71,
+        "snippet": "install, update Install or update plugin in ~/.gemini/config/plugins/codex-worklog (default)",
+        "githubBlobUrl": "https://github.com/lemonxiny55/antigravity-codex-worklog/blob/9da58118d568e56bf82c83cf7ae7b78b99bcd7bc/bin/cli.mjs#L71"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.1",
+      "sha": "9da58118d568e56bf82c83cf7ae7b78b99bcd7bc",
+      "scannedAt": "2026-11-27T18:20:36.465Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace"
+      ]
+    }
+  ]
+}

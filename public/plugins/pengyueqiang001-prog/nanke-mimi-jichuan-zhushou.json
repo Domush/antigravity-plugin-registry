@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "pengyueqiang001-prog/nanke-mimi-jichuan-zhushou",
+  "sha": "23c891fc993db9de392a1f879333c9bfb780f7f6",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:22.592Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "nanke-mimi-jichuan-zhushou",
+    "displayName": "男科秘密击穿助手",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "urology-thesis-assistant",
+        "slashCommand": "/urology-thesis-assistant",
+        "description": "男科秘密击穿助手：泌尿外科与男科研究生（专硕/学硕/博士）开题报告、课题设计、文献检索、样本量估算、EQUATOR规范SCI论文写作、去AI味润色与审稿回复（Rebuttal）全流程辅助工具。Use this skill whenever the user asks about urology or andrology graduate thesis proposals (开题报告), research topic feasibility (选题击穿), sample siz",
+        "disableModelInvocation": false,
+        "file": "skills/urology-thesis-assistant/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/urology-thesis-assistant"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.svg\" alt=\"男科秘密击穿助手 Logo\" width=\"110\" />\n\n# 男科秘密击穿助手（Urology & Andrology Thesis Assistant）\n\n**专为泌尿外科与男科研究生（专硕 / 学硕 / 博士）打造的开题击穿与学术写作 AI Agent Skill 套件**\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-0D7377.svg)](./LICENSE)\n[![Agent Skill](https://img.shields.io/badge/Format-Agent%20Skill%20%2F%20Antigravity%20Plugin-14A098.svg)](./skills/urology-thesis-assistant/SKILL.md)\n[![Python 3 Stdlib](https://img.shields.io/badge/Scripts-Python%203%20Stdlib%20Only-38BDF8.svg)](#-内置纯-python-零依赖辅助工具)\n\n</div>\n\n---\n\n## ✨ 为什么做这个 Skill？\n\n泌尿外科与男科研究生在开题和发文章时，最常遇到五个痛点：\n1. **选题“看起来能做，开题一问就倒”**：缺乏 PICO 拆解、专硕/学硕可行性评估和阴性结果保底方案（Plan B）；\n2. **男科质控与指南脱节**：精液分析仍照抄过时的 WHO 第 5 版阈值（未对标 **WHO 第 6 版 2021 手册**），性激素未固定清晨采血，ED/PE 未控制心理协变量；\n3. **样本量拍脑袋**：不知道何时用两均数、两率、生存分析 Schoenfeld 或预测模型 EPV 公式；\n4. **“纯生信空心套路”被盲审枪毙**：缺少临床样本验证、细胞系选型踩坑（如用 AR 阴性 PC-3 讲恩扎卢胺耐药）；\n5. **SCI 写作“AI 味”太重、Rebuttal 不会回**：不会对标 **EQUATOR 规范**（STROBE / CONSORT / TRIPOD+AI / PRISMA / ARRIVE 2.0）。\n\n**男科秘密击穿助手** 将泌尿外科/男科专病知识库、开题防拷打题库、标准中文开题模板、SCI 写作与 Rebuttal 骨架，以及 **3 个零依赖 Python 计算/检索/体检脚本** 打包为开箱即用的 Agent Skill 与 Antigravity 插件。\n\n---\n\n## 🚀 核心能力矩阵\n\n| 模块 | 核心功能 | 关键产出物 |\n| :--- | :--- | :--- |\n| **1. 开题选题击穿** | 5 维研究生画像采集 + PICO/PECO 拆解 + FINER 红绿灯审查 + Plan B 保底设计 | 可落地题目重塑方案与风险评估表 |\n| **2. 文献检索与对标** | 联动 PubMed/EuropePMC 等检索工具 + 12 个泌尿男科预设词表布尔检索式生成 | 标准 PubMed 检索式 + `literature_extraction_matrix.csv` |\n| **3. 研究设计与样本量** | 专硕/学硕/博士研究范式匹配 + EQUATOR 规范路由 + 专病量表速查 + 样本量计算 | 完整纳排标准、统计学方案与样本量依据 |\n| **4. 中文开题与体检** | 国内医学院校通用开题模板（含 Mermaid 技术路线图）+ 12 维自动量化体检 | 《学位论文开题报告》+ 0–100 体检诊断报告 |\n| **5. SCI 写作与 Rebuttal** | IMRaD 结构化写作 + “去 AI 味”医学地道改写 + Point-by-Point 审稿回复模板 | SCI 手稿段落、Cover Letter 与 Rebuttal |\n| **6. 答辩高压模拟拷打** | 20 个泌尿/男科盲审高频致命追问（附“专家潜台词 + 高分应答 + 补救行动”） | 模拟答辩问答实录与防翻车自查清单 |\n\n---\n\n## 📁 项目结构\n\n```text\nnanke-mimi-jichuan-zhushou/\n├── plugin.json                                      # Antigravity 插件清单\n├── assets/logo.svg                                  # 插件矢量图标\n├── README.md\n├── LICENSE                                          # MIT 开源协议\n└── skills/\n    └── urology-thesis-assistant/\n        ├── SKILL.md                                 # 主工作流与医学学术红线规范\n        ├── references/\n        │   ├── urology_subspecialties_and_scales.md # 亚专业热点、WHO 第6版与核心量表\n        │   ├── study_design_and_equator.md          # 研究范式矩阵、EQUATOR、统计与选刊\n        │   ├── defense_qa_and_pitfalls.md           # 答辩高压追问 Top 20 与去 AI 味规范\n        │   └── academic_integrity_and_rebuttal.md   # IRB伦理、临床注册与 Rebuttal 句型库\n        ├── resources/\n        │   ├── proposal_template_cn.md              # 中文开题报告标准模板（含 Mermaid）\n        │   ├── sci_manuscript_and_rebuttal_template.md\n        │   └── literature_extraction_matrix.csv     # 文献精读提取矩阵（UTF-8-SIG）\n        ├── examples/\n        │   ├── example_ed_proposal_breakthrough.md  # 示例1：DMED 临床预测模型开题击穿\n        │   └── example_pca_translational_proposal.md# 示例2：CRPC 单细胞+临床转化开题\n        └── scripts/\n            ├── sample_size_calc.py                  # 样本量计算器（均数/率/EPV/生存）\n            ├── pubmed_query_builder.py              # 12 病种 PubMed 布尔检索式生成器\n            └── proposal_checklist.py                # 开题报告 12 维自动体检评分工具\n```\n\n---\n\n## 📦 安装方式\n\n### 方式一：作为 Antigravity 插件安装（推荐）\n\n将本仓库克隆或复制到本地 Antigravity 全局插件目录 `~/.gemini/config/plugins/nanke-mimi-jichuan-zhushou/`：\n\n```powershell\ngit clone https://github.com/pengyueqiang001-prog/nanke-mimi-jichuan-zhushou.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\nanke-mimi-jichuan-zhushou\"\n```\n\nmacOS / Linux：\n\n```bash\ngit clone https://github.com/pengyueqiang001-prog/nanke-mimi-jichuan-zhushou.git ~/.gemini/config/plugins/nanke-mimi-jichuan-zhushou\n```\n\nAntigravity 将自动发现并加载 `urology-thesis-assistant` Skill。\n\n### 方式二：作为通用 Agent Skill 安装（Claude Code / Cursor / Codex 等）\n\n仅需复制 `skills/urology-thesis-assistant/` 目录到对应工具的 Skills 目录（如 `.agents/skills/urology-thesis-assistant/` 或 `~/.claude/skills/urology-thesis-assistant/`）。\n\n---\n\n## 🛠️ 内置纯 Python 零依赖辅助工具\n\n所有脚本均仅使用 Python 3 标准库，无需安装任何第三方包：\n\n```bash\n# 1. 计算临床预测模型（Nomogram）EPV 样本量\npython skills/urology-thesis-assistant/scripts/sample_size_calc.py epv --predictors 7 --event-rate 0.35 --epv 10 --validation-split 0.30 --dropout 0.15\n\n# 2. 计算两组均数比较（如治疗前后 IIEF-5 评分差异）\npython skills/urology-thesis-assistant/scripts/sample_size_calc.py two-means --mean1 20.5 --mean2 17.0 --sd 4.8 --alpha 0.05 --power 0.80 --dropout 0.15\n\n# 3. 构建前列腺癌 / ED 等标准 PubMed 布尔检索式\npython skills/urology-thesis-assistant/scripts/pubmed_query_builder.py --list-presets\npython skills/urology-thesis-assistant/scripts/pubmed_query_builder.py --disease ed --intervention \"PDE5 inhibitors\" --outcome \"IIEF-5\" --years 2021:2026 --humans-only\n\n# 4. 对开题报告 Markdown 进行 12 维自动体检与答辩预警\npython skills/urology-thesis-assistant/scripts/proposal_checklist.py path/to/your_proposal.md\n```\n\n---\n\n## 💬 典型使用对话示例\n\n- **选题击穿**：*“我是泌尿外科专硕，想做糖尿病性 ED 对他达拉非效果不好的预测模型，手头有大约 260 例病例，帮我用男科秘密击穿助手做 PICO 拆解、算好样本量并模拟专家拷打。”*\n- **开题体检**：*“请检查我这份开题报告初稿，找出样本量、男科质控、统计方法上的漏洞并给出修改建议。”*\n- **SCI 润色与回复**：*“审稿人质疑我们单中心回顾性研究没有外部验证，要求补做 3 年多中心随访，怎么写礼貌且有说服力的 Rebuttal？”*\n\n---\n\n## ⚠️ 学术诚信与临床安全声明\n\n1. **禁止学术造假**：本工具严格禁止编造任何 PMID、DOI、文献数据或实验结果；所有引用均须由使用者核验真实原文。\n2. **仅作科研教学辅助**：不构成任何临床诊疗建议，具体医疗决策须以临床执业医师判断及最新官方临床指南为准。\n3. **伦理与隐私合规**：涉及人体病历、量表与生物样本的研究，须在机构伦理委员会（IRB）批准及严格数据去标识化脱敏前提下开展。\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_rules_only"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "23c891fc993db9de392a1f879333c9bfb780f7f6",
+      "scannedAt": "2026-11-27T18:14:22.592Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_rules_only"
+      ]
+    }
+  ]
+}

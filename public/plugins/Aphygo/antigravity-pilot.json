@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "id": "Aphygo/antigravity-pilot",
+  "sha": "a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:25.001Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-pilot",
+    "displayName": "Antigravity Pilot (Cross-Platform Computer Use)",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "desktop-computer-use",
+        "slashCommand": "/desktop-computer-use",
+        "description": "Cross-platform desktop computer use and parallel virtual desktop sandboxes (Windows, macOS & Linux) using a zero-MCP hybrid CLI stack: Vercel Labs `agent-desktop` as primary headless accessibility engine (AX/UIA/AT-SPI, `@snapshotId:eN` ref",
+        "disableModelInvocation": false,
+        "file": "skills/desktop-computer-use/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "desktop-operator",
+        "description": "Autonomous cross-platform desktop GUI operator (Windows, macOS & Linux) using agent-desktop (headless AX/UIA/AT-SPI), pilot_ctl.py (Set-of-Mark --annotate/--grid, Risk-Guard + JSONL trace, window-tile, recipes), and sandbox_ctl.py (parallel",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/desktop-operator.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/desktop-computer-use"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "desktop-operator"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/hero.svg\" alt=\"Antigravity Pilot — Cross-Platform Computer Use & Parallel Desktops\" width=\"100%\" />\n\n<br />\n\n# Antigravity Pilot (`antigravity-pilot`)\n\n**Cross-platform desktop computer use and `<1s` parallel virtual desktops for Google Antigravity — on Windows, macOS, and Linux, with zero MCP token bloat.**\n\n[![Antigravity Plugin](https://img.shields.io/badge/Antigravity-Plugin%20v1.0-2563EB?style=flat-square)](plugin.json)\n[![Zero-MCP CLI](https://img.shields.io/badge/Architecture-Zero--MCP%20CLI-10B981?style=flat-square)](#why-hybrid-cli-instead-of-a-heavy-mcp-server)\n[![Platform](https://img.shields.io/badge/Platform-Win%20%7C%20macOS%20%7C%20Linux-0F172A?style=flat-square)](#platform-support-matrix)\n[![Risk-Guard](https://img.shields.io/badge/Safety-Risk--Guard-F59E0B?style=flat-square)](#security-guardrails)\n[![License](https://img.shields.io/badge/License-Apache%202.0-334155?style=flat-square)](LICENSE)\n\n[Highlights](#highlights) · [Platform Matrix](#platform-support-matrix) · [Architecture](#why-hybrid-cli-instead-of-a-heavy-mcp-server) · [Quick Start](#quick-start) · [CLI Reference](#cli-quick-reference) · [Parallel Sandboxes](#parallel-desktop-automation) · [Security](#security-guardrails)\n\n</div>\n\n---\n\n> **Control any native desktop without burning thousands of context tokens on bloated MCP tool schemas.**\n>\n> **Antigravity Pilot** unites Vercel Labs **`agent-desktop`** (headless `AX` / `UIA` / `AT-SPI` accessibility trees), zero-dependency Python **`pilot_ctl.py`** (Set-of-Mark `--annotate` & `--grid` overlays, deterministic **Risk-Guard** + JSONL audit traces, multi-display `window-tile`, parameterized `recipe` workflows, and native notifications), and **`sandbox_ctl.py`** (`<1s` Docker virtual Linux desktops with live **noVNC** human-in-the-loop takeover) — backed by the autonomous **`desktop-operator`** subagent.\n\n---\n\n## Highlights\n\n- **Cross-Platform Headless Control (`agent-desktop`):** Drives native apps on **Windows (`UIA`)**, **macOS (`AX`)**, and **Linux (`AT-SPI`)** without stealing focus or moving the cursor, with qualified `@<snapshot_id>:e<N>` stale-ref protection, Chromium/Electron accessibility, overlay surfaces, `wait`, `batch`, and `--stdin` secret piping.\n- **Zero-Dependency Set-of-Mark (`--annotate` & `--grid`):** `pilot_ctl.py screenshot` renders crisp bounding boxes, numbered interactive refs (`e1..eN`), and optional coordinate grids directly onto PNGs using pure Python standard library — giving agents reliable visual grounding on canvas, WebGL, and custom views across all three OSes.\n- **Deterministic Risk-Guard & JSONL Audit Traces:** `guard-check`, `safe-click`, `safe-close`, and `recipe run` deterministically block destructive or external-send actions with exit code **`2`** (`RISK_GUARD_BLOCKED`) unless `--confirm-risky` is explicitly passed after user approval. Record compact JSONL audit logs with `--trace <file.jsonl>` or `PILOT_CTL_TRACE`.\n- **Parameterized Recipes & Multi-Display Tiling:** Store, inspect, `--dry-run`, and replay parameterized workflows (`--param key=val`) with `pilot_ctl.py recipe`, and snap windows across multiple monitors with `pilot_ctl.py window-tile ... --display <1-based>`.\n- **`<1s` Parallel Virtual Desktops + Live noVNC (`sandbox_ctl.py`):** Launch isolated Docker/Colima virtual Linux desktops (`ag-desk-*`) from Windows, macOS, or Linux with optional browser-accessible live **noVNC** (`up <name> --vnc` + `url <name>`) for seamless human takeover during 2FA, SSO logins, or CAPTCHAs.\n\n---\n\n## Platform Support Matrix\n\n| Capability | Windows 10/11 | macOS 13+ | Linux (X11 / Wayland) | Engine |\n| :--- | :---: | :---: | :---: | :--- |\n| **Headless Accessibility Tree (`snapshot`, `click`, `type`, `wait`, `batch`)** | ✅ (`UIA`) | ✅ (`AX`) | ✅ (`AT-SPI`) | `agent-desktop` |\n| **Zero-Dep Set-of-Mark (`screenshot --annotate --grid`)** | ✅ | ✅ | ✅ | `pilot_ctl.py` |\n| **Deterministic Risk-Guard (`guard-check`, `safe-click`, `safe-close`) & JSONL Trace** | ✅ | ✅ | ✅ | `pilot_ctl.py` |\n| **Multi-Display Window Tiling (`window-tile --display <N>`)** | ✅ | ✅ | ✅ | `pilot_ctl.py` |\n| **Parameterized Recipes (`recipe list\\|show\\|save\\|run\\|delete`)** | ✅ | ✅ | ✅ | `pilot_ctl.py` |\n| **Native Desktop Notifications (`notify`) & Readiness (`doctor`)** | ✅ | ✅ | ✅ | `pilot_ctl.py` |\n| **Parallel Virtual Linux Desktops + Live noVNC (`up --vnc`, `url`, `exec`)** | ✅ (Docker) | ✅ (Docker / Colima) | ✅ (Docker) | `sandbox_ctl.py` |\n| **Live Demo Recording (`record`) & Apple Shortcuts (`shortcut`)** | — | ⚡ Native Accelerator | — | `pilot_ctl.py` → `bin/macos-ctl` |\n\n> **Honest note on macOS Native Accelerators:** `record` (capturing live user mouse/keyboard demos into recipe JSON via macOS Input Monitoring) and `shortcut` (running Apple Shortcuts) are macOS-only accelerators delegated automatically through the compiled Swift binary `bin/macos-ctl`. Every other capability — including headless control, Set-of-Mark overlays, Risk-Guard, audit traces, multi-display tiling, `recipe save/run`, `notify`, and live noVNC sandboxes — runs natively on **Windows, macOS, and Linux**.\n\n---\n\n## Why Hybrid CLI Instead of a Heavy MCP Server?\n\nTypical desktop-control MCP servers inject **50+ tool schemas** into every conversation turn, burning thousands of context tokens before the agent even reads your prompt.\n\n**Antigravity Pilot** uses a **zero-MCP hybrid CLI stack** instead:\n\n```mermaid\nflowchart LR\n    Agent[\"Antigravity Agent / desktop-operator\"] --> Primary[\"agent-desktop (AX / UIA / AT-SPI)\"]\n    Agent --> Pilot[\"pilot_ctl.py (Zero-Dep Python 3)\"]\n    Agent --> Sandbox[\"sandbox_ctl.py (Docker / Colima)\"]\n    Pilot --> SoM[\"Set-of-Mark --annotate & --grid\"]\n    Pilot --> Guard[\"Risk-Guard (exit 2) + JSONL Trace\"]\n    Pilot --> Util[\"window-tile · recipe · notify · macOS accel\"]\n    Sandbox --> VNC[\"ag-desk-* Virtual Linux Desktops + Live noVNC\"]\n```\n\n1. **Primary Engine — `agent-desktop` (Vercel Labs):** Headless-first semantic accessibility engine with qualified `@<snapshot_id>:e<N>` refs, Chromium/Electron support, overlay surfaces, `wait`, `batch`, `--stdin` secret piping, and built-in `POLICY_DENIED` quit guards.\n2. **Complement Engine — `pilot_ctl.py` (Zero-Dep Python 3):** Cross-platform Set-of-Mark rendering, deterministic Risk-Guard + JSONL trace logging, multi-display window tiling, parameterized recipes, native notifications, and seamless macOS Swift acceleration (`bin/macos-ctl`).\n3. **Virtual Desktop Engine — `sandbox_ctl.py`:** Launches `<1s` isolated virtual Linux desktops (`antigravity-desktop-sandbox:latest`, prefix `ag-desk-*`) with optional live **noVNC** so parallel subagents never fight over host focus, cursor, or clipboard.\n4. **Autonomous Subagent — `desktop-operator`:** Runs multi-step *Observe → Act → Verify* loops in an isolated subagent context with hard safety stops, keeping your main conversation clean.\n\n---\n\n## Quick Start\n\n### Prerequisites\n\n- **Python 3.9+** (standard library only — zero `pip` dependencies required for `pilot_ctl.py` and `sandbox_ctl.py`)\n- **Vercel Labs `agent-desktop`** on your `PATH` (installed or verified by the installer)\n- **Docker** or **Colima** (optional — only needed for Level 2 parallel virtual desktops via `sandbox_ctl.py`)\n- **macOS optional:** Xcode Command Line Tools (`swift`) if compiling the native `bin/macos-ctl` accelerator for `record` and `shortcut`\n\n### macOS & Linux (Bash / Zsh)\n\n```bash\ngit clone https://github.com/Aphygo/antigravity-pilot.git \\\n  \"$HOME/.gemini/config/plugins/antigravity-pilot\"\n\ncd \"$HOME/.gemini/config/plugins/antigravity-pilot\"\n./scripts/install.sh\n```\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/Aphygo/antigravity-pilot.git `\n  \"$HOME\\.gemini\\config\\plugins\\antigravity-pilot\"\n\ncd \"$HOME\\.gemini\\config\\plugins\\antigravity-pilot\"\n.\\scripts\\install.ps1\n```\n\n### Verify Permissions & Readiness\n\n**macOS & Linux:**\n```bash\nagent-desktop permissions\npython3 \"$HOME/.gemini/config/plugins/antigravity-pilot/scripts/pilot_ctl.py\" doctor\n```\n*(If macOS Accessibility or Screen Recording is missing, run `agent-desktop permissions --guide`.)*\n\n**Windows (PowerShell):**\n```powershell\nagent-desktop status\npython \"$HOME\\.gemini\\config\\plugins\\antigravity-pilot\\scripts\\pilot_ctl.py\" doctor\n```\n\n---\n\n## CLI Quick Reference\n\n### `pilot_ctl.py` (Cross-Platform Complement CLI)\n\nRun via `python3 \"$HOME/.gemini/config/plugins/antigravity-pilot/scripts/pilot_ctl.py\"` (or `bin/pilot-ctl` on macOS/Linux) or `python \"%USERPROFILE%\\.gemini\\config\\plugins\\antigravity-pilot\\scripts\\pilot_ctl.py\"` on Windows.\n\n| Command | Purpose |\n| :--- | :--- |\n| `doctor [--json]` | Inspect OS backend, `agent-desktop`, permissions, Docker, and macOS accelerator status. |\n| `screenshot <out.png> [--app <App>] [--window-id <id>] [--screen <idx>] [--annotate] [--grid] [--max-depth <N>] [--limit <N>] [--session <S>] [--agent-id <A>] [--json]` | Zero-dependency screenshot with Set-of-Mark (`--annotate`) interactive bounding boxes/refs and/or coordinate `--grid`. |\n| `window-tile <app> <left\\|right\\|top\\|bottom\\|maximize\\|center> [--window-id <id>] [--title <substr>] [--display <1-based>] [--json]` | Snap an app window to halves, centered, or maximized layout on a chosen display. |\n| `guard-check <action> <target> [--json]` | Check whether an action/target trips deterministic Risk-Guard (exit `2` + `RISK_GUARD_BLOCKED`). |\n| `safe-click <ref> [--label <text>] [--app <App>] [--headed]` | Click a qualified ref through Risk-Guard enforcement. |\n| `safe-close <app> [--force]` | Close an app cleanly through Risk-Guard (`--force` requires `--confirm-risky`). |\n| `recipe list\\|show\\|save\\|run\\|delete` | Manage and execute parameterized recipes (`--param key=val`, `--dry-run`, `--stdin`, `--confirm-risky`). |\n| `notify <title> <message>` | Show a native desktop notification on Windows, macOS, or Linux. |\n| `record [--duration <sec>] [--output <file>] [--app <name>]` | *(macOS accelerator)* Record live mouse/keyboard demos into recipe JSON. |\n| `shortcut <name> [--input <text>]` | *(macOS accelerator)* Run an Apple Shortcut by name. |\n\n**Global flags:** `--confirm-risky` (only after explicit user approval) and `--trace <file.jsonl>` (or environment variable `PILOT_CTL_TRACE=<file.jsonl>`).\n\n---\n\n## Parallel Desktop Automation\n\n`antigravity-pilot` supports two complementary levels of parallelism:\n\n### Level 1 — Host Multi-Worker Sessions (`agent-desktop`)\n\nIsolate concurrent workers on the host desktop with `--session` and `--agent-id`:\n\n```bash\nagent-desktop --session batch-1 --agent-id worker-a \\\n  snapshot --app \"Google Chrome\" --window-id w-101 -i --compact\n\nagent-desktop --session batch-1 --agent-id worker-b \\\n  snapshot --app \"Google Chrome\" --window-id w-205 -i --compact\n```\n\n> **Multi-window gotcha:** On multi-window apps like Chrome, Edge, Finder, or Explorer, always pass `--app \"<App>\"` and `--window-id <id>` together so each worker stays pinned to its intended window.\n\n### Level 2 — Parallel Virtual Desktops + Live noVNC (`sandbox_ctl.py`)\n\nWhen parallel agents need fully isolated displays, clipboards, and application state across Windows, macOS, or Linux, run virtual Linux desktops in Docker/Colima (`antigravity-desktop-sandbox:latest`, container prefix `ag-desk-*`):\n\n```bash\n# macOS / Linux (on Windows, invoke with: python scripts\\sandbox_ctl.py ...)\nSANDBOX=\"python3 $HOME/.gemini/config/plugins/antigravity-pilot/scripts/sandbox_ctl.py\"\n\n# 1. Build the sandbox image once (add --with-chromium for browser workflows)\n$SANDBOX build --with-chromium\n\n# 2. Spin up isolated virtual desktops (<1s each), optionally with live noVNC\n$SANDBOX up desk-1 --vnc --vnc-port 6081\n$SANDBOX up desk-2\n\n# 3. Get the live noVNC URL for human-in-the-loop takeover (e.g. 2FA / login)\n$SANDBOX url desk-1\n\n# 4. Run agent-desktop commands inside each virtual desktop\n$SANDBOX exec desk-1 status\n$SANDBOX exec desk-2 snapshot -i --compact\n\n# 5. Inspect or tear down sandboxes\n$SANDBOX list --json\n$SANDBOX down desk-1\n$SANDBOX down-all\n```\n\n---\n\n## Security Guardrails\n\nBoth the always-on rules (`rules/AGENTS.md`) and the `desktop-operator` subagent (`agents/desktop-operator.md`) enforce hard safety boundaries:\n\n- **Headless by default:** Semantic accessibility calls never steal focus or move the cursor unless `--headed` is explicitly required and permitted.\n- **Deterministic Risk-Guard (`RISK_GUARD_BLOCKED`, exit `2`):** `pilot_ctl.py` blocks destructive and external-send actions before execution; `--confirm-risky` is never passed without explicit user approval.\n- **JSONL Audit Trace:** Record compact machine-readable logs of every `pilot_ctl.py` action via `--trace <file.jsonl>` or `PILOT_CTL_TRACE`.\n- **Built-in `POLICY_DENIED` guards:** Dangerous quit/delete key combinations are blocked by default in `agent-desktop`; use `close-app` or `pilot_ctl.py safe-close` instead.\n- **Safe retry semantics:** Actions are retried **only** when `error.disposition.retry == \"safe\"` (`delivery == \"not_delivered\"`), preventing accidental double-submits.\n- **Secrets off argv:** Sensitive or multiline text is always piped via `--stdin`.\n- **Hard approval stops:** Destructive actions (deleting files/records, emptying Trash/Recycle Bin, closing unsaved work), external sends/publishing, financial/legal commitments, and credential/OS security changes always pause for explicit user confirmation.\n\n---\n\n## Repository Structure\n\n```text\nantigravity-pilot/\n├── plugin.json                            # Antigravity plugin manifest (v1.0.0)\n├── README.md                              # Documentation & platform matrix\n├── LICENSE                                # Apache License 2.0\n├── assets/\n│   ├── hero.svg                           # Repository hero banner\n│   └── logo.svg                           # Plugin icon\n├── rules/\n│   └── AGENTS.md                          # Always-on cross-platform rules & guardrails\n├── skills/\n│   └── desktop-computer-use/\n│       └── SKILL.md                       # Full cross-platform command & workflow reference\n├── agents/\n│   └── desktop-operator.md                # Autonomous multi-step GUI subagent\n├── scripts/\n│   ├── pilot_ctl.py                       # Zero-dep cross-platform complement CLI\n│   ├── sandbox_ctl.py                     # Cross-platform Docker/noVNC sandbox manager\n│   ├── install.sh                         # macOS & Linux installer\n│   └── install.ps1                        # Windows PowerShell installer\n├── bin/\n│   ├── pilot-ctl                          # macOS/Linux wrapper for pilot_ctl.py\n│   ├── sandbox-ctl                        # macOS/Linux wrapper for sandbox_ctl.py\n│   └── macos-ctl                          # Optional compiled macOS Swift accelerator\n├── src/                                   # Swift source for optional macOS accelerator\n├── sandbox/                               # Dockerfile & scripts for virtual Linux desktops\n└── tests/                                 # Automated smoke & cross-platform regression tests\n```\n\n---\n\n## Credits & License\n\n- Built on top of **[Vercel Labs `agent-desktop`](https://github.com/vercel-labs/agent-desktop)**, licensed under the **Apache License 2.0**.\n- Architectural inspiration from **`ghost-os`** (self-learning recipes), **`Peekaboo`** (Set-of-Mark visual grounding), **`virtual-desktop`** (containerized noVNC sandboxes), and **`macos-computer-use-kit`** (deterministic guardrails & tracing).\n- **Antigravity Pilot (`antigravity-pilot`)** by **Aphygo** is licensed under the **Apache License 2.0** — see [LICENSE](LICENSE) for full terms.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 165,
+        "snippet": "return subprocess.run( list(cmd), input=input_text, capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\", timeout=timeout, env=env, )",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L165"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 2138,
+        "snippet": "proc = subprocess.run(cmd)",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L2138"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/sandbox_ctl.py",
+        "line": 77,
+        "snippet": "return subprocess.run( cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=check, timeout=timeout, )",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/sandbox_ctl.py#L77"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/sandbox_ctl.py",
+        "line": 85,
+        "snippet": "return subprocess.run(cmd, check=check, timeout=timeout)",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/sandbox_ctl.py#L85"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/sandbox_ctl.py",
+        "line": 278,
+        "snippet": "subprocess.run( [\"docker\", \"exec\", cname, AGENT_DESKTOP_RUN, \"status\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False, )",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/sandbox_ctl.py#L278"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/sandbox_ctl.py",
+        "line": 312,
+        "snippet": "res = subprocess.run(docker_cmd, check=False)",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/sandbox_ctl.py#L312"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 309,
+        "snippet": "with open(path, \"a\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L309"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 604,
+        "snippet": "with open(cache_path, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L604"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 614,
+        "snippet": "with open(cache_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L614"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 1802,
+        "snippet": "with open(fp, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L1802"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/pilot_ctl.py",
+        "line": 1875,
+        "snippet": "dest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/pilot_ctl.py#L1875"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/png_overlay.py",
+        "line": 871,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/png_overlay.py#L871"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/png_overlay.py",
+        "line": 1122,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/png_overlay.py#L1122"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/png_overlay.py",
+        "line": 1295,
+        "snippet": "with open(out_path, \"wb\") as f:",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/scripts/png_overlay.py#L1295"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 7,
+        "snippet": "- macOS / Linux: `python3 \"$HOME/.gemini/config/plugins/antigravity-pilot/scripts/pilot_ctl.py\"` (or wrapper `\"$HOME/.gemini/config/plugins/antigravity-pilot/bin/pilot-ctl\"`)",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/rules/AGENTS.md#L7"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 8,
+        "snippet": "- Windows: `python \"%USERPROFILE%\\.gemini\\config\\plugins\\antigravity-pilot\\scripts\\pilot_ctl.py\"`",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/rules/AGENTS.md#L8"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 19,
+        "snippet": "- macOS / Linux: `python3 \"$HOME/.gemini/config/plugins/antigravity-pilot/scripts/sandbox_ctl.py\"` (or wrapper `\"$HOME/.gemini/config/plugins/antigravity-pilot/bin/sandbox-ctl\"`)",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/rules/AGENTS.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 20,
+        "snippet": "- Windows: `python \"%USERPROFILE%\\.gemini\\config\\plugins\\antigravity-pilot\\scripts\\sandbox_ctl.py\"`",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/rules/AGENTS.md#L20"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/desktop-computer-use/SKILL.md",
+        "line": 197,
+        "snippet": "Use `python3 \"$HOME/.gemini/config/plugins/antigravity-pilot/scripts/pilot_ctl.py\"` (macOS/Linux), `bin/pilot-ctl` (macOS/Linux), or `python \"%USERPROFILE%\\.gemini\\config\\plugins\\a",
+        "githubBlobUrl": "https://github.com/Aphygo/antigravity-pilot/blob/a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68/skills/desktop-computer-use/SKILL.md#L197"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "a4ed24f6fd2bd51dfe79b92a27804998ef1cdb68",
+      "scannedAt": "2026-11-27T18:18:25.001Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

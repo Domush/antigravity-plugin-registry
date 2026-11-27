@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "EVANKRISTANTO/vanzee-designer",
+  "sha": "fba2d69918c6381531506ebdffd89ca8741a1ecf",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:16.374Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "vanzee-designer",
+    "displayName": "Vanzee Designer",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "lighthouse-audit-fix",
+        "slashCommand": "/lighthouse-audit-fix",
+        "description": "Use after building or significantly updating a website/web app (or when asked to run Lighthouse) to capture initial Lighthouse scores, analyze issues, recommend fixes via ask_question, apply approved changes, and re-verify scores.",
+        "disableModelInvocation": false,
+        "file": "skills/lighthouse-audit-fix/SKILL.md"
+      },
+      {
+        "name": "micro-interactions",
+        "slashCommand": "/micro-interactions",
+        "description": "Use when designing or implementing UI components, pages, transitions, buttons, forms, navigation, or feedback states so every interface includes purposeful, responsive micro-interactions and motion.",
+        "disableModelInvocation": false,
+        "file": "skills/micro-interactions/SKILL.md"
+      },
+      {
+        "name": "text-animations",
+        "slashCommand": "/text-animations",
+        "description": "Use when animating headlines, hero text, counters, kinetic typography, badges, or text transitions in websites and web apps so motion is smooth, readable, and accessible.",
+        "disableModelInvocation": false,
+        "file": "skills/text-animations/SKILL.md"
+      },
+      {
+        "name": "typography-curation",
+        "slashCommand": "/typography-curation",
+        "description": "Use when selecting, pairing, or reviewing fonts and typographic hierarchy for any website, web app, or UI design so typography feels distinctive, legible, and free of monotonous AI-default fonts.",
+        "disableModelInvocation": false,
+        "file": "skills/typography-curation/SKILL.md"
+      },
+      {
+        "name": "vanzee-designer",
+        "slashCommand": "/vanzee-designer",
+        "description": "Use when designing, building, or reviewing websites, web apps, UI components, icons, typography, animations, or micro-interactions so interfaces use curated design libraries, purposeful motion, and verified UX guardrails.",
+        "disableModelInvocation": false,
+        "file": "skills/vanzee-designer/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/lighthouse-audit-fix",
+      "/micro-interactions",
+      "/text-animations",
+      "/typography-curation",
+      "/vanzee-designer"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Vanzee Designer — UI/UX Skills, References & Rules Pack\n\nPaket skill dan rules terkurasi untuk Antigravity agar agen AI selalu membangun antarmuka dengan desain berkarakter, referensi visual nyata, komponen konsisten menyeluruh (*system-wide parity*), animasi modern, dan audit kualitas Lighthouse.\n\n## Isi Paket\n\n### Rules (`rules/AGENTS.md`)\n- Otomatis memicu `vanzee-designer` setiap kali merancang atau membangun UI/UX maupun website.\n- Wajib menanyakan referensi desain via `ask_question` (`is_multi_select: true`)—mendukung **1 referensi** maupun **gabungan beberapa referensi**.\n- Mewajibkan inspeksi gambar/video referensi asli (via file lokal atau **CDN publik**) sebelum menulis kode.\n- Mengizinkan pencarian aset gambar real-world dari Google/web (mis. foto produk brand) dengan verifikasi URL aktif.\n- Menjalankan audit **Lighthouse** otomatis setelah website selesai dibuat.\n\n### Skills (`skills/`)\n1. **`vanzee-designer`**\n   - **Icon, Illustration & 3D:** [Material Symbols & Icons](https://fonts.google.com/icons), [Icons8](https://icons8.com/)\n   - **Fonts & Typography:** [Google Fonts](https://fonts.google.com/), [Fontshare](https://www.fontshare.com/), [Typewolf](https://www.typewolf.com/)\n   - **Colors & Contrast:** [Realtime Colors](https://www.realtimecolors.com/), [Coolors](https://coolors.co/)\n   - **Web & UI/UX Galleries:** [Refero](https://refero.design/styles), [Land-book](https://land-book.com/), [Lapa Ninja](https://www.lapa.ninja/), [Mobbin](https://mobbin.com/), [Godly](https://godly.design/), [Awwwards](https://www.awwwards.com/), [Shadcn Space](https://shadcnspace.com/animated-blocks), [Pinterest](https://www.pinterest.com/)\n   - **9 Referensi UI/Dashboard Terkurasi + 7 Video Pola Interaksi Teranalisa (Lokal + CDN Publik):**\n     1. *Fennel AI Agent Dashboard*\n     2. *Paymo: Wallet Overview*\n     3. *Business Transactions Dashboard*\n     4. *Ecommerce Orders Dashboard*\n     5. *FleetTrack: Container Fleet*\n     6. *Personal Finance Analytics*\n     7. *FleetTrack: Fleet Reports*\n     8. *Cloud Dock: File Management*\n     9. *Smart Home Control Dashboard*\n     10. *Motion & Block Library (`references/motion-blocks-library.md`):* **Dot-Matrix AI Thinking Pill**, **Cinema 3D Seat Map & View Preview**, **Inline Morphing Sentence Order Sheet**, **Dark AI SaaS Landing Architecture**, **Product Dial Showcase Hero (Hero 68)**, **Immersive Game & Character Hero (Hero 55)**, **Frosted Glass Plan Cards (Pricing 18)**, plus 60+ blok **Shadcn Space Animated Blocks**.\n   - **Otomasi Aset Nyata (Anti-Icon-Buatan):** Wajib pakai library ikon/logo/foto asli lewat pencarian web otomatis bila aset tidak tersedia secara lokal.\n   - **Katalog 42 Micro-Interactions**, **System-Wide Component Parity** (`references/component-craft.md`), **Motion Recipes** (`references/motion-recipes.md`), dan **7 Guardrail Good UX vs Bad UX**.\n2. **`typography-curation`** — Panduan pairing font anti-slop (menghindari font default AI yang monoton).\n3. **`text-animations`** — Katalog 20 pola kinetic typography + resep CSS aksesibel (`aria-label` & `prefers-reduced-motion`).\n4. **`micro-interactions`** — Token timing/easing CSS (`--ease-snappy`, `--ease-out-expo`, `--ease-spring`) dan standar gerak GPU-only.\n5. **`lighthouse-audit-fix`** — Skrip dan workflow audit Lighthouse + Core Web Vitals sebelum & sesudah perbaikan.\n\n---\n\n## Cara Install & Pakai\n\n### Opsi 1 — Install sebagai Plugin Global (Direkomendasikan)\nSemua skill dan `rules/AGENTS.md` langsung aktif otomatis di semua proyek.\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/EVANKRISTANTO/vanzee-designer.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\vanzee-designer\"\n```\n\n**macOS / Linux:**\n```bash\ngit clone https://github.com/EVANKRISTANTO/vanzee-designer.git ~/.gemini/config/plugins/vanzee-designer\n```\n\n### Opsi 2 — Install per Proyek (Workspace `.agents/plugins/`)\n```bash\ngit clone https://github.com/EVANKRISTANTO/vanzee-designer.git .agents/plugins/vanzee-designer\n```\n\n### Opsi 3 — Install Manual sebagai Standalone Skills + Always-On Rule\nJika ingin memisahkan skill dan rule global secara manual:\n1. Salin isi folder `skills/` ke `~/.gemini/config/skills/` (atau `.agents/skills/`).\n2. Salin isi `rules/AGENTS.md` ke `~/.gemini/config/rules/vanzee-designer.md` dengan menambahkan frontmatter berikut di baris paling atas:\n   ```markdown\n   ---\n   trigger: always_on\n   ---\n   ```\n\n### Setup Tambahan untuk `lighthouse-audit-fix` (Opsional, 1x saja)\nAgar skrip audit Lighthouse bisa berjalan lokal:\n```bash\ncd skills/lighthouse-audit-fix/scripts\nnpm install\n```\n*(Membutuhkan Node.js dan Google Chrome / Microsoft Edge yang sudah terpasang).*\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/lighthouse-audit-fix/scripts/run-lighthouse.mjs",
+        "line": 46,
+        "snippet": "const child = spawn(process.execPath, [cliPath, ...cliArgs], { env, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/EVANKRISTANTO/vanzee-designer/blob/fba2d69918c6381531506ebdffd89ca8741a1ecf/skills/lighthouse-audit-fix/scripts/run-lighthouse.mjs#L46"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/lighthouse-audit-fix/scripts/run-lighthouse.mjs",
+        "line": 193,
+        "snippet": "fs.rmSync(tempJson, { force: true });",
+        "githubBlobUrl": "https://github.com/EVANKRISTANTO/vanzee-designer/blob/fba2d69918c6381531506ebdffd89ca8741a1ecf/skills/lighthouse-audit-fix/scripts/run-lighthouse.mjs#L193"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/lighthouse-audit-fix/SKILL.md",
+        "line": 13,
+        "snippet": "- Untuk website lokal, lebih disarankan memakai **production build + preview** (`npm run build` lalu `npm run preview` atau static server) daripada dev server agar skor **Performan",
+        "githubBlobUrl": "https://github.com/EVANKRISTANTO/vanzee-designer/blob/fba2d69918c6381531506ebdffd89ca8741a1ecf/skills/lighthouse-audit-fix/SKILL.md#L13"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "fba2d69918c6381531506ebdffd89ca8741a1ecf",
+      "scannedAt": "2026-11-27T18:14:16.374Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

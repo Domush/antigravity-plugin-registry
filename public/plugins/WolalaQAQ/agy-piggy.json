@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "id": "WolalaQAQ/agy-piggy",
+  "sha": "663d3141c22fbde456c96a5e66e2fb87e07fe58b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:51.033Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-piggy",
+    "displayName": "Piggy Work Events",
+    "version": "0.1.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "agy-piggy",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "node ./src/hook.mjs",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AGY Piggy\n\n中文 | [English](README.en.md)\n\nAGY Piggy 是一个自包含的 Antigravity 插件，让 [dsh-piggy](https://github.com/CLICGGER-TYPES/dsh-piggy) 桌宠随你在 Antigravity 中的工作成长。\n\n插件通过 Antigravity 原生 `hooks.json` 监听对话输入、工具执行和回合结束事件，在本地发件箱落盘后由后台独立进程投递到游戏的官方工作事件 HTTP 接口（`source: \"antigravity\"`）。插件不注入规则、技能或 MCP 工具，不占用模型上下文，也不分发或启动桌宠。\n\n| 组件 | 要求 |\n|---|---|\n| Node.js | 22.0 或以上（需在 `PATH` 中） |\n| dsh-piggy | 支持工作事件协议 v1，启用「外部连接」或以 `--work-events` 启动 |\n| 插件版本 | 0.1.1 |\n\n## 快速开始\n\n### 1. 安装插件\n\n从 npm 一键安装最新正式版：\n\n```sh\nnpx agy-piggy@latest\n```\n\n命令会拉取插件并自动调用本机 `agy plugin install` 完成注册与启用（无 `agy` CLI 时自动回退托管复制到 `~/.gemini/config/plugins/agy-piggy`）。固定版本可使用 `npx agy-piggy@0.1.1`。\n\n不使用 npm 时，可以克隆仓库后通过 Antigravity CLI 安装：\n\n```sh\ngit clone https://github.com/WolalaQAQ/agy-piggy.git\nagy plugin install ./agy-piggy\n```\n\n或从 [Releases](https://github.com/WolalaQAQ/agy-piggy/releases) 下载 `.zip` / `.tgz` 离线归档：`.zip` 解压后执行 `agy plugin install ./agy-piggy`，`.tgz` 解压后执行 `node ./package/bin/agy-piggy.mjs`。\n\n卸载插件使用 `agy plugin uninstall agy-piggy` 或 `npx agy-piggy@latest --uninstall`，已保存的事件队列保留在 `PLUGIN_DATA` 中。\n\n### 2. 开启桌宠工作事件接口\n\n在 dsh-piggy 桌面设置中开启「外部连接」，或以 `--work-events` 参数启动游戏。之后在 Antigravity 正常对话与调用工具即可自动投递事件。\n\n## 事件映射与去重\n\n插件只提取事件标识、类型与时间戳，不上传对话正文、代码或工具输出：\n\n| Antigravity Hook | 映射类型 | 去重与过滤规则 |\n|---|---|---|\n| `PreInvocation` | `message` | 仅统计当前会话新增的 `USER_EXPLICIT` 用户输入（按 `conversationId` 与 `step_index` 去重，跳过子代理无用户输入会话） |\n| `PostToolUse` | `tool` / `toolError` | 无 `error` 字段记为 `tool`，含非空 `error` 记为 `toolError`；跳过 `enter_plan_mode` 与 `exit_plan_mode` |\n| `Stop` | `turn` / `agentError` | `terminationReason === \"ERROR\"` 记为 `agentError`；`NO_TOOL_CALL` 且 `fullyIdle !== false` 记为 `turn`；忽略 `USER_CANCELED` 等中断 |\n\nHook 主进程只执行同步落盘与按需派生后台 `--flush` 子进程，不阻塞 Agent 对话循环。收到游戏 `429` 限流响应时按 `Retry-After` 头退避；超过 7 天接收窗口的事件会保留在磁盘上并停止自动投递。\n\n## 目录发现与可选配置\n\n插件按以下顺序自动发现游戏的 `endpoint.json`（只读解析，不读写游戏存档）：\n\n1. 显式配置 `config.json` 中的 `gameDirectory` 或环境变量 `AGY_PIGGY_GAME_ENDPOINT`\n2. `PIGGY_OWNER_DOCUMENT_CONFIG` 指定的独立完整档目录\n3. `PIGGY_USERDATA` 指定的用户数据目录（优先检查其 `owner-archive-selection.json` 指向的 `<ownerDocumentPath>.work-events`，再回退 `work-endpoint`）\n4. 系统默认 `piggy` 数据目录（Windows `%APPDATA%/piggy`、macOS `~/Library/Application Support/piggy`、Linux `${XDG_DATA_HOME:-~/.local/share}/piggy`），同样优先识别 `owner-archive-selection.json` 完整档与 `work-endpoint`\n5. 桌面标记文件 `$DSH_HOME/dsh-piggy/desktop-app.json`（或 `~/.dsh/dsh-piggy/desktop-app.json`）及旧版 `dsh-piggy` / `dsh-piggy-desktop` 目录\n\n如需覆写默认行为，可在安装后的插件目录创建 `config.json`（不随 Git 提交）：\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `enabled` | boolean | 为 `false` 时停用事件上报（默认值 `true`；也可通过环境变量 `AGY_PIGGY_DISABLED=1` 临时关闭） |\n| `directory` | string | 自定义发件箱队列目录的绝对路径（默认依次使用 `AGY_PIGGY_DATA_DIR`、`PLUGIN_DATA`、系统配置目录下的 `agy-piggy-plugin`） |\n| `gameDirectory` | string | 自定义游戏 `endpoint.json` 所在目录的绝对路径 |\n\n反馈问题时请勿分享游戏目录下的 `endpoint.json`，其中包含本机访问令牌。\n\n## 开发与校验\n\n插件运行与校验仅使用 Node.js 内置模块，无需安装第三方依赖：\n\n```sh\nnpm run check\nnpm run pack:plugin\nagy plugin validate --strict .\n```\n\n版本变化见 [CHANGELOG](CHANGELOG.md)。\n\n## 许可\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "# 中文\n\n## [0.1.1] - 2026-11-21\n\n### Features\n- 新增 npm 包分发与 `npx agy-piggy@latest` 一键安装器（`bin/agy-piggy.mjs`），支持直接安装、更新与 `--uninstall` 卸载。\n- 安装器调用 `agy plugin install` 前先暂存只包含运行时文件的纯净 `agy-piggy/` 目录，避免将 `.git`、`dist`、开发脚本或 npm 元数据写入全局插件目录。\n- 调整 `npm run pack:plugin` 生成的 `.tgz` 为 npm 标准 `package/` 顶层结构（含去除了私有标记与开发脚本的公开 `package.json` 及 LF/0755 `bin` 入口），确保 GitHub Release `.tgz` 与 npm 发布包完全一致；`.zip` 保持纯插件结构。\n\n### Design Rationale\n- Antigravity 原生 `agy plugin install` 目前不直接从 npm 拉取包，通过提供轻量 `bin` 入口封装暂存目录与原生安装命令，让用户可以用一行 `npx agy-piggy@latest` 获得与 OpenCode 插件一致的安装体验。\n\n### Notes & Caveats\n- 从 `0.1.0` 升级时直接运行 `npx agy-piggy@latest` 即可原地替换安装，已保存的事件队列保留不变。\n- `npm publish` 时只发布 `npm run pack:plugin` 生成的 `dist/agy-piggy-0.1.1.tgz`，仓库根目录保留 `\"private\": true`。\n\n### 安装\n\n```sh\nnpx agy-piggy@latest\n```\n\n### 离线归档\n\n- [agy-piggy-0.1.1.zip](https://github.com/WolalaQAQ/agy-piggy/releases/download/v0.1.1/agy-piggy-0.1.1.zip)\n- [agy-piggy-0.1.1.tgz](https://github.com/WolalaQAQ/agy-piggy/releases/download/v0.1.1/agy-piggy-0.1.1.tgz)\n\n下载 `.zip` 解压后执行 `agy plugin install ./agy-piggy`；下载 `.tgz` 解压后执行 `node ./package/bin/agy-piggy.mjs`（或 `agy plugin install ./package`）。游戏要求与可选配置见 [README](https://github.com/WolalaQAQ/agy-piggy/blob/v0.1.1/README.md)。\n\n---\n\n# English\n\n## [0.1.1] - 2026-11-21\n\n### Features\n- Added npm package distribution with a one-command `npx agy-piggy@latest` installer (`bin/agy-piggy.mjs`), supporting installation, upgrades and `--uninstall`.\n- Updated the installer to stage a clean `agy-piggy/` directory containing only runtime files before invoking `agy plugin install`, keeping `.git`, `dist`, development scripts and npm metadata out of the global plugins directory.\n- Updated `npm run pack:plugin` so the `.tgz` archive uses the standard npm top-level `package/` layout (with a public `package.json` stripped of `\"private\"` and dev scripts, plus an LF/0755 `bin` entry), matching the exact tarball published to npm; `.zip` remains a standalone plugin bundle.\n\n### Design Rationale\n- Because `agy plugin install` does not fetch packages directly from npm, shipping a lightweight `bin` wrapper that stages a clean runtime bundle gives users the same one-line `npx agy-piggy@latest` experience.\n\n### Notes & Caveats\n- Upgrading from `0.1.0` with `npx agy-piggy@latest` replaces the installed plugin in place while preserving your outbox queue.\n- Publish only the generated `dist/agy-piggy-0.1.1.tgz` tarball; the repository root keeps `\"private\": true`.\n\n### Install\n\n```sh\nnpx agy-piggy@latest\n```\n\n### Offline archives\n\n- [agy-piggy-0.1.1.zip](https://github.com/WolalaQAQ/agy-piggy/releases/download/v0.1.1/agy-piggy-0.1.1.zip)\n- [agy-piggy-0.1.1.tgz](https://github.com/WolalaQAQ/agy-piggy/releases/download/v0.1.1/agy-piggy-0.1.1.tgz)\n\nExtract the `.zip` archive and run `agy plugin install ./agy-piggy`, or extract the `.tgz` archive and run `node ./package/bin/agy-piggy.mjs` (or `agy plugin install ./package`). See the [README](https://github.com/WolalaQAQ/agy-piggy/blob/v0.1.1/README.en.md) for game requirements and optional configuration.\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 35,
+        "snippet": "const probe = spawnSync('agy', ['plugin', 'list', '--json'], { encoding: 'utf8', windowsHide: true, })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 87,
+        "snippet": "const res = spawnSync('agy', ['plugin', 'install', stagePluginDir], { encoding: 'utf8', windowsHide: true, })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L87"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 106,
+        "snippet": "const res = spawnSync('agy', ['plugin', 'uninstall', 'agy-piggy'], { encoding: 'utf8', windowsHide: true, })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L106"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"agy-piggy\" executes a shell command on PostToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 7,
+        "snippet": "node ./src/hook.mjs",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/hooks.json#L7"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/hook.mjs",
+        "line": 69,
+        "snippet": "const child = spawn(process.execPath, [SELF_FILE, '--flush'], { detached: true, stdio: 'ignore', windowsHide: true, env: process.env, })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/hook.mjs#L69"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/work-files.mjs",
+        "line": 82,
+        "snippet": "execFile( 'powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { env: { ...process.env, PIGGY_WORK_PATH: targetPath }, windowsHide: true }, error => error ? rej",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/work-files.mjs#L82"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 45,
+        "snippet": "rmSync(target, { recursive: false, force: true })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L45"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 65,
+        "snippet": "rmSync(target, { recursive: true, force: true })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L65"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 93,
+        "snippet": "rmSync(stageBase, { recursive: true, force: true })",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L93"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/agy-piggy.mjs",
+        "line": 125,
+        "snippet": "writeFileSync(join(target, MANAGED_MARKER), 'agy-piggy-managed-v1\\n', 'utf8')",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/bin/agy-piggy.mjs#L125"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 65,
+        "snippet": "writeFileSync(logPath, nl >= 0 ? half.slice(nl + 1) : half, 'utf8')",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L65"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 68,
+        "snippet": "appendFileSync(logPath, `${new Date().toISOString()} [agy-piggy] ${message}\\n`, 'utf8')",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L68"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 77,
+        "snippet": "writeFileSync(fd, JSON.stringify(value), 'utf8')",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L77"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 84,
+        "snippet": "try { unlinkSync(tmpPath) } catch {}",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L84"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 150,
+        "snippet": "writeFileSync(fd, payload, 'utf8')",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L150"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 162,
+        "snippet": "try { writeFileSync(directFd, payload, 'utf8') } finally { closeSync(directFd) }",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L162"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 168,
+        "snippet": "try { unlinkSync(tmp) } catch {}",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L168"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 231,
+        "snippet": "try { writeFileSync(fd, body, 'utf8') } finally { closeSync(fd) }",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L231"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 235,
+        "snippet": "if (current?.token === token) unlinkSync(lockPath)",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L235"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 254,
+        "snippet": "try { unlinkSync(lockPath) } catch {}",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L254"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/outbox.mjs",
+        "line": 280,
+        "snippet": "await unlink(filePath)",
+        "githubBlobUrl": "https://github.com/WolalaQAQ/agy-piggy/blob/663d3141c22fbde456c96a5e66e2fb87e07fe58b/src/outbox.mjs#L280"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.1",
+      "sha": "663d3141c22fbde456c96a5e66e2fb87e07fe58b",
+      "scannedAt": "2026-11-27T18:21:51.033Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

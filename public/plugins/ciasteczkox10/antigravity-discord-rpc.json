@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "ciasteczkox10/antigravity-discord-rpc",
+  "sha": "3de55fa009075922adbf773e0e4b2ca209c5b9c4",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:14.687Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-discord-rpc",
+    "displayName": "Discord Rich Presence",
+    "version": "2.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "discord-presence",
+        "runtimeName": "antigravity-discord-rpc_discord-presence",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/discord-presence.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "antigravity-discord-rpc_discord-presence"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostInvocation",
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [
+      {
+        "name": "DETAILS",
+        "title": "DETAILS",
+        "required": true,
+        "description": "Environment variable for MCP server \"discord-presence\".",
+        "link": null
+      },
+      {
+        "name": "SMALL_IMAGE",
+        "title": "SMALL_IMAGE",
+        "required": true,
+        "description": "Environment variable for MCP server \"discord-presence\".",
+        "link": null
+      }
+    ],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Discord Rich Presence for Antigravity\n\n[![Node.js](https://img.shields.io/badge/Node.js-required-green)](https://nodejs.org)\n[![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)\n[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](#requirements)\n[![Antigravity](https://img.shields.io/badge/Google-Antigravity%20plugin-4285F4)](#installation)\n[![MCP](https://img.shields.io/badge/MCP-stdio-black)](#architecture)\n\n![Preview](preview.png)\n\nA native Google Antigravity plugin that shows your Antigravity activity, including the active AI model, as Discord Rich Presence. It runs as a plugin-managed local MCP stdio server and needs no standalone app.\n\n## Features\n\n- **Plugin-managed lifecycle** — the MCP server starts when the plugin is enabled and stops when it is disabled or uninstalled; presence is cleared on shutdown\n- **Live model display** — shows the active model from the official lifecycle hook `modelName` field, e.g. `gemini-3.8-flash-high` becomes `Gemini 3.8 Flash (High)`\n- **Auto-reconnect** — retries every 5 seconds until Discord is available, and again if Discord restarts\n- **Cross-platform IPC** — Windows named pipes, macOS and Linux Unix sockets\n- **Fully configurable** — state/details text, images, and elapsed timer via `mcp_config.json`\n- **Privacy-first** — only the model identifier and a timestamp are stored locally; prompts, transcripts, and conversation text are never read or written\n- **Status tool** — ask Antigravity to \"Check Discord Rich Presence status\"\n- **Stack** — Node.js (ESM, zero dependencies), MCP over stdio, Discord IPC\n\n## Architecture\n\n```\nantigravity-discord-rpc/\n├── plugin.json              # plugin manifest\n├── mcp_config.json          # MCP server launch + activity settings (env vars)\n├── hooks.json               # lifecycle hooks (SessionStart, PreInvocation, PostInvocation, Stop)\n├── scripts/\n│   ├── discord-presence.mjs # MCP stdio server, Discord IPC client, presence updates\n│   └── model-state.mjs      # hook script, persists the current model name\n├── LICENSE\n└── README.md\n```\n\n**Flow:** Antigravity fires a lifecycle hook → `model-state.mjs` reads `modelName` from stdin and writes it atomically to `~/.gemini/antigravity/discord-rpc-model.json` (on Windows `%USERPROFILE%\\.gemini\\antigravity\\`) → the MCP server polls that file every 5 seconds → on a model change it formats the name and sends `SET_ACTIVITY` over Discord IPC → Discord shows the updated presence.\n\n**Limitation:** Antigravity hooks cover agent sessions and tool calls, not the `Antigravity.exe` process itself. They cannot detect desktop startup or shutdown, or keep a process alive past the hook timeout. A plugin-managed MCP server is the closest supported lifecycle. This plugin has no task scheduler, startup entry, or process watcher, and it does not target VS Code or other editors.\n\n## Configuration\n\nAll settings live in the `env` block of `mcp_config.json`:\n\n| Variable | Default | Description |\n| --- | --- | --- |\n| `DISCORD_APPLICATION_ID` | `1573947464581652570` | Optional. Override only if you want to use your own Discord application |\n| `APPLICATION_NAME` | `Antigravity` | Display name used in logs |\n| `DETAILS` | empty | Discord details line; leave empty to omit it |\n| `STATE` | `AI-assisted development` | Fallback state text when no model is known |\n| `LARGE_IMAGE` | `antigravity` | Art asset key for the large image |\n| `SMALL_IMAGE` | empty | Art asset key for the small image |\n| `ELAPSED_TIME` | `true` | Show the elapsed timer |\n\nThe detected model name overrides `STATE`. A model switch shows up on the next invocation, so send a message after switching models.\n\n## Requirements\n\n- Google Antigravity Desktop 2.x\n- Node.js available on `PATH`\n- Desktop Discord with the local RPC IPC server enabled\n- Windows, macOS, or Linux\n\n## Installation\n\n```powershell\ngit clone https://github.com/ciasteczkox10/antigravity-discord-rpc\ncd antigravity-discord-rpc\nagy plugin validate --strict .\nagy plugin install .\nagy plugin list\n```\n\nEnable the plugin in Antigravity's **Customizations > Installed** panel, then restart Antigravity if presence doesn't appear.\n\n## Troubleshooting\n\n- **Nothing shows in Discord** — make sure desktop Discord is running and Activity Status is enabled in Discord's settings\n- **Model not updating** — send a message after switching models to trigger the next hook event\n- **Plugin not detected** — run `agy plugin list` and restart Antigravity after installing\n\n## Validate\n\n```powershell\nagy plugin validate --strict .\nnode --check .\\scripts\\discord-presence.mjs\nnode --check .\\scripts\\model-state.mjs\n```\n\n## Uninstall\n\n```powershell\nagy plugin uninstall antigravity-discord-rpc\n```\n\n## License\n\nMIT — see [LICENSE](LICENSE).",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/model-state.mjs",
+        "line": 36,
+        "snippet": "fs.writeFileSync( temp_file, JSON.stringify({ modelName: model_name, updatedAt: Date.now() }), \"utf8\" );",
+        "githubBlobUrl": "https://github.com/ciasteczkox10/antigravity-discord-rpc/blob/3de55fa009075922adbf773e0e4b2ca209c5b9c4/scripts/model-state.mjs#L36"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/model-state.mjs",
+        "line": 47,
+        "snippet": "fs.unlinkSync(temp_file);",
+        "githubBlobUrl": "https://github.com/ciasteczkox10/antigravity-discord-rpc/blob/3de55fa009075922adbf773e0e4b2ca209c5b9c4/scripts/model-state.mjs#L47"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.0.0",
+      "sha": "3de55fa009075922adbf773e0e4b2ca209c5b9c4",
+      "scannedAt": "2026-11-27T18:16:14.687Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec"
+      ]
+    }
+  ]
+}

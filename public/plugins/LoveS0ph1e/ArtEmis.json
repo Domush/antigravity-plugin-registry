@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "id": "LoveS0ph1e/ArtEmis",
+  "sha": "2bae232a7b0f805d976cb7f6198a92198066a3a9",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:54.947Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "everos",
+    "displayName": "everos",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "everos",
+        "runtimeName": "everos_everos",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/server.js"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "everos-flush",
+        "slashCommand": "/everos-flush",
+        "description": "立即将当前工程的最新会话与沉淀记忆提交封箱（两阶段提交 2PC），安全触发 EverOS 后台知识萃取与长期画像演进更新。支持 /everos flush 与 /everos-flush 快捷调用。",
+        "disableModelInvocation": false,
+        "file": "skills/everos-flush/SKILL.md"
+      },
+      {
+        "name": "everos-search",
+        "slashCommand": "/everos-search",
+        "description": "在当前工程中检索历史沉淀的长期记忆（包含【既定规约】、【曾有范例】、【交互脉络】等）。",
+        "disableModelInvocation": false,
+        "file": "skills/everos-search/SKILL.md"
+      },
+      {
+        "name": "everos-status",
+        "slashCommand": "/everos-status",
+        "description": "查看 EverOS 长期记忆引擎的连接状态、当前工程空间分区、用户信息与待补偿会话诊断看板。",
+        "disableModelInvocation": false,
+        "file": "skills/everos-status/SKILL.md"
+      },
+      {
+        "name": "everos",
+        "slashCommand": "/everos",
+        "description": "EverOS 智能记忆引擎统一运维总控台。提供当前工程记忆健康状态自检、手动两阶段提交封箱（flush）与自然语言记忆检索（search）。输入 /everos 呼出控制台分流面板。",
+        "disableModelInvocation": false,
+        "file": "skills/everos/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/everos",
+      "/everos-flush",
+      "/everos-search",
+      "/everos-status"
+    ],
+    "mcpServerNames": [
+      "everos_everos"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# ArtEmis: EverOS Memory Plugin for Google Antigravity\n\nPersistent, cross-session, self-evolving memory for **Google Antigravity**, backed by the [EverOS](https://github.com/EverMind-AI/EverOS) cognitive memory engine (`http://127.0.0.1:8000`).\n\nStrictly compliant with the EverOS v2 backend protocol (`/api/v2/memory/*`), built with a **pure ESM architecture and zero runtime dependencies (Zero-Dep)**, fully resilient on Windows 11, and featuring an advanced **Three-Tier Progressive Disclosure** context assembly pipeline.\n\n---\n\n## Table of Contents\n\n- [1. Cognitive Model Prerequisites (Important!)](#1-cognitive-model-prerequisites-important)\n- [2. One-Click AI Agent Deployment Prompt](#2-one-click-ai-agent-deployment-prompt)\n- [3. Manual Installation & Setup](#3-manual-installation--setup)\n- [4. Key Highlights & Architectural Invariants](#4-key-highlights--architectural-invariants)\n- [5. Dual-Language Semantic Anchors](#5-dual-language-semantic-anchors)\n- [6. Native MCP Server Tools & Skills Console](#6-native-mcp-server-tools--skills-console)\n- [7. Configuration Reference](#7-configuration-reference)\n- [8. Verification & Test Suite](#8-verification--test-suite)\n- [License](#license)\n\n---\n\n## 1. Cognitive Model Prerequisites (Important!)\n\n> [!IMPORTANT]\n> **Dual-Model Cognitive Engine Dependency**:\n> This plugin (client adapter layer) is strictly pure ESM with **zero runtime dependencies** and built-in fail-open resilience.\n> However, the underlying **EverOS backend engine requires two distinct AI model services** configured to extract memories and power dense vector retrieval:\n> 1. **Extractor LLM (Inference Model)**: Distills raw conversation transcripts, extracts coding conventions, records architectural decisions, and evolves the developer profile.\n> 2. **Dense Embedding Model (Vector Model)**: Computes dense semantic vectors for user prompts and memory collections, enabling sub-second hybrid and semantic search.\n>\n> Without configuring these models, EverOS cannot construct vector indexes or extract cognitive memories.\n\n### Recommended Configuration Template (`~/.everos/everos.toml`)\n\nCreate or update `~/.everos/everos.toml` (or `%USERPROFILE%\\.everos\\everos.toml` on Windows):\n\n```toml\n[server]\nhost = \"127.0.0.1\"\nport = 8000\n\n# 1. Extractor LLM: Distills transcripts, extracts entities, and evolves user profile\n[llm]\nprovider = \"openai\"\nbase_url = \"https://api.example.com/v1\"       # Endpoint for your inference model\napi_key = \"sk-xxxxxxxxxxxxxxxxxxxxxxxx\"\nmodel = \"your-chat-model-name\"\ntemperature = 0.2\n\n# 2. Dense Embedding Model: Vectorizes memory collections for semantic retrieval\n[embedding]\nprovider = \"openai\"\nbase_url = \"https://api.example.com/v1\"       # Endpoint for your embedding model\napi_key = \"sk-xxxxxxxxxxxxxxxxxxxxxxxx\"\nmodel = \"your-embedding-model-name\"\ndimension = 4096                              # Must strictly match the model dimension\nquery_max_concurrent = 8                      # Concurrent search slots (default 16)\n\n[storage]\nbackend = \"lancedb\"                           # Default vector storage backend\n```\n\n### Health Verification\nStart your EverOS server and verify readiness:\n```bash\ncurl http://127.0.0.1:8000/health\n```\n**Expected response**:\n```json\n{\n  \"healthy\": true,\n  \"embed\": true,\n  \"version\": \"1.5.1\"\n}\n```\n> Ensure both `\"healthy\": true` and `\"embed\": true` are returned to activate full semantic retrieval and memory ingestion.\n\n---\n\n## 2. One-Click AI Agent Deployment Prompt\n\nIf you use an AI Agent (e.g., Antigravity, Codex, Claude Code, Deepseek Harness, etc.), **copy and paste the prompt below directly to your Agent**. It will automatically inspect the environment, configure prerequisites, and register the plugin:\n\n````markdown\n# ArtEmis Automated Deployment Task\n\nPlease execute the automated configuration, deployment, and verification of the ArtEmis (EverOS Google Antigravity) memory plugin on this machine.\nThe plugin root is the current directory (if not located here, please prompt me for or locate the plugin repository path).\n\nExecute the workflow sequentially through the following five phases:\n\n## Phase 1: Runtime & Dependency Discovery\n- Verify that Node.js runtime version satisfies `>= 20.0.0`;\n- Inspect system Python `>= 3.10` and EverOS package status (`everos --version` or in the active virtual environment); guide or run `pip install everos` if uninstalled.\n\n## Phase 2: Dual-Model Cognitive Configuration Verification\n- Check if `~/.everos/everos.toml` (or `%USERPROFILE%\\.everos\\everos.toml` on Windows) exists with valid `[llm]` and `[embedding]` sections;\n- If missing or unconfigured, prompt me for the following two sets of credentials:\n  1. **Extractor LLM**: Base URL, API Key, Model Name (for transcript distillation, rule extraction, and developer profile evolution);\n  2. **Embedding Model**: Base URL, API Key, Model Name, and Output Dimension (for dense vector indexing and semantic recall);\n- Automatically generate and atomically write the standard `~/.everos/everos.toml`.\n\n## Phase 3: Daemon Launch & Health Deep Check\n- Start or verify the running EverOS daemon (`http://127.0.0.1:8000`);\n- Probe `http://127.0.0.1:8000/health` and verify the JSON response strictly satisfies:\n  * `healthy === true`\n  * `embed === true`\n  Confirming both dense embedding and LLM backend pipelines are fully operational.\n\n## Phase 4: Global Deployment, Native Sidecar Registration & Test Gates\n- In the plugin repository root, run manifest security gates:\n  `node scripts/check-manifests.mjs` (ensure all 16 checks pass with 0 FAIL);\n- Deploy as a global plugin and register the native Antigravity Sidecar daemon:\n  `node scripts/install.mjs -g -s` (installs to `~/.gemini/config/plugins/everos/` and registers `~/.gemini/config/sidecars/everos/`);\n- Execute full test suite to guarantee environment resilience:\n  `npm test` (verify all 120 tests pass).\n\n## Phase 5: Handoff & Verification Summary\n- Render a structured diagnostic summary (EverOS endpoint, dual-model connection status, plugin and sidecar registration paths);\n- Advise me to restart or reload Antigravity and inspect status via `/everos status`.\n````\n\n---\n\n## 3. Manual Installation & Setup\n\n### 1. Global Plugin & Native Sidecar Registration (Recommended)\nFrom the plugin repository directory, run:\n```bash\n# -g: Deploy as a global plugin (~/.gemini/config/plugins/everos)\n# -s: Register Antigravity native persistent Sidecar daemon\nnode scripts/install.mjs -g -s\n```\n\n### 2. Workspace-Level Setup\nTo mount the plugin only for a specific project:\n```bash\nnode scripts/install.mjs --workspace /path/to/your/workspace\n```\nThe installer automatically links hooks and MCP tools into `<workspace>/.agents/hooks.json` and `<workspace>/.agents/mcp_config.json`, safely creating `.bak` backups of any existing configurations.\n\n### 3. Uninstall & Rollback\n```bash\nnode scripts/install.mjs -g --uninstall\n```\n\n---\n\n## 4. Key Highlights & Architectural Invariants\n\n```\n       Google Antigravity IDE (Host)\n┌───────────────────────────────────────────────┐\n│ System Context: <everos_profile> (L1 Profile) │ ─── Prescriptive Covenants & Tacit Affinities\n│ History Trajectory                            │\n│ Ephemeral Turn: <everos_memory> (L2 Ephemeral)│ ─── Erstwhile Exemplars & Interwoven Vestiges\n│ Current User Prompt                           │\n└───────────────────────────────────────────────┘\n                       ▲\n                       │ stdio JSON-RPC 2.0 / Hook Ingestion\n                       ▼\n┌───────────────────────────────────────────────┐\n│ everos-antigravity (Pure ESM, Zero-Dep)       │\n│ - Hook IO & Windows 11 Natural Drain Protocol │\n│ - Detached Worker Dispatch (~300ms startup)   │\n│ - Two-Phase Commit (2PC) State Ledger         │\n│ - Chunk Idempotency (acked_chunks tracking)   │\n│ - Dummy Tool Synth & Anti-Recursive Defense   │\n│ - Native stdio MCP Server & Unified /everos   │\n└───────────────────────────────────────────────┘\n                       ▲\n                       │ HTTP REST (Loopback)\n                       ▼\n┌───────────────────────────────────────────────┐\n│ EverOS Cognitive Memory Runtime (:8000)       │\n│ - LLM Distillation + LanceDB Vector Index     │\n└───────────────────────────────────────────────┘\n```\n\n- **Zero Runtime Dependencies**: Strictly built on Node.js `>=20.0.0` built-in standard libraries (`node:fs`, `node:child_process`, `node:readline`, native `fetch` and `crypto`). No third-party npm packages to audit.\n- **Fail-Open by Design**: If EverOS is offline, unreachable, or encounters an internal fault, hooks exit in milliseconds returning `{}`. Antigravity operates uninterrupted.\n- **Two-Phase Commit (2PC) Ledger**: Local observation (`observed_turn_index`) advances independently of settlement (`settled_turn_index`). Includes client-side `acked_chunks` tracking to eliminate chunk duplication during retries.\n- **Detached Startup Dispatch**: Replaces synchronous SessionStart blocking with an asynchronous detached worker process, reducing SessionStart execution from >15s to **~300ms**.\n- **Windows 11 Natural Drain Protocol**: Strictly enforces `process.exitCode = 0` exit semantics over `process.exit(0)`, preventing stdout pipe truncation and empty JSON parse crashes on Windows.\n- **Code Generic & JSX Safety**: Uses targeted regex stripping exclusively for `<everos_memory>` and `<everos_profile>`, preserving TypeScript generics (`Array<T>`) and JSX tags.\n\n---\n\n## 5. Dual-Language Semantic Anchors\n\nThe rendering engine features a dual-language anchor registry (toggled via `EVEROS_AG_LOCALE=zh` or `en`):\n\n| Data Bucket | Chinese Anchor | English Anchor | Purpose |\n|---|---|---|---|\n| `explicit_info` | **【既定规约】** | **[Prescriptive Covenants]** | Hard architectural constraints and tech stack mandates (L1 Profile) |\n| `implicit_traits` | **【意趣默契】** | **[Tacit Affinities]** | Inferred engineering style and coding habits (L1 Profile) |\n| `agent_cases` | **【曾有范例】** | **[Erstwhile Exemplars]** | Troubleshooting postmortems and breakthrough solutions (L2 Ephemeral) |\n| `episodes` | **【交互脉络】** | **[Interwoven Vestiges]** | Cross-session architectural evolution and decision history (L2 Ephemeral) |\n\n---\n\n## 6. Native MCP Server Tools & Skills Console\n\n### 1. Autonomous Agent Tools (MCP Tools)\n- `everos_search_memory`: Search historical engineering memories and troubleshooting cases.\n- `everos_get_profile`: Retrieve developer profile (covenants and tacit affinities).\n- `everos_add_memory`: Explicitly record a critical postmortem, decision, or convention.\n- *(Note: Flush/Seal permissions are withheld from the LLM; sealing is reserved for lifecycle hooks and human developers).*\n\n### 2. Unified Skills Console (`/everos`)\n- **/everos status** (or bare `/everos`): Run diagnostics and inspect connection status, project partition, and active sessions.\n- **/everos flush** (or `/everos-flush`): Manually trigger a 2PC seal on the most recent session for knowledge distillation.\n- **/everos search <query>**: Interactively search engineering memory directly from the prompt line.\n\n---\n\n## 7. Configuration Reference\n\nThe plugin client adapter supports optional overrides via environment variables:\n\n| Variable | Default | Description |\n|---|---|---|\n| `EVEROS_AG_BASE_URL` | `http://127.0.0.1:8000` | HTTP URL of the EverOS backend server |\n| `EVEROS_AG_SEARCH_METHOD` | `keyword` | Retrieval mode (`keyword`, `vector`, `hybrid`) |\n| `EVEROS_AG_PROJECT_ID` | Derived from Git Remote | Canonical project partition (Agent Track) |\n| `EVEROS_AG_USER_ID` | System Username (`USERNAME`) | User identity partition (User Track) |\n| `EVEROS_AG_LOCALE` | `zh` | Language for semantic anchors (`zh` or `en`) |\n| `EVEROS_AG_DATA_DIR` | `~/.everos/antigravity` | Path for 2PC session state and index |\n| `EVEROS_AG_RECALL_TIMEOUT_MS` | `5000` | Retrieval timeout ceiling (500~10000ms) |\n\n---\n\n## 8. Verification & Test Suite\n\nThe repository includes a comprehensive, dependency-free test harness:\n\n```bash\n# Run 16 manifest gate checks and 120 unit/integration tests\nnpm test\n\n# Run isolated live verification suite simulating full IDE lifecycle\nnpm run verify:live\n```\n\nThe test suite covers monotonic state merges, chunk retry ledgers, Windows path casing, pipe drain semantics, detached dispatch, and dual-track search fairness.\n\n---\n\n## License\n\nApache-2.0 © 2026 Sethyrial\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/scripts/lib/identity.js",
+        "line": 44,
+        "snippet": "const out = execFileSync(\"git\", [\"-C\", cwd, ...args], { encoding: \"utf8\", timeout: Math.min(Math.max(Number(timeout) || 1000, 100), 1000), stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/hooks/scripts/lib/identity.js#L44"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "hooks/scripts/session-start.js",
+        "line": 55,
+        "snippet": "const child = spawn(process.execPath, [flushScript, \"--background\", stale.session_id], { detached: true, stdio: \"ignore\", windowsHide: true, cwd: safeCwd, env: process.env, });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/hooks/scripts/session-start.js#L55"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/live-verify.js",
+        "line": 58,
+        "snippet": "const child = spawn(cmd, args, { ...options, stdio: [\"pipe\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L58"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/live-verify.js",
+        "line": 114,
+        "snippet": "while ((match = regex.exec(rawCmd)) !== null) {",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L114"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/live-verify.js",
+        "line": 369,
+        "snippet": "const mcpChild = spawn(process.execPath, [path.join(pluginRoot, \"mcp\", \"server.js\")], { cwd: sandboxDir, env: baseEnv, stdio: [\"pipe\", \"pipe\", \"pipe\"], });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L369"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/scripts/lib/state.js",
+        "line": 47,
+        "snippet": "fs.writeFileSync(tmpPath, content, { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/hooks/scripts/lib/state.js#L47"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/scripts/lib/state.js",
+        "line": 70,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/hooks/scripts/lib/state.js#L70"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/scripts/lib/state.js",
+        "line": 478,
+        "snippet": "fs.unlinkSync(fullPath);",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/hooks/scripts/lib/state.js#L478"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 120,
+        "snippet": "fs.writeFileSync(targetHooksPath, hooksContent, \"utf8\");",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L120"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 157,
+        "snippet": "fs.writeFileSync(targetMcpPath, mcpContent, \"utf8\");",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L157"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 273,
+        "snippet": "fs.writeFileSync(sidecarJsonPath, content, \"utf8\");",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L273"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/live-verify.js",
+        "line": 92,
+        "snippet": "const res = await fetch(`${baseUrl}/health`, { signal: AbortSignal.timeout(1000), });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L92"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/live-verify.js",
+        "line": 234,
+        "snippet": "fs.writeFileSync(transcriptPath, JSON.stringify(turn1UserEntry) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L234"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/live-verify.js",
+        "line": 303,
+        "snippet": "fs.appendFileSync(transcriptPath, JSON.stringify(assistantStep) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L303"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/live-verify.js",
+        "line": 438,
+        "snippet": "if (fs.existsSync(transcriptPath)) fs.unlinkSync(transcriptPath);",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L438"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/live-verify.js",
+        "line": 439,
+        "snippet": "fs.rmSync(testDataDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/live-verify.js#L439"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/everos/cli.js",
+        "line": 85,
+        "snippet": "fs.writeFileSync(probe, \"\");",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/skills/everos/cli.js#L85"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/everos/cli.js",
+        "line": 86,
+        "snippet": "fs.unlinkSync(probe);",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/skills/everos/cli.js#L86"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 7,
+        "snippet": "* 2. Global Plugin Bundle Mode: Deploys as standard plugin to ~/.gemini/config/plugins/everos/",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L7"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 167,
+        "snippet": "* 2. Install as Global Plugin Bundle (~/.gemini/config/plugins/everos/)",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L167"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 218,
+        "snippet": "* 3. Register as Native Antigravity Sidecar (~/.gemini/config/sidecars/everos/sidecar.json)",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L218"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 289,
+        "snippet": "-g, --global Install as standard Global Plugin Bundle to ~/.gemini/config/plugins/everos/",
+        "githubBlobUrl": "https://github.com/LoveS0ph1e/ArtEmis/blob/2bae232a7b0f805d976cb7f6198a92198066a3a9/scripts/install.mjs#L289"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "2bae232a7b0f805d976cb7f6198a92198066a3a9",
+      "scannedAt": "2026-11-27T18:24:54.947Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

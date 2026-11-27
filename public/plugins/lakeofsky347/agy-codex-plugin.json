@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "id": "lakeofsky347/agy-codex-plugin",
+  "sha": "a9cd9dd921feb954b4313e74e4206710dd078ac3",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:25.510Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-delegate",
+    "displayName": "Codex Delegate",
+    "version": "0.3.3",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "worker",
+        "runtimeName": "codex-delegate_worker",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/dist/mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-delegate",
+        "slashCommand": "/codex-delegate",
+        "description": "Delegate a read-only workspace review, Git diff audit, root-cause diagnosis, or second opinion to local OpenAI Codex, or orchestrate ChatGPT Codex CLI builder/verifier workers inside Antigravity /swarm. Use when the user invokes /codex-dele",
+        "disableModelInvocation": false,
+        "file": "skills/codex-delegate/SKILL.md"
+      },
+      {
+        "name": "codex-swarm-worker",
+        "slashCommand": "/codex-swarm-worker",
+        "description": "Transceiver protocol exclusively for an Antigravity Swarm worker bound to a local Codex CLI model. Coordinators and non-swarm agents must not load this skill.",
+        "disableModelInvocation": true,
+        "file": "skills/codex-swarm-worker/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "codex-auditor",
+        "description": "Read-only cross-model auditor backed by local OpenAI Codex. Delegate to this subagent for independent code reviews, root-cause diagnoses, architecture or security second opinions, and parallel module audits without cluttering the main conve",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/codex-auditor.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-delegate",
+      "/codex-swarm-worker"
+    ],
+    "mcpServerNames": [
+      "codex-delegate_worker"
+    ],
+    "agentNames": [
+      "codex-auditor"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Codex Delegate\n\n在 Antigravity 会话与 `/swarm` 多智能体编队中管理并调度本机 ChatGPT 登录态下的 OpenAI Codex CLI 模型。既能让 Codex 在隔离的 Git Worktree 中作为 **Builder / Author（`workspace-write`）** 参与构建与提交，也能作为 **Verifier / Auditor（`read-only`）** 进行高信噪比代码审查与交叉二审。\n\n## 核心能力\n\n- **Swarm 混合编队管理（Builder + Verifier）**：\n  - **模型目录与限流查询（`codex_swarm` `models`）**：通过 `codex app-server` 读取当前 ChatGPT 登录态下可用的 Codex 模型列表（及 `low`～`ultra` 推理档位）和窗口配额状态；严格剥离 `OPENAI_API_KEY` / `CODEX_API_KEY`，仅使用本地 ChatGPT 订阅态。\n  - **可写构建节点与 Git Worktree 隔离**。构建节点须先在花名册绑定 `sandbox: \"workspace-write\"`，并使用 `swarm{action:\"add\", workspace:\"share\"}` 分配独立工作副本。绑定时省略 `workspace`，首次调用会固定实际目录。后续轮次沿用该目录，单轮可传 `sandbox: \"read-only\"` 临时降为只读。\n  - **Git 写入范围**。Codex 在分配的工作副本里改文件、运行测试并提交到该副本的分支。链接式工作树的专用 Git 目录与公共 Git 元数据目录都会通过 `--add-dir` 加入写入范围，供 Git 写入索引、对象和引用。按分配的分支和文件范围提交可保留主工作区及父分支的独立性。提交依赖本机 Git 作者身份及仓库 hooks。\n  - **Swarm 消息板协作**。Swarm worker 收到 `@name` 消息后，直接调用预加载的 `mcp_codex-delegate_worker_codex_swarm_turn`，把任务内容放在 `prompt` 中。Antigravity 管理后台任务的 `toolSummary`，Codex 完成后由 worker 在消息板汇报结果。\n  - **动态换模、上下文分叉与持久化**。用 `codex_swarm` 的 `configure` 指定下一轮的模型和推理档位，用 `fork_from` 从已有 Codex 会话分叉。花名册与累计用量保存在 `${PLUGIN_DATA}/swarms/<swarm_id>.json`。并发限制、运行状态和取消由执行任务的 MCP 进程管理，同一编队的运行中任务应在发起任务的 Antigravity 客户端管理。\n- **零轮询后台唤醒与只读二审**：\n  - 保留独立的 `codex-auditor` 子智能体与 `codex_consult` / `codex_review` 只读工具，统一采用 `background: \"always\"` 与 `timeoutSeconds: 660` 响应式唤醒，支持 `output_schema`、`AbortSignal` 进程组取消联动、`stderr` 故障透传与 `${PLUGIN_DATA}/history.jsonl` 审计日志。\n\n## 安装与更新\n\n需要 Antigravity App 或 CLI（`agy`）、本机 Node.js 22+，以及已用 ChatGPT 登录的 Codex CLI。可直接从 GitHub 安装已构建的插件。\n\n```bash\ncodex login status\nagy plugin install https://github.com/lakeofsky347/agy-codex-plugin\n```\n\n如需从本地源码安装，在仓库根目录运行以下命令。\n\n```bash\ncodex login status\nnpm ci && npm run build\nagy plugin validate --strict .\nagy plugin install .\n```\n\n更新后，在 Antigravity 中开启新会话。若现有 App 进程仍加载旧版 MCP 工具声明，在插件面板关闭再开启 Codex Delegate，确认版本后重试。\n\n## 使用方式\n\n### 1. 在 `/swarm` 中混编管理 ChatGPT Codex 模型\n\n```text\n/swarm 列出本机 ChatGPT 可用的 Codex 模型；用 gpt-6.2-sol（high）作为 auth-builder 在 share worktree 实现登录校验修复并提交，再用只读 Codex verifier 交叉审查。\n```\n\n若通用 `call_mcp_tool` 返回 `not enabled`，让 worker 直接调用 `mcp_codex-delegate_worker_codex_swarm_turn`，并使用 `prompt` 参数提交任务。\n\n### 2. 单会话代码审查与只读审计\n\n```text\n/codex-delegate 用本地 Codex 审查当前未提交的 Git 改动，并核实最关键的三个风险点。\n```\n\n```text\n派 codex-auditor 子智能体并行检查 src/ 下的并发控制与错误处理，返回带行号证据的二审结论。\n```\n\n### 3. 插件组件清单\n\n| 组件 | 名称 | 说明 |\n| --- | --- | --- |\n| **Rule** | `rules/codex-swarm.md` | `model_decision` 按需触发，指导 Swarm Coordinator 用 `codex_swarm` 管理 Codex 构建/审校节点。 |\n| **Skill** | `codex-swarm-worker` | Swarm 宿体 Worker 专用协议（`disable-model-invocation: true`），负责零轮询消息转发。 |\n| **Skill** | `codex-delegate` | 通用工作流入口，涵盖 Swarm 编队、Subagent 委派与直接工具调用。 |\n| **Subagent** | `codex-auditor` | 只读审计子智能体（Flash），在独立上下文调用 Codex 并核验 `file:line` 引用。 |\n| **MCP 工具** | `codex_swarm` | 前台控制面：`models` / `status` / `bind` / `configure` / `release`。 |\n| **MCP 工具** | `codex_swarm_turn` | 按 `member` 在后台续用或分叉 Codex 会话，支持 `workspace-write`。 |\n| **MCP 工具** | `codex_consult` / `codex_review` | 独立只读分析与原生 Git 审查工具。 |\n\n## 开发验证\n\n```bash\nnpm test\nagy plugin validate --strict .\n```\n\n`npm test` 会重新打包 `dist/mcp-server.mjs`，并通过替身进程验证：`app-server` 模型与 ChatGPT 鉴权检查、`workspace-write` + Git worktree `--add-dir` 并发读写与锁一致性、`configure` 保留 `session_id` 热换模、`fork_from` 分叉、`release` 终止、跨重启续问、`codex_review` 校验、`stderr` 诊断与 `notifications/cancelled` 信号回收。\n\n打包依赖的许可声明见 [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt)。\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "prompt_injection_suspect"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_OVERRIDE_GUARDRAILS",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_injection_suspect",
+        "message": "Prompt instructs the agent to override safety rules or hide actions from the user.",
+        "file": "rules/codex-swarm.md",
+        "line": 8,
+        "snippet": "Native `swarm{action:\"models\"}` lists only Antigravity cloud models. Do **not** pass local Codex/GPT model names to `swarm{action:\"add\", model:...}`, and do not tell the user Codex",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/rules/codex-swarm.md#L8"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/codex-models.mjs",
+        "line": 43,
+        "snippet": "const child = spawn( executable, [ 'app-server', '--stdio', '--disable', 'apps', '--disable', 'plugins', '--disable', 'hooks', '-c', 'mcp_servers={}', ], { env: stripApiKeys(), std",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex-models.mjs#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/codex.mjs",
+        "line": 59,
+        "snippet": "const match = /^gitdir:\\s*(.+)$/m.exec(content);",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/codex.mjs",
+        "line": 184,
+        "snippet": "const child = spawn(executable, commandSpec.args, { cwd: options.workspace, detached: posix, env, stdio: ['pipe', 'pipe', 'pipe'], });",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex.mjs#L184"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/codex.mjs",
+        "line": 161,
+        "snippet": "await writeFile(schemaPath, JSON.stringify(options.outputSchema), 'utf8');",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex.mjs#L161"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/codex.mjs",
+        "line": 169,
+        "snippet": "if (tempDir) await rm(tempDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex.mjs#L169"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/codex.mjs",
+        "line": 173,
+        "snippet": "if (tempDir) await rm(tempDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex.mjs#L173"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/codex.mjs",
+        "line": 301,
+        "snippet": "await rm(tempDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/codex.mjs#L301"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/mcp-server.mjs",
+        "line": 64,
+        "snippet": "await appendFile(logPath, `${JSON.stringify({ timestamp: new Date().toISOString(), ...entry })}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/mcp-server.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/swarm-roster.mjs",
+        "line": 86,
+        "snippet": "await writeFile(tmpPath, JSON.stringify(roster, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/swarm-roster.mjs#L86"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/swarm-roster.mjs",
+        "line": 90,
+        "snippet": "await rm(tmpPath, { force: true });",
+        "githubBlobUrl": "https://github.com/lakeofsky347/agy-codex-plugin/blob/a9cd9dd921feb954b4313e74e4206710dd078ac3/src/swarm-roster.mjs#L90"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.3.3",
+      "sha": "a9cd9dd921feb954b4313e74e4206710dd078ac3",
+      "scannedAt": "2026-11-27T18:15:25.510Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "prompt_injection_suspect"
+      ]
+    }
+  ]
+}

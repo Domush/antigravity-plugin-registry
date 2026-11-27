@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "KatherineKarpova/Linux-Mentor",
+  "sha": "b74b87f19fe8bc2d07aa8aafbf31d42a18cef3a6",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:06.589Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "linux-mentor",
+    "displayName": "linux-mentor",
+    "version": "0.2.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "linux-mentor",
+        "runtimeName": "linux-mentor_linux-mentor",
+        "transport": "stdio",
+        "command": "linux-mentor-mcp",
+        "args": [],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "linux-mentor_linux-mentor"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Linux-Mentor\r\n\r\n**New here? See [INSTALL.md](INSTALL.md): download the zip from the [latest release](https://github.com/KatherineKarpova/Linux-Mentor/releases/latest), run `install.sh`, then `run-mentor`.**\r\n\r\nAn Antigravity CLI plugin that teaches Linux troubleshooting and system concepts through Socratic guidance, using the active distribution's installed documentation where available.\r\n\r\nThe desktop application is a Wails native window with a React and TypeScript interface. To build and install everything from a checkout, run `./scripts/install-from-source.sh`. To build only the window, run `./scripts/build-desktop.sh`; the script writes `build/bin/linux-mentor`, which the enabled `SessionStart` hook launches (or set `LINUX_MENTOR_GUI` to override the path). The hook passes Antigravity's conversation ID and transcript path through environment variables.\r\n\r\nThe GUI reads completed model responses from the active Antigravity transcript and does not display user messages. The small `index.html` in the frontend is only the embedded React entry point for Wails; it is not served as a separate website. See [documentation/architecture.txt](documentation/architecture.txt) for the current design and remaining work.\r\n\r\nLearning progress is stored locally in SQLite at `${XDG_STATE_HOME:-~/.local/state}/linux-mentor/progress.db`. The desktop app and MCP server create or update the schema on first launch and share the same per-user database. It stores session metadata, concept progress and attempt history, and interaction preferences; it does not store transcript contents or collect hardware identifiers.\r\n\r\nThe MCP server also creates `${XDG_DATA_HOME:-~/.local/share}/linux-mentor/docs.db`. On first launch it reads the exact distro ID from `/etc/os-release` and indexes installed man pages and selected text documentation from standard system directories. RAG searches only that distro's indexed section and returns short, source-labeled excerpts; coverage depends on which local documentation is installed.\r\n\r\nRun `./scripts/test-progress.sh` in a terminal to exercise scoring and SQLite persistence using an isolated temporary database. It stays available while the script waits; only a keyboard key triggers its deletion, not a mouse click.\r\n",
+  "latestReleaseNotes": "## What's Changed\n* Adding database by @KatherineKarpova in https://github.com/KatherineKarpova/Linux-Mentor/pull/1\n\n## New Contributors\n* @KatherineKarpova made their first contribution in https://github.com/KatherineKarpova/Linux-Mentor/pull/1\n\n**Full Changelog**: https://github.com/KatherineKarpova/Linux-Mentor/commits/v0.2.0",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "mcp_local_exec"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "0.2.0",
+      "sha": "b74b87f19fe8bc2d07aa8aafbf31d42a18cef3a6",
+      "scannedAt": "2026-11-27T18:20:06.589Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "mcp_local_exec"
+      ]
+    }
+  ]
+}

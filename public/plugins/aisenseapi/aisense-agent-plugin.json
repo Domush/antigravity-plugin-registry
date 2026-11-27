@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "aisenseapi/aisense-agent-plugin",
+  "sha": "aff848068906bf31a4caecd792e5025825772712",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:09.241Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "aisense",
+    "displayName": "AI SENSE Free Public Tools",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "aisense",
+        "runtimeName": "aisense_aisense",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://aisenseapi.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "aisense-tools",
+        "slashCommand": "/aisense-tools",
+        "description": "Pick and use the right AI SENSE tool - QR codes, HTML to PDF, hashing, time and time zones, temporary storage, webhook capture, queues, leases or a weighted decision - from the free aisense MCP server. Use when the user needs one of these u",
+        "disableModelInvocation": false,
+        "file": "skills/aisense-tools/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/aisense-tools"
+    ],
+    "mcpServerNames": [
+      "aisense_aisense"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AI SENSE Free Public Tools: Agent Plugin\n\nA portable [Agent Plugins](https://agent-plugins.org) 1.0.0 package that\nconnects an agent to the free [AI SENSE MCP server](https://aisense.no/free-public-mcp-server)\nand bundles one skill that tells the agent which of its 77 tools fits which\nneed.\n\n| File | What it is |\n| --- | --- |\n| `plugin.json` | The manifest: name `aisense`, version, author, license |\n| `mcp.json` | One remote server, `aisense`, over Streamable HTTP at `https://aisenseapi.com/mcp`, with no authentication |\n| `skills/aisense-tools/SKILL.md` | When to use which tool, the rules on tokens, expiry and quota, and a call with a known answer that proves the connection |\n| `.claude-plugin/`, `.mcp.json` | Claude Code: the plugin manifest, a marketplace with this one plugin, and the same server |\n| `.agents/plugins/marketplace.json` | Codex: a marketplace with this one plugin. Codex reads `plugin.json` and `mcp.json` itself |\n| `gemini-extension.json` | Gemini CLI: the extension manifest with the same server |\n| `.antigravity-plugin/`, `mcp_config.json`, `assets/logo.svg` | Antigravity: the manifest with display name, logo and starter prompts, and the same server |\n\nThere is no local code: the package declares a hosted server and a skill.\n\n## Install\n\nClaude Code:\n\n```text\n/plugin marketplace add aisenseapi/aisense-agent-plugin\n/plugin install aisense@aisense\n```\n\nCodex, Gemini CLI, Antigravity and the other clients that load Agent Plugins\ninstall this repository with their own plugin or extension command. The\ncommands for Codex and Gemini CLI are in the\n[MCP guide](https://github.com/aisenseapi/aisense-free-public-rest-apis/blob/main/MCP.md#connect-from-a-client),\nand the [compatible clients](https://agent-plugins.org/compatible-clients) page\nlinks each client's own instructions.\n\nWithout the plugin, the server is one entry in any MCP client: the URL\n`https://aisenseapi.com/mcp`, over Streamable HTTP, with no authentication.\n\n## What the tools do\n\nUtilities: time and time zones, hashing and verification, encoding, random\nvalues and UUIDs, QR codes in both directions, HTML to PDF, HTML and Markdown,\nJSON checks and JSON to CSV, table matching, image conversion and metadata,\nemail and value validation, network lookups, short URLs. Workflow tools:\ntemporary storage and files, webhook capture, human approval, Agent Queue,\nLease, Heartbeat, Agent Inbox, Agent Wake, Agent Handoff, Agent Run, temporary\nDNS names, semantic search, one-time secrets, and `decide` for typed decisions\nfrom facts and weighted rules. The full list with arguments is in\n[MCP.md](https://github.com/aisenseapi/aisense-free-public-rest-apis/blob/main/MCP.md).\n\n## What to know before installing\n\n- **Every tool call goes to AI SENSE's server** at `aisenseapi.com` with the\n  arguments the agent passes, and those arguments also reach the user's model\n  provider through the session. AI SENSE AS is in Oslo, Norway; request logs\n  hold the caller's IP address for the period the\n  [privacy policy](https://aisense.no/privacy) gives.\n- **No account, no key, no session ID.** Every address has 5000 requests a day\n  across all tools; past that the server answers 429 until the daily reset.\n- **Bearer tokens.** Tools that create something (queues, inboxes, captures,\n  leases, secrets, search collections) return tokens that grant access to it.\n  The bundled skill tells the agent to keep them out of messages and logs.\n- **Public by id, gone in 24 hours.** Stored data, files and captures are\n  readable by anyone holding their id or URL and expire within 24 hours. Do not\n  store secrets, credentials or personal data.\n- **Outbound calls.** Webhook schedules and notify URLs make the server send a\n  request to a URL the agent supplies.\n- **Annotated tools.** Each tool carries MCP annotations: 37 are read-only, 32\n  write and 8 are destructive (they acknowledge, release, cancel, delete, reveal\n  or burn). A client that asks before write-capable calls can use them, for\n  example Hermes Agent with `trust: untrusted` on the server entry.\n- **The tool list comes from the server at run time**, so a pinned commit of\n  this package does not fix it.\n\n## Check it works\n\nAsk the agent to call `decide` with state `{\"amount\": 30, \"tier\": \"gold\"}` and\none `yes_no` question named `refund_now` with bias -2 and the rules amount lte\n50 weight 2 and tier eq gold weight 1. The answer is `yes`, probability 0.7311,\nconfidence 0.4621, action `hold`.\n\n## License and contact\n\nMIT, see [LICENSE](LICENSE). AI SENSE AS, support@aisense.no,\nhttps://aisense.no. Questions and problems:\n[issues](https://github.com/aisenseapi/aisense-agent-plugin/issues).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "aff848068906bf31a4caecd792e5025825772712",
+      "scannedAt": "2026-11-27T18:24:09.241Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

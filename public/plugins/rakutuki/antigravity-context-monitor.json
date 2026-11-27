@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "rakutuki/antigravity-context-monitor",
+  "sha": "d47cdf3a3ed903b8458bdfe7c40910ffcb72016c",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:12.229Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-monitor",
+    "displayName": "Context Monitor",
+    "version": "1.0.1",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "monitor",
+        "runtimeName": "context-monitor_monitor",
+        "transport": "stdio",
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "${PLUGIN_ROOT}/bin/run_server.cmd",
+          "--data_dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "context-monitor_monitor"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Context Monitor for Google Antigravity\n\nEnglish | [日本語](./README.ja.md) | [简体中文](./README.zh-CN.md)\n\n**An official-spec MCP App plugin for the Google Antigravity desktop app (Antigravity 2.0) side pane that monitors your current session's context usage and per-model Usage quotas in real time, helping you compact cleanly at the right moment with one-click `/compact` copy.**\n\n---\n\n## 💡 Why Use Context Monitor?\n\nAntigravity users commonly run into two costly pitfalls when working in long sessions:\n\n1. **Burning through Usage quotas silently with bloated context**\n   * Antigravity Usage quotas (5h limit / Weekly limit) scale with the **total context size the AI reads on each turn** (conversation history, tool outputs, file contents, skills, rules), not just the number of messages sent.\n   * Continuing a chat at 200k–400k tokens consumes far more quota on every single question.\n2. **Unexpected auto-compaction mid-task**\n   * When context grows large enough, Antigravity automatically compacts older turns into a summary—sometimes right in the middle of an implementation step.\n   * **Keeping an eye on the bar and clicking \"Copy `/compact`\" at a clean breakpoint** preserves important context while keeping token consumption low.\n\n---\n\n## ✨ Features\n\n* **Compact Bar & One-Click Detailed Breakdown**\n  * Shows a clean summary bar (`usage %` and `used / target` in `k` format) when collapsed.\n  * Click the **Details / Compact** button at the top-right to expand or collapse both the Context card and the Usage card together, or click each card individually.\n  * Breaks usage down into **Messages**, **System Tools**, **MCP Tools**, **System Prompt**, **Skills**, and **Memory Files / Rules**, along with **Free space**, **Cached context**, **Conversation steps**, **Tool calls**, and **Artifacts**.\n* **One-Click `Copy /compact` & Immediate Post-Compaction Reset**\n  * Shows remaining tokens until your target limit (`-- tokens until target`, matching **Free space**) and copies `/compact` to the clipboard for pasting into the chat input (clipboard copy prevents MCP App `ui/message` from sending `/compact` as plain chat text).\n  * Automatically detects `/compact` immediately via `CHECKPOINT` entries in the session log—resetting accumulated dynamic tokens and cached context without waiting for the next user message—and also keeps a large token-drop fallback detector.\n* **Auto-Follow Mode (`🔄 Auto-follow`) & Session Pinning**\n  * Selecting `🔄 Auto-follow` at the top of the session dropdown automatically tracks the active chat in the main pane (including updated titles).\n  * **Note on Antigravity behavior**: Before sending the first message in a brand-new chat window, Antigravity has not written a session log on disk or sent a new conversation ID to the plugin yet, so the previous active session remains shown (clearly labeled as `Latest: <session title>`). As soon as the first message is sent, it switches automatically.\n  * You can also pin any recent session from the dropdown to inspect its token breakdown and generated artifacts.\n* **Persistent Settings, Unified `k` Notation & Multi-Language UI**\n  * Target context limit (`200k` / `400k` / `1,000k` / `2,000k`, clamped within `10k`–`10,000k` — **a reference 100% scale and `/compact` guide; it does not modify Antigravity's internal auto-compact threshold**), card expand/collapse states, and display language (`Auto`, `日本語`, `English`, `简体中文`) are saved atomically to `settings.json` in the plugin data directory.\n  * All token counts use clean **`k` notation** (e.g., `136k / 400k`, `1,000k`).\n* **Automatic Light / Dark Theme Sync**\n  * Follows Antigravity's host theme and CSS variables automatically.\n* **Model Usage Quota Ring Gauges**\n  * Displays **Weekly limit** / **5h limit** remaining percentages and reset countdowns across model groups (**Gemini Models**, **Claude and GPT models**) via local Language Server RPC.\n* **Zero External Dependencies**\n  * Pure Python standard library (`python >= 3.9`) using the official MCP App (`ui://` + `aux_pane`) specification—no app binary patching required.\n\n---\n\n## 🚀 Installation\n\n### Prerequisites\n* Google Antigravity desktop app (Antigravity 2.0)\n* Python 3.9+ (no `pip install` required)\n\n### Windows (PowerShell)\nClone into `~/.gemini/config/plugins/context-monitor`:\n\n```powershell\ngit clone https://github.com/rakutuki/antigravity-context-monitor.git \"$HOME\\.gemini\\config\\plugins\\context-monitor\"\n```\n(Or download the ZIP and extract it to `C:\\Users\\<username>\\.gemini\\config\\plugins\\context-monitor`.)\n\n### macOS / Linux\n```bash\ngit clone https://github.com/rakutuki/antigravity-context-monitor.git ~/.gemini/config/plugins/context-monitor\nchmod +x ~/.gemini/config/plugins/context-monitor/bin/run_server.sh\n```\nOn macOS / Linux, update `mcp_config.json` as follows:\n\n```json\n{\n  \"mcpServers\": {\n    \"monitor\": {\n      \"command\": \"${PLUGIN_ROOT}/bin/run_server.sh\",\n      \"args\": [\n        \"--data_dir=${PLUGIN_DATA}\"\n      ],\n      \"env\": {\n        \"PYTHONIOENCODING\": \"utf-8\"\n      }\n    }\n  }\n}\n```\n\n---\n\n## 📖 Usage\n\n1. Once placed in the plugins folder, Antigravity automatically detects **Context Monitor** (verify it is enabled under **Skills & Customizations > Plugins**).\n2. Click the **`+`** button at the top of the right-hand side pane and choose **`Context`**.\n3. You can also ask the assistant in chat (e.g., *\"Open Context Monitor in the side pane\"*).\n\n---\n\n## 📁 Project Structure\n\n```text\ncontext-monitor/\n├── plugin.json                  # Plugin manifest\n├── mcp_config.json              # MCP server launch config\n├── README.md                    # Documentation (English)\n├── README.ja.md                 # Documentation (Japanese)\n├── README.zh-CN.md              # Documentation (Simplified Chinese)\n├── LICENSE                      # MIT License\n├── assets/\n│   └── logo.svg                 # Plugin icon\n├── bin/\n│   ├── server.py                # MCP server (JSON-RPC 2.0 handlers & tool schemas)\n│   ├── cm_analyzer.py           # Token estimation & log analyzer (/compact & CHECKPOINT reset, LRU cache)\n│   ├── cm_session.py            # Active session discovery, title/model resolution & env counts\n│   ├── cm_quota.py              # Language Server RPC client for Usage quotas\n│   ├── cm_settings.py           # Atomic settings persistence (settings.json)\n│   ├── run_server.cmd           # Windows Python launcher\n│   └── run_server.sh            # macOS / Linux launcher\n├── tests/\n│   └── test_context_monitor.py  # Standard-library unittest suite\n└── ui/\n    └── app.html                 # Self-contained MCP App frontend UI\n```\n\n---\n\n## 🧪 Running Unit Tests\n\nAll unit tests run completely offline using Python's built-in `unittest` without requiring live Antigravity sessions or a running Language Server.\n\nFrom the `context-monitor` root directory:\n\n```bash\npython -m unittest discover -s tests -v\n```\n\n---\n\n## 📜 License\n[MIT License](./LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "bin/cm_quota.py",
+        "line": 110,
+        "snippet": "proc = subprocess.run(cmd, capture_output=True, text=True, timeout=3.0, startupinfo=startupinfo)",
+        "githubBlobUrl": "https://github.com/rakutuki/antigravity-context-monitor/blob/d47cdf3a3ed903b8458bdfe7c40910ffcb72016c/bin/cm_quota.py#L110"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "bin/cm_quota.py",
+        "line": 113,
+        "snippet": "proc = subprocess.run([\"ps\", \"-ef\"], capture_output=True, text=True, timeout=1.5)",
+        "githubBlobUrl": "https://github.com/rakutuki/antigravity-context-monitor/blob/d47cdf3a3ed903b8458bdfe7c40910ffcb72016c/bin/cm_quota.py#L113"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "bin/cm_session.py",
+        "line": 62,
+        "snippet": "proc = subprocess.run( cmd, capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\", timeout=0.8, startupinfo=startupinfo, )",
+        "githubBlobUrl": "https://github.com/rakutuki/antigravity-context-monitor/blob/d47cdf3a3ed903b8458bdfe7c40910ffcb72016c/bin/cm_session.py#L62"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "bin/cm_quota.py",
+        "line": 171,
+        "snippet": "with urllib.request.urlopen(req, timeout=1.2, context=ssl_ctx) as resp:",
+        "githubBlobUrl": "https://github.com/rakutuki/antigravity-context-monitor/blob/d47cdf3a3ed903b8458bdfe7c40910ffcb72016c/bin/cm_quota.py#L171"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "bin/cm_settings.py",
+        "line": 116,
+        "snippet": "os.unlink(tmp_path)",
+        "githubBlobUrl": "https://github.com/rakutuki/antigravity-context-monitor/blob/d47cdf3a3ed903b8458bdfe7c40910ffcb72016c/bin/cm_settings.py#L116"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.1",
+      "sha": "d47cdf3a3ed903b8458bdfe7c40910ffcb72016c",
+      "scannedAt": "2026-11-27T18:20:12.229Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

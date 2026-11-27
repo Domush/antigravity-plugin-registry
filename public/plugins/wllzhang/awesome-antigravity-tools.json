@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "id": "wllzhang/awesome-antigravity-tools",
+  "sha": "97f11c3bd4a626d479e7b98f87444db57a97d8a7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:54.189Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "awesome-antigravity-tools",
+    "displayName": "Awesome Antigravity Tools Advisor",
+    "version": "2.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "antigravity-tools-advisor",
+        "slashCommand": "/antigravity-tools-advisor",
+        "description": "Search, compare, and recommend verified 100% Google Antigravity-exclusive tools (quota HUDs, Windows runtime fixes, proxy injectors, ACP gateways, official CLI/SDKs) from the awesome-antigravity-tools catalog. Trigger when the user asks for",
+        "disableModelInvocation": false,
+        "file": "skills/antigravity-tools-advisor/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/antigravity-tools-advisor"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<!-- AUTO-GENERATED FROM data/tools.json BY scripts/generate_docs.py — DO NOT EDIT DIRECTLY -->\n\n# Awesome Antigravity Tools [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)\n[![Curated Tools](https://img.shields.io/badge/Curated-21%20Tools-4285F4.svg)](#contents)\n[![Daily Health Audit](https://github.com/wllzhang/awesome-antigravity-tools/actions/workflows/health-check.yml/badge.svg)](https://github.com/wllzhang/awesome-antigravity-tools/actions/workflows/health-check.yml)\n[![Repository Health](https://img.shields.io/badge/Health%20Audit-20/21%20Active%20%2895%25%29-brightgreen)](health_report.md)\n[![Antigravity](https://img.shields.io/badge/Google-Antigravity-4285F4.svg?logo=google)](https://antigravity.google)\n\n> A strictly curated, schema-validated directory of **100% native, dedicated tools, IDE extensions, runtime hotfixes, and engineering gateways** built exclusively for Google Antigravity.\n\n[🌐 Interactive Web Explorer](https://wllzhang.github.io/awesome-antigravity-tools/) · [📊 Comparison Matrix](COMPARISON.md) · [中文文档 (Chinese)](README.zh-CN.md) · [Contributing Guidelines](CONTRIBUTING.md) · [Daily Health Report](health_report.md) · [Submit a Tool](https://github.com/wllzhang/awesome-antigravity-tools/issues/new/choose)\n\n---\n\n## 🎯 Our Manifesto: Strictly Antigravity-Exclusive\n\nMost \"awesome\" lists in the AI agent space are flooded with two types of noise:\n1. **Generic Markdown prompt dumps** (`SKILL.md`) that work identically across Claude Code, Cursor, and Codex.\n2. **Generic multi-agent tools** that were designed for other platforms and merely slapped \"Antigravity\" onto their tags.\n\n**This repository rejects all generic padding.** Every single project curated here is **100% dedicated to Google Antigravity**:\n- Built specifically for the Antigravity IDE, CLI (`agy`), or `agy acp` protocol.\n- Directly fixes critical Antigravity bugs, OS runtime limitations, or telemetry blind spots.\n- Verified daily by our automated health audit (`scripts/health-check.py`) and backed by a single-source-of-truth JSON catalog (`data/tools.json`).\n\n> **Ecosystem Pulse**: `21` curated tools across `4` categories · `59.2k` combined GitHub stars · `20/21` active (`95.2%`) · Avg Health Score: `85.1/100` ([Full Audit](health_report.md))\n\n---\n\n## Contents\n\n- [Official CLI & SDKs (2)](#-official-cli--sdks)\n- [IDE Extensions & Cockpits (6)](#️-ide-extensions--cockpits)\n- [Platform Fixes & Runtime Patches (7)](#-platform-fixes--runtime-patches)\n- [Dedicated Gateways, ACP Adapters & Migration Tooling (6)](#-dedicated-gateways-acp-adapters--migration-tooling)\n- [Badge](#️-badge)\n- [Contributing](#-contributing)\n\n---\n\n## 🚀 Official CLI & SDKs\n\nFirst-party command-line harnesses and SDKs maintained under `google-antigravity` for terminal workflows and programmatic agent orchestration.\n\n- [antigravity-cli](https://github.com/google-antigravity/antigravity-cli) - Official Antigravity CLI (`agy`) bringing the reasoning, execution, and orchestration capabilities of the Antigravity agent harness directly into the terminal. `Official` `CLI` `Terminal`\n- [antigravity-sdk-python](https://github.com/google-antigravity/antigravity-sdk-python) - Official Apache-2.0 Python SDK for building programmatic AI agents and workflows powered directly by Google Antigravity. `Official` `Python` `SDK`\n\n---\n\n## 🖥️ IDE Extensions & Cockpits\n\nExtensions and desktop applications designed exclusively to monitor Antigravity model quotas, manage accounts, and provide HUD telemetry.\n\n- [antigravity-link-extension](https://github.com/cafeTechne/antigravity-link-extension) - Mobile companion extension specifically mirroring Antigravity IDE sessions to phone with emergency stop triggers and 9 MCP tools. `Mobile` `Antigravity-IDE` `MCP`\n- [Antigravity-Manager](https://github.com/lbjlaq/Antigravity-Manager) - Native desktop account manager and one-click switcher for Antigravity built with Tauri v2 (Rust) and React. `Desktop` `Rust` `Tauri`\n- [antigravity-panel](https://github.com/n2ns/antigravity-panel) - Quota monitor and cache manager for Google Antigravity IDE tracking Gemini, Claude, and GPT limits with usage trend analytics. `VS Code` `TypeScript` `Quota`\n- [AntigravityManager](https://github.com/Draculabo/AntigravityManager) - Desktop application for managing Google accounts across Antigravity Classic, Antigravity IDE, and `agy` CLI with real-time quota views. `Desktop` `TypeScript` `Quota`\n- [AntigravityQuotaWatcher](https://github.com/wusimpl/AntigravityQuotaWatcher) - VS Code extension for continuous monitoring and status bar alerts of Antigravity AI model quotas. `VS Code` `IDE` `Quota`\n- [vscode-antigravity-cockpit](https://github.com/jlcodes99/vscode-antigravity-cockpit) - VS Code extension for real-time Antigravity model quota tracking, status bar countdowns, multi-model pinning, and capability HUDs. `VS Code` `TypeScript` `HUD`\n\n---\n\n## 🔧 Platform Fixes & Runtime Patches\n\nSystem-level hotfixes, localization injectors, network bridges, and patches solving core Antigravity bugs and OS runtime limitations.\n\n- [Antigravity-Chinese-Localization](https://github.com/antigravity-cn-community/Antigravity-Chinese-Localization) - MIT-licensed one-click Chinese localization toolkit and UI translation patch tailored for Google Antigravity IDE. `Localization` `JavaScript` `Patch`\n- [antigravity-conversation-fix](https://github.com/FutureisinPast/antigravity-conversation-fix) - Repairs corrupted Antigravity session databases, missing threads, and out-of-order conversation history. `IDE` `Fix` `Recovery`\n- [antigravity-fixer](https://github.com/fulldiagnose/antigravity-fixer) - Automated diagnostic and credential-cleanup utility resolving the Google Antigravity 'not eligible' sign-in and account state error. `Python` `Fix` `Diagnostics`\n- [antigravity-junction-skill-fix](https://github.com/wllzhang/antigravity-junction-skill-fix) - Zero-copy NTFS hardlink directory bridge that resolves Go language server discovery failures for Windows directory junctions (`mklink /J`) and symlinks (`mklink /D`). `Windows` `PowerShell` `NTFS`\n- [antigravity-proxy](https://github.com/yuaotian/antigravity-proxy) - Transparent Windows DLL-injection proxy utility that routes Antigravity process traffic through SOCKS5/HTTP proxies without requiring TUN mode. `Windows` `C++` `Proxy`\n- [antigravity_bypass](https://github.com/Futureppo/antigravity_bypass) - Runtime patch raising local MCP tool limits to 8192 in Antigravity IDE and Windows desktop client with automated backup and restore. `Windows` `Patch` `MCP`\n- [vscode-antigravity-backend-fix](https://github.com/HeshamNoaman/vscode-antigravity-backend-fix) - Hotfix for the official VS Code Antigravity extension resolving the repeated ~202 MB `agy.exe` background download loop caused by Windows Defender timeouts. `Windows` `Node.js` `PowerShell`\n\n---\n\n## 🔌 Dedicated Gateways, ACP Adapters & Migration Tooling\n\nEngineering utilities specifically built around the official Antigravity Agent Client Protocol (`agy acp`) and native plugin specifications (`plugin.json`).\n\n- [ACP-Ant](https://github.com/czg86389-hub/ACP-Ant) - OpenAI and Anthropic compatible API server bridging Google's official Antigravity CLI over ACP with per-account proxy and tool-calling support. `Python` `ACP` `Gateway`\n- [agy-acp](https://github.com/shindgew/agy-acp) - Apache-2.0 Agent Client Protocol adapter wrapping the official Google Antigravity CLI (`agy`) for ACP-compatible editors. `TypeScript` `ACP` `Adapter`\n- [antigravity-acp](https://github.com/shubzkothekar/antigravity-acp) - Bun-powered Agent Client Protocol server for Google Antigravity's `agy` CLI featuring live streaming and session history replay. `TypeScript` `Bun` `ACP`\n- [antigravity-skill-porter](https://github.com/Pranav-Nexus/antigravity-skill-porter) - CLI tool specifically adapting, wrapping, and validating external skills into native Antigravity plugins with `plugin.json` and tool name mapping. `CLI` `Converter` `Plugin`\n- [liftgate](https://github.com/acking-you/liftgate) - Run Antigravity as a local OpenAI Responses and Anthropic Messages gateway via official `agy acp` over stdio with native GPUI desktop and TUI controls. `Rust` `GPUI` `Gateway`\n- [refined-antigravity-acp](https://github.com/simonepri/refined-antigravity-acp) - Drop-in refined Google Antigravity ACP binary wrapper resolving protocol compatibility quirks for external ACP clients. `TypeScript` `ACP` `Wrapper`\n\n---\n\n## 🏷️ Badge\n\nIf your tool is featured in this list, add this badge to your README:\n\n[![Awesome Antigravity Tools](https://img.shields.io/badge/Awesome-Antigravity--Tools-brightgreen?logo=google&logoColor=white)](https://github.com/wllzhang/awesome-antigravity-tools)\n\n```markdown\n[![Awesome Antigravity Tools](https://img.shields.io/badge/Awesome-Antigravity--Tools-brightgreen?logo=google&logoColor=white)](https://github.com/wllzhang/awesome-antigravity-tools)\n```\n\n---\n\n## 🤝 Contributing\n\nContributions are welcome! All entries are managed in [`data/tools.json`](data/tools.json) and rendered deterministically into both English and Chinese READMEs via `python scripts/generate_docs.py`.\n\n> **Tip**: This repository also ships as a native Antigravity plugin ([`plugin.json`](plugin.json) + `antigravity-tools-advisor` skill) and CLI (`python scripts/aat_cli.py search <query>`).\n\nPlease read our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a pull request or issue.\n",
+  "latestReleaseNotes": "# Changelog\n\nAll notable changes to **awesome-antigravity-tools** are documented in this file.\n\n## [2.0.0] - 2026-11-18\n\nA complete architectural evolution from a hand-edited Markdown list into a schema-validated, self-auditing, bilingual Antigravity-exclusive engineering index platform.\n\n### Added\n- **Single Source of Truth (`data/tools.json` + `data/catalog.schema.json`)**: Canonical JSON catalog with strict schema validation, bilingual EN/ZH descriptions, explicit Antigravity exclusivity rationales, platform enums, tags, and install hints.\n- **Expanded Curated Catalog (10 → 21 Verified Tools across 4 Categories)**: Added `Official CLI & SDKs` (`antigravity-cli`, `antigravity-sdk-python`), plus live-verified Antigravity-exclusive tools (`AntigravityManager`, `antigravity-panel`, `Antigravity-Chinese-Localization`, `antigravity-fixer`, `antigravity-proxy`, `ACP-Ant`, `agy-acp`, `antigravity-acp`, `refined-antigravity-acp`), representing 59,000+ combined GitHub stars with 0 generic cross-agent padding.\n- **Deterministic Bilingual Generator (`scripts/generate_docs.py`)**: Generates `README.md` and `README.zh-CN.md` with guaranteed EN/ZH parity, alphabetical ordering, live Ecosystem Pulse metrics, and `--check` CI sync verification.\n- **Strict Zero-Dependency Validator (`scripts/validate_catalog.py`)**: Enforces schema compliance, duplicate/self-reference checks, URL integrity, punctuation & anti-hyperbole rules, canonical sorting (`--fix-order`), and README sync checks.\n- **Health Engine v2 (`scripts/health-check.py`)**: Adds deterministic `0–100` Health Score, richer GitHub metadata (stars, forks, language, SPDX license, latest release), machine-readable `data/health_snapshot.json`, bilingual audit reports (`health_report.md` & `health_report.zh-CN.md`), rolling 90-day trend history (`data/health_history.json`), status transition diffing, and offline `--from-snapshot` mode.\n- **Shields.io Dynamic Endpoint Badges (`scripts/generate_badges.py`)**: Emits `data/badges/{count,health,stars,score}.json`.\n- **Candidate Discovery Radar (`scripts/discover_candidates.py`)**: Automated GitHub search & Antigravity-exclusivity heuristic scorer to surface emerging native tools while filtering out prompt dumps and multi-agent noise.\n- **Interactive Catalog CLI (`scripts/aat_cli.py`)**: Zero-dependency CLI supporting `list`, `search`, `info`, `stats`, `add --sync-docs`, and `verify`.\n- **Submission Triage Parser (`scripts/parse_submission.py`)**: Converts `.github/ISSUE_TEMPLATE/submit_tool.yml` issues into validated `data/tools.json` snippets with live GitHub verification.\n- **Interactive GitHub Pages Web Explorer (`docs/`)**: Zero-framework bilingual directory (`index.html`, `styles.css`, `app.js`, `catalog-logic.js`, `insights.js`) featuring live search, category/platform/status filtering, sorting, native `<dialog closedby=\"any\">` modals with scroll containment, collapsible Ecosystem Insights charts, 3-tool side-by-side comparison drawer, URL deep-linking, keyboard navigation (`/`, `j`/`k`, `l`), print styles, RSS feed (`docs/feed.xml`), sitemap, and JSON bundle (`docs/catalog-bundle.json`).\n- **Exports & Developer Ergonomics**: Added `scripts/export_catalog.py` (`COMPARISON.md`, `data/exports/tools.csv`, `data/exports/catalog.jsonld`), `scripts/dev.ps1`, `Makefile`, `pyproject.toml`, and `CONTRIBUTING.zh-CN.md`.\n- **Automated Test Suite (`tests/`) & CI/CD Workflows**: Added 17 Python `unittest` tests + 5 Node.js `node:test` frontend tests, upgraded `lint-and-links.yml` and `health-check.yml`, and added `pages.yml` and `submission-triage.yml`.\n\n## [1.0.0] - 2026-11-17\n\n- Initial release with 10 curated Antigravity-exclusive repositories, bilingual READMEs, and initial daily GitHub Actions health check workflow.\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/discover_candidates.py",
+        "line": 79,
+        "snippet": "proc = subprocess.run([\"gh\", \"auth\", \"token\"], capture_output=True, text=True, timeout=5, check=False)",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/discover_candidates.py#L79"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/health-check.py",
+        "line": 50,
+        "snippet": "proc = subprocess.run( [\"gh\", \"auth\", \"token\"], capture_output=True, text=True, timeout=5, check=False, )",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L50"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "docs/app.js",
+        "line": 589,
+        "snippet": "const resp = await fetch(\"./catalog-bundle.json\", { cache: \"no-store\" });",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/docs/app.js#L589"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/aat_cli.py",
+        "line": 286,
+        "snippet": "args.catalog.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/aat_cli.py#L286"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/aat_cli.py",
+        "line": 303,
+        "snippet": "catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/aat_cli.py#L303"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/aat_cli.py",
+        "line": 315,
+        "snippet": "(badges_dir / fname).write_text( json.dumps(payload, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\" )",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/aat_cli.py#L315"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/build_site.py",
+        "line": 200,
+        "snippet": "path.write_text(content, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/build_site.py#L200"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/discover_candidates.py",
+        "line": 99,
+        "snippet": "with urllib.request.urlopen(req, timeout=15) as resp:",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/discover_candidates.py#L99"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/discover_candidates.py",
+        "line": 250,
+        "snippet": "args.out.write_text(output, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/discover_candidates.py#L250"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/export_catalog.py",
+        "line": 170,
+        "snippet": "path.write_text(content, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/export_catalog.py#L170"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/generate_badges.py",
+        "line": 107,
+        "snippet": "path.write_text(content, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/generate_badges.py#L107"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/generate_docs.py",
+        "line": 350,
+        "snippet": "path.write_text(content, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/generate_docs.py#L350"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/health-check.py",
+        "line": 76,
+        "snippet": "with urllib.request.urlopen(req, timeout=15) as resp:",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L76"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/health-check.py",
+        "line": 438,
+        "snippet": "history_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L438"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/health-check.py",
+        "line": 573,
+        "snippet": "report_file.write_text(report_content, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L573"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/health-check.py",
+        "line": 603,
+        "snippet": "issue_file.write_text(\"\\n\".join(issue_lines) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L603"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/health-check.py",
+        "line": 738,
+        "snippet": "report_file.write_text(content, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L738"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/health-check.py",
+        "line": 803,
+        "snippet": "args.snapshot.write_text(json.dumps(snapshot, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/health-check.py#L803"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/parse_submission.py",
+        "line": 268,
+        "snippet": "args.out.write_text(output, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/parse_submission.py#L268"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/validate_catalog.py",
+        "line": 276,
+        "snippet": "template_path.write_text(updated, encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/validate_catalog.py#L276"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/validate_catalog.py",
+        "line": 324,
+        "snippet": "args.catalog.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\", newline=\"\\n\")",
+        "githubBlobUrl": "https://github.com/wllzhang/awesome-antigravity-tools/blob/97f11c3bd4a626d479e7b98f87444db57a97d8a7/scripts/validate_catalog.py#L324"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.0.0",
+      "sha": "97f11c3bd4a626d479e7b98f87444db57a97d8a7",
+      "scannedAt": "2026-11-27T18:14:54.189Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

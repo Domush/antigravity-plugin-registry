@@ -1,0 +1,821 @@
+{
+  "schemaVersion": 1,
+  "id": "InfSein/antigravity-app-account-manager",
+  "sha": "f6b2093eec9eea81618cee043338b1b18043568f",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:22:15.614Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-account-manager",
+    "displayName": "Antigravity 账号切换器 (Account Manager)",
+    "version": "1.1.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "default",
+        "enabledByDefault": true,
+        "event": "SessionStart",
+        "matcher": "",
+        "type": "command",
+        "command": "node ./scripts/session_hook.js",
+        "prompt": null,
+        "timeout": null
+      }
+    ],
+    "skills": [
+      {
+        "name": "account-manager",
+        "slashCommand": "/account-manager",
+        "description": "管理、安装、更新与卸载 Antigravity Google 多账号切换插件（Account Manager）。当用户发送安装指令（如 `Install this plugin: https://github.com/InfSein/antigravity-app-account-manager`）、要求安装/更新/卸载账号管理插件，或需要查看、切换、新增 Antigravity Google 账号时立即使用。",
+        "disableModelInvocation": false,
+        "file": "skills/account-manager/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/account-manager"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity APP Account Manager\n\n**Languages:** [简体中文](README.zh.md) | **English**\n\nQuickly manage your Antigravity account**s**.\n\n![Sample Screenshot](docs/assets/sample_screenshot.png)\n\n## How To Use\n\nSend one of the following messages to your Antigravity APP:\n\n- **Install**:\n  ```\n  Install this plugin: https://github.com/InfSein/antigravity-app-account-manager\n  ```\n- **Update**: `Update Antigravity Account Manager plugin`\n- **Uninstall**: `Uninstall Antigravity Account Manager plugin`\n\n> For AI agents: see [AGENTS.md](AGENTS.md) and [SKILL.md](skills/account-manager/SKILL.md) for fast zero-dependency install, update, and uninstall instructions.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "credential_access",
+      "dynamic_code_exec",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/credential_manager.js",
+        "line": 5,
+        "snippet": "* 2. 文件系统备份: ~/.gemini/jetski-standalone-oauth-token 与 ~/.gemini/oauth_creds.json 等",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L5"
+      },
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/credential_manager.js",
+        "line": 218,
+        "snippet": "// 3. 规范化写入 ~/.gemini/oauth_creds.json (保持标准 Google 扁平 JSON 格式)",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L218"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"default\" executes a shell command on SessionStart (matcher: ).",
+        "file": "hooks.json",
+        "line": 9,
+        "snippet": "node ./scripts/session_hook.js",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/hooks.json#L9"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "install.js",
+        "line": 56,
+        "snippet": "execSync('powershell \"Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \\'*account-manager*main.mjs*\\' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/install.js#L56"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "install.js",
+        "line": 73,
+        "snippet": "const child = spawn(execCmd, [daemonScript], { detached: true, stdio: 'ignore', windowsHide: true, env });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/install.js#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/boot_hook_installer.js",
+        "line": 195,
+        "snippet": "const out = execSync( 'powershell -NoProfile -Command \"Get-CimInstance Win32_Process -Filter \\\\\"Name=\\'Antigravity.exe\\'\\\\\" | Where-Object { $_.CommandLine -notlike \\'*sidecar_sdk*",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/boot_hook_installer.js#L195"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/boot_hook_installer.js",
+        "line": 428,
+        "snippet": "const child = spawn(nodeExe, args, { cwd: os.tmpdir(), detached: true, stdio: 'ignore', windowsHide: true });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/boot_hook_installer.js#L428"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/cdp_injector.js",
+        "line": 181,
+        "snippet": "const child = spawn(execCmd, [installScript], { detached: true, stdio: 'ignore', windowsHide: true, env });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/cdp_injector.js#L181"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/credential_manager.js",
+        "line": 62,
+        "snippet": "const res = spawnSync('powershell.exe', [ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', WINCRED_PS1, '-Action', 'read', '-Target', target ], { encoding: 'utf8', timeout: 500",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L62"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/credential_manager.js",
+        "line": 92,
+        "snippet": "const res = spawnSync('powershell.exe', [ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', WINCRED_PS1, '-Action', 'write', '-Target', target, '-UserName', userName ], { input:",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L92"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/http_client.js",
+        "line": 59,
+        "snippet": "const out = execSync( 'reg query \"HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\"', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 2000, w",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/http_client.js#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/oauth_service.js",
+        "line": 187,
+        "snippet": "exec(startCmd, (err) => { if (err) debugLog('openInBrowser error:', err.message); });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/oauth_service.js#L187"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/updater.js",
+        "line": 71,
+        "snippet": "execFile(cmd, args, { windowsHide: true, ...options }, (err, stdout, stderr) => { if (err) { const detail = (stderr || stdout || err.message || '').trim(); reject(new Error(detail ",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/updater.js#L71"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/updater.js",
+        "line": 268,
+        "snippet": "const runRes = spawnSync(process.execPath, [installScript], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/updater.js#L268"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "test_suite.js",
+        "line": 170,
+        "snippet": "new Function(script);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L170"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "test_suite.js",
+        "line": 329,
+        "snippet": "vm.runInNewContext(uiCode, sandbox);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L329"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "uninstall.js",
+        "line": 35,
+        "snippet": "execSync('powershell \"Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \\'*account-manager*main.mjs*\\' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/uninstall.js#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "uninstall.js",
+        "line": 91,
+        "snippet": "const child = spawn(nodeExe, ['-e', cleanupCode], { cwd: os.tmpdir(), detached: true, stdio: 'ignore', windowsHide: true });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/uninstall.js#L91"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "install.js",
+        "line": 50,
+        "snippet": "fs.unlinkSync(DAEMON_PID_FILE);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/install.js#L50"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/session_hook.js",
+        "line": 27,
+        "snippet": "fs.writeFileSync(THROTTLE_FILE, String(now), 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/scripts/session_hook.js#L27"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/manager/main.mjs",
+        "line": 27,
+        "snippet": "fs.appendFileSync(LOG_FILE, str, 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/sidecars/manager/main.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/manager/main.mjs",
+        "line": 38,
+        "snippet": "fs.writeFileSync(DAEMON_PID_FILE, String(process.pid), 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/sidecars/manager/main.mjs#L38"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/manager/main.mjs",
+        "line": 64,
+        "snippet": "fs.unlinkSync(DAEMON_PID_FILE);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/sidecars/manager/main.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/manager/main_test.mjs",
+        "line": 12,
+        "snippet": "fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${msg}\\n`);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/sidecars/manager/main_test.mjs#L12"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/account_store.js",
+        "line": 60,
+        "snippet": "fs.writeFileSync(tempFile, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/account_store.js#L60"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/account_store.js",
+        "line": 64,
+        "snippet": "fs.unlinkSync(STORE_FILE);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/account_store.js#L64"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/account_store.js",
+        "line": 68,
+        "snippet": "fs.writeFileSync(STORE_FILE, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/account_store.js#L68"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/account_store.js",
+        "line": 69,
+        "snippet": "try { fs.unlinkSync(tempFile); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/account_store.js#L69"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/account_store.js",
+        "line": 72,
+        "snippet": "fs.writeFileSync(STORE_FILE, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/account_store.js#L72"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/boot_hook_installer.js",
+        "line": 225,
+        "snippet": "fs.writeFileSync(tmpPath, finalBuf);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/boot_hook_installer.js#L225"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/boot_hook_installer.js",
+        "line": 233,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/boot_hook_installer.js#L233"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/boot_hook_installer.js",
+        "line": 435,
+        "snippet": "try { fs.writeFileSync(pidFile, String(child.pid), 'utf8'); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/boot_hook_installer.js#L435"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/boot_hook_installer.js",
+        "line": 461,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/boot_hook_installer.js#L461"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/bridge_handler.js",
+        "line": 34,
+        "snippet": "fs.appendFileSync(LOG_FILE, str, 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/bridge_handler.js#L34"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/cdp_injector.js",
+        "line": 115,
+        "snippet": "const req = http.get(`http://127.0.0.1:${port}/json/list`, (res) => { let raw = ''; res.on('data', chunk => raw += chunk); res.on('end', () => { try { const targets = JSON.parse(ra",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/cdp_injector.js#L115"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/cdp_injector.js",
+        "line": 235,
+        "snippet": "const ws = new WebSocket(target.webSocketDebuggerUrl);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/cdp_injector.js#L235"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config_store.js",
+        "line": 67,
+        "snippet": "fs.writeFileSync(tempFile, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/config_store.js#L67"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config_store.js",
+        "line": 70,
+        "snippet": "fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/config_store.js#L70"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config_store.js",
+        "line": 74,
+        "snippet": "fs.writeFileSync(filePath, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/config_store.js#L74"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config_store.js",
+        "line": 75,
+        "snippet": "try { fs.unlinkSync(tempFile); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/config_store.js#L75"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config_store.js",
+        "line": 79,
+        "snippet": "fs.writeFileSync(filePath, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/config_store.js#L79"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/credential_manager.js",
+        "line": 213,
+        "snippet": "fs.writeFileSync(STANDALONE_TOKEN_FILE, jsonStr, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L213"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/credential_manager.js",
+        "line": 231,
+        "snippet": "fs.writeFileSync(OAUTH_CREDS_FILE, JSON.stringify(standardOAuthCreds, null, 2), { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L231"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/credential_manager.js",
+        "line": 242,
+        "snippet": "fs.writeFileSync(ACTIVE_ACCOUNT_FILE, JSON.stringify({ email, lastSwitchedAt: new Date().toISOString() }, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L242"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/credential_manager.js",
+        "line": 257,
+        "snippet": "fs.writeFileSync(APP_STORAGE_FILE, JSON.stringify(parsedStorage, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L257"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/http_client.js",
+        "line": 207,
+        "snippet": "const proxyReq = http.request({ hostname: p.hostname, port: proxyPort, path: targetUrl, method, headers: reqHeaders }, handleResponse);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/http_client.js#L207"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/http_client.js",
+        "line": 224,
+        "snippet": "const connectReq = http.request({ host: p.hostname, port: proxyPort, method: 'CONNECT', path: `${parsedUrl.hostname}:${port}` });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/http_client.js#L224"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/oauth_service.js",
+        "line": 29,
+        "snippet": "fs.appendFileSync(DEBUG_LOG_FILE, line, 'utf8');",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/oauth_service.js#L29"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/updater.js",
+        "line": 226,
+        "snippet": "fs.writeFileSync(tempZip, res.bodyBuffer);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/updater.js#L226"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/updater.js",
+        "line": 242,
+        "snippet": "try { fs.rmSync(tempZip, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/updater.js#L242"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/updater.js",
+        "line": 243,
+        "snippet": "try { fs.rmSync(extractDir, { recursive: true, force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/updater.js#L243"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "test_rpc.js",
+        "line": 6,
+        "snippet": "http.get('http://127.0.0.1:' + port + '/json/list', (res) => { let raw = ''; res.on('data', chunk => raw += chunk); res.on('end', () => { const targets = JSON.parse(raw); const mai",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_rpc.js#L6"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "test_rpc.js",
+        "line": 12,
+        "snippet": "const ws = new WebSocket(mainPage.webSocketDebuggerUrl);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_rpc.js#L12"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "test_suite.js",
+        "line": 144,
+        "snippet": "try { if (fs.existsSync(tempCfgFile)) fs.unlinkSync(tempCfgFile); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L144"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "test_suite.js",
+        "line": 191,
+        "snippet": "fs.writeFileSync(tempAsarClean, createSyntheticAsar(origMain));",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L191"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "test_suite.js",
+        "line": 221,
+        "snippet": "fs.writeFileSync(tempAsarCoexist, createSyntheticAsar(zhPatchedMain));",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L221"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "test_suite.js",
+        "line": 246,
+        "snippet": "try { if (fs.existsSync(tempAsarClean)) fs.unlinkSync(tempAsarClean); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L246"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "test_suite.js",
+        "line": 247,
+        "snippet": "try { if (fs.existsSync(tempAsarCoexist)) fs.unlinkSync(tempAsarCoexist); } catch {}",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/test_suite.js#L247"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "uninstall.js",
+        "line": 29,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/uninstall.js#L29"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "uninstall.js",
+        "line": 85,
+        "snippet": "fs.rmSync(TARGET_DIR, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/uninstall.js#L85"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "install.js",
+        "line": 3,
+        "snippet": "* 1. 同步文件到用户插件目录 ~/.gemini/config/plugins/antigravity-account-manager",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/install.js#L3"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/config_store.js",
+        "line": 3,
+        "snippet": "* 将用户语言偏好与更新检查状态保存在 ~/.gemini/antigravity/account-manager-config.json，",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/config_store.js#L3"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/credential_manager.js",
+        "line": 5,
+        "snippet": "* 2. 文件系统备份: ~/.gemini/jetski-standalone-oauth-token 与 ~/.gemini/oauth_creds.json 等",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L5"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/credential_manager.js",
+        "line": 207,
+        "snippet": "// 2. 写入 ~/.gemini/jetski-standalone-oauth-token",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L207"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/credential_manager.js",
+        "line": 218,
+        "snippet": "// 3. 规范化写入 ~/.gemini/oauth_creds.json (保持标准 Google 扁平 JSON 格式)",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L218"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/credential_manager.js",
+        "line": 236,
+        "snippet": "// 4. 写入 ~/.gemini/antigravity/active-account.json",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/src/credential_manager.js#L236"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "uninstall.js",
+        "line": 6,
+        "snippet": "* 4. 清理插件目录 ~/.gemini/config/plugins/antigravity-account-manager",
+        "githubBlobUrl": "https://github.com/InfSein/antigravity-app-account-manager/blob/f6b2093eec9eea81618cee043338b1b18043568f/uninstall.js#L6"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.1",
+      "sha": "f6b2093eec9eea81618cee043338b1b18043568f",
+      "scannedAt": "2026-11-27T18:22:15.614Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

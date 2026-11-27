@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "id": "LEFTX1/antigravity-token-heatmap",
+  "sha": "bfc9626b9e193051da2e58cc5b8b9bd37b09886b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:09.360Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "token-heatmap",
+    "displayName": "Token 热力图与战绩墙",
+    "version": "3.0.3",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "heatmap",
+        "runtimeName": "token-heatmap_heatmap",
+        "transport": "stdio",
+        "command": "python",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/mcp_server.py",
+          "--data_dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "token-heatmap",
+        "slashCommand": "/token-heatmap",
+        "description": "打开并展示「Token 热力图与战绩墙」MCP App 面板。当用户想查看 GitHub 风格 Token 贡献热力图、连续打卡天数、分模型 FinOps 成本与缓存节省、上下文窗口健康、热点源码、单场对话透视、导出 Markdown 战报或生成纪念海报时使用。（100% 本地只读解析 `~/.gemini/antigravity` 对话日志，零云端上传）",
+        "disableModelInvocation": false,
+        "file": "skills/token-heatmap/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/token-heatmap"
+    ],
+    "mcpServerNames": [
+      "token-heatmap_heatmap"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" width=\"84\" height=\"84\" alt=\"Antigravity Token Heatmap Logo\" />\n\n# Antigravity Token Heatmap Cockpit (`token-heatmap`)\n\n**Local-First AI Engineering Telemetry, Contribution Heatmap, FinOps Ledger & Collectible Almanac for Google Antigravity and Gemini CLI**\n\n**面向 Google Antigravity 与 Gemini CLI 的本地 AI 研发战绩驾驶舱：GitHub 风格 Token 贡献热力图、分模型 FinOps 账单、上下文体检与高清年鉴海报**\n\n[![Antigravity Plugin](https://img.shields.io/badge/Google_Antigravity-Plugin-3de066?style=flat-square&logo=google&logoColor=white)](https://github.com/LEFTX1/antigravity-token-heatmap)\n[![Gemini CLI Extension](https://img.shields.io/badge/Gemini_CLI-Extension-38bdf8?style=flat-square)](https://github.com/LEFTX1/antigravity-token-heatmap)\n[![MCP App](https://img.shields.io/badge/MCP-App_%26_Server-a855f7?style=flat-square)](https://modelcontextprotocol.io)\n[![Privacy](https://img.shields.io/badge/Privacy-100%25_Local_Read--Only-10b981?style=flat-square)](#privacy--security)\n[![License: MIT](https://img.shields.io/badge/License-MIT-fbbf24?style=flat-square)](LICENSE)\n\n</div>\n\n---\n\n## One-Command Installation · 一行命令极速安装\n\n### Option 1: Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/LEFTX1/antigravity-token-heatmap\n```\n\n### Option 2: Windows PowerShell (No `agy` CLI needed · 自动配置依赖)\n\n```powershell\nirm https://raw.githubusercontent.com/LEFTX1/antigravity-token-heatmap/main/install.ps1 | iex\n```\n\n### Option 3: macOS / Linux (`curl`)\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/LEFTX1/antigravity-token-heatmap/main/install.sh | bash\n```\n\n### Option 4: Google Gemini CLI Extension\n\n```bash\ngemini extensions install https://github.com/LEFTX1/antigravity-token-heatmap\n```\n\n> **Requirement / 运行要求**：Python 3.10+ (`mcp>=1.2.0`). The installer scripts automatically check and install `mcp`, and the MCP server also auto-bootstraps `mcp` if missing on first launch.\n\n---\n\n## Visual Preview · 实机视觉一览\n\n<p align=\"center\">\n  <img src=\"docs/preview-cockpit.png\" alt=\"Token Heatmap Cockpit Top Overview\" width=\"100%\" />\n</p>\n\n<details>\n<summary>More Screenshots · 点击展开更多模块预览（FinOps 账单 / 工具武器库 / 黑金年鉴海报）</summary>\n<br/>\n<p align=\"center\">\n  <img src=\"docs/preview-finops.png\" alt=\"AI Engineering Insights and Model-Tiered FinOps\" width=\"100%\" />\n</p>\n<p align=\"center\">\n  <img src=\"docs/preview-arsenal.png\" alt=\"Toolchain Arsenal and Hot Source Files\" width=\"100%\" />\n</p>\n<p align=\"center\">\n  <img src=\"docs/preview-poster-gold.png\" alt=\"Obsidian Gold Collector Poster\" width=\"420\" />\n</p>\n</details>\n\n---\n\n## Why This Plugin? · 核心模块全景\n\nBuilt by synthesizing telemetry best practices from `ccusage`, `tokscale`, `CodexBar`, `agentlytics`, Cursor Conversation Insights, WakaTime, Linear Insights, and Apple Fitness / Oura biotelemetry into a single zero-upload **MCP App** running inside Antigravity.\n\n| Module · 模块 | Highlights · 核心亮点 |\n| :--- | :--- |\n| **Sticky Glassmorphic Cockpit Nav** | Section jump pills, passive scroll-spy highlight, `Ctrl+K` / `⌘K` Command Palette, and 1-click Markdown report export (`导出战报`). |\n| **8 KPI Tiles + 7D Rolling Momentum** | Live `↗/↘` 7-day delta pills, micro wave charts, and grounded engineering breakdowns (output per turn, Read/Write ratio, code writes, edit hit rate, unique files touched). |\n| **Today Activity Rings & 6-Axis Radar** | Tri-ring daily goals (Fresh Tokens / Turns / Streak), Human-AI leverage ratio, flow endurance, code edit first-pass hit rate, API-equivalent cache savings benchmark, and hoverable 6-axis radar with live exact math formulas. |\n| **Energy Contribution Heatmap** | Interactive square grid (`Auto` / `3M` / `6M` / `1Y`), metric switcher (`净耗` / `输出` / `轮次`), live gamma color-scale slider (`γ`) persisted across sessions, and clickable per-day drill-down strip. |\n| **Context Health & Heavy Sessions** | Tracks max context window, P90 & average peaks, auto-compaction (`CHECKPOINT`) count, 4 context buckets (`<64K` to `500K+`), prompt-recovered Top-4 heavy sessions, edit first-pass hit rate, and honest error attribution. |\n| **API Benchmark & 7D Momentum** | Tiered public API equivalent benchmark (`$saved` by Prompt Cache hits without negative double-counting, strictly sorted) alongside a 7-day vs previous-7-day velocity comparison table. |\n| **Engineering Actions, MCP & Projects** | Semantic action distribution (with zero internal RPC plumbing), MCP plugin stats, normalized CLI runtimes (`python` / `powershell` / `node` / `baw`), **path-deduplicated Hot Project Files (`project/file`)**, and smart Project Allocation rankings. |\n| **54×10-Tier Collector Medal Hall** | 54 bespoke vector medals across 6 categories with visible acquisition criteria, filterable by category or `未解锁` status, and full 10-tier progression ladder modals. |\n| **Single-Session Inspector (`Ctrl+K`)** | Search any past conversation by title, workspace, or date; click any session anywhere to inspect token composition (`Input`/`Cache`/`Output`), per-model collaboration, and tool footprint. |\n| **Chronotype, Weekly Rhythm & Fleet** | 24-hour chronotype analysis (`凌晨战神` / `夜航架构师` / etc.), Mon–Sun weekday vs weekend rhythm bars, Top-10 model fleet with readable names + cache hit rings, and weekly stacked evolution / 14-day smooth trend curves. |\n| **6-Slide Stories & 3-Theme Posters** | Interactive Spotify-Wrapped-style recap (`←/→` keys) + 1080×1920 Portrait & 1920×1080 Landscape PNG studio in **Obsidian Aurora**, **Ivory Gallery**, and **Obsidian Gold**, supporting `Ctrl+C` native system clipboard copy. |\n\n---\n\n## Usage · 使用方式\n\nAfter installation, reload MCP servers (or restart Antigravity) and simply ask:\n\n- `\"打开我的 Token 热力图与战绩墙\"` / `\"Open my Token Heatmap\"`\n- `\"查看我的分模型 FinOps 缓存节省和 7 日动量\"`\n- `\"生成一张黑金风格的 AI 编程能量年鉴海报\"`\n\n---\n\n## Architecture · 架构说明\n\n```text\n~/.gemini/config/plugins/token-heatmap/\n├── plugin.json                # Antigravity native plugin manifest\n├── gemini-extension.json      # Gemini CLI extension manifest\n├── mcp_config.json            # MCP stdio launcher (${PLUGIN_ROOT}, ${PLUGIN_DATA})\n├── install.ps1 / install.sh   # 1-command cross-platform installers\n├── assets/logo.svg            # Crisp square SVG plugin icon\n├── skills/token-heatmap/SKILL.md\n├── scripts/\n│   ├── heatmap_stats.py       # Transcript JSONL + SQLite aggregator (stat-fingerprinted cache)\n│   └── mcp_server.py          # FastMCP App server + native clipboard / PNG save tools\n└── ui/app.html                # Self-contained single-file MCP App UI (dark + light themes)\n```\n\n---\n\n## Privacy & Security · 隐私与安全声明\n\n- **100% Local Read-Only**: Only reads local session transcripts (`~/.gemini/antigravity*/brain/*/.system_generated/logs/transcript.jsonl` and local metadata DB).\n- **Zero Telemetry / Zero Cloud Upload**: No external network requests are ever made by the analytics backend or UI (no external fonts, CDNs, or analytics beacons).\n- **Isolated Local Cache**: Derived numeric caches and UI preferences live strictly inside your local plugin data directory (`--data_dir=${PLUGIN_DATA}`).\n\n---\n\n## Keywords & Discovery Tags\n\n`google-antigravity` · `antigravity-plugin` · `antigravity-cli` · `antigravity-skills` · `gemini-cli` · `gemini-cli-extension` · `mcp` · `mcp-app` · `mcp-server` · `token-usage` · `token-heatmap` · `ai-coding-analytics` · `finops` · `ccusage` · `developer-wrapped`\n\n## License\n\n[MIT License](LICENSE) © 2026 [LEFTX1](https://github.com/LEFTX1)\n",
+  "latestReleaseNotes": "Removed fake LOC/dev-years/literary equivalences, fixed FinOps sort & signage, added edit hit-rate & prompt-recovered session titles, fixed npython/cmdlet parsing, showed model names & badge criteria, and fixed 440px sidebar overflow.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_server.py",
+        "line": 15,
+        "snippet": "subprocess.check_call( [sys.executable, \"-m\", \"pip\", \"install\", \"--quiet\", \"--disable-pip-version-check\", \"mcp>=1.2.0\"] )",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L15"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_server.py",
+        "line": 187,
+        "snippet": "proc = subprocess.run( [\"powershell\", \"-NoProfile\", \"-STA\", \"-Command\", ps_script], env=env, capture_output=True, text=True, timeout=10, creationflags=getattr(subprocess, \"CREATE_N",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L187"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_server.py",
+        "line": 203,
+        "snippet": "proc = subprocess.run( [\"osascript\", \"-e\", f'set the clipboard to (read (POSIX file \"{safe_p}\") as «class PNGf»)'], capture_output=True, text=True, timeout=10, )",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L203"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_server.py",
+        "line": 216,
+        "snippet": "proc = subprocess.run([\"wl-copy\", \"--type\", \"image/png\"], stdin=img_f, capture_output=True, timeout=10)",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L216"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_server.py",
+        "line": 223,
+        "snippet": "proc = subprocess.run( [\"xclip\", \"-selection\", \"clipboard\", \"-t\", \"image/png\", \"-i\", tmp_path], capture_output=True, text=True, timeout=10, )",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L223"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 147,
+        "snippet": "with open(os.path.join(annot_dir, fn), \"r\", encoding=\"utf-8\", errors=\"ignore\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L147"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 165,
+        "snippet": "with open(cache_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L165"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 176,
+        "snippet": "with open(tmp_path, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L176"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 428,
+        "snippet": "with open(path, \"r\", encoding=\"utf-8\", errors=\"ignore\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L428"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 811,
+        "snippet": "with open(pj, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L811"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 826,
+        "snippet": "with open(p, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L826"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/heatmap_stats.py",
+        "line": 849,
+        "snippet": "with open(tmp, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/heatmap_stats.py#L849"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mcp_server.py",
+        "line": 71,
+        "snippet": "with open(UI_HTML_PATH, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L71"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mcp_server.py",
+        "line": 141,
+        "snippet": "with open(out_path, \"wb\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L141"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mcp_server.py",
+        "line": 215,
+        "snippet": "with open(tmp_path, \"rb\") as img_f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L215"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mcp_server.py",
+        "line": 251,
+        "snippet": "os.remove(tmp_path)",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-token-heatmap/blob/bfc9626b9e193051da2e58cc5b8b9bd37b09886b/scripts/mcp_server.py#L251"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "3.0.3",
+      "sha": "bfc9626b9e193051da2e58cc5b8b9bd37b09886b",
+      "scannedAt": "2026-11-27T18:13:09.360Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

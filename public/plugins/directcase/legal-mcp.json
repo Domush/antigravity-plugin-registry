@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "directcase/legal-mcp",
+  "sha": "9d88f4328ab83b305bcca39e0c9558c7ae657086",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:35.026Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "directcase-legal-search",
+    "displayName": "DirectCase Legal Search",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "directcase",
+        "runtimeName": "directcase-legal-search_directcase",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.directcase.ai/"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "citation-check",
+        "slashCommand": "/citation-check",
+        "description": "Checks every legal citation in a document (brief, contract, opinion, memo or AI draft) against DirectCase sources: is each provision or decision found, does it say what the document makes of it, and does quoted wording match. Trigger it for",
+        "disableModelInvocation": false,
+        "file": "skills/citation-check/SKILL.md"
+      },
+      {
+        "name": "legal-memo",
+        "slashCommand": "/legal-memo",
+        "description": "Writes a legal memo on a defined question: the conclusion first, then the national and EU legislation, the case law and a legal assessment, with every source linked through DirectCase. Use when the user asks for a memo, a research note or a",
+        "disableModelInvocation": false,
+        "file": "skills/legal-memo/SKILL.md"
+      },
+      {
+        "name": "legal-question",
+        "slashCommand": "/legal-question",
+        "description": "Answers a legal question only from DirectCase sources (legislation, case law, regulators and EU bodies), with every source linked. Use for any legal question that needs research. To check the citations in a document use citation-check; for ",
+        "disableModelInvocation": false,
+        "file": "skills/legal-question/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/citation-check",
+      "/legal-memo",
+      "/legal-question"
+    ],
+    "mcpServerNames": [
+      "directcase-legal-search_directcase"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# DirectCase Legal Search for Google Antigravity\n\nLegal research over national and EU law. DirectCase finds the relevant\nlegislation and court decisions and links each result to its document.\n\n## What it does\n\n- Searches legislation, case law and regulatory decisions: national courts,\n  including supreme and constitutional courts where available, EU legislation,\n  the Court of Justice of the EU and the European Court of Human Rights.\n  Coverage varies by country and plan.\n- Returns the wording of a provision held for a given date.\n- Looks up decisions by case number or ECLI and opens their full text.\n- Compares the citations in a document with DirectCase sources and flags the\n  ones it cannot find.\n\nNo local data is ever changed. All tools read, except the hearing watch: when\nyou ask for it, it saves the case to your DirectCase profile and e-mails you\nwhen a hearing changes.\n\n## Install\n\n```\nagy plugin install https://github.com/directcase/legal-mcp\n```\n\nWhen the MCP server connects, Antigravity opens the DirectCase sign-in in your\nbrowser (OAuth 2.0 with PKCE). A DirectCase account is required; new accounts\nstart free.\n\n## Contents\n\n| Path | Purpose |\n| --- | --- |\n| `.antigravity-plugin/plugin.json` | Plugin manifest |\n| `mcp_config.json` | Remote MCP server `https://mcp.directcase.ai/` (Streamable HTTP) |\n| `skills/legal-question/SKILL.md` | A legal question answered from legislation and case law, with linked sources |\n| `skills/citation-check/SKILL.md` | Every citation in a document checked against DirectCase sources, as a table |\n| `skills/legal-memo/SKILL.md` | A structured legal memo with linked sources |\n| `assets/logo.png` | Plugin icon |\n\n## Links\n\n- Documentation: https://www.directcase.ai/gb/en/docs/mcp/\n- Website: https://www.directcase.ai/\n- Support: support@directcase.ai\n- Privacy policy: https://www.directcase.ai/gb/en/privacy-policy/\n- Terms: https://www.directcase.ai/gb/en/terms/\n",
+  "latestReleaseNotes": "Branded names for the Antigravity Marketplace.\n\n- Plugin renamed from `legal-plugin` to `directcase-legal-search` in all manifests.\n- MCP server renamed from `legal-search` to `directcase`; skills refer to its tools as `directcase:<tool>`.\n\nInstall:\n\n- Google Antigravity: `agy plugin install https://github.com/directcase/legal-mcp`\n- Claude Code: `/plugin install directcase-legal-search@directcase`\n- OpenAI Codex: `codex plugin add directcase-legal-search@directcase`, then `codex mcp login directcase`\n\nIf you installed `legal-plugin` before, remove it and install `directcase-legal-search`.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "9d88f4328ab83b305bcca39e0c9558c7ae657086",
+      "scannedAt": "2026-11-27T18:19:35.026Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

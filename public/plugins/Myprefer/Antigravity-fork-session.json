@@ -1,0 +1,371 @@
+{
+  "schemaVersion": 1,
+  "id": "Myprefer/Antigravity-fork-session",
+  "sha": "2ee89a4c56c71f17dd3d35cc89e2b4b042703f81",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:46.055Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-fork-session",
+    "displayName": "Antigravity-fork-session",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "session-manager",
+        "slashCommand": "/session-manager",
+        "description": "打开桌面端侧边栏的「会话 Fork 管理」面板，对当前会话按轮次 Fork、完整分叉或在桌面端与 Antigravity CLI 之间同步会话。",
+        "disableModelInvocation": false,
+        "file": "skills/session-manager/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/session-manager"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity-fork-session\n\n**English** | [简体中文](./README_zh.md)\n\nA Sidecar UI plugin for Google Antigravity Desktop to fork conversations (including per-turn truncation), sync sessions between Desktop and CLI (`agy`), and export/import sessions across devices.\n\n## Why\n\nAntigravity CLI (`agy`) supports `/fork`, `/rewind`, and importing conversations from Desktop, while Antigravity Desktop currently lacks native support for:\n\n1. **Conversation forking & per-turn branching**: When you want to branch off an earlier turn in a long session to try a different approach, there is no built-in way to fork from a specific turn without starting over or going through the CLI.\n2. **Opening CLI sessions in Desktop**: Desktop (`~/.gemini/antigravity`) and CLI (`~/.gemini/antigravity-cli`) store sessions in separate local directories, so sessions continued or forked in CLI do not show up in the Desktop sidebar.\n\nBecause both clients share the same underlying SQLite + protobuf storage format, this zero-dependency Sidecar plugin brings per-turn forking, Desktop ↔ CLI sync, and cross-device transfer directly into the Desktop side pane.\n\n## Features\n\n- **Per-turn Fork**: View every turn (prompts + rendered Markdown replies) of the active conversation in the side pane and fork right after or before any turn.\n- **Full Fork & Project Switching**: Clone any Desktop or CLI session with a fresh UUID, custom title, and target project, then notify Desktop's `ConversationService` so it appears immediately in the sidebar.\n- **Desktop ↔ CLI Sync**: Import CLI sessions from `~/.gemini/antigravity-cli` into Desktop, or sync Desktop sessions to CLI.\n- **Cross-device Export & Import**: Export any session to a portable `.agysess.zip` bundle via a native OS Save-As dialog (with optional `brain/` attachments), and import `.agysess.zip` or raw `.db` files on another macOS / Linux / Windows machine with automatic ID and project reassignment.\n- **Auto-backup & Restore**: Automatically snapshots existing sessions before any overwrite, with one-click restore in the **Backups** tab.\n- **Zero Dependencies**: Pure Python 3.9+ standard library backend + vanilla HTML/CSS/JS frontend, synced with Antigravity's light/dark theme.\n\n## Requirements\n\n- macOS / Linux / Windows\n- Python 3.9+\n- Google Antigravity Desktop (optionally with `agy` CLI for cross-surface sync)\n\n## Installation\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/Myprefer/Antigravity-fork-session.git\ncd Antigravity-fork-session\n./install.sh\n```\n\nFor development, use `./install.sh --symlink`. To uninstall: `./uninstall.sh`.\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/Myprefer/Antigravity-fork-session.git\ncd Antigravity-fork-session\n.\\install.ps1\n```\n\n`install.ps1` automatically detects Python 3.9+ on your machine and writes its path into the installed `sidecar.json`. To uninstall: `.\\uninstall.ps1`.\n\n### Enable in Antigravity Desktop\n\n1. Open **Customizations** in Antigravity Desktop and enable `Antigravity-fork-session` (`antigravity-fork-session`) along with its Sidecar.\n2. Click **`+`** in the top-right corner of the right-hand side pane and select **会话 Fork 管理**.\n\n## Standalone Mode (Without Installing the Plugin)\n\n```bash\npython3 sidecars/session-manager/server.py --port 18765\n```\n\nThen open `http://127.0.0.1:18765` in your browser.\n\n## Environment Variables\n\n| Variable | Description | Default |\n| --- | --- | --- |\n| `AGY_DESKTOP_DIR` | Antigravity Desktop data directory | `~/.gemini/antigravity` |\n| `AGY_CLI_DIR` | Antigravity CLI data directory | `~/.gemini/antigravity-cli` |\n| `AGY_MANAGER_PORT` | Port when running standalone | `18766` |\n\n## Notes\n\n- The local server binds strictly to `127.0.0.1`.\n- Fork, sync, and import operations use SQLite's online `.backup()` in a staging directory and replace files atomically without modifying source databases.\n- This project reads and writes Antigravity's local SQLite and protobuf storage format; future upstream storage changes may require updates.\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1574,
+        "snippet": "proc = subprocess.run([\"osascript\", \"-e\", script], capture_output=True, text=True, timeout=180)",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1574"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1593,
+        "snippet": "proc = subprocess.run( [\"powershell\", \"-NoProfile\", \"-STA\", \"-Command\", ps_script], capture_output=True, text=True, timeout=180, )",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1593"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1604,
+        "snippet": "proc = subprocess.run( [ \"zenity\", \"--file-selection\", \"--save\", \"--confirm-overwrite\", \"--title=导出 Antigravity 会话包\", f\"--filename={str(start_dir / safe_name)}\", ], capture_output=",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1604"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1619,
+        "snippet": "proc = subprocess.run( [\"kdialog\", \"--getsavefilename\", str(start_dir / safe_name), \"*.agysess.zip\"], capture_output=True, text=True, timeout=180, )",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1619"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1670,
+        "snippet": "subprocess.Popen([\"open\", \"-R\", str(target)])",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1670"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1672,
+        "snippet": "subprocess.Popen([\"explorer\", f\"/select,{str(target)}\"])",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1672"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1676,
+        "snippet": "subprocess.Popen([opener, str(target.parent if target.is_file() else target)])",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1676"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 281,
+        "snippet": "ann_path.write_text(text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L281"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 288,
+        "snippet": "ann_path.write_text(\" \".join(parts) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L288"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1004,
+        "snippet": "shutil.rmtree(dst_brain)",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1004"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1044,
+        "snippet": "(bdir / \"meta.json\").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1044"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1137,
+        "snippet": "with urllib.request.urlopen(req, timeout=3.0) as resp:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1137"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1684,
+        "snippet": "with open(file_path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1684"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1707,
+        "snippet": "with zf.open(\"annotation.pbtxt\", \"r\") as sf, open(ann_tmp, \"wb\") as df:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1707"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1712,
+        "snippet": "with zf.open(\"conversation.db\", \"r\") as sf, open(db_path, \"wb\") as df:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1712"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1748,
+        "snippet": "p.write_bytes(raw_bytes)",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1748"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1767,
+        "snippet": "with open(file_path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1767"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1793,
+        "snippet": "with zf.open(info, \"r\") as src_f, open(out_p, \"wb\") as dst_f:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1793"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1803,
+        "snippet": "with zf.open(\"annotation.pbtxt\", \"r\") as sf, open(ann_tmp, \"wb\") as df:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1803"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1806,
+        "snippet": "with zf.open(\"conversation.db\", \"r\") as sf, open(staged_db, \"wb\") as df:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1806"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/core.py",
+        "line": 1918,
+        "snippet": "p.write_bytes(raw_bytes)",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/core.py#L1918"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/server.py",
+        "line": 86,
+        "snippet": "dst_path.write_bytes(b\"\")",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/server.py#L86"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/server.py",
+        "line": 90,
+        "snippet": "with open(dst_path, \"wb\") as out_f:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/server.py#L90"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "sidecars/session-manager/server.py",
+        "line": 187,
+        "snippet": "with open(tmp_zip, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/server.py#L187"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/session-manager/static/app.js",
+        "line": 254,
+        "snippet": "const res = await fetch(url, { ...opts, headers });",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/static/app.js#L254"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/session-manager/static/app.js",
+        "line": 837,
+        "snippet": "const res = await fetch(`/api/export/${surface}/${id}?include_brain=${includeBrain ? '1' : '0'}`, { headers });",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/static/app.js#L837"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/session-manager/static/app.js",
+        "line": 906,
+        "snippet": "const res = await fetch('/api/import/inspect', { method: 'POST', headers, body: file });",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/static/app.js#L906"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/session-manager/static/app.js",
+        "line": 951,
+        "snippet": "const res = await fetch(`/api/import?${params.toString()}`, { method: 'POST', headers, body: file });",
+        "githubBlobUrl": "https://github.com/Myprefer/Antigravity-fork-session/blob/2ee89a4c56c71f17dd3d35cc89e2b4b042703f81/sidecars/session-manager/static/app.js#L951"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "2ee89a4c56c71f17dd3d35cc89e2b4b042703f81",
+      "scannedAt": "2026-11-27T18:14:46.055Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

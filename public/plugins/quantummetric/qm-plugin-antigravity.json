@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "quantummetric/qm-plugin-antigravity",
+  "sha": "575a434bbfd0ff9311f5f29b180f514e345a6aeb",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:23:11.728Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "quantum-metric",
+    "displayName": "Quantum Metric",
+    "version": "0.2.3",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "quantum-metric",
+        "runtimeName": "quantum-metric_quantum-metric",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://api.quantummetric.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "data-analysis",
+        "slashCommand": "/data-analysis",
+        "description": "Answer questions about funnels, conversion, errors, friction, traffic and trends using Quantum Metric. Use for any request that needs a number, a breakdown, a drop-off or a comparison from Quantum Metric data.",
+        "disableModelInvocation": false,
+        "file": "skills/data-analysis/SKILL.md"
+      },
+      {
+        "name": "getting-started",
+        "slashCommand": "/getting-started",
+        "description": "Orient to a Quantum Metric connection before answering questions about Quantum Metric data. Use at the start of any Quantum Metric session, when a query returns no data or an error, or when a tool reports an authorization problem.",
+        "disableModelInvocation": false,
+        "file": "skills/getting-started/SKILL.md"
+      },
+      {
+        "name": "session-review",
+        "slashCommand": "/session-review",
+        "description": "Investigate one Quantum Metric session, or a small set of sessions, to explain what a user experienced. Use for a bug report, a complaint, a replay link or a session ID, and to find evidence behind a number.",
+        "disableModelInvocation": false,
+        "file": "skills/session-review/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/data-analysis",
+      "/getting-started",
+      "/session-review"
+    ],
+    "mcpServerNames": [
+      "quantum-metric_quantum-metric"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Quantum Metric for Antigravity\n\nAnalyze funnels, errors, friction and session replays in Quantum Metric to find and fix digital experience issues.\n\n## Install\n\n```bash\nagy plugin install https://github.com/quantummetric/qm-plugin-antigravity.git\n```\n\n## Configure\n\nThe server uses Quantum Metric sign-in (OAuth). Every call runs as you, with your role, permissions, workspace and timezone. No token is created or stored.\n\n| Setting | Value |\n|---|---|\n| Endpoint | `https://api.quantummetric.com/mcp` |\n| Subscription | Chosen when you sign in |\n\n## Skills\n\n- `getting-started`: confirms the subscription, workspace and timezone, and fixes common connection problems\n- `data-analysis`: answers funnel, conversion, error and trend questions with verified numbers\n- `session-review`: explains what a user experienced in one or more sessions\n\n## Support\n\nsupport@quantummetric.com, or the [Quantum Metric support portal](https://thequad.quantummetric.com/).\n\n## Privacy\n\n[Quantum Metric Privacy Policy](https://www.quantummetric.com/legal/privacy-policy)\n\n## Terms\n\n[Quantum Metric Terms and Conditions](https://iam.quantummetric.com/terms-and-conditions)\n\n## License\n\nMIT\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "0.2.3",
+      "sha": "575a434bbfd0ff9311f5f29b180f514e345a6aeb",
+      "scannedAt": "2026-11-27T18:23:11.728Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

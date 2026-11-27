@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "id": "DevModee/mercadopago-kit",
+  "sha": "33cd8bfde92f934d3415bc91457f52fba179f1de",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:15.710Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "mercadopago-kit",
+    "displayName": "Mercado Pago Kit",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "mercadopago",
+        "runtimeName": "mercadopago-kit_mercadopago",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mercadopago-mcp@0.2.0"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "checkout-integration",
+        "slashCommand": "/checkout-integration",
+        "description": "Guides Checkout Pro integrations by checking available payment methods, auditing existing preferences, and creating new preferences only when write mode is enabled and the user confirms. Use when a user is integrating or troubleshooting Mer",
+        "disableModelInvocation": false,
+        "file": "skills/checkout-integration/SKILL.md"
+      },
+      {
+        "name": "payment-debug",
+        "slashCommand": "/payment-debug",
+        "description": "Diagnoses rejected, pending, or in-process Mercado Pago payments and reconciles merchant orders against their attached payments using the mercadopago MCP tools. Use when a user asks why a payment failed, why it is stuck in pending, or why a",
+        "disableModelInvocation": false,
+        "file": "skills/payment-debug/SKILL.md"
+      },
+      {
+        "name": "webhook-verify",
+        "slashCommand": "/webhook-verify",
+        "description": "Verifies and debugs Mercado Pago webhook HMAC-SHA256 signatures with the offline verify_webhook_signature tool and explains how to implement the check in a backend. Use when webhook signature validation fails, when setting up webhook verifi",
+        "disableModelInvocation": false,
+        "file": "skills/webhook-verify/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/checkout-integration",
+      "/payment-debug",
+      "/webhook-verify"
+    ],
+    "mcpServerNames": [
+      "mercadopago-kit_mercadopago"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Mercado Pago Kit\n\nAntigravity plugin for working with Mercado Pago from the agent. It bundles:\n\n- The [`mercadopago-mcp`](https://github.com/DevModee/mercadopago-mcp) server, launched with `npx -y mercadopago-mcp@0.2.0` (pinned version). Read-only by default.\n- Three skills: payment debugging, webhook signature verification, and Checkout Pro integration.\n- Agent rules in `rules/AGENTS.md` that keep tokens out of the chat and block guessed endpoints.\n\n## Requirements\n\n- Node.js 20 or newer (`npx` must be on your `PATH`).\n- `MP_ACCESS_TOKEN`: a Mercado Pago access token. Use a test user token while developing.\n- `MP_WEBHOOK_SECRET` (optional): the webhook secret from Your integrations, used by `verify_webhook_signature`.\n\nSet them in the environment Antigravity starts from, not in the plugin files:\n\n```sh\nexport MP_ACCESS_TOKEN=\"TEST-...\"\nexport MP_WEBHOOK_SECRET=\"...\"\n```\n\n## Installation\n\nFrom GitHub:\n\n```sh\nagy plugin install https://github.com/DevModee/mercadopago-kit\n```\n\nFrom a local clone:\n\n```sh\ngit clone https://github.com/DevModee/mercadopago-kit.git\nagy plugin install ./mercadopago-kit\n```\n\n## Read-only by default\n\nOnly read tools are registered unless you opt in. To enable writes, set these before starting Antigravity:\n\n| Variable | Enables |\n| --- | --- |\n| `MP_ALLOW_WRITES=true` | `create_preference` |\n| `MP_ALLOW_REFUNDS=true` | `refund_payment` |\n\nThe rules tell the agent to show the payload and wait for your confirmation before calling either one, and to reuse the same `idempotency_key` on retries.\n\n## Tools\n\n| Tool | Mode | What it does |\n| --- | --- | --- |\n| `get_payment` | read | Fetch one payment by ID |\n| `search_payments` | read | Search by status, `external_reference`, payer email, and date range |\n| `get_merchant_order` | read | Fetch a merchant order with its attached payments |\n| `get_preference` | read | Fetch a Checkout Pro preference |\n| `list_payment_methods` | read | List payment methods, optionally per site (`MLA`, `MLB`, `MLM`, ...) |\n| `verify_webhook_signature` | read, offline | Check an `x-signature` header with HMAC-SHA256, no access token needed |\n| `create_preference` | write, opt-in | Create a Checkout Pro preference |\n| `refund_payment` | write, opt-in | Refund a payment fully or partially |\n\n## Skills\n\n- `payment-debug`: explains rejected or pending payments from `status_detail` and reconciles merchant orders against their payments.\n- `webhook-verify`: checks webhook signatures and points at the usual backend bugs (`data.id` read from the body instead of the query string, or not lowercased).\n- `checkout-integration`: audits payment methods and preferences, and creates preferences only when write mode is on and you confirm.\n\n## Known API limitations\n\nMercado Pago does not expose a public endpoint for the live account balance. `/mercadopago_account/balance` returns `403`. The closest options are `search_payments` and the asynchronous settlement and release reports from the Mercado Pago dashboard or reports API.\n\n## Local verification\n\n```sh\nnpm run lint && npm test\n```\n\n`lint` syntax-checks the scripts and tests, parses every JSON file, and rejects em-dash characters. `test` validates `plugin.json` against the Antigravity v1 plugin schema, the MCP config, the skill frontmatter, and the rules file. No dependencies to install.\n\n## License\n\nMIT\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lint.mjs",
+        "line": 37,
+        "snippet": "const res = spawnSync(process.execPath, ['--check', file], { encoding: 'utf8', windowsHide: true });",
+        "githubBlobUrl": "https://github.com/DevModee/mercadopago-kit/blob/33cd8bfde92f934d3415bc91457f52fba179f1de/scripts/lint.mjs#L37"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "33cd8bfde92f934d3415bc91457f52fba179f1de",
+      "scannedAt": "2026-11-27T18:18:15.710Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

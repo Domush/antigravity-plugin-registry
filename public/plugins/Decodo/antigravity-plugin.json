@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "id": "Decodo/antigravity-plugin",
+  "sha": "9aa37c31458ad65391832b858f40cddb195c5563",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:38.029Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "decodo",
+    "displayName": "Decodo",
+    "version": "0.1.1",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "decodo",
+        "runtimeName": "decodo_decodo",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.decodo.com/mcp?toolsets=web,search"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "decodo-setup",
+        "slashCommand": "/decodo-setup",
+        "description": "Get Decodo working in Antigravity — fetch an API key (or token), then authenticate the MCP server, the CLI, or both. Run only when the user invokes /decodo-setup.",
+        "disableModelInvocation": true,
+        "file": "skills/decodo-setup/SKILL.md"
+      },
+      {
+        "name": "decodo-status",
+        "slashCommand": "/decodo-status",
+        "description": "Report which Decodo surfaces are live in this session — MCP tools, CLI version and auth, enabled toolsets — without scraping anything. Run only when the user invokes /decodo-status.",
+        "disableModelInvocation": true,
+        "file": "skills/decodo-status/SKILL.md"
+      },
+      {
+        "name": "decodo",
+        "slashCommand": "/decodo",
+        "description": "Scrape websites and extract structured web data with Decodo — search the web, map a site's URLs, crawl a whole site or section, pull product data from Amazon, Walmart, Target, and collect posts from Reddit, TikTok, YouTube and more. Decodo ",
+        "disableModelInvocation": false,
+        "file": "skills/decodo/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/decodo",
+      "/decodo-setup",
+      "/decodo-status"
+    ],
+    "mcpServerNames": [
+      "decodo_decodo"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [
+      {
+        "name": "DECODO_AUTH_TOKEN",
+        "title": "Decodo API key or token",
+        "required": true,
+        "description": "Referenced by MCP server \"decodo\".",
+        "link": "https://dashboard.decodo.com/web-data/playground"
+      }
+    ],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Decodo plugin for Antigravity\n\nAntigravity plugin for [Decodo](https://decodo.com) — web scraping, SERP, and e-commerce data for\nAI agents. Decodo handles JavaScript rendering, anti-bot and CAPTCHA, proxy rotation, and\ngeo-targeting across 125M+ IPs in 195+ locations.\n\n## What's included\n\n| Component | Description |\n| --- | --- |\n| `decodo` skill | When to reach for Decodo, which target to pick, and how to handle output |\n| MCP server | Hosted Decodo tools (`web`, `search` toolsets) — no install, no shell |\n| `/decodo-setup`, `/decodo-status` | Get an API key in place; see which surfaces are live |\n| recovery rule | Handles MCP 401s and CLI install/`PATH`/auth errors |\n\n## Install\n\n```bash\nagy plugin install https://github.com/Decodo/antigravity-plugin\n```\n\nSetup needs an API key or auth token (`DECODO_AUTH_TOKEN`) from the\n[Decodo Playground](https://dashboard.decodo.com/web-data/playground). The plugin installs\ndisabled until it is set: open `/plugin` in `agy` (or Customizations → Installed in the app), turn\nDecodo on and paste the key. Or run `/decodo-setup` and let the agent walk you through it.\n\nThe key you paste in `/plugin` only reaches the hosted MCP server. The skill uses the `decodo` CLI\nfor targets the MCP toolsets don't cover (Amazon, Walmart, Reddit, crawls), and the CLI keeps its\nown credential. Give it the same key once:\n\n```bash\nnpx -y @decodo/cli setup --token '<your-key>'   # saved for every session\n# or, for the current shell only:\nexport DECODO_AUTH_TOKEN='<your-key>'\n```\n\nCheck it with `npx -y @decodo/cli whoami`. Skip this and the agent asks for the key the first\ntime it needs the CLI.\n\nTo try it from a clone:\n\n```bash\nbash install.sh              # validates, then installs into ~/.gemini/config/plugins/; start a new agy session after\nbash install.sh --uninstall  # remove\n```\n\n## Example workflows\n\nAsk in plain language. The agent picks the MCP tool or the `decodo` CLI command for you.\n\n| Ask | What runs | You get |\n| --- | --- | --- |\n| \"What are the top 5 Google results for web scraping api?\" | MCP `search` | Parsed results: title, URL and snippet |\n| \"Scrape decodo.com and summarise what they sell.\" | MCP `scrape_as_markdown` | The rendered page as markdown, then a summary |\n| \"Get the price and rating for Amazon ASIN B09H74FXNW.\" | CLI `decodo amazon-product` (needs the CLI key, see Install) | Parsed product JSON: title, price, rating, availability |\n| \"List every docs page on example.com, then pull the ones about pricing.\" | MCP `map`, then `scrape_as_markdown` per page | A URL list, then only the pages you need |\n| \"Crawl the blog on example.com and give me each post's title and date.\" | CLI `decodo crawl --wait` | One record per page, as NDJSON |\n\nSearch, map and crawl need an API key; a basic auth token works for the rest. Every request is\nbilled, so the agent doesn't run the same request through both MCP and the CLI.\n\n## Contributing\n\nSee [`CONTRIBUTING.md`](CONTRIBUTING.md) for repository layout, validation and local testing.\n\n## License\n\nMIT\n",
+  "latestReleaseNotes": "## What's Changed\n* remove Perplexity and Reddit tools from status skill by @paulius-krutkis-dcd in https://github.com/Decodo/antigravity-plugin/pull/2\n\n## New Contributors\n* @paulius-krutkis-dcd made their first contribution in https://github.com/Decodo/antigravity-plugin/pull/2\n\n**Full Changelog**: https://github.com/Decodo/antigravity-plugin/compare/v0.1.0...v0.1.1",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "credential_access",
+      "fs_write_workspace",
+      "network_external_mcp",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "rules/decodo-recovery.md",
+        "line": 71,
+        "snippet": "curl -fsSL https://decodo.github.io/cli/install.sh | sh # macOS / Linux (recommended)",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/rules/decodo-recovery.md#L71"
+      },
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "rules/decodo-recovery.md",
+        "line": 184,
+        "snippet": "curl -fsSL https://decodo.github.io/cli/install.sh | sh # handles EACCES automatically",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/rules/decodo-recovery.md#L184"
+      },
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "skills/decodo-setup/SKILL.md",
+        "line": 81,
+        "snippet": "curl -fsSL https://decodo.github.io/cli/install.sh | sh # macOS / Linux",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/skills/decodo-setup/SKILL.md#L81"
+      },
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "skills/decodo/SKILL.md",
+        "line": 113,
+        "snippet": "curl -fsSL https://decodo.github.io/cli/install.sh | sh # macOS / Linux",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/skills/decodo/SKILL.md#L113"
+      },
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/decodo/SKILL.md",
+        "line": 140,
+        "snippet": "`curl` against Decodo's API (`https://data.decodo.com/v1/...` with an API key, or",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/skills/decodo/SKILL.md#L140"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-version.mjs",
+        "line": 19,
+        "snippet": "const git = (...args) => execFileSync(\"git\", args, { encoding: \"utf8\" });",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/check-version.mjs#L19"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-version.mjs",
+        "line": 22,
+        "snippet": "const match = versionPattern.exec(version ?? \"\");",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/check-version.mjs#L22"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate.mjs",
+        "line": 37,
+        "snippet": "const match = /^([A-Za-z0-9_-]+):\\s*(.*)$/.exec(lines[i]);",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/validate.mjs#L37"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/validate.test.mjs",
+        "line": 12,
+        "snippet": "after(() => temps.forEach((dir) => rmSync(dir, { recursive: true, force: true })));",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/validate.test.mjs#L12"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/validate.test.mjs",
+        "line": 27,
+        "snippet": "writeFileSync(file, JSON.stringify(data));",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/validate.test.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/validate.test.mjs",
+        "line": 49,
+        "snippet": "writeFileSync(file, readFileSync(file, \"utf8\").replace(\"name: decodo-status\", \"name: status\"));",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/validate.test.mjs#L49"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/validate.test.mjs",
+        "line": 56,
+        "snippet": "writeFileSync(file, readFileSync(file, \"utf8\").replace(\"trigger: model_decision\", \"alwaysApply: false\"));",
+        "githubBlobUrl": "https://github.com/Decodo/antigravity-plugin/blob/9aa37c31458ad65391832b858f40cddb195c5563/scripts/validate.test.mjs#L56"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.1",
+      "sha": "9aa37c31458ad65391832b858f40cddb195c5563",
+      "scannedAt": "2026-11-27T18:18:38.029Z",
+      "riskTier": "high",
+      "capabilities": [
+        "credential_access",
+        "fs_write_workspace",
+        "network_external_mcp",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

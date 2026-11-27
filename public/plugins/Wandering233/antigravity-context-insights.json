@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "id": "Wandering233/antigravity-context-insights",
+  "sha": "c54fe871703a82e964cc680bcdc6e6e77f3515f4",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:29.136Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-context",
+    "displayName": "Context Insights",
+    "version": "0.3.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "context",
+        "slashCommand": "/context",
+        "description": "Context insight for Antigravity conversations. Use when the user asks about context usage, context size, token usage, cache hit rate, what is filling or bloating the context window, why a conversation is slow or expensive, how to slim the c",
+        "disableModelInvocation": false,
+        "file": "skills/context/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/context"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-context — Context Insights for Antigravity\n\nInspired by [`dsh-context`](https://www.npmjs.com/package/dsh-context) (v0.84.0) for DeepSeek Harness. Shows **what your agent is carrying, how it got there, and what it costs** — entirely from local Antigravity conversation logs and metadata (read-only, no network).\n\n## Feature map (vs. dsh-context)\n\n| dsh-context | agy-context |\n| --- | --- |\n| Context Insights page (KPIs, custom dates, archived filter, 7-day chart, heatmap with Tokens/Sessions, skills with source/path, tools, commands, paginated session cards with search/group/sort) | **Insights** tab: same — plus reads Antigravity's `conversation_summaries.db` for real titles, workspace paths, running state and archived status |\n| Context Stats / Token Stats / Timing Stats | **KPIs + Token Stats + Timing Stats**: turns, steps, model badge, user/answer/skill/event/I-O jump chips, fresh/cache/output tokens, cache hit rate, **TPS (`tok/s`)**, proportional timeline strip (`0..Q3..Total`), own + subagent cost |\n| Current Context (stack vs. model window + compaction reserve) | **Current context** gauge calibrated to the real request size against the model's window, with auto-compaction trigger line inferred from checkpoints |\n| Context Trend (Step/Turn, Total/Delta, Adaptive, Duration curve with right-side quartile ticks, Overview stacked bands, DNA mode, hover & pinned Step Brief) | Same: **Step / Turn**, **Total / Delta**, **Adaptive** viewport rescaling, **Duration** curve (turns sum step durations, right-side quartile axis), **Overview** continuous stacked bands with category highlight, **DNA** item-fingerprint bars, and live **Step brief** (`User / In / Response`) |\n| Context Browser (Treemap, DNA, diff badges, Delta-only filter, searchable step picker, provider tags, Raw/Markdown/JSON tree/Find/Copy, image attachments) | **Browser**: **Treemap**, **DNA** reverse read-order view, **vs prev step / turn** diffs, **Added only**, searchable step picker (`Live` or `T·S`), tool provider tags (`builtin` / `mcp:<server>` / `skill:<name>`), **Raw / Markdown / JSON tree + Find + Copy**, and **image attachment thumbnails** |\n| Context Events (inject / compact / switch / mode) | **Events**: compact (with net Δ), inject, skill loads, **model switches** (`A → B`), slash mode commands, errors, user messages |\n| File Activity (Read / Written / Searched / Images, 5 sorts, +/- lines, read line ranges, ops log) | **Files**: same filters, **5 sorts** (`Count / Lines / Latest / Path / Name`), file-type glyphs, `+add / −del` lines, read line ranges, search hits, path copy, expandable ops log |\n| Command Executions (rail + notable + programs + status + rich viewer) | **Commands**: summary KPIs, **Notable** quick-jumps (`Slowest / Most failing / Most repeated / Background`), searchable programs list, status/heredoc/exit-code/truncated/stderr badges, Raw/MD/Find + Reveal in Browser |\n| Fleet tab (Agent network, Cross-agent timeline, Collaborating tasks, Event inspector) | **Fleet**: parent + subagent tree (via logs & `conversation_summaries.db`), **Swimlane timeline** (`Earliest / Latest`, hide quiet lanes), **Collaborating tasks**, and **Event inspector** |\n| Preferences + system prompt prefix/suffix | **Settings**: language (`Auto / EN / ZH`), tabs visibility, USD / CNY (`1 CNY = 0.15 USD`), auto reference pricing + custom rates, defaults for trend/browser/tools/files, and **System Prompt Prefix & Suffix** synced to `rules/AGENTS.md` |\n| `/context` command | `context` skill (`/context`) + CLI `session`, `overview`, `list`, `fleet`, `browse` |\n\nNot applicable to Antigravity: pruning events (Antigravity truncates via checkpoints rather than pruning tool outputs), PTC `run_code`, DeepSeek account balance widget.\n\n### Ask an agent\n\n- **Side question** — starts a *separate* read-only conversation seeded with the report, leaving the main conversation untouched.\n- **Copy /btw** — copies a ready-made `/btw …` prompt to paste in the composer for Antigravity's native `/btw`.\n\n## Data & Privacy\n\n- Reads `~/.gemini/antigravity/brain/<id>/.system_generated/logs/transcript_full.jsonl` and `~/.gemini/antigravity/conversation_summaries.db` (read-only).\n- Summaries are cached in `~/.gemini/antigravity/plugin_data/agy-context/cache.json`; settings in `settings.json`.\n- Built-in reference model pricing (`lib/pricing.mjs`) is approximate; override in **Settings** for exact billing rates.\n- The sidecar binds to loopback via `sidecar_sdk`, every API route is POST with token validation, and conversation text / local images are only returned to the local UI on explicit drill-down.\n\n## Install\n\n```bash\ngit clone <this repo> ~/.gemini/config/plugins/agy-context\n```\n\nRestart Antigravity, then open **Context Insights** from the side-pane list, or run `/context`.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 159,
+        "snippet": "const m = /<USER_REQUEST>\\s*([\\s\\S]*?)\\s*<\\/USER_REQUEST>/.exec(content || '');",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L159"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 167,
+        "snippet": "const m = /The user changed setting `Model Selection` from (.+?) to (.+?)(?:\\.\\s*(?:No need|If reporting)|\\.?\\s*$)/m.exec(bm[1]);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L167"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 181,
+        "snippet": "const h = /<<-?\\s*['\"]?([A-Za-z_][\\w]*)['\"]?/.exec(line);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L181"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 242,
+        "snippet": "const codeM = /exit(?:ed)?\\s*(?:with)?\\s*code\\s*(\\d+)/i.exec(content.slice(0, 600));",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L242"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 256,
+        "snippet": "const tsOf = (re, text) => { const m = re.exec(text); return m ? Date.parse(m[1]) || 0 : 0; };",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L256"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 262,
+        "snippet": "const m = /sender=(\\S+)/.exec(c);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L262"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 264,
+        "snippet": "const t = /\\[(Message|Notice)\\]/.exec(c);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L264"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 391,
+        "snippet": "const modeM = /^\\/(plan|goal|teamwork|boost|grill-me)\\b/.exec(text);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L391"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 549,
+        "snippet": "const m = /sender=([0-9a-f-]{36})(?![\\w/-])/.exec(content);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L549"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 551,
+        "snippet": "const body = /content=([\\s\\S]*?)(?:<\\/SYSTEM_MESSAGE>|$)/.exec(content);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L551"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/analyzer.mjs",
+        "line": 556,
+        "snippet": "const m = /content=([\\s\\S]*?)(?:<\\/SYSTEM_MESSAGE>|$)/.exec(content);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L556"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/analyzer.mjs",
+        "line": 954,
+        "snippet": "await fsp.writeFile(tmp, JSON.stringify({ schema: SCHEMA, items: [...memo.values()] }));",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L954"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/settings.mjs",
+        "line": 90,
+        "snippet": "await fsp.writeFile(settingsFile(), JSON.stringify(next, null, 2));",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/settings.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/settings.mjs",
+        "line": 101,
+        "snippet": "await fsp.rm(RULE_FILE, { force: true });",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/settings.mjs#L101"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/settings.mjs",
+        "line": 109,
+        "snippet": "await fsp.writeFile(RULE_FILE, `${blocks.join('\\n\\n')}\\n`);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/settings.mjs#L109"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/analyzer.mjs",
+        "line": 4,
+        "snippet": "// - ~/.gemini/antigravity/brain/<conversation-id>/.system_generated/logs/transcript_full.jsonl",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L4"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/analyzer.mjs",
+        "line": 5,
+        "snippet": "// - ~/.gemini/antigravity/conversation_summaries.db (optional, read-only metadata: title, workspace, parent, status, archived)",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/lib/analyzer.mjs#L5"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/insights/server.mjs",
+        "line": 13,
+        "snippet": "sdk = await import(new URL(`file://${path.join(os.homedir(), '.gemini/antigravity/lib/node_modules/sidecar_sdk/index.mjs')}`).href);",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/sidecars/insights/server.mjs#L13"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/context/SKILL.md",
+        "line": 16,
+        "snippet": "The CLI lives at `../../lib/cli.mjs` relative to this `SKILL.md`",
+        "githubBlobUrl": "https://github.com/Wandering233/antigravity-context-insights/blob/c54fe871703a82e964cc680bcdc6e6e77f3515f4/skills/context/SKILL.md#L16"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.3.0",
+      "sha": "c54fe871703a82e964cc680bcdc6e6e77f3515f4",
+      "scannedAt": "2026-11-27T18:17:29.136Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 1,
+  "id": "zeropage-onryo/phantra-plugin",
+  "sha": "dfed566453334f3a50432961aa57f27eac33cea0",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:37.247Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "phantra-ai",
+    "displayName": "Phantra AI",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "phantra",
+        "runtimeName": "phantra-ai_phantra",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://api.phantra.ai/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "ad-formats",
+        "slashCommand": "/ad-formats",
+        "description": "Picks the shape of a short ad in Phantra (product spot, demo, before/after, problem-solution, unboxing, comparison, teaser) and turns it into a shot plan: length, shot count, the photos it is held to and a `write_scene` shape, with `duplica",
+        "disableModelInvocation": false,
+        "file": "skills/ad-formats/SKILL.md"
+      },
+      {
+        "name": "ad-variations",
+        "slashCommand": "/ad-variations",
+        "description": "Makes A/B variants of a saved Phantra scene with `duplicate_scene`, changing one thing (the hook, the length, the first shot, the product photo or the video model), each a new scene priced on its own and read back later with `what_works`. U",
+        "disableModelInvocation": false,
+        "file": "skills/ad-variations/SKILL.md"
+      },
+      {
+        "name": "brand-kit-from-my-work",
+        "slashCommand": "/brand-kit-from-my-work",
+        "description": "Builds a brand kit from the person's own Phantra work: reads what they kept and posted, their library, elements and recipes, draws out palette, light, framing and product rules, confirms each, and saves the kit as a recipe and a project loo",
+        "disableModelInvocation": false,
+        "file": "skills/brand-kit-from-my-work/SKILL.md"
+      },
+      {
+        "name": "browse-presets",
+        "slashCommand": "/browse-presets",
+        "description": "Shows the person what Phantra can do before anything is made: the effects menu (image edits, animated templates, camera moves, upscales, sound, cut-outs), the saved recipes, and the image and video models. Browsing costs nothing and starts ",
+        "disableModelInvocation": false,
+        "file": "skills/browse-presets/SKILL.md"
+      },
+      {
+        "name": "camera-moves",
+        "slashCommand": "/camera-moves",
+        "description": "A vocabulary of camera moves and framings for Phantra scene prompts (push-in, pull-back, orbit, handheld, locked-off, rack focus, whip pan, crane, top-down, POV; close, medium, wide), with when each works in a 2-10 second shot and the rule ",
+        "disableModelInvocation": false,
+        "file": "skills/camera-moves/SKILL.md"
+      },
+      {
+        "name": "client-treatment",
+        "slashCommand": "/client-treatment",
+        "description": "Writes a one-page client treatment (a pitch) for a Phantra project from what it holds: brief, look, scenes and references (`project`), renders (`library`), a clip link (`share_link`) and what worked before (`what_works`). Use when someone a",
+        "disableModelInvocation": false,
+        "file": "skills/client-treatment/SKILL.md"
+      },
+      {
+        "name": "credits-and-limits",
+        "slashCommand": "/credits-and-limits",
+        "description": "Explains what is free and what costs credits in Phantra, reads the balance and where credits went, walks the quote, yes, spend flow, sets up draft-first rendering, and explains a refusal or a rate limit (429). Use when someone asks what som",
+        "disableModelInvocation": false,
+        "file": "skills/credits-and-limits/SKILL.md"
+      },
+      {
+        "name": "edit-and-deliver",
+        "slashCommand": "/edit-and-deliver",
+        "description": "Finishes a video with Phantra's free edits: finds clips in the library, trims one, joins several (a cut or a crossfade), reformats to a platform's shape and hands over a download link. Every result is a new item and nothing spends credits. ",
+        "disableModelInvocation": false,
+        "file": "skills/edit-and-deliver/SKILL.md"
+      },
+      {
+        "name": "effects",
+        "slashCommand": "/effects",
+        "description": "Changes something already in the person's Phantra library with one of the seven effect tools: `edit_image`, `remove_background`, `animate_still`, `camera_move`, `upscale_clip`, `add_sound`, `reframe_clip`. Quotes it in credits and runs it o",
+        "disableModelInvocation": false,
+        "file": "skills/effects/SKILL.md"
+      },
+      {
+        "name": "explainer",
+        "slashCommand": "/explainer",
+        "description": "Plans and writes a short explainer video in Phantra (what it is, how it works, why now) as timed shots held to the person's own product or place photos, then joins the rendered scenes and makes one copy per platform. Use when someone asks f",
+        "disableModelInvocation": false,
+        "file": "skills/explainer/SKILL.md"
+      },
+      {
+        "name": "hooks-and-first-seconds",
+        "slashCommand": "/hooks-and-first-seconds",
+        "description": "Writes the first shot of a Phantra scene so it holds attention (an arresting image, a turn or a reveal in the first seconds) and puts it into the scene's first timed shot, reading `what_works` and `score_caption` as evidence rather than ver",
+        "disableModelInvocation": false,
+        "file": "skills/hooks-and-first-seconds/SKILL.md"
+      },
+      {
+        "name": "ideas-and-projects",
+        "slashCommand": "/ideas-and-projects",
+        "description": "Turns a brief into a few story ideas the person chooses between in the chat, and keeps the work in a Phantra project. Use when someone describes a video, ad, short or scene they want made, asks what they are working on, wants to open or sta",
+        "disableModelInvocation": false,
+        "file": "skills/ideas-and-projects/SKILL.md"
+      },
+      {
+        "name": "look-matching",
+        "slashCommand": "/look-matching",
+        "description": "Sets the visual look of a Phantra scene from the person's elements and from an image or frame they describe or attach, says what each photo is FOR (its role), and explains what the studio can and cannot match. Use when someone says \"make it",
+        "disableModelInvocation": false,
+        "file": "skills/look-matching/SKILL.md"
+      },
+      {
+        "name": "model-prompting",
+        "slashCommand": "/model-prompting",
+        "description": "Chooses the video model a Phantra scene renders on and writes the scene for it: `video_models` for what each model takes (lengths, frames, credits, a draft frame), `recommend_model` for a job described in words, and the wording that follows",
+        "disableModelInvocation": false,
+        "file": "skills/model-prompting/SKILL.md"
+      },
+      {
+        "name": "phantra-ai-use",
+        "slashCommand": "/phantra-ai-use",
+        "description": "The habits every Phantra skill assumes, loaded before any writing tool: reuse what the person has, hold every scene to a photo, quote before anything costs, wait for the person's yes before anything spends, and never overwrite. Use when wor",
+        "disableModelInvocation": false,
+        "file": "skills/phantra-ai-use/SKILL.md"
+      },
+      {
+        "name": "platform-delivery",
+        "slashCommand": "/platform-delivery",
+        "description": "Delivers a Phantra video in the shape and length each platform wants (9:16 for Reels, TikTok and Shorts; 16:9 for YouTube; 1:1 or 4:5 for a feed): sets a default length, writes each scene to its platform's length, reformats a finished clip ",
+        "disableModelInvocation": false,
+        "file": "skills/platform-delivery/SKILL.md"
+      },
+      {
+        "name": "price-and-render",
+        "slashCommand": "/price-and-render",
+        "description": "Prices a Phantra scene or still in credits, starts it on the person's yes, and reports where it stands. Every spend is quoted first, approved by the person in the chat, started with `approve` (a scene) or `generate_image` (one still), and r",
+        "disableModelInvocation": false,
+        "file": "skills/price-and-render/SKILL.md"
+      },
+      {
+        "name": "product-ad-set",
+        "slashCommand": "/product-ad-set",
+        "description": "Turns one product photo into a set of Phantra ads: three or four ad stills in different styles and, when wanted, two or three short video ads with different hooks. Agrees the set, quotes every still and scene separately and makes only what ",
+        "disableModelInvocation": false,
+        "file": "skills/product-ad-set/SKILL.md"
+      },
+      {
+        "name": "product-shots",
+        "slashCommand": "/product-shots",
+        "description": "Writes a product-led Phantra scene: the product as the subject, in macro and turntable shots, held to the person's own product photos, and says what a 4:5 or 1:1 reformat does afterwards. A pack-shot still can be drawn too (`generate_image`",
+        "disableModelInvocation": false,
+        "file": "skills/product-shots/SKILL.md"
+      },
+      {
+        "name": "series-and-continuity",
+        "slashCommand": "/series-and-continuity",
+        "description": "Makes several Phantra scenes read as one series (episodes, a campaign): one project and look, the same refs in the same order and roles, the same style block, a fixed length, frame and model, each episode started from the last with `duplica",
+        "disableModelInvocation": false,
+        "file": "skills/series-and-continuity/SKILL.md"
+      },
+      {
+        "name": "setup",
+        "slashCommand": "/setup",
+        "description": "The first minutes with Phantra in an AI assistant: what the person can make here, the one sign-in, a look at what the workspace holds, and the one rule about spending. Use right after the plugin is installed, when the person asks how to sta",
+        "disableModelInvocation": false,
+        "file": "skills/setup/SKILL.md"
+      },
+      {
+        "name": "sound-plan",
+        "slashCommand": "/sound-plan",
+        "description": "Plans the sound of a Phantra scene: writes the \"No background music. Only diegetic sound:\" line and each shot's own sound, says which models render sound with the picture, and where music and voice go (a music bed through `assemble_clips`; ",
+        "disableModelInvocation": false,
+        "file": "skills/sound-plan/SKILL.md"
+      },
+      {
+        "name": "start-a-project",
+        "slashCommand": "/start-a-project",
+        "description": "Takes a one-line idea to a Phantra project holding its first scene: creates it with a title, brief and look, gets the person's pictures in as elements, writes and files the first scene, then quotes it and, on the person's yes, approves the ",
+        "disableModelInvocation": false,
+        "file": "skills/start-a-project/SKILL.md"
+      },
+      {
+        "name": "storyboard",
+        "slashCommand": "/storyboard",
+        "description": "Plans a piece as a sequence of Phantra scenes before any is written: a beat list agreed in the chat, then one `write_scene` per scene, all in one project and held to the same photos with the same roles so the scenes cut together. Use when s",
+        "disableModelInvocation": false,
+        "file": "skills/storyboard/SKILL.md"
+      },
+      {
+        "name": "thumbnails",
+        "slashCommand": "/thumbnails",
+        "description": "Draws a cover image in Phantra (a YouTube thumbnail, a Reels, TikTok or Shorts cover, a feed cover) as a still with `generate_image`, in the platform's frame, with a few words that stay readable small, on a model from `image_models`; quoted",
+        "disableModelInvocation": false,
+        "file": "skills/thumbnails/SKILL.md"
+      },
+      {
+        "name": "ugc-ad",
+        "slashCommand": "/ugc-ad",
+        "description": "Writes a UGC-style ad scene in Phantra: a person talking to their phone camera about a product they hold, rendered against their own face and product photos in a handheld feel, with every spoken line and claim coming from the person. Use wh",
+        "disableModelInvocation": false,
+        "file": "skills/ugc-ad/SKILL.md"
+      },
+      {
+        "name": "ugc-review",
+        "slashCommand": "/ugc-review",
+        "description": "Writes a UGC-style review scene in Phantra: a person telling their phone camera what they think after using a product (the verdict, the one thing they noticed, the product in use, an honest drawback), rendered against their own face and pro",
+        "disableModelInvocation": false,
+        "file": "skills/ugc-review/SKILL.md"
+      },
+      {
+        "name": "ugc-try-on",
+        "slashCommand": "/ugc-try-on",
+        "description": "Writes a UGC-style try-on scene in Phantra: a person trying on clothing, shoes or an accessory for their phone camera (held up, worn, a mirror turn, a close detail, a verdict), rendered against their own face and photos of the actual garmen",
+        "disableModelInvocation": false,
+        "file": "skills/ugc-try-on/SKILL.md"
+      },
+      {
+        "name": "ugc-tutorial",
+        "slashCommand": "/ugc-tutorial",
+        "description": "Writes a UGC-style tutorial scene in Phantra: a person showing their phone camera how they use a product, one step per shot, the result first and last, rendered against their own face and product photos, with every step, quantity and tip co",
+        "disableModelInvocation": false,
+        "file": "skills/ugc-tutorial/SKILL.md"
+      },
+      {
+        "name": "ugc-unboxing",
+        "slashCommand": "/ugc-unboxing",
+        "description": "Writes a UGC-style unboxing scene in Phantra: a person opening a package on their phone camera (the sealed box, the open, the product lifted out, a first touch of its details, a first impression in their own words), rendered against their o",
+        "disableModelInvocation": false,
+        "file": "skills/ugc-unboxing/SKILL.md"
+      },
+      {
+        "name": "write-scene",
+        "slashCommand": "/write-scene",
+        "description": "Writes the scene prompt for an idea the person chose, in the shape Phantra renders from, and saves it with the `write_scene` tool against their elements. Use when someone asks to write the scene, the prompt, the shots or the script, says \"m",
+        "disableModelInvocation": false,
+        "file": "skills/write-scene/SKILL.md"
+      },
+      {
+        "name": "youtube-script",
+        "slashCommand": "/youtube-script",
+        "description": "Writes a YouTube video script in the chat, shaped to its genre (explainer, list, tutorial, review, story), with a hook, sections and one call to action, set out as what is SAID beside what is SEEN; only if the person wants footage does the ",
+        "disableModelInvocation": false,
+        "file": "skills/youtube-script/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ad-formats",
+      "/ad-variations",
+      "/brand-kit-from-my-work",
+      "/browse-presets",
+      "/camera-moves",
+      "/client-treatment",
+      "/credits-and-limits",
+      "/edit-and-deliver",
+      "/effects",
+      "/explainer",
+      "/hooks-and-first-seconds",
+      "/ideas-and-projects",
+      "/look-matching",
+      "/model-prompting",
+      "/phantra-ai-use",
+      "/platform-delivery",
+      "/price-and-render",
+      "/product-ad-set",
+      "/product-shots",
+      "/series-and-continuity",
+      "/setup",
+      "/sound-plan",
+      "/start-a-project",
+      "/storyboard",
+      "/thumbnails",
+      "/ugc-ad",
+      "/ugc-review",
+      "/ugc-try-on",
+      "/ugc-tutorial",
+      "/ugc-unboxing",
+      "/write-scene",
+      "/youtube-script"
+    ],
+    "mcpServerNames": [
+      "phantra-ai_phantra"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Phantra AI\n\nPhantra is an AI image and video studio. This plugin connects your AI assistant to your\nPhantra account so you can create images, videos and product ads from a chat: start with an\nidea, a script, reference media or a product photo.\n\n- Generate images and video on the latest models. Ask which model suits the job.\n- Turn product photos into short video ads: product shots, UGC-style reviews, unboxings,\n  tutorials, try-ons and full ad sets, with a skill for each.\n- Edit a still, animate it, add a camera move, upscale a clip or add sound.\n- Keep characters, products and places consistent across shots by adding them once as elements.\n- Finish in the chat: trim, reshape for vertical, square or widescreen, join clips and get a\n  download link, free.\n\nEvery still, clip and effect is quoted in credits first and made only when you say yes.\n\nYou need a Phantra account (any plan, including the free trial): https://phantra.ai\n\n## What's inside\n\n- **MCP server:** `https://api.phantra.ai/mcp` (streamable HTTP, OAuth sign-in through Phantra;\n  no API key to paste).\n- **32 skills** in `skills/`: setup, scenes, storyboards, product ads, UGC ads, effects,\n  delivery and more.\n\n## Install\n\n**Gemini CLI**\n\n    gemini extensions install https://github.com/zeropage-onryo/phantra-plugin\n\nThen run `/mcp auth phantra-ai` and sign in. Sign-in opens a browser, so it needs a desktop\nsession.\n\n**Antigravity**\n\n    agy plugin install https://github.com/zeropage-onryo/phantra-plugin\n\nThen open `/mcp`, pick `phantra-ai_phantra`, choose Authenticate, sign in to Phantra in the\nbrowser and paste the code Antigravity's page shows back into the CLI.\n\n**Cursor**\n\nInstall Phantra AI from the Cursor Marketplace, or add the server yourself in\nSettings → MCP: `https://api.phantra.ai/mcp`.\n\n**OpenClaw (ClawHub)**\n\nSearch ClawHub (clawhub.ai) for \"Phantra\". Each skill is published as `phantra-ai-<skill>`.\nAdd the MCP server\n`https://api.phantra.ai/mcp` to your OpenClaw config.\n\n**Hermes Agent**\n\n    hermes skills tap add zeropage-onryo/phantra-plugin\n\nThen add the MCP server `https://api.phantra.ai/mcp` to your Hermes config.\n\n**Any other MCP client**\n\nAdd `https://api.phantra.ai/mcp` as a remote (streamable HTTP) server and sign in when asked.\n\n## Configuration\n\nNothing to configure. The server signs you in with OAuth the first time a tool is called, and\nworks only inside your own Phantra workspace. Credits come from your Phantra plan.\n\n## Support\n\n- Docs: https://phantra.ai/mcp\n- Email: support@phantra.ai\n- Privacy: https://phantra.ai/privacy\n\n## License\n\nMIT\n",
+  "latestReleaseNotes": "Adds Google Antigravity: install with `agy plugin install https://github.com/zeropage-onryo/phantra-plugin`, then sign in to Phantra from `/mcp`.\n\n- `.antigravity-plugin/plugin.json` and `mcp_config.json`; passes `agy plugin validate --strict`.\n- Gemini's context file is now `rules/GEMINI.md` (Antigravity loads it as an always-on rule).\n- Cursor's server is declared inline in `.cursor-plugin/plugin.json`; the root `mcp.json` is gone.\n\nGemini CLI, Cursor, ClawHub and Hermes work as in 1.0.0.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "dfed566453334f3a50432961aa57f27eac33cea0",
+      "scannedAt": "2026-11-27T18:24:37.247Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

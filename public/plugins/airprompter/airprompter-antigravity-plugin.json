@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "id": "airprompter/airprompter-antigravity-plugin",
+  "sha": "31e287688bb056c18e658967c29cb3aad1c6da47",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:52.458Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "airprompter",
+    "displayName": "AirPrompter",
+    "version": "0.2.5",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "airprompter",
+        "runtimeName": "airprompter_airprompter",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.airprompter.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "airprompter",
+        "slashCommand": "/airprompter",
+        "description": "Use when the user wants to save a prompt, template or workflow to reuse, find or run one they saved, or share one with their team (\"share this prompt with my team\"); to create a workflow, build a reusable process, or turn this into a skill;",
+        "disableModelInvocation": false,
+        "file": "skills/airprompter/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/airprompter"
+    ],
+    "mcpServerNames": [
+      "airprompter_airprompter"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# AirPrompter for Antigravity\n\nRun your saved AirPrompter prompts and workflows from Antigravity.\n\n## Install\n\n```bash\nagy plugin install https://github.com/airprompter/airprompter-antigravity-plugin\n```\n\nThis one command adds AirPrompter to both the Antigravity app and the\nagy command line.\n\n## Sign in\n\n- **Antigravity app:** open Customizations, select AirPrompter under\n  Installed, and click **Set up authentication**.\n- **agy command line:** type `/mcp`, select AirPrompter, and choose\n  **Authenticate**.\n\nSign in to AirPrompter in the browser window that opens. Then start a new\nconversation and ask it to list your AirPrompter workflows. The app and\nthe command line sign in separately, so sign in from each one you use.\nAntigravity stores the token, not this plugin.\n\n## Without the plugin\n\nAdd the same server to `~/.gemini/config/mcp_config.json`:\n\n```json\n{\n  \"mcpServers\": {\n    \"airprompter\": {\n      \"serverUrl\": \"https://mcp.airprompter.com/mcp\"\n    }\n  }\n}\n```\n\nThe plugin adds the AirPrompter Skill on top of that, so Antigravity\nreaches for AirPrompter when you mention a saved prompt or workflow\ninstead of answering from scratch.\n\n## Coming from Gemini CLI\n\nGoogle replaced Gemini CLI with Antigravity for free, Google AI Pro, and\nGoogle AI Ultra accounts. Install this plugin in place of the AirPrompter\nGemini CLI extension.\n\n## What this plugin contains\n\n- `plugin.json` -- plugin name and description.\n- `mcp_config.json` -- names the AirPrompter MCP server.\n- `skills/airprompter/` -- routing rules for saved prompts and workflows.\n\nNo credential, client id, or customer identifier is packaged here.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "contains_minified",
+      "credential_access",
+      "fs_write_workspace",
+      "network_external_mcp"
+    ],
+    "findings": [
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "skills/airprompter/scripts/upload_runtime.py",
+        "line": 69,
+        "snippet": "SECRET_NAMES = (\"id_rsa*\", \"id_dsa*\", \"id_ecdsa*\", \"id_ed25519*\", \"*.pem\", \"*.key\", \"*.p12\", \"*.pfx\", \"*.ppk\", \"*service-account*.json\", \"credentials\", \".env*\", \".npmrc\", \".netrc\")",
+        "githubBlobUrl": "https://github.com/airprompter/airprompter-antigravity-plugin/blob/31e287688bb056c18e658967c29cb3aad1c6da47/skills/airprompter/scripts/upload_runtime.py#L69"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "skills/airprompter/scripts/upload_runtime.py",
+        "line": 63,
+        "snippet": "\\u200b\\u2060\\u202a\\u202b\\u202c\\u202d\\u202e\\u2066\\u2067\\u2068\\u2069\\ufeff",
+        "githubBlobUrl": "https://github.com/airprompter/airprompter-antigravity-plugin/blob/31e287688bb056c18e658967c29cb3aad1c6da47/skills/airprompter/scripts/upload_runtime.py#L63"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/airprompter/scripts/install_runtime.py",
+        "line": 162,
+        "snippet": "os.unlink(name)",
+        "githubBlobUrl": "https://github.com/airprompter/airprompter-antigravity-plugin/blob/31e287688bb056c18e658967c29cb3aad1c6da47/skills/airprompter/scripts/install_runtime.py#L162"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/airprompter/scripts/install_runtime.py",
+        "line": 552,
+        "snippet": "shutil.rmtree(stage)",
+        "githubBlobUrl": "https://github.com/airprompter/airprompter-antigravity-plugin/blob/31e287688bb056c18e658967c29cb3aad1c6da47/skills/airprompter/scripts/install_runtime.py#L552"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/airprompter/scripts/install_runtime.py",
+        "line": 627,
+        "snippet": "shutil.rmtree(folder)",
+        "githubBlobUrl": "https://github.com/airprompter/airprompter-antigravity-plugin/blob/31e287688bb056c18e658967c29cb3aad1c6da47/skills/airprompter/scripts/install_runtime.py#L627"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.5",
+      "sha": "31e287688bb056c18e658967c29cb3aad1c6da47",
+      "scannedAt": "2026-11-27T18:19:52.458Z",
+      "riskTier": "high",
+      "capabilities": [
+        "contains_minified",
+        "credential_access",
+        "fs_write_workspace",
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

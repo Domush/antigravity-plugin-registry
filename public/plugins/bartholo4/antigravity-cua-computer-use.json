@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "id": "bartholo4/antigravity-cua-computer-use",
+  "sha": "fce59e1d2105dee7e45e34fb4a422ed5c6cad59e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:18.201Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "cua-computer-use",
+    "displayName": "Cua Computer Use (Windows GUI)",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "cua-driver",
+        "runtimeName": "cua-computer-use_cua-driver",
+        "transport": "stdio",
+        "command": "python",
+        "args": [
+          "-u",
+          "-c",
+          "import os, runpy; root = os.environ.get('CUA_PLUGIN_DIR') or os.path.join(os.path.expanduser('~'), '.gemini', 'config', 'plugins', 'cua-computer-use'); runpy.run_path(os.path.join(root, 'scripts', 'mcp_filter_proxy.py'), run_name='__main__')"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "cua-driver",
+        "slashCommand": "/cua-driver",
+        "description": "Drive native Windows GUI applications (Win32, WPF, WinUI, UWP/AppX, Electron) in the background via cua-driver MCP or CLI using UI Automation trees, snapshot-bound element tokens, native menus, window geometry, and WGC screenshots without s",
+        "disableModelInvocation": false,
+        "file": "skills/cua-driver/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/cua-driver"
+    ],
+    "mcpServerNames": [
+      "cua-computer-use_cua-driver"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Cua Computer Use (`cua-computer-use`)\n\n[English](README.en.md) | 简体中文\n\n面向 **Google Antigravity（Windows）** 的本地原生桌面真后台 GUI 自动化插件，基于开源 [`cua-driver`](https://github.com/trycua/cua)（UI Automation 语义树 + Windows Graphics Capture 后台截屏）封装，可在 `Settings > Plugins` 一键启停，不影响其他 AI 客户端或全局 `mcp_config.json`。\n\n> 本项目为独立社区整合插件，与 Cua AI, Inc. 及 Google 无官方隶属关系。\n\n## 为什么做这个插件\n\n直接把裸 `cua-driver mcp` 写入全局配置在 Antigravity Windows 端存在 5 个常见痛点，本插件一次性收口：\n\n1. **修复 NTFS Junction 技能静默失效**：`cua-driver skills install` 在 Windows 创建目录联接（Junction），Antigravity 定制扫描器会跳过重解析点。本插件全部以实体文件部署 `skills/cua-driver/`。\n2. **服务端硬裁剪 62 → 39 个纯原生工具**：`scripts/mcp_filter_proxy.py` 在 MCP 服务端侧移除全部 13 个浏览器冲突工具（避免与 Antigravity 内置 `browser` 子代理抢活）、废弃 `replay_trajectory` 及 `kill_app`/`set_config`/`install_ffmpeg`/录屏等高危低频项，并在 `tools/call` 层返回 `-32601` 硬拦截，同时净化 `initialize` 引导语。\n3. **复用 High-IL 后台守护进程 + 自动自愈**：自动探测 `\\\\.\\pipe\\cua-driver`，守护未启动时自动执行 `cua-driver autostart kick` 拉起高权限管道（穿透 Win11 UWP/AppContainer UIA 树），不可用时平滑降级直连 `cua-driver mcp`。\n4. **真后台防抢焦点护栏与高效批处理**：注入 `rules/AGENTS.md` 与优化后的 `skills/cua-driver/SKILL.md`，强制接口优先、默认 `delivery_mode: \"background\"`（遇 `background_unavailable` 须经用户授权才可升格 `foreground`）、优先 `run_steps` 与 QuickJS `run_script` 本地树筛选以压缩往返。\n5. **零遥测兜底**：代理进程默认注入 `CUA_DRIVER_RS_TELEMETRY_ENABLED=0` 与 `CUA_TELEMETRY_ENABLED=0`，安装脚本同步执行 `cua-driver telemetry disable` 与 `reset-id`。\n\n## 前置条件\n\n- **Windows 10 (1903+) / Windows 11 x64**（已解锁交互桌面）\n- **Python 3.10+**\n- **`cua-driver`（推荐 `0.53.0+`）**：\n  ```powershell\n  irm https://cua.ai/driver/install.ps1 | iex\n  cua-driver telemetry disable\n  cua-driver telemetry reset-id\n  cua-driver status\n  ```\n\n## 快速安装\n\n### 方式 A：直接克隆（Python 已在 `PATH` 时开箱即用）\n\n```powershell\ngit clone https://github.com/bartholo4/antigravity-cua-computer-use.git \"$HOME\\.gemini\\config\\plugins\\cua-computer-use\"\n```\n\n### 方式 B：通过安装脚本部署（自动绑定本机 Python 路径并关闭遥测）\n\n```powershell\ngit clone https://github.com/bartholo4/antigravity-cua-computer-use.git\ncd antigravity-cua-computer-use\n.\\install.ps1\n```\n\n如果 Python 不在 `PATH` 中，可显式指定解释器：\n\n```powershell\n.\\install.ps1 -PythonExe \"C:\\Path\\to\\python.exe\"\n```\n\n安装完成后重启 Antigravity（或在 **Settings > Plugins** 刷新/启用 **Cua Computer Use (Windows GUI)**）。\n\n## 仓库结构\n\n```text\n.\n├── plugin.json                 # Antigravity 插件清单\n├── mcp_config.json             # 便携式 MCP 启动配置（零个人路径）\n├── install.ps1                 # Windows 实体文件安装脚本\n├── assets/logo.svg             # 插件图标\n├── rules/AGENTS.md             # 路由与真后台安全护栏\n├── scripts/mcp_filter_proxy.py # 39 工具白名单过滤 + 守护自愈 stdio 代理\n├── skills/cua-driver/          # Windows 操控技能与参考文档\n│   ├── SKILL.md                # 精简入口（含 QuickJS run_script 本地树筛选范式）\n│   ├── WINDOWS.md              # Windows delivery_mode、UWP/AUMID 详情\n│   ├── WORKFLOW.md             # 观察、批处理、run_script、校验规约\n│   ├── RUNTIME.md              # 管道架构、会话与权限\n│   └── VISUAL.md               # 可选 cua-perception 说明（默认用 zoom）\n└── tests/test_proxy.py         # 零依赖单元与端到端代理测试\n```\n\n## 39 个白名单核心工具\n\n| 类别 | 工具（共 39 个） |\n|---|---|\n| 诊断与指南（4） | `health_report`, `check_permissions`, `get_config`, `get_guide` |\n| 应用与窗口（6） | `list_apps`, `list_windows`, `launch_app`, `bring_to_front`, `set_window_frame`, `debug_window_info` |\n| 观测与校验（7） | `get_window_state`, `get_accessibility_tree`, `get_desktop_state`, `get_screen_size`, `parse_visual_regions`, `zoom`, `verify_state` |\n| 动作与批处理（12） | `run_steps`, `run_script`, `click`, `double_click`, `right_click`, `drag`, `scroll`, `type_text`, `press_key`, `hotkey`, `set_value`, `invoke_menu` |\n| 剪贴板（2） | `clipboard_read`, `clipboard_write` |\n| 会话与光标（8） | `start_session`, `get_session`, `list_sessions`, `end_session`, `get_cursor_position`, `move_cursor`, `get_agent_cursor_state`, `set_agent_cursor_enabled` |\n\n## 日常免 UAC 升级 `cua-driver`\n\n当本机已注册高权限开机自启计划任务（`\\cua-driver-serve`）时，可免弹 UAC 热升级底层驱动：\n\n```powershell\n$installer = \"$env:TEMP\\cua-install.ps1\"\nInvoke-WebRequest -Uri \"https://cua.ai/driver/install.ps1\" -OutFile $installer -UseBasicParsing\npowershell -NoProfile -ExecutionPolicy Bypass -File $installer -NoAutoStart -NoConnect -NoTest\ncua-driver stop\ncua-driver autostart kick\ncua-driver status\n```\n\n## 运行测试\n\n```bash\npython -m unittest discover -s tests -p \"test_*.py\" -v\n```\n\n## 许可与致谢\n\n- 本插件代码与配置以 [MIT License](LICENSE) 发布。\n- `skills/cua-driver/{WINDOWS,WORKFLOW,RUNTIME,VISUAL}.md` 源自开源项目 [`trycua/cua`](https://github.com/trycua/cua)（MIT License），详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。\n",
+  "latestReleaseNotes": "## Highlights\n- **Windows True-Background Native GUI Automation for Google Antigravity**, built on `cua-driver` (`0.53.0+`).\n- **39-Tool Server-Side Allowlist Proxy** (`scripts/mcp_filter_proxy.py`): strips 13 browser-conflicting tools, deprecated `replay_trajectory`, and high-risk/noisy tools, blocking excluded `tools/call` requests with JSON-RPC `-32601` and sanitizing `initialize` instructions.\n- **High-IL Named-Pipe Auto-Healing**: reuses `\\\\.\\pipe\\cua-driver` via `cua-driver autostart kick` with graceful fallback to `cua-driver mcp`.\n- **Real-File Skill Deployment & QuickJS Local Filtering**: fixes Antigravity's NTFS Junction skipping issue and includes `run_script` local UIA tree filtering patterns.\n- **Zero Telemetry by Default**: enforces `CUA_DRIVER_RS_TELEMETRY_ENABLED=0` and `CUA_TELEMETRY_ENABLED=0`.\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_filter_proxy.py",
+        "line": 125,
+        "snippet": "subprocess.run( [*base_cmd, \"autostart\", \"kick\"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5, creationflags=getattr(subprocess, \"CREA",
+        "githubBlobUrl": "https://github.com/bartholo4/antigravity-cua-computer-use/blob/fce59e1d2105dee7e45e34fb4a422ed5c6cad59e/scripts/mcp_filter_proxy.py#L125"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mcp_filter_proxy.py",
+        "line": 164,
+        "snippet": "child = subprocess.Popen( _resolve_child_cmd(), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=sys.stderr, env=env, creationflags=getattr(subprocess, \"CREATE_NO_WINDOW\", 0),",
+        "githubBlobUrl": "https://github.com/bartholo4/antigravity-cua-computer-use/blob/fce59e1d2105dee7e45e34fb4a422ed5c6cad59e/scripts/mcp_filter_proxy.py#L164"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "fce59e1d2105dee7e45e34fb4a422ed5c6cad59e",
+      "scannedAt": "2026-11-27T18:21:18.201Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

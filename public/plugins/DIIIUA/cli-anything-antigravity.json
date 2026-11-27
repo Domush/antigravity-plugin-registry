@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "id": "DIIIUA/cli-anything-antigravity",
+  "sha": "0bb283179b50e45d093f723e6de20bd219893a97",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:40.260Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "cli-anything",
+    "displayName": "CLI-Anything",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "pep420-namespace-guard",
+        "enabledByDefault": false,
+        "event": "PreToolUse",
+        "matcher": "write_file",
+        "type": "command",
+        "command": "python -S ./scripts/pep420_guard.py",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "cli-anything-list",
+        "slashCommand": "/cli-anything-list",
+        "description": "List all installed and locally generated CLI-Anything harnesses with status, version, executable path, and source directory in table or JSON format. Invoked via /cli-anything-list [--path <dir>] [--depth <n>] [--json].",
+        "disableModelInvocation": false,
+        "file": "skills/cli-anything-list/SKILL.md"
+      },
+      {
+        "name": "cli-anything-refine",
+        "slashCommand": "/cli-anything-refine",
+        "description": "Refine an existing CLI-Anything harness in Google Antigravity to analyze capability gaps and incrementally add new commands, backend wrappers, and tests (with optional focus area). Invoked via /cli-anything-refine <path> [focus].",
+        "disableModelInvocation": false,
+        "file": "skills/cli-anything-refine/SKILL.md"
+      },
+      {
+        "name": "cli-anything-test",
+        "slashCommand": "/cli-anything-test",
+        "description": "Run unit, real-backend E2E, and installed-CLI subprocess tests for an existing CLI-Anything harness in Google Antigravity and append passing results to TEST.md. Invoked via /cli-anything-test <path-or-repo>.",
+        "disableModelInvocation": false,
+        "file": "skills/cli-anything-test/SKILL.md"
+      },
+      {
+        "name": "cli-anything-validate",
+        "slashCommand": "/cli-anything-validate",
+        "description": "Validate a CLI-Anything harness against the full HARNESS.md and validate.md contract using the deterministic verify_harness.py script plus manual code and test audit. Invoked via /cli-anything-validate <path-or-repo>.",
+        "disableModelInvocation": false,
+        "file": "skills/cli-anything-validate/SKILL.md"
+      },
+      {
+        "name": "cli-anything",
+        "slashCommand": "/cli-anything",
+        "description": "Build a complete, stateful CLI-Anything harness for any GUI application or source repository in Google Antigravity (all 7 phases, Phase 6.5 SKILL.md generation, Preview Bundle Protocol, and PEP 420 namespace packaging). Invoked automaticall",
+        "disableModelInvocation": false,
+        "file": "skills/cli-anything/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "cli-anything-auditor",
+        "description": "Read-only CLI-Anything codebase analyst and contract auditor. Delegate to this subagent for Phase 1 upstream codebase surveys, Refine gap analysis, or independent 52-check harness validation without modifying source files.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/cli-anything-auditor.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/cli-anything",
+      "/cli-anything-list",
+      "/cli-anything-refine",
+      "/cli-anything-test",
+      "/cli-anything-validate"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "cli-anything-auditor"
+    ],
+    "hookEvents": [
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# CLI-Anything for Google Antigravity (Community Edition)\n\nStandalone **Community Edition** native plugin adapter that brings the complete\n[**HKUDS/CLI-Anything**](https://github.com/HKUDS/CLI-Anything) 7-phase CLI\nharness generator to **Google Antigravity** (App, CLI `agy`, and IDE) — synced\nverbatim with upstream and ready for upstream adoption via PR.\n\n> **Upstream parity:** Canonical methodology (`references/HARNESS.md`, all 5\n> command specs, all 8 guides, `references/docs/PREVIEW_PROTOCOL.md`) and\n> reusable Python utilities (`repl_skin.py`, `preview_bundle.py`,\n> `skill_generator.py`, `templates/SKILL.md.template`) are synced unmodified\n> from [`HKUDS/CLI-Anything`](https://github.com/HKUDS/CLI-Anything). See\n> [`UPSTREAM_SYNC.json`](UPSTREAM_SYNC.json) for the pinned upstream commit.\n\n## Two Tracks (Same Architecture as Upstream)\n\n| Track | What you get | How |\n|---|---|---|\n| **Generator** (this plugin) | 5 slash commands (`/cli-anything*`), glob-scoped guardrails, read-only `cli-anything-auditor` subagent, opt-in PEP 420 hook, `verify_harness.py`, and `list_harnesses.py` | Install this plugin |\n| **Consumer** (unchanged) | Find, install, and invoke published CLIs & matrices from CLI-Hub | `npx skills` + `cli-hub` |\n\n## Quick Install\n\n### Option 1: Official Antigravity CLI (`agy`) — One Command\n\n```bash\nagy plugin install https://github.com/DIIIUA/cli-anything-antigravity\nagy plugin validate --strict ~/.gemini/config/plugins/cli-anything\n```\n\n### Option 2: Bundled Installers (macOS / Linux / Git Bash / Windows PowerShell)\n\n```bash\ngit clone https://github.com/DIIIUA/cli-anything-antigravity.git\nbash cli-anything-antigravity/scripts/install.sh\n```\n\nWindows PowerShell:\n\n```powershell\ngit clone https://github.com/DIIIUA/cli-anything-antigravity.git\n.\\cli-anything-antigravity\\scripts\\install.ps1\n```\n\nOptions:\n- `--force` / `-Force`: locked, pre-verified atomic upgrade with rollback.\n- `--dry-run` / `-DryRun`: preview install targets without writing files.\n- `--workspace <repo>` / `-Workspace <repo>`: project-scoped install to `<repo>/.agents/plugins/cli-anything` (leaves global discovery pointer untouched).\n- `ANTIGRAVITY_PLUGINS_HOME`: override default global root `~/.gemini/config/plugins` (must point to a directory named `plugins`).\n\nUninstall:\n\n```bash\nbash cli-anything-antigravity/scripts/uninstall.sh          # or --workspace <repo>\n# PowerShell:\n.\\cli-anything-antigravity\\scripts\\uninstall.ps1            # or -Workspace <repo>\n```\n\n## Included Antigravity-Native Components\n\n| Component | Path | Role |\n|---|---|---|\n| `/cli-anything` | `skills/cli-anything/SKILL.md` | Full 7-phase harness build + Phase 6.5 `SKILL.md` + Preview Bundle Protocol |\n| `/cli-anything-refine` | `skills/cli-anything-refine/SKILL.md` | Incremental gap analysis & coverage expansion (`[focus]`) |\n| `/cli-anything-test` | `skills/cli-anything-test/SKILL.md` | Unit + real-backend E2E + `CLI_ANYTHING_FORCE_INSTALLED=1` + `TEST.md` |\n| `/cli-anything-validate` | `skills/cli-anything-validate/SKILL.md` | Deterministic `verify_harness.py` + 52-check `validate.md` audit |\n| `/cli-anything-list` | `skills/cli-anything-list/SKILL.md` | Deterministic `list_harnesses.py` (`--path`, `--depth`, `--json`) |\n| **Glob Rule** | `rules/cli-anything-generator.md` | `trigger: glob` on `**/agent-harness/**, **/.cli-anything-progress.json, **/cli_anything/**` (0 tokens in unrelated chats) |\n| **Auditor Subagent** | `agents/cli-anything-auditor.md` | Read-only Phase 1 codebase surveyor & independent contract auditor |\n| **PEP 420 Hook** | `hooks.json` + `scripts/pep420_guard.py` | Opt-in (`\"enabled\": false` by default) `PreToolUse` guard blocking `cli_anything/__init__.py` |\n| **Tooling Runbook** | `references/antigravity-tooling.md` | App/CLI/IDE paths, `~/.gemini/config/skills.json` bridge for `cli-hub matrix` & newly generated CLI skills, `/goal`/`/swarm` recipes, Failure Playbook |\n\n## Dogfooded Bonus: `cli-anything-antigravity` CLI Harness\n\nThis repository also ships a full, verified CLI-Anything harness built **using this very plugin** for Google Antigravity itself (`harness/antigravity/agent-harness/`, passing `verify_harness.py --strict` **30/30**):\n\n- Stateful `.agyproj.json` authoring with undo/redo, locked JSON saves, auto-save, and `--dry-run`.\n- Author, import, validate, and export official Antigravity v1 `plugin.json`, `skills/*/SKILL.md`, `rules/*.md` (trigger/glob/24 KB checks), `agents/*.md`, `hooks.json`, `mcp_config.json` (with automatic secret redaction), and `skills.json` / `plugins.json` (including `discovery bridge-clihub`).\n- Generate AST-verified `google-antigravity` Python SDK runner scripts (`LocalAgentConfig` / `LiteRTAgentConfig` / `LocalOpenAIAgentConfig`).\n- Wrap the live installed `antigravity-ide` / `agy` CLI (`ide detect`, `ide version`, `ide extensions`, `ide inspect-host`) without ever touching private `config.json`.\n\nInstall the dogfooded CLI harness:\n\n```bash\npip install -e ./harness/antigravity/agent-harness\ncli-anything-antigravity --json ide detect\ncli-anything-antigravity --json plugin validate-dir ~/.gemini/config/plugins/cli-anything\n```\n\nTo expose its generated skill (`harness/skills/cli-anything-antigravity/SKILL.md`) inside Antigravity App, register `./harness/skills` in `.agents/skills.json` or `~/.gemini/config/skills.json`.\n\n## Consumer Track & `cli-hub` Matrix Bridge\n\n```bash\nnpx skills add HKUDS/CLI-Anything --skill cli-hub-meta-skill -g -y\npip install cli-anything-hub\n```\n\nTo expose `cli-hub matrix install` skills (`~/.cli-hub/matrix/`) and global\n`npx skills` installs (`~/.agents/skills/`) inside **Antigravity App**\nautomatically, add them to `~/.gemini/config/skills.json` (details in\n[`references/antigravity-tooling.md`](references/antigravity-tooling.md)).\n\n## Syncing with Upstream `HKUDS/CLI-Anything`\n\n```bash\nbash scripts/sync-upstream.sh\n# PowerShell: .\\scripts\\sync-upstream.ps1\n```\n\nA scheduled GitHub Actions workflow (`.github/workflows/sync-upstream.yml`)\nchecks upstream weekly and opens a PR automatically when canonical files change.\n\n## Tests\n\n```bash\nbash tests/test_install.sh\n# Windows PowerShell: .\\tests\\test_install.ps1\n\npython3 -m pytest tests/test_verify_harness.py tests/test_install_race.py -v\n```\n\n## Upstream Contribution\n\nAn upstream-ready PR branch (`feat/antigravity-plugin`) with zero duplicated\ncanonical files is maintained at\n[`DIIIUA/CLI-Anything`](https://github.com/DIIIUA/CLI-Anything/tree/feat/antigravity-plugin)\nfor direct upstream integration into `HKUDS/CLI-Anything`.\n\n## License\n\nApache License 2.0 — same as [`HKUDS/CLI-Anything`](https://github.com/HKUDS/CLI-Anything). See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).\n",
+  "latestReleaseNotes": "## What's Changed\n\nAddresses both P2 findings from upstream PR #739 Codex review `6087716732` (synced with upstream commit `236dc39`):\n\n1. **Validate all explicitly selected package directories (`scripts/verify_harness.py`)**:\n   - Removed the `target_pkg.` prefix filter when checking package directories in `_check_packaging()` so every selected package in `packages=[...]` (as well as discovered/mapped selected packages) is verified against effective `package_dir`, catching unbuildable entries like nonexistent `\"missingpkg\"`.\n2. **Resolve imported local classes before certifying instance callability (`scripts/verify_harness.py`)**:\n   - Added cross-module class callability resolution (`_resolve_module_class_instance_call_status()`, `attr_call_instances` tracking for module-qualified calls like `runners.Runner(cli)`, and imported base class resolution) in `_resolve_module_attr_path()` so console targets instantiated from imported classes without a compatible `__call__` fail `console-script`.\n3. **Regression Tests (`tests/test_verify_harness.py`)**:\n   - Added `test_verify_validates_all_explicitly_selected_package_directories` and `test_verify_resolves_imported_classes_for_instance_callability` (`123 passed, 5 skipped`).\r\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/utils/antigravity_backend.py",
+        "line": 126,
+        "snippet": "return subprocess.run( cmd, cwd=cwd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding=\"utf-8\", errors=\"replace\", timeout=timeout, )",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/utils/antigravity_backend.py#L126"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"pep420-namespace-guard\" executes a shell command on PreToolUse (matcher: write_file).",
+        "file": "hooks.json",
+        "line": 10,
+        "snippet": "python -S ./scripts/pep420_guard.py",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/hooks.json#L10"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/antigravity_cli.py",
+        "line": 825,
+        "snippet": "target.write_text(code, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/antigravity_cli.py#L825"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/core/export.py",
+        "line": 143,
+        "snippet": "path.write_text(content, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/core/export.py#L143"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/core/session.py",
+        "line": 16,
+        "snippet": "f = open(abs_path, \"r+\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/core/session.py#L16"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/core/session.py",
+        "line": 19,
+        "snippet": "f = open(abs_path, \"w\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/core/session.py#L19"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/preview_bundle.py",
+        "line": 99,
+        "snippet": "with open(path, \"r\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/scripts/preview_bundle.py#L99"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/preview_bundle.py",
+        "line": 256,
+        "snippet": "with open(output_path, \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/scripts/preview_bundle.py#L256"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/skill_generator.py",
+        "line": 565,
+        "snippet": "output_path.write_text(content, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/scripts/skill_generator.py#L565"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/skill_generator.py",
+        "line": 568,
+        "snippet": "compatibility_path.write_text(content, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/scripts/skill_generator.py#L568"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/antigravity_cli.py",
+        "line": 885,
+        "snippet": "@click.option(\"--global-root\", default=None, help=\"Override ~/.gemini/config root for inspection.\")",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/antigravity_cli.py#L885"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/utils/antigravity_backend.py",
+        "line": 6,
+        "snippet": "- Public customization directories (`~/.gemini/config/{plugins,skills,rules,agents,skills.json,plugins.json,hooks.json}`",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/utils/antigravity_backend.py#L6"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "harness/antigravity/agent-harness/cli_anything/antigravity/utils/antigravity_backend.py",
+        "line": 9,
+        "snippet": "Never reads or modifies `~/.gemini/config/config.json` and never probes undocumented",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/harness/antigravity/agent-harness/cli_anything/antigravity/utils/antigravity_backend.py#L9"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/cli-anything-generator.md",
+        "line": 19,
+        "snippet": "assume `./HARNESS.md` exists in the user's workspace).",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/rules/cli-anything-generator.md#L19"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/cli-anything-refine/SKILL.md",
+        "line": 39,
+        "snippet": "5. `test` — expand `test_core.py` and `test_full_e2e.py`; run full regression suite (`pytest`) plus `python \"{PLUGIN_ROOT}/scripts/verify_harness.py\" \"<software-root>/agent-harness",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/skills/cli-anything-refine/SKILL.md#L39"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/cli-anything-test/SKILL.md",
+        "line": 35,
+        "snippet": "2. `unit_tests` — run `python -m pytest cli_anything/<software>/tests/test_core.py -v --tb=short`.",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/skills/cli-anything-test/SKILL.md#L35"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/cli-anything/SKILL.md",
+        "line": 27,
+        "snippet": "Never resolve `./HARNESS.md` against the user's workspace root. First resolve an",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/skills/cli-anything/SKILL.md#L27"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/cli-anything/SKILL.md",
+        "line": 82,
+        "snippet": "| `./HARNESS.md` | `{PLUGIN_ROOT}/references/HARNESS.md` | `{REPO_ROOT}/cli-anything-plugin/HARNESS.md` |",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/skills/cli-anything/SKILL.md#L82"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/cli-anything/SKILL.md",
+        "line": 96,
+        "snippet": "- **Required:** a **local source path** (e.g., `./gimp`, `D:\\src\\blender`,",
+        "githubBlobUrl": "https://github.com/DIIIUA/cli-anything-antigravity/blob/0bb283179b50e45d093f723e6de20bd219893a97/skills/cli-anything/SKILL.md#L96"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "0bb283179b50e45d093f723e6de20bd219893a97",
+      "scannedAt": "2026-11-27T18:14:40.260Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "id": "tz7543/agy-canvas-bg",
+  "sha": "b434c245f8161565fc531e8313d888cdfc7c475e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:23.209Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-canvas-bg",
+    "displayName": "Canvas Wallpaper",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "canvas-wallpaper",
+        "slashCommand": "/canvas-wallpaper",
+        "description": "Help users configure, inspect, and troubleshoot Canvas Wallpaper (agy-canvas-bg) for Antigravity 2.0 — open the Canvas Wallpaper aux pane, inspect diagnostics.json, adjust settings.json safely, or switch presets and ambient themes.",
+        "disableModelInvocation": false,
+        "file": "skills/canvas-wallpaper/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/canvas-wallpaper"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Canvas Wallpaper (`agy-canvas-bg`)\n\n> **Zero-occlusion custom wallpapers and procedural ambient backgrounds for the Antigravity 2.0 conversation canvas.**\n\n[繁體中文說明](README.zh-TW.md) · [Agent Install Prompt](docs/INSTALL_AGENT.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)\n\n**Canvas Wallpaper** (`agy-canvas-bg`) is a zero-dependency Node.js ESM plugin for **Antigravity 2.0**. It enhances the main conversation canvas with custom raster wallpapers or procedural ambient themes while strictly preserving message readability, interactive controls, and full compatibility with `agy-powertools`.\n\n---\n\n## Features (v1.0.0)\n\n### 1. Zero-Occlusion Architecture\n- **Conversation-canvas only**: Targets only `[data-testid=\"conversation-view\"]` (and empty new conversation views). The left sidebar, top title bar, and right auxiliary pane keep their native solid surfaces.\n- **Stacking safety**: Creates `isolation: isolate` on `[data-agy-canvas-bg-host=\"true\"]` without setting `overflow: hidden` on the host, preserving `agy-powertools` focus halos and glow beams. Wallpaper and veil layers sit at `z-index: -2` / `-1` with `pointer-events: none`.\n- **Protected surfaces**: Input box (`agent-input-box`), user message bubbles (`user-message-bubble`), `pre`/`code` blocks, tool collapsibles, `.xterm` terminals, menus, and dialogs remain protected above the backdrop.\n- **Composer fade-strip cleanup**: Automatically clears distracting top fade strips and empty upward shadows right above the composer while restoring inline styles cleanly on disable or dispose.\n\n### 2. Background Sources, Ask AI & Smart Auto-Tone\n- **Custom Raster Images**: Upload PNG, JPEG, WebP, GIF, or AVIF (up to 8 MB, magic-byte validated). Supports **Shared** (single wallpaper) or **Separate** (distinct Dark & Light slot images) pairing, client-side downscaling (`<= 2560px`), and **Smart Auto-Tone** luminance/dark-ratio analysis with one-click **Auto-Tune**.\n- **Ask AI with Screenshot**: When an image wallpaper is active, click **Open AI Tune Chat** to capture a live CDP canvas screenshot and open a new Antigravity conversation prefilled with your preset prompt, wallpaper path, and current settings so the AI can directly inspect and adjust the layout.\n- **Procedural Ambient Themes**: Zero-image pure CSS and geometric SVG data-URI backgrounds (`aurora-mesh`, `dot-matrix`, `blueprint-grid`, `soft-grain`, `radial-glow`) with theme accent sync, primary/secondary hex colors, scale (`50–200%`), and opacity (`0–100%`).\n\n### 3. Visual Tuning, Surface Material & Power Guard\n- **Cover & Watermark / Side-Art Modes**: Full-canvas `cover` mode or `watermark` mode with 6 anchor positions (`right-side`, `left-side`, `bottom-right`, `bottom-left`, `top-right`, `top-left`), adjustable size (`18–75%`), and feathering (`15–85%`).\n- **Independent Dark & Light Profiles**: Per-theme visibility (safety-capped at `60%` cover / `75%` watermark, unlockable to `100%`), blur (`0–24px`), saturation (`0–120%`), brightness (`40–130%`), contrast (`80–135%`), blend modes (`normal`, `screen`, `multiply`, `soft-light`), center veil, reading backdrop, **2D Focal Point** crosshair (`positionX`/`positionY`), **Scale** (`100–200%`), and **Flip X**.\n- **Surface Material & Edge Vignette**: Opt-in translucent card material (`cardOpacity` `75–100%`, `cardBlur` `0–24px`) scoped strictly to composer/user-bubble/overview cards (automatically reverted in `forced-colors: active`), plus `readingStyle` (`halo`, `card`, `none`), `textShadow` (`off`, `subtle`, `crisp`), and `edgeVignette` (`0–60%`).\n- **Animation Power Guard**: Captures a static first frame for animated GIF/WebP wallpapers and pauses playback on window blur/hidden tab or when `prefers-reduced-motion` is enabled.\n- **Scoped Custom CSS**: Up to 8 KB of user CSS (`</style` sanitized), automatically unloaded whenever the wallpaper is disabled.\n\n### 4. Wallpaper Library, Rotation & Workspaces\n- **Wallpaper Library & Rotation**: Store up to 24 wallpapers with favorites, instant apply/delete, **Shuffle Now**, and automatic rotation (`off`, `conversation`, `interval`, `daily`).\n- **Built-in & Custom Presets**: 4 built-in presets (`anime-dark`, `anime-bright`, `side-art`, `subtle`) plus up to 20 custom presets, and JSON Settings / portable Theme Pack (`.json`) export & import.\n- **Per-Workspace Bindings**: Bind up to 30 workspace URIs to specific presets/images or disable wallpapers in distraction-free workspaces.\n- **9 UI Languages**: Auto-detect (`auto`) plus `English`, `繁體中文`, `简体中文`, `日本語`, `한국어`, `Français`, `Deutsch`, `Español`, and `Русский`.\n\n### 5. Low-Overhead Runtime Design\n- **Metadata-Cached Stores**: `settings.json`, `images/meta.json`, and `images/library.json` use `statSync` (`mtimeMs`, `size`, `ino`) read caches so unchanged polls avoid redundant disk reads and JSON parsing, while returning isolated clones.\n- **Debounced & Pruned DOM Scanning**: The renderer uses a `250ms` trailing debounce, skips mutations inside streaming response/code/terminal subtrees, prunes `TreeWalker` scans past protected surfaces, caches `parseRgb` lookups (256 entries), throttles stack probes, and emits `filter: none` for neutral defaults.\n- **Conditional Asset Caching & Idle Poll Guard**: The Aux Pane server responds with metadata-based `ETag` / `304 Not Modified` for slot and library images before reading bytes, while the client pauses status polling when the tab is hidden, preserves active slider/focal-point interactions, and diffs DOM signatures before re-rendering.\n- **Idle CDP Poll Skipping**: `cdp-host` skips redundant `setSettings` evaluations and unchanged `diagnostics.json` writes during idle polls, with gentle backoff when no debug port is open.\n\n---\n\n## Requirements & Installation\n\n- **Antigravity 2.0**\n- **Node.js 22+** (zero third-party npm packages required)\n\n### Option A: Antigravity CLI (Recommended)\n\n```bash\nagy plugin install https://github.com/tz7543/agy-canvas-bg\n```\n\nValidate or uninstall anytime via:\n```bash\nagy plugin validate --strict https://github.com/tz7543/agy-canvas-bg\nagy plugin uninstall agy-canvas-bg\n```\n\n### Option B: Install Script\n\n**macOS / Linux / WSL2:**\n```bash\ngit clone https://github.com/tz7543/agy-canvas-bg agy-canvas-bg\ncd agy-canvas-bg\n./install.sh\n```\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/tz7543/agy-canvas-bg agy-canvas-bg\ncd agy-canvas-bg\n.\\install.ps1\n```\n\nBoth scripts copy only runtime files (`plugin.json`, `package.json`, `README.md`, `assets/`, `lib/`, `sidecars/`, `skills/`) to `${AGY_PLUGINS_DIR:-~/.gemini/config/plugins}/agy-canvas-bg` without touching your existing `plugin_data`.\n\n### Option C: Ask Your Antigravity Agent\nPaste the prompt from [docs/INSTALL_AGENT.md](docs/INSTALL_AGENT.md) into an Antigravity conversation to have the agent install and verify the plugin safely.\n\n### Uninstall\n- **macOS / Linux / WSL2:** `./uninstall.sh` (preserves wallpapers/settings; add `--purge-data` to remove user data)\n- **Windows (PowerShell):** `.\\uninstall.ps1` (preserves wallpapers/settings; add `-PurgeData` to remove user data)\n\n---\n\n## Passive CDP Connection & Platform Setup\n\n`agy-canvas-bg` **never** modifies Antigravity binaries, **never** edits `~/.gemini/config/config.json`, and **never** kills or force-restarts Antigravity. It passively polls Antigravity's `DevToolsActivePort` file and attaches only to local Antigravity Desktop loopback pages.\n\nIf Antigravity was launched without a remote debugging port, open it manually using `--remote-debugging-port=0` (or use the opt-in helper scripts):\n\n| Platform | Manual Command / Helper |\n| :--- | :--- |\n| **macOS** | `./scripts/launch-with-debug.sh` (`open -n -a \"/Applications/Antigravity.app\" --args --remote-debugging-port=0`) |\n| **Windows (PowerShell)** | `.\\scripts\\launch-with-debug.ps1` (`\"%LOCALAPPDATA%\\Programs\\Antigravity\\Antigravity.exe\" --remote-debugging-port=0`) |\n| **Linux** | `./scripts/launch-with-debug.sh` (`antigravity --remote-debugging-port=0`) |\n| **WSL2** | Launch Antigravity on Windows with `--remote-debugging-port=0` (`.\\scripts\\launch-with-debug.ps1`). When running inside WSL2, `agy-canvas-bg` automatically falls back to `/mnt/c/Users/<winUser>/AppData/Roaming/Antigravity/DevToolsActivePort` if no Linux port file exists. |\n\n### Coexistence with `agy-powertools`\n`agy-canvas-bg` and `agy-powertools` are fully isolated:\n- Separate plugin directories, separate persistent `plugin_data` folders, and separate sidecar ports.\n- `agy-canvas-bg` excludes `/powertools`, `/customizations`, `/automations`, and `/settings` routes, protects `[data-agy-powertools-root]`, `.pt-tip-pop`, and `[data-testid^=\"agy-\"]`, and avoids `overflow: hidden` on the host so `agy-powertools` beams and halos render unclipped.\n\n---\n\n## Agent Skill\n\nThe bundled skill `skills/canvas-wallpaper/SKILL.md` (`canvas-wallpaper`) lets your Antigravity agent help you open `[Canvas Wallpaper](sidecar://agy-canvas-bg/wallpaper/)`, inspect `diagnostics.json`, tune settings, or switch presets while enforcing strict safety rules (no edits to `config.json` or app binaries).\n\n---\n\n## Privacy & Security Boundaries\n\n- **100% local**: No telemetry, no analytics, and no external API keys or third-party endpoints. **Ask AI with Screenshot** only calls Antigravity's local `ConversationService` (`ANTIGRAVITY_LS_ADDRESS`) to open a new chat in your existing Antigravity session and writes `ai-snapshots/canvas-latest.png` locally with `0600` permissions.\n- **Authenticated local UI**: All `/api/*` Aux Pane routes require the per-session sidecar token and bind strictly to `127.0.0.1`.\n- **Strict input validation**:\n  - Image uploads and Theme Packs verify binary magic bytes (PNG/JPEG/WebP/GIF/AVIF only; SVG, HTML, and text payloads are rejected).\n  - Settings patches and imports reject unknown keys and prototype pollution keys (`__proto__`, `constructor`, `prototype`).\n  - Library IDs are guarded by `^[a-z0-9_-]{6,64}$` against path traversal.\n  - Scoped Custom CSS strips `</style` and caps size at 8192 bytes.\n- **Isolated user data**: Stored in `${AGY_CANVAS_BG_DATA_DIR:-~/.gemini/antigravity/plugin_data/agy-canvas-bg}` with `0600` file permissions.\n\n---\n\n## Development & Verification\n\n```bash\nnpm run check\nnpm test\nagy plugin validate --strict .\n```\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/cdp-host.mjs",
+        "line": 483,
+        "snippet": "const m1 = CONVERSATION_ROUTE_RE.exec(routePath);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/cdp-host.mjs#L483"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/cdp-host.mjs",
+        "line": 487,
+        "snippet": "const m2 = CONVERSATION_ROUTE_RE.exec(pathname);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/cdp-host.mjs#L487"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/renderer-bg.js",
+        "line": 649,
+        "snippet": "const m = /^rgba?\\(\\s*([\\d.]+)\\s*[,\\s]\\s*([\\d.]+)\\s*[,\\s]\\s*([\\d.]+)(?:\\s*[,/]\\s*([\\d.]+%?))?\\s*\\)$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/renderer-bg.js#L649"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/web-ui/server.mjs",
+        "line": 128,
+        "snippet": "const unsupportedMatch = /^不支援的設定欄位：(.+)$/.exec(msg);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/web-ui/server.mjs#L128"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/web-ui/server.mjs",
+        "line": 314,
+        "snippet": "const customPresetDelMatch = /^\\/api\\/presets\\/custom\\/([^/]+)$/.exec(url.pathname);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/web-ui/server.mjs#L314"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/web-ui/server.mjs",
+        "line": 526,
+        "snippet": "const libApplyMatch = /^\\/api\\/library\\/([^/]+)\\/apply$/.exec(url.pathname);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/web-ui/server.mjs#L526"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/web-ui/server.mjs",
+        "line": 553,
+        "snippet": "const libItemMatch = /^\\/api\\/library\\/([^/]+)$/.exec(url.pathname);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/web-ui/server.mjs#L553"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/web-ui/server.mjs",
+        "line": 657,
+        "snippet": "const imgMatch = /^\\/api\\/image\\/(shared|dark|light)$/.exec(url.pathname);",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/web-ui/server.mjs#L657"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/ai-tuner.mjs",
+        "line": 12,
+        "snippet": "writeFileSync(tmp, buffer, { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/ai-tuner.mjs#L12"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/ai-tuner.mjs",
+        "line": 15,
+        "snippet": "try { rmSync(tmp, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/ai-tuner.mjs#L15"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/cdp-host.mjs",
+        "line": 249,
+        "snippet": "writeFileSync(tmp, JSON.stringify(payload, null, 2) + '\\n', { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/cdp-host.mjs#L249"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/cdp-host.mjs",
+        "line": 254,
+        "snippet": "try { rmSync(tmp, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/cdp-host.mjs#L254"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 135,
+        "snippet": "fsImpl.writeFileSync(tmpPath, JSON.stringify(value, null, 2) + '\\n', { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L135"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 138,
+        "snippet": "try { fsImpl.rmSync(tmpPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L138"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 146,
+        "snippet": "fsImpl.writeFileSync(tmpPath, buffer, { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L146"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 149,
+        "snippet": "try { fsImpl.rmSync(tmpPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L149"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 306,
+        "snippet": "try { fsImpl.rmSync(fullPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L306"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 349,
+        "snippet": "try { fsImpl.rmSync(targetPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L349"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/images.mjs",
+        "line": 509,
+        "snippet": "try { fsImpl.rmSync(targetPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/images.mjs#L509"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/settings.mjs",
+        "line": 690,
+        "snippet": "fsImpl.writeFileSync(tmpPath, JSON.stringify(value, null, 2) + '\\n', { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/settings.mjs#L690"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/settings.mjs",
+        "line": 693,
+        "snippet": "try { fsImpl.rmSync(tmpPath, { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/settings.mjs#L693"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/web-ui/client.js",
+        "line": 746,
+        "snippet": "const res = await fetch(authUrl(path), { ...options, headers: authHeaders(Boolean(options.body)) });",
+        "githubBlobUrl": "https://github.com/tz7543/agy-canvas-bg/blob/b434c245f8161565fc531e8313d888cdfc7c475e/lib/web-ui/client.js#L746"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "b434c245f8161565fc531e8313d888cdfc7c475e",
+      "scannedAt": "2026-11-27T18:15:23.209Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

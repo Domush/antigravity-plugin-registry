@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "id": "Nowistay/gemini",
+  "sha": "26819fd5384028ea7242526d68f9d20be0a0a842",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:18.250Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "nowistay",
+    "displayName": "Nowistay",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "nowistay",
+        "runtimeName": "nowistay_nowistay",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://api.nowistay.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "calendar-revenue",
+        "slashCommand": "/calendar-revenue",
+        "description": "Review and safely update Nowistay calendar availability, nightly rates, minimum or maximum stays, stop-sell rules, and arrival or departure restrictions. Use for pricing changes, bulk date-range updates, weekday rules, availability checks, ",
+        "disableModelInvocation": false,
+        "file": "skills/calendar-revenue/SKILL.md"
+      },
+      {
+        "name": "daily-brief",
+        "slashCommand": "/daily-brief",
+        "description": "Prepare a concise cross-property operations brief from Nowistay bookings, missions, and conversations. Use for daily briefs, today's arrivals or departures, upcoming guests, urgent work, operational handovers, and questions such as \"what ne",
+        "disableModelInvocation": false,
+        "file": "skills/daily-brief/SKILL.md"
+      },
+      {
+        "name": "direct-bookings",
+        "slashCommand": "/direct-bookings",
+        "description": "Create or update direct Nowistay bookings with availability checks, minimum required guest details, pricing, status, operational notes, and optional payment links. Use for manual reservations, direct booking quotes, payment-request bookings",
+        "disableModelInvocation": false,
+        "file": "skills/direct-bookings/SKILL.md"
+      },
+      {
+        "name": "guest-messaging",
+        "slashCommand": "/guest-messaging",
+        "description": "Find guest conversations, read recent messages, summarize context, draft replies, and send messages through Nowistay. Use for \"show the last messages\", \"reply to this guest\", booking-based conversation lookup, follow-up replies, and multili",
+        "disableModelInvocation": false,
+        "file": "skills/guest-messaging/SKILL.md"
+      },
+      {
+        "name": "guest-records",
+        "slashCommand": "/guest-records",
+        "description": "Review and maintain privacy-minimized Nowistay guest records. Use when a host asks to find a returning guest, review a guest's stay history, or add a guest to the customer base. Do not use merely because another booking or messaging workflo",
+        "disableModelInvocation": false,
+        "file": "skills/guest-records/SKILL.md"
+      },
+      {
+        "name": "guest-reviews",
+        "slashCommand": "/guest-reviews",
+        "description": "Check a property's review score, read recent guest reviews, find the reviews still waiting for an answer, draft public replies and publish them once the host approves. Also gives the public Airbnb and Booking.com links of a listing. Use for",
+        "disableModelInvocation": false,
+        "file": "skills/guest-reviews/SKILL.md"
+      },
+      {
+        "name": "portfolio-reporting",
+        "slashCommand": "/portfolio-reporting",
+        "description": "Build privacy-minimized Nowistay financial and operational reports across many properties. Use for CSV or spreadsheet exports, revenue and fee totals, OTA commissions, cleaning costs, team-member billing, workload reports, owner statements,",
+        "disableModelInvocation": false,
+        "file": "skills/portfolio-reporting/SKILL.md"
+      },
+      {
+        "name": "property-knowledge",
+        "slashCommand": "/property-knowledge",
+        "description": "Maintain the private Nowistay AI co-host knowledge base for each property. Use to list, search, add, correct, or copy reusable property questions and answers such as policies, equipment details, access guidance, and local recommendations.",
+        "disableModelInvocation": false,
+        "file": "skills/property-knowledge/SKILL.md"
+      },
+      {
+        "name": "team-operations",
+        "slashCommand": "/team-operations",
+        "description": "Plan and manage Nowistay cleaning, maintenance, urgency, and custom missions. Use for mission lists, team workloads, assignments, scheduling, completion status, mission reports, cleaning plans, and operational follow-up across one or many p",
+        "disableModelInvocation": false,
+        "file": "skills/team-operations/SKILL.md"
+      },
+      {
+        "name": "welcome-guide",
+        "slashCommand": "/welcome-guide",
+        "description": "Create and edit structured Nowistay welcome guides while preserving headings, lists, images, videos, tables, separators, translations, and EditorJS formatting. Use for page creation, page updates, translations, reordering, image uploads, an",
+        "disableModelInvocation": false,
+        "file": "skills/welcome-guide/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/calendar-revenue",
+      "/daily-brief",
+      "/direct-bookings",
+      "/guest-messaging",
+      "/guest-records",
+      "/guest-reviews",
+      "/portfolio-reporting",
+      "/property-knowledge",
+      "/team-operations",
+      "/welcome-guide"
+    ],
+    "mcpServerNames": [
+      "nowistay_nowistay"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Nowistay for Gemini CLI and Antigravity CLI\n\n[Website](https://www.nowistay.com) · [Setup guide](https://www.nowistay.com/help/how-to-connect-chatgpt-claude-to-nowistay-mcp) · [Pricing](https://www.nowistay.com/pricing)\n\nRun your vacation rental business from your terminal. This extension connects Gemini CLI and Antigravity CLI to your [Nowistay](https://www.nowistay.com) account so you can check bookings, availability and prices, read and answer guest messages, check your review score and reply to guest reviews, plan cleaning and maintenance missions, edit welcome guides, and maintain the private knowledge your AI co-host uses, without switching tools.\n\n## Install\n\n**Gemini CLI**\n\n```bash\ngemini extensions install https://github.com/Nowistay/gemini\n```\n\n**Antigravity CLI**\n\n```bash\nagy plugin install https://github.com/Nowistay/gemini\n```\n\nThen connect your account. In Gemini CLI, run `/mcp auth nowistay`. In Antigravity CLI, open `/plugin`, expand **nowistay** under Installed and choose **Sign in**. Sign in with your Nowistay account and approve the requested access.\n\n## What you can ask\n\n- \"What needs my attention today across my properties?\"\n- \"Raise the nightly rate by 10% on Fridays and Saturdays in July for The Beauty Villa.\"\n- \"Show me the last messages from the guest arriving tomorrow and draft a reply.\"\n- \"What is my review score on the studio, and which reviews still need an answer?\"\n- \"Create a direct booking for 12 to 15 August and send a payment link.\"\n- \"Who is assigned to next week's cleanings?\"\n- \"Update the Wi-Fi password in the welcome guide.\"\n- \"Build a CSV of last month's revenue and cleaning costs by property.\"\n\n## Skills\n\n| Skill | What it does |\n| --- | --- |\n| `daily-brief` | Arrivals, departures, urgent missions and guest conversations that need a decision |\n| `calendar-revenue` | Review and update availability, nightly rates, stay rules and restrictions |\n| `direct-bookings` | Create or update direct bookings, with optional payment links |\n| `guest-messaging` | Find conversations, summarize them, draft and send replies |\n| `guest-reviews` | Review score, recent guest reviews, public replies and listing links |\n| `guest-records` | Find returning guests and add guests to your customer base |\n| `team-operations` | Plan, assign and follow up cleaning, maintenance and custom missions |\n| `welcome-guide` | Create and edit welcome guide pages, translations and images |\n| `property-knowledge` | Maintain and copy the private Q&A your AI co-host answers from |\n| `portfolio-reporting` | Revenue, fees, commissions, cleaning costs and workload reports across properties |\n\n## Requirements\n\n- A Nowistay account. Sign up at [nowistay.com](https://www.nowistay.com).\n- Properties with the AI co-host feature and an active Nowistay PMS connection. Other properties are not visible to the assistant.\n\n## How changes are applied\n\nEvery change goes through two steps. The assistant first stages the change with a preview tool and shows you exactly what will happen. Nothing is written until you confirm and the assistant calls the matching confirm tool with the one-time approval token from that preview. Read-only questions never change your data.\n\n## Data\n\nThe extension itself contains only instructions (skills) and a reference to the Nowistay MCP server at `https://api.nowistay.com/mcp`. It runs no local code and stores nothing on your machine apart from the sign-in token your CLI keeps.\n\nWhen you use it, your CLI sends your requests to that server over HTTPS using an OAuth token scoped to your Nowistay account. The server returns property, calendar, booking, mission, guest, message, review, welcome guide and knowledge base data for your eligible properties only. Guest contact details and private notes are omitted by default and returned only when you explicitly ask for them. Nowistay does not send your data to any other destination through this extension.\n\nSee the [Nowistay privacy policy](https://www.nowistay.com/privacy) and [terms of use](https://www.nowistay.com/terms-of-use).\n\n## Support\n\nContact us at [nowistay.com/contact-us](https://www.nowistay.com/contact-us).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "credential_access",
+      "network_external_mcp"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/guest-records/SKILL.md",
+        "line": 23,
+        "snippet": "3. Never request payment-card or bank data, government identifiers, medical or biometric data, postal addresses, account passwords, access tokens, private notes, or unrelated perso",
+        "githubBlobUrl": "https://github.com/Nowistay/gemini/blob/26819fd5384028ea7242526d68f9d20be0a0a842/skills/guest-records/SKILL.md#L23"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "26819fd5384028ea7242526d68f9d20be0a0a842",
+      "scannedAt": "2026-11-27T18:17:18.250Z",
+      "riskTier": "high",
+      "capabilities": [
+        "credential_access",
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

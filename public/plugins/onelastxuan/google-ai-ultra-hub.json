@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "id": "onelastxuan/google-ai-ultra-hub",
+  "sha": "d69339c48ed5cbb5b3a692caca45f241b36cdf58",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:16.397Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "google-ai-ultra-hub",
+    "displayName": "Google AI Ultra Hub",
+    "version": "0.2.4",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "google-ai-ultra-hub_mcp",
+        "runtimeName": "google-ai-ultra-hub_google-ai-ultra-hub_mcp",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "__PLUGIN_ROOT__/mcp-server/index.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "ai-ultra-hub",
+        "slashCommand": "/ai-ultra-hub",
+        "description": "Unified hub and router for Google AI Ultra exclusive web tools (Google Flow, Google Whisk, NotebookLM, Google Colab GPU/TPU CCUs) and read-only AI Credits / subscription status checks via silent background browser tabs. Use whenever the use",
+        "disableModelInvocation": false,
+        "file": "skills/ai-ultra-hub/SKILL.md"
+      },
+      {
+        "name": "google-colab",
+        "slashCommand": "/google-colab",
+        "description": "Operational playbook for Google Colab (opening/creating notebooks, switching to GPU/TPU runtimes to use AI Ultra's 2,000 monthly CCUs, running cells, reading outputs, and disconnecting runtimes cleanly to conserve compute units) via silent ",
+        "disableModelInvocation": false,
+        "file": "skills/google-colab/SKILL.md"
+      },
+      {
+        "name": "google-flow",
+        "slashCommand": "/google-flow",
+        "description": "Operational playbook for Google Flow (Veo text-to-video, frame-to-video, ingredients-to-video, model selection, AI Credits checks, and output downloads) via silent background Chrome tabs or Antigravity's built-in browser fallback.",
+        "disableModelInvocation": false,
+        "file": "skills/google-flow/SKILL.md"
+      },
+      {
+        "name": "google-notebooklm",
+        "slashCommand": "/google-notebooklm",
+        "description": "Operational playbook for Google NotebookLM (creating/opening notebooks, uploading PDF/Markdown/TXT sources, adding URLs or YouTube links, grounded Q&A with citations, Studio notes, and Audio Overview generation) via silent background Chrome",
+        "disableModelInvocation": false,
+        "file": "skills/google-notebooklm/SKILL.md"
+      },
+      {
+        "name": "google-whisk",
+        "slashCommand": "/google-whisk",
+        "description": "Operational playbook for Google Whisk (uploading Subject, Scene, and Style reference images, entering remix prompts, animating outputs, and downloading results) via silent background Chrome tabs or Antigravity's built-in browser fallback.",
+        "disableModelInvocation": false,
+        "file": "skills/google-whisk/SKILL.md"
+      },
+      {
+        "name": "ultra-launch-copy",
+        "slashCommand": "/ultra-launch-copy",
+        "description": "Structured, anti-AI-slop multi-platform launch copy workflow inside Google AI Ultra Hub. Executed by whichever model is active in the current Antigravity session (users who prefer Claude Opus's writing style can manually select Opus in Anti",
+        "disableModelInvocation": false,
+        "file": "skills/ultra-launch-copy/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/ai-ultra-hub",
+      "/google-colab",
+      "/google-flow",
+      "/google-notebooklm",
+      "/google-whisk",
+      "/ultra-launch-copy"
+    ],
+    "mcpServerNames": [
+      "google-ai-ultra-hub_google-ai-ultra-hub_mcp"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Google AI Ultra Hub\n\n![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)\n![Version](https://img.shields.io/badge/version-v0.2.4-blue.svg)\n[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)\n![Node.js](https://img.shields.io/badge/node-%3E%3D20-339933.svg)\n\n[English Documentation](./README.en.md)\n\n**Google AI Ultra Hub** 是一个专为 Antigravity 打造的插件（**v0.2.4**），将 **Google AI Ultra** 会员专属的网页端权益工具——**Google Flow**、**Google Whisk**、**NotebookLM**、**Google Colab (GPU/TPU CCU)** 与 **结构化去 AI 味多平台宣发文案流水线**——统一整合到对话工作流中，并内置零依赖本地 **Node.js MCP Server** 提供驱动诊断、资产校验暂存、跨工具流水线状态机与额度账本能力。\n\n无需在十几个浏览器标签页之间来回切换，也无需重复登录或中断当前窗口焦点，即可在后台静默完成视频生成、图像混搭、资料分析与 GPU 算力调度。\n\n---\n\n## 架构总览\n\n```mermaid\nflowchart LR\n  AG[\"Antigravity Agent\"] --> HUB[\"google-ai-ultra-hub\"]\n\n  subgraph HUB[\"google-ai-ultra-hub (v0.2.4)\"]\n    SK[\"6 Tool Skills (Router, Playbooks & Launch Copy)\"]\n    MCP[\"Local MCP Server (Node.js stdio)\"]\n    STORE[\"State & Quota Store (~/.google-ai-ultra-hub/state.json)\"]\n    MCP <--> STORE\n  end\n\n  HUB --> CL[\"Chrome Live Driver (127.0.0.1:28196)\"]\n  HUB --> BB[\"Built-in Browser Fallback\"]\n\n  CL --> ULTRA[\"Google AI Ultra Web Suite\"]\n  BB --> ULTRA\n\n  subgraph ULTRA[\"Google AI Ultra Web Suite\"]\n    FLOW[\"Google Flow (Veo & AI Credits)\"]\n    WHISK[\"Google Whisk (Subject/Scene/Style)\"]\n    NLM[\"NotebookLM (Sources & Audio Overview)\"]\n    COLAB[\"Google Colab (GPU/TPU CCUs)\"]\n  end\n```\n\n---\n\n## 核心特性\n\n- **四合一工具矩阵**：\n  - **Google Flow** (`google-flow`)：文生视频 / 图生视频 (Veo)、模型选择、剩余 AI Credits 查询、成品下载。\n  - **Google Whisk** (`google-whisk`)：上传 Subject（主体）/ Scene（场景）/ Style（风格）参考图进行图像混搭、动画化与结果下载。\n  - **NotebookLM** (`google-notebooklm`)：新建/打开笔记本、上传本地 PDF/Markdown/TXT 或网页与 YouTube 链接、带引用问答、笔记沉淀与 Audio Overview（音频概览）生成。\n  - **自动化宣发文案流水线** (`ultra-launch-copy`)：结构化去 AI 味的多平台宣发文案工作流，由当前 Antigravity 会话激活的模型执行（偏好 Claude Opus 文风可在运行前手动切换模型），自动采集仓库/作品事实，一键输出小红书、掘金/知乎、B 站分镜、X/Reddit 与 GitHub Release 文案。\n  - **Google Colab** (`google-colab`)：切换 GPU/TPU 运行时（高效利用 Ultra 每月 2,000 CCU 额度）、运行单元格、提取输出，并在完成后自动断开运行时避免浪费算力。\n  - **统一路由与状态总控** (`ai-ultra-hub`)：自动调度多工具串联流程，并在 `https://one.google.com` 或 Flow 内只读查询 AI Credits 与订阅状态。\n- **零依赖本地 MCP Server (`mcp-server/`)**：\n  - 支持标准 JSON-RPC 2.0 over stdio（同时兼容 `Content-Length` 帧与按行分隔的 JSON-RPC）。\n  - 提供驱动就绪探针、SHA-256 安全文件暂存、原子化 JSON 流水线状态机与 AI Credits / Colab CCU 消耗速率账本。\n- **双引擎无感驱动**：\n  - **默认静默后台模式（Chrome Live）**：优先调用 `chrome-live-for-antigravity_chrome-live` MCP 工具，直接复用你已登录的本地 Chrome，在自动折叠的 `Live · Active` 后台标签组中执行操作，全程不抢占前台窗口焦点，并挂载聊天内联实时预览卡片。\n  - **开箱即用回退机制（Built-in Browser）**：当用户未安装 `chrome-live` 或扩展未连接时，自动平滑回退至 Antigravity 内置 `browser` 子代理。\n- **严格安全边界**：\n  - 绝不触碰任何支付、结账、套餐购买或取消页面（`/checkout`、`/pay`、`/billing`）。\n  - 绝不绕过 Google 登录、2FA 或验证码（遇到验证会交还给用户手动完成）。\n  - 所有抓取的网页文本均视为不可信数据（`<untrusted_page_content>`），防止网页提示词注入。\n  - 任务结束后自动清理临时后台标签页（绝不关闭用户主动 `Alt+Shift+L` 共享的标签页）。\n\n---\n\n## MCP 工具参考 (`google-ai-ultra-hub_mcp`)\n\n| 工具名 | 功能说明 | 关键参数 |\n|---|---|---|\n| `ultra_check_drivers` | 绕过系统代理直连探测 Chrome Live（`127.0.0.1:28196/api/health`，自动附加 HMAC-SHA256 签名并向后兼容 `/health`）并返回 `chrome-live-ready` / `chrome-live-extension-disconnected` / `fallback-builtin-browser` 诊断结果 | `chromeLiveUrl?`, `timeoutMs?` |\n| `ultra_stage_asset` | 校验源目录白名单（默认仅限当前工作目录、`Desktop`/`Downloads`/`Pictures`/`Documents`、`~/.chrome-live-antigravity/uploads` 与 `~/.google-ai-ultra-hub`，可通过 `ULTRA_HUB_ALLOWED_DIRS` 收紧或扩展）、文件存在性、大小上限（默认 50MB）与扩展名（`image` / `document` / `any`），计算 SHA-256 并复制到 `~/.chrome-live-antigravity/uploads/<name>-<hash8><ext>` | `sourcePath`, `target?`, `allowedKind?`, `maxBytes?` |\n| `ultra_pipeline_create` | 创建持久化的多步骤工作流运行记录（如 `whisk_to_flow`、`notebooklm_to_colab`、`flow_batch`） | `workflow`, `title?`, `steps?`, `id?`, `metadata?` |\n| `ultra_pipeline_update` | 更新流水线步骤状态（`pending \\| running \\| completed \\| failed`）、挂载产物路径、记录错误信息与重试计数 | `pipelineId`, `status`, `stepName?`, `stepIndex?`, `artifact?`, `error?`, `incrementRetry?` |\n| `ultra_pipeline_status` | 查询指定 `pipelineId` 详情或列出最近的工作流运行记录 | `pipelineId?`, `status?`, `workflow?`, `limit?` |\n| `ultra_quota_log` | 记录 `flow_credits` 或 `colab_ccu` 剩余快照并计算差值与小时消耗速率；省略 `remaining` 时仅返回汇总账本 | `kind?`, `remaining?`, `total?`, `note?`, `source?` |\n\n> **安全加固提示（`ULTRA_HUB_ALLOWED_DIRS` 严格白名单）**：在生产或共享环境中，建议在 `mcp_config.json` 的 `env` 字段或启动环境中显式设置 `ULTRA_HUB_ALLOWED_DIRS`（多个目录使用系统路径分隔符 `;` / `:` 分隔），将 `ultra_stage_asset` 的源目录白名单**严格收紧**为仅包含你的项目素材目录（设置后将覆盖默认的 `Desktop` / `Downloads` / `Documents` 等宽泛目录，进一步遵循最小权限原则）。\n\n---\n\n## 目录结构\n\n```text\ngoogle-ai-ultra-hub/\n├── .github/\n│   └── workflows/\n│       └── ci.yml                   # GitHub Actions CI（配置校验、Frontmatter 检查、单元测试）\n├── plugin.json                      # Antigravity 插件清单\n├── mcp_config.json                  # 本地 MCP Server 声明配置\n├── assets/\n│   └── logo.svg                     # 插件图标 (128x128 SVG)\n├── mcp-server/\n│   ├── index.mjs                    # 零依赖 Node.js (>=20) MCP stdio 服务端入口\n│   └── lib/\n│       ├── assets.mjs               # 安全扩展名校验、SHA-256 与暂存拷贝\n│       ├── drivers.mjs              # 直连探针（HMAC-SHA256 /api/health + 代理绕过 + 回退诊断）\n│       └── store.mjs                # 基于 state.json.lock 的多进程锁 + 原子化持久化\n├── rules/\n│   └── AGENTS.md                    # 常驻路由与安全规则\n├── skills/\n│   ├── ai-ultra-hub/SKILL.md        # 统一路由、MCP 编排、AI Credits 查询与跨工具串联\n│   ├── google-flow/SKILL.md         # Google Flow 操作手册\n│   ├── google-whisk/SKILL.md        # Google Whisk 操作手册\n│   ├── google-notebooklm/SKILL.md   # NotebookLM 操作手册\n│   ├── google-colab/SKILL.md        # Google Colab GPU/CCU 操作手册\n│   └── ultra-launch-copy/SKILL.md   # 结构化去 AI 味多平台宣发文案流程\n├── tools/\n│   └── chrome-live-setup/\n│       ├── ChromeLiveAutoSetup.cs   # Windows 原生 WinForms 图形装载向导源码（零依赖）\n│       ├── build.ps1                # 使用 csc.exe 编译 .exe 并生成 .exe.sha256 清单\n│       ├── setup-chrome-live.sh     # macOS / Linux 跨平台安装与 --check 诊断脚本\n│       ├── Setup-ChromeLive.command # macOS 访达双击启动封装脚本\n│       └── README.md                # 跨平台向导使用、校验与编译说明\n├── scripts/\n│   ├── install.ps1                  # Windows 一键安装脚本\n│   └── install.sh                   # macOS / Linux 一键安装脚本\n├── tests/\n│   └── mcp-server.test.mjs          # 基于 node:test 的自动化单元测试\n├── README.md                        # 中文主文档\n├── README.en.md                     # 英文文档\n├── LICENSE                          # MIT 许可证\n└── .gitignore\n```\n\n---\n\n## 跨平台一键装载 Chrome Live 向导（Windows / macOS / Linux）\n\n很多用户在接入 `chrome-live-for-antigravity` 时容易卡在 **Node/Git 环境准备** 或 **找不到 `.gemini` 隐藏目录下的 `extension/` 文件夹**。本仓库自带零外部依赖的跨平台引导工具 [tools/chrome-live-setup](./tools/chrome-live-setup/README.md)：\n\n### Windows (`ChromeLiveAutoSetup.exe`)\n\n* **直接下载与 SHA-256 校验**：前往 [Releases](https://github.com/onelastxuan/google-ai-ultra-hub/releases/latest) 下载 `ChromeLiveAutoSetup.exe` 与 `ChromeLiveAutoSetup.exe.sha256`（约 36 KB，Win10/11 双击即用）。\n  > **SmartScreen 提示说明**：个人开源二进制未购买商业代码签名证书，首次运行可能触发 Windows SmartScreen 警告；运行前请务必使用 `Get-FileHash .\\ChromeLiveAutoSetup.exe -Algorithm SHA256` 核对发布页提供的 `.sha256` 清单，或直接从源码本地编译。\n* **本地从源码编译**（同时生成 `.exe` 与 `.exe.sha256`）：\n  ```powershell\n  powershell -ExecutionPolicy Bypass -File .\\tools\\chrome-live-setup\\build.ps1\n  ```\n* **自动完成 + 合规人工交接**：\n  1. 自动检查 `Node.js >= 20` 与 `Git`（缺失可一键调用 `winget` 安装），自动克隆 `chrome-live-for-antigravity`、执行 `setup` / `install --with-plugin` 并启动本地守护进程。\n  2. **绝不篡改 Chrome 安全配置**：将隐藏的 `extension` 目录复制到剪贴板、提供一键打开 `chrome://extensions`（或 Edge 扩展页）与 `extension` 文件夹，并在置顶窗口中轮询 `/api/health`（带 HMAC-SHA256 签名），扩展连上立刻亮绿灯。\n  3. 支持命令行自检：`ChromeLiveAutoSetup.exe --check status.json`（退出码 `0` = 已连接，`2` = 守护进程在线但扩展未加载，`3` = 守护进程未启动）。\n\n### macOS / Linux (`setup-chrome-live.sh` & `Setup-ChromeLive.command`)\n\n* **运行向导**：\n  ```bash\n  bash ./tools/chrome-live-setup/setup-chrome-live.sh\n  ```\n  macOS 用户也可在访达中双击 `tools/chrome-live-setup/Setup-ChromeLive.command`。向导会自动校验 `Node.js >= 20` 与 `git`，克隆仓库并依次运行 `setup`、`install --with-plugin` 与 `start`，通过 `pbcopy` / `wl-copy` / `xclip` / `xsel` 复制 `extension/` 路径、尝试打开 `chrome://extensions` 与 `extension/` 目录，并使用内联 Node HMAC-SHA256 签名轮询 `http://127.0.0.1:28196/api/health` 直至扩展连接成功。\n* **非交互式诊断**：`bash ./tools/chrome-live-setup/setup-chrome-live.sh --check`（输出 JSON，退出码同为 `0` / `2` / `3`）。\n\n---\n\n## 一键安装\n\n> **前置要求**：本地需安装 **Node.js >= 20** 以运行 `google-ai-ultra-hub` 内置 MCP Server。\n\n安装脚本会幂等地将插件核心文件（`plugin.json`、`mcp_config.json`、`README.md`、`README.en.md`、`assets/`、`rules/`、`skills/`、`mcp-server/`）复制到 `~/.gemini/config/plugins/google-ai-ultra-hub`（自动排除 `.git/`、`scripts/`、`tests/` 与 `.github/`），并自动将已安装副本中的路径占位符替换为实际安装绝对路径。\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/onelastxuan/google-ai-ultra-hub.git\ncd google-ai-ultra-hub\npowershell -ExecutionPolicy Bypass -File .\\scripts\\install.ps1\n```\n\n### macOS / Linux (Bash)\n\n```bash\ngit clone https://github.com/onelastxuan/google-ai-ultra-hub.git\ncd google-ai-ultra-hub\nbash ./scripts/install.sh\n```\n\n安装完成后，重载或重启 Antigravity 即可生效。建议配合 `chrome-live-for-antigravity` 插件获得最佳后台静默标签页体验。\n\n---\n\n## 使用示例\n\n1. **Google Flow 视频生成**：\n   > “用 Google Flow 生成一段 16:9 的赛博朋克雨夜航拍视频，先帮我看一下还剩多少 AI Credits。”\n2. **Google Whisk 图像混搭**：\n   > “用 Google Whisk 把 `D:\\assets\\cat.png` 作为主体、`D:\\assets\\forest.jpg` 作为场景、`D:\\assets\\watercolor.png` 作为风格进行混搭并下载结果。”\n3. **NotebookLM 资料梳理与音频概览**：\n   > “在 NotebookLM 新建名为 `AI Agent 论文精读` 的笔记本，上传本地 `paper.pdf` 并生成中文结构化摘要和 Audio Overview。”\n4. **Google Colab GPU 运行与释放**：\n   > “打开 Colab 切换 T4/A100 GPU 运行时，执行我的训练脚本并返回日志，结束后记得断开运行时节省 CCU。”\n\n---\n\n## 本地开发与测试 (`node --test`)\n\n本项目保持**零外部 npm 依赖**，可直接使用 Node.js 内置测试运行器执行全部单元测试：\n\n```bash\nnode --test tests/mcp-server.test.mjs\n```\n\n测试覆盖范围包括：\n- `stageAsset` 文件校验、源目录白名单（含 `ULTRA_HUB_ALLOWED_DIRS` 与路径穿越/符号链接拦截）、SHA-256 计算与非法扩展名/超大文件拦截\n- `whisk_to_flow` 等流水线状态机完整生命周期（`pending -> running -> failed -> retry -> completed`）、多进程 `state.json.lock` 并发写入串行化及过期锁自动恢复\n- `flow_credits` / `colab_ccu` 额度账本差值与每小时消耗速率计算\n- `checkDrivers` 针对本地 Mock HTTP 服务的驱动状态识别、`/api/health` HMAC-SHA256 请求头签名校验与代理环境变量绕过\n- 标准 MCP JSON-RPC 2.0（`initialize`、`ping`、`tools/list`、`tools/call`）及 `Content-Length` / 换行分隔双帧解析\n\n---\n\n## 发布到 GitHub\n\n1. 修改 `plugin.json` 中的 `\"repository\"` 字段为你的真实 GitHub 仓库地址，并更新 `README.md` / `README.en.md` 中的克隆与 Release 下载地址。\n2. 在 GitHub 创建一个新的空仓库（例如 `google-ai-ultra-hub`）。\n3. 在本地仓库目录执行推送：\n\n```bash\ngit remote add origin https://github.com/onelastxuan/google-ai-ultra-hub.git\ngit push -u origin main\n```\n\n---\n\n## 开源协议\n\n本项目基于 [MIT License](./LICENSE) 开源。\n",
+  "latestReleaseNotes": "## Google AI Ultra Hub v0.2.4\n\n### Highlights\n- **Multi-Process State Locking (mcp-server/lib/store.mjs)**: Added atomic exclusive lockfile (state.json.lock via \fs.open(..., wx)) with stale-lock recovery (15000ms default) and bounded retry wrapping createPipeline, updatePipelineStep, and logQuota.\n- **Proxy-Bypass Loopback & HMAC-SHA256 Probe (mcp-server/lib/drivers.mjs)**: Switched to direct \node:http / \node:https (\u0007gent: false) against http://127.0.0.1:28196/api/health with HMAC-SHA256 signature headers (X-Chrome-Live-Ts, X-Chrome-Live-Nonce, X-Chrome-Live-Hdr-Sig, X-Chrome-Live-Sig) and legacy /health fallback.\n- **Cross-Platform Chrome Live Setup Wizards (\tools/chrome-live-setup/)**:\n  - **Windows**: ChromeLiveAutoSetup.exe (35,840 bytes) + ChromeLiveAutoSetup.exe.sha256 manifest attached below.\n  - **macOS / Linux**: Added setup-chrome-live.sh (with --check diagnostic mode) and Setup-ChromeLive.command.\n- **Documentation & Tests**: 11/11 \node:test unit tests passing (including concurrency stress, stale-lock recovery, and HMAC probe), removed broken unpushed CI badge, and added ULTRA_HUB_ALLOWED_DIRS hardening & SmartScreen / SHA-256 verification instructions.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "mcp-server/index.mjs",
+        "line": 537,
+        "snippet": "const match = /content-length:\\s*(\\d+)/i.exec(headerBlock);",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/index.mjs#L537"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp-server/lib/assets.mjs",
+        "line": 194,
+        "snippet": "await fsp.rm(tempPath, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/lib/assets.mjs#L194"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp-server/lib/store.mjs",
+        "line": 109,
+        "snippet": "await fs.rm(lockPath, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/lib/store.mjs#L109"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp-server/lib/store.mjs",
+        "line": 132,
+        "snippet": "await handle.writeFile(`${payload}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/lib/store.mjs#L132"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp-server/lib/store.mjs",
+        "line": 138,
+        "snippet": "await fs.rm(lockPath, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/lib/store.mjs#L138"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp-server/lib/store.mjs",
+        "line": 196,
+        "snippet": "await fs.writeFile(tempFile, payload, \"utf8\");",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/lib/store.mjs#L196"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp-server/lib/store.mjs",
+        "line": 200,
+        "snippet": "await fs.rm(tempFile, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/onelastxuan/google-ai-ultra-hub/blob/d69339c48ed5cbb5b3a692caca45f241b36cdf58/mcp-server/lib/store.mjs#L200"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.4",
+      "sha": "d69339c48ed5cbb5b3a692caca45f241b36cdf58",
+      "scannedAt": "2026-11-27T18:13:16.397Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

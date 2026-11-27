@@ -1,0 +1,476 @@
+{
+  "schemaVersion": 1,
+  "id": "Nexro920/agy-chrome-use",
+  "sha": "b6dc03fad01971cb09dd763d44dcb596fcf9b207",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:35.700Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-chrome-use",
+    "displayName": "Chrome Browser REPL",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "agy-chrome-use",
+        "runtimeName": "agy-chrome-use_agy-chrome-use",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/mcp-launcher.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "cua-repl",
+        "slashCommand": "/cua-repl",
+        "description": "Use this skill whenever interacting with Chrome web pages via the agy-chrome-use MCP server (cua_exec, cua_authorize, cua_status, cua_reset). Activate when the user provides a URL or asks to open, read, click, type, scroll, or inspect a web",
+        "disableModelInvocation": false,
+        "file": "skills/cua-repl/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/cua-repl"
+    ],
+    "mcpServerNames": [
+      "agy-chrome-use_agy-chrome-use"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-chrome-use\n\n**English** | [简体中文](README.zh-CN.md)\n\nStateful Chrome browser REPL plugin (`agy-chrome-use` / `agy_chrome_use`, `cua_exec`) for **Google Antigravity (AGY)**.\n\n## Features\n\n- **Foolproof Pre-Flight Check & One-Click Install**: Verifies Node.js (`>= 20`), `npm`, and Google Chrome before installing; refuses installation with clear diagnostics if missing, or installs missing prerequisites automatically on user confirmation / `-AutoInstall` / `--auto-install`, then installs dependencies, builds, registers the plugin, and verifies the MCP server handshake.\n- **Automatic URL & Browser Routing**: Bundled `rules/AGENTS.md` and `skills/cua-repl/SKILL.md` instruct AGY to automatically invoke `agy-chrome-use` whenever you share a URL, domain, or ask to interact with a web page / active Chrome tab.\n- **One-Time First-Use Authorization**: Prompts once for explicit approval on the first `cua_exec` call and saves it in `PLUGIN_DATA/auth.json` for all future sessions.\n- **Open-Chrome-First Connection**:\n  1. Attaches to an already-open Chrome window via CDP (`AGY_CHROME_CDP_URL`, default `http://127.0.0.1:9222`, or Chrome's built-in `chrome://inspect/#remote-debugging` channel — kept alive across turns within a session to avoid repeated permission prompts).\n  2. Falls back automatically to a visible persistent managed Chrome window (`PLUGIN_DATA/chrome-profile`) when remote debugging is not enabled.\n- **Safe Human Handoff**: Automatically stops and hands control back to you (via `cua_reset({ scope: \"control\" })` without closing managed windows) whenever encountering login passwords, 2FA/MFA, CAPTCHAs, or sensitive payment/destructive confirmations.\n- **Hardened Sandbox + Semantic Tree + Visual HUD**: Runs scripts in an isolated `worker_threads` + `node:vm` sandbox, masks `input[type=\"password\"]` as `***`, checks Shadow DOM occlusion, blocks SSRF/unsafe redirects, keeps the virtual cursor visible throughout active browser operations, and automatically hides all HUD overlays when control is released or the turn ends.\n\n---\n\n## Quick Install\n\n### Option A: Antigravity CLI (Zero Config)\n\nRequires **Node.js `>= 20`**, `npm`, and **Google Chrome**:\n\n```bash\nagy plugin install https://github.com/Nexro920/agy-chrome-use\n```\n\nOn first launch, `mcp-launcher.mjs` automatically bootstraps runtime dependencies into `PLUGIN_DATA` without modifying the read-only plugin directory.\n\n### Option B: Zero-Clone Foolproof Installer (Auto-Checks & Installs Node.js / Chrome)\n\n### Windows (PowerShell)\n\nInteractive (checks environment first; asks before auto-installing missing Node.js / Chrome):\n\n```powershell\nirm https://raw.githubusercontent.com/Nexro920/agy-chrome-use/main/scripts/bootstrap.ps1 | iex\n```\n\nUnattended one-click auto-install (automatically installs missing Node.js LTS / Chrome via `winget` + builds + verifies):\n\n```powershell\n& ([scriptblock]::Create((irm https://raw.githubusercontent.com/Nexro920/agy-chrome-use/main/scripts/bootstrap.ps1))) -AutoInstall\n```\n\n### macOS / Linux (Bash)\n\nInteractive:\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/Nexro920/agy-chrome-use/main/scripts/bootstrap.sh | bash\n```\n\nUnattended one-click auto-install:\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/Nexro920/agy-chrome-use/main/scripts/bootstrap.sh | bash -s -- --auto-install\n```\n\n---\n\n## Install from Local Clone\n\n```bash\ngit clone https://github.com/Nexro920/agy-chrome-use.git\ncd agy-chrome-use\n```\n\n**Windows (PowerShell):**\n\n```powershell\n# Check environment only (no changes)\npowershell -ExecutionPolicy Bypass -File .\\scripts\\install-local.ps1 -CheckOnly\n\n# Install (checks environment first; prompts or refuses if prerequisites missing)\npowershell -ExecutionPolicy Bypass -File .\\scripts\\install-local.ps1\n\n# Install + auto-install missing Node.js / Chrome via winget\npowershell -ExecutionPolicy Bypass -File .\\scripts\\install-local.ps1 -AutoInstall\n\n# Uninstall (preserves auth & chrome-profile; add -PurgeData to delete all data)\npowershell -ExecutionPolicy Bypass -File .\\scripts\\install-local.ps1 -Uninstall\n```\n\n**macOS / Linux (Bash):**\n\n```bash\n# Check environment only\nbash ./scripts/install-local.sh --check-only\n\n# Install (checks environment first; prompts or refuses if prerequisites missing)\nbash ./scripts/install-local.sh\n\n# Install + auto-install missing prerequisites (Homebrew / apt / dnf)\nbash ./scripts/install-local.sh --auto-install\n\n# Uninstall (add --purge-data to also delete auth & chrome-profile)\nbash ./scripts/install-local.sh --uninstall\n```\n\n---\n\n## How First Use Works\n\n1. Send any browser prompt in AGY (e.g. `Open https://github.com and check trending`).\n2. On the very first run, AGY will pause and ask you to approve one-time authorization. Confirm once, and it is persisted for future sessions.\n3. By default, if Chrome remote debugging isn't enabled, AGY opens a visible **managed Chrome window** whose cookies/logins persist across sessions.\n4. **Optional — Reuse your existing logged-in Chrome window**:\n   - **Recommended (no permission re-prompts or top banner)**: Launch a dedicated CDP-enabled Chrome window with an isolated profile:\n     - Windows: `powershell -ExecutionPolicy Bypass -File .\\scripts\\launch-chrome-debug.ps1`\n     - macOS / Linux: `bash ./scripts/launch-chrome-debug.sh`\n   - **Or via Chrome 136+ `chrome://inspect/#remote-debugging`**: Turn on remote debugging in Chrome and click **Allow** once (kept alive within the MCP session so Chrome doesn't re-prompt across turns; note that Chrome's native *\"Automation is controlling Chrome / Turn off in Settings\"* top infobar is controlled by Chrome itself as long as remote debugging is active until dismissed or turned off in Chrome Settings; call `cua_reset({ scope: \"browser\" })` to force-disconnect).\n5. When a page requires passwords, 2FA, CAPTCHAs, or payments, AGY pauses and releases control so you can complete the step safely in Chrome, then continue by replying to AGY.\n\n## Development & Tests\n\n```bash\nnpm install\nnpm test\n```\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 139,
+        "snippet": "const child = spawn('npm', args, { cwd, shell: process.platform === 'win32', env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1', npm_config_update_notifier: 'false', npm_",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 52,
+        "snippet": "const out = execFileSync( 'reg', ['query', `${hive}\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\chrome.exe`, '/ve'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ig",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L52"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 57,
+        "snippet": "const match = /REG_\\w+\\s+(.+\\.exe)/i.exec(out);",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L57"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 67,
+        "snippet": "const out = execFileSync('where', ['chrome'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L67"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 90,
+        "snippet": "const res = spawnSync('which', [bin], { encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 99,
+        "snippet": "const res = spawnSync('npm', ['--version'], { encoding: 'utf8', shell: process.platform === 'win32', });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L99"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 163,
+        "snippet": "const res = spawnSync(cmd, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32', });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L163"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 178,
+        "snippet": "execFileSync('cmd', ['/c', 'rmdir', targetDir], { stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L178"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/setup.mjs",
+        "line": 221,
+        "snippet": "const child = spawn(entry.command, resolvedArgs, { cwd: targetDir, env: { ...process.env, ...resolvedEnv, PLUGIN_ROOT: targetDir, PLUGIN_DATA: tempData, }, stdio: ['pipe', 'pipe', ",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/browser/perception.ts",
+        "line": 349,
+        "snippet": "const match = /^shot-(\\d+)/.exec(name);",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/browser/perception.ts#L349"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 90,
+        "snippet": "await fsp.rm(destDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 117,
+        "snippet": "await fsp.rm(lockDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L117"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 133,
+        "snippet": "await fsp.rm(lockDir, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L133"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 223,
+        "snippet": "await fsp.writeFile(path.join(runtimeDir, 'package.json'), pkgText, 'utf8');",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L223"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 246,
+        "snippet": "await fsp.writeFile(path.join(runtimeDir, 'package.json'), pkgText, 'utf8');",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L246"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/mcp-launcher.mjs",
+        "line": 249,
+        "snippet": "await fsp.writeFile( stampPath, JSON.stringify({ distHash, depsHash, updatedAt: new Date().toISOString() }, null, 2) + '\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/mcp-launcher.mjs#L249"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 180,
+        "snippet": "await fsp.unlink(targetDir);",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L180"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 183,
+        "snippet": "await fsp.rm(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L183"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 299,
+        "snippet": "await fsp.rm(tempData, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L299"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 314,
+        "snippet": "await fsp.rm(opts.dataDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L314"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 420,
+        "snippet": "await fsp.writeFile( path.join(opts.targetDir, 'mcp_config.json'), JSON.stringify(mcpCfg, null, 2) + '\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L420"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 444,
+        "snippet": "await fsp.writeFile( path.join(opts.targetDir, 'hooks.json'), JSON.stringify(hooksCfg, null, 2) + '\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L444"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 454,
+        "snippet": "await fsp.rm(path.join(opts.targetDir, 'assets'), { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L454"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 458,
+        "snippet": "await fsp.rm(path.join(opts.targetDir, 'rules'), { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L458"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/setup.mjs",
+        "line": 459,
+        "snippet": "await fsp.rm(path.join(opts.targetDir, 'skills'), { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/setup.mjs#L459"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/stop-hook.mjs",
+        "line": 87,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${port}/release`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, Connection: 'close', }, signal: AbortSignal.timeout(1500)",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/scripts/stop-hook.mjs#L87"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/browser/manager.ts",
+        "line": 164,
+        "snippet": "const res = await fetch(`${cdpUrl}/json/version`, { signal: AbortSignal.timeout(800), });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/browser/manager.ts#L164"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/browser/perception.ts",
+        "line": 368,
+        "snippet": "fs.unlink(path.join(SCREENSHOT_DIR, name)).catch(() => {}),",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/browser/perception.ts#L368"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/browser/perception.ts",
+        "line": 395,
+        "snippet": "await fs.writeFile(filePath, buffer);",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/browser/perception.ts#L395"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/security/auth.ts",
+        "line": 46,
+        "snippet": "await fs.writeFile(AUTH_FILE, JSON.stringify(record, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/security/auth.ts#L46"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/security/auth.ts",
+        "line": 52,
+        "snippet": "await fs.unlink(AUTH_FILE);",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/security/auth.ts#L52"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server.ts",
+        "line": 51,
+        "snippet": "await fs.writeFile(tmpPath, content, { encoding: 'utf8', mode });",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/server.ts#L51"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server.ts",
+        "line": 313,
+        "snippet": "await fs.unlink(full).catch(() => {});",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/server.ts#L313"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server.ts",
+        "line": 316,
+        "snippet": "await fs.unlink(full).catch(() => {});",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/server.ts#L316"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server.ts",
+        "line": 400,
+        "snippet": "await fs.unlink(pidControlFile).catch(() => {});",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/server.ts#L400"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server.ts",
+        "line": 405,
+        "snippet": "await fs.unlink(CONTROL_FILE).catch(() => {});",
+        "githubBlobUrl": "https://github.com/Nexro920/agy-chrome-use/blob/b6dc03fad01971cb09dd763d44dcb596fcf9b207/src/server.ts#L405"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "b6dc03fad01971cb09dd763d44dcb596fcf9b207",
+      "scannedAt": "2026-11-27T18:15:35.700Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

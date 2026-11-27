@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "carlosduplar/agy-lite-research",
+  "sha": "cc605f35cdf0f8b19f4694252eac90d95bc96e58",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:07.018Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-lite-research",
+    "displayName": "Research Flash-Lite Quota Saver",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": [
+      {
+        "name": "research",
+        "description": "Read-only research subagent for codebase exploration, file search, documentation lookup and web research. Use for broad, read-heavy surveys that would clutter the parent context.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/research.md"
+      },
+      {
+        "name": "worker",
+        "description": "Low-cost worker for mechanical or repetitive edits, lint/format fixes, single-file patches, log inspection, data conversion and narrow test runs. Not for design decisions.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/worker.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [
+      "research",
+      "worker"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Lite Research\n\nA zero-dependency Google Antigravity plugin providing two hardened subagents with pinned frontmatter models to reduce frontier-model quota drain:\n\n- **`research`** (`model: flash_lite` → `gemini-3.5-flash-lite`): Read-only codebase explorer and web researcher with `< 0.01%` quota drain.\n- **`worker`** (`model: flash` → `gemini-4-hydrogen-tiered-high`): Scoped mechanical worker for focused edits, lint/format fixes, single-file patches, and narrow test runs.\n\n> [!NOTE]\n> **Why there is no `PreToolUse` hook or Python dependency**: Current Antigravity builds honor each subagent's YAML frontmatter `model:` field directly—even when `invoke_subagent` passes `Model: \"inherit\"`—making a runtime `PreToolUse` rewrite hook unnecessary.\n\nOn fresh single-dispatch `agy -p` `research` benchmarks (Gemini AI Pro), pinning `research` to `flash_lite` bounds the `research` share at `< 0.01%` (`0.00%` measured on the General counters in the Claude-parent run, below `/usage` display resolution) — cutting benchmark-run drain by **2.67x** on **Gemini 4 Hydrogen (High)**, **4.26x** on **Gemini 4 Neon (High)**, and keeping **Claude Opus 5.5 (Medium)** subagent-attributable drain at **0.00%**.\n\n![Research Subagent Quota Drain Comparison](./assets/benchmark-savings.svg)\n\n---\n\n## Subagents Architecture (`agents/`)\n\n### 1. `agents/research.md` (Read-Only Explorer)\n- **Model**: `model: flash_lite` (`gemini-3.5-flash-lite`).\n- **Role**: Codebase exploration, file search, documentation lookup, and web research.\n- **Tools**: Read-only allowlist (`send_message`, `read_file`, `list_dir`, `find_by_name`, `grep_search`, `read_url_content`, `search_web`) with `inheritMcp: false`. Write, shell, and MCP tools are excluded. *(Note: `view_file` is omitted because it resolves to the same tool name as `read_file` and causes an executor tool-name conflict.)*\n- **Ceilings**: `max_turns: 15`, `timeout_mins: 5`.\n\n### 2. `agents/worker.md` (Mechanical Worker)\n- **Model**: `model: flash` (`gemini-4-hydrogen-tiered-high`).\n- **Role**: Focused edits, lint/format fixes, single-file patches, log inspection, data conversion, and narrow test runs. Not for design decisions.\n- **Tools**: Explicit allowlist (`send_message`, `read_file`, `edit_file`, `write_file`, `run_command`, `manage_task`, `search_web`) with `inheritMcp: false`. *(Legacy `enable_write_tools` / `enable_mcp_tools` flags are not honored by current loaders, which fall back to a read-only default set when `tools` is omitted.)*\n- **Why `flash` instead of `flash_lite`**: `gemini-3.5-flash-lite` has higher error rates on exact-match whitespace diffs (`edit_file`) and recovery loops. `flash` (`gemini-4-hydrogen-tiered-high`) is 2x cheaper per token than Neon ($1.50/$7.50 vs. $3.00/$15.00), faster, and offloads 100% of worker drain from the Claude/GPT quota pool.\n- **Guardrails**: Strict pre-edit inspection (`read_file` first to copy whitespace byte-for-byte), scoped edits, and an explicit **fail visibly** policy forbidding speculative workarounds.\n\n---\n\n## Empirical Benchmark Results\n\n### 1. `research` Subagent (`flash_lite` vs. `inherit`)\n\nConducted on a **Gemini AI Pro** subscription using fresh, isolated `agy -p --model <id>` sessions on a single 6-document comparative synthesis task delegated to `research` (~33KB source text).\n\n| Metric | `flash_lite` (Plugin ON) | Hydrogen High (`inherit`) | Neon High (`inherit`) |\n| :--- | :--- | :--- | :--- |\n| **Observed `PLANNER_RESPONSE.model`** | `gemini-3.5-flash-lite` | `gemini-4-hydrogen-high` | `gemini-4-neon-high` |\n| **Benchmark-Run Quota Multiplier Savings** | **Baseline (`< 0.01%` `research` drain)** | **2.20x Weekly / 2.67x 5-Hr lower run drain** (`-0.05% / -0.15%` ON vs `-0.11% / -0.40%` OFF) | **4.22x Weekly / 4.26x 5-Hr lower run drain** (`-0.09% / -0.31%` ON vs `-0.38% / -1.32%` OFF) |\n\n- **Claude pool preservation (`0.00%` subagent drain)**: On **Claude Opus 5.5 (Medium)** with Plugin ON, parent turns consumed `-3.70%` Weekly / `-7.39%` 5-Hr Claude quota while `research` ran on `gemini-3.5-flash-lite` with `0.00%` Claude movement and `0.00%` visible General counter movement (`< 0.01%`).\n\n### 2. `worker` Subagent (`flash` vs. `inherit`)\n\nIsolated `agy -p` runs on an identical 4-bug Python fix + 5-test `unittest` verification task (all runs passed 5/5 tests):\n\n| Parent Model | `worker` Model | Duration | Claude 5-Hr Delta | Gemini 5-Hr Delta | Takeaway |\n| :--- | :--- | :---: | :---: | :---: | :--- |\n| **Claude Sonnet 5.5 (Low)** | `flash` (`gemini-4-hydrogen-tiered-high`) | 35.6s | **`-3.28%`** | `-1.04%` | **1.70x lower Claude drain** vs. `-5.58%` inheriting Sonnet |\n| **Claude Opus 5.5 (Low)** | `flash` (`gemini-4-hydrogen-tiered-high`) | 42.0s | **`-6.59%`** | `-1.05%` | **1.79x lower Claude drain** vs. `-11.77%` inheriting Opus |\n| **Gemini 4 Neon (High)** | `flash` (`gemini-4-hydrogen-high`) | **~58s** | `0.00%` | **`-1.43%`** | Lower drain & ~2x faster vs. `-1.63%`–`-3.29%` (71–119s) on Neon High |\n| **Gemini 4 Neon (Medium)** | `flash` (`gemini-4-hydrogen-high`) | **~58s** | `0.00%` | **`-1.43%`** | ~31% lower drain & ~20% faster vs. `-2.07%` (72s) on Neon Medium |\n\n---\n\n## Installation & Setup\n\n### Option 1: Antigravity Plugin (Recommended)\nInstall directly from GitHub via the Antigravity CLI:\n```bash\nagy plugin install https://github.com/carlosduplar/agy-lite-research\n```\n\nOr clone locally and install from the directory (via CLI or `/plugin install <directory>` inside `agy`):\n```bash\ngit clone https://github.com/carlosduplar/agy-lite-research.git\nagy plugin install ./agy-lite-research\n```\n\nVerify installation with `agy plugin list`.\n\n### Option 2: Global Agent Configurations\nCopy `agents/research.md` and `agents/worker.md` to `~/.gemini/config/agents/`.\n\n### Option 3: Project Workspace Agents\nCopy `agents/research.md` and `agents/worker.md` to `<project-root>/.agents/agents/`.\n\n---\n\n## Verifying Model Pinning End-to-End\n\n1. Run an isolated dispatch:\n   ```bash\n   agy -p \"Invoke the research subagent to read plugin.json and report its version number. Do not read plugin.json in the parent session.\"\n   ```\n2. Inspect the subagent log in `<appDataDir>/brain/<subagent-id>/.system_generated/logs/transcript.jsonl` to confirm:\n   - `research` runs on `gemini-3.5-flash-lite`\n   - `worker` runs on `gemini-4-hydrogen-tiered-high`\n\n---\n\n## Requirements\n\n- Google Antigravity CLI (`agy`) or Antigravity IDE. *(No Python or external runtime dependencies.)*\n",
+  "latestReleaseNotes": "## Highlights\n\n- **Zero-dependency pure-agent plugin**: Removed redundant `hooks.json` and `scripts/research-flash-lite.py` after empirically verifying that current Antigravity builds honor subagent YAML frontmatter `model:` directly (even when `invoke_subagent` passes `Model: \"inherit\"`). No Python runtime required.\n- **Fixed `agents/research.md` startup conflict**: Removed duplicate `view_file` alias alongside `read_file` that caused executor tool-name conflict errors; `research` remains pinned to `model: flash_lite` (`gemini-3.5-flash-lite`).\n- **Fixed `agents/worker.md` tool inventory**: Replaced ignored legacy `enable_write_tools` / `enable_mcp_tools` flags with an explicit `tools:` allowlist and `inheritMcp: false`; `worker` remains pinned to `model: flash` (`gemini-4-hydrogen-tiered-high`).\n- **Updated `README.md`**: Added empirical `worker` A/B benchmarks across Claude Sonnet 5.5 (Low) (1.70x lower Claude drain), Claude Opus 5.5 (Low) (1.79x lower Claude drain), and Gemini 4 Neon High/Medium (~31% lower drain vs. Neon Medium).\n",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_rules_only"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "cc605f35cdf0f8b19f4694252eac90d95bc96e58",
+      "scannedAt": "2026-11-27T18:17:07.018Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_rules_only"
+      ]
+    }
+  ]
+}

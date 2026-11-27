@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "id": "zsky-ai/gemini-extension",
+  "sha": "30a4ef93d7b0ffd8702469f1b1431c33fe46a70f",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:20.135Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "zsky",
+    "displayName": "ZSky",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "zsky",
+        "runtimeName": "zsky_zsky",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.zsky.ai/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "zsky-ad-creatives",
+        "slashCommand": "/zsky-ad-creatives",
+        "description": "Static ad creatives with ZSky: one ad concept produced as a matched set\nacross feed, story, banner and pin formats, with the user's exact copy set\nlocally, or a few distinct concepts to test against each other.\nUse when: \"ad creatives\", \"Me",
+        "disableModelInvocation": false,
+        "file": "skills/zsky-ad-creatives/SKILL.md"
+      },
+      {
+        "name": "zsky-brand-kit",
+        "slashCommand": "/zsky-brand-kit",
+        "description": "Save, inspect or update a portable local brand kit for ZSky creative work:\napproved colors, fonts, logo references, tone, exact copy and constraints.\nThe kit is a file in the project; it does not create a cloud project or a\nshared media lib",
+        "disableModelInvocation": false,
+        "file": "skills/zsky-brand-kit/SKILL.md"
+      },
+      {
+        "name": "zsky-product-photos",
+        "slashCommand": "/zsky-product-photos",
+        "description": "Product and e-commerce photography with ZSky: studio packshots, lifestyle\nscenes, flat lays, hero banners, seasonal sets, and staged backdrops for the\nuser's own product cutout. Picks a shot recipe, keeps a set consistent, and\nis honest abo",
+        "disableModelInvocation": false,
+        "file": "skills/zsky-product-photos/SKILL.md"
+      },
+      {
+        "name": "zsky-short-videos",
+        "slashCommand": "/zsky-short-videos",
+        "description": "Short video clips with ZSky, 1 to 10 seconds each: text-to-video, animating\na ZSky image, choosing the fast, quality or cinematic mode, pricing the clip\nbefore it runs, and joining clips locally for longer pieces.\nUse when: \"make a video\", ",
+        "disableModelInvocation": false,
+        "file": "skills/zsky-short-videos/SKILL.md"
+      },
+      {
+        "name": "zsky-thumbnails",
+        "slashCommand": "/zsky-thumbnails",
+        "description": "YouTube thumbnails, podcast and video covers, blog headers and social cards\nwith a real, legible headline. ZSky generates a text-free image composed for\nthe headline; the headline is then set locally with exact spelling and\nchecked at small",
+        "disableModelInvocation": false,
+        "file": "skills/zsky-thumbnails/SKILL.md"
+      },
+      {
+        "name": "zsky",
+        "slashCommand": "/zsky",
+        "description": "Create images with ZSky through its hosted connection. This is the core\nskill: how to call the ZSky tools, wait, show images and links, save files\nwhen needed, handle errors and sign-in, and delete outputs. Every other\nzsky-* skill follows ",
+        "disableModelInvocation": false,
+        "file": "skills/zsky/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/zsky",
+      "/zsky-ad-creatives",
+      "/zsky-brand-kit",
+      "/zsky-product-photos",
+      "/zsky-short-videos",
+      "/zsky-thumbnails"
+    ],
+    "mcpServerNames": [
+      "zsky_zsky"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# ZSky for Gemini CLI and Antigravity\n\nCreate images and short videos with [ZSky](https://zsky.ai) from Gemini CLI or\nGoogle Antigravity. Ask for product photos, a YouTube thumbnail, an ad set in\nevery social format, or a short clip. The agent plans the shots, generates\nthem on your ZSky account and shows the results, with links you can open or\ndownload.\n\n## Requirements\n\n- A paid ZSky account: Pro, Max, or a prepaid API balance. Free accounts\n  cannot connect. See [zsky.ai/api-mcp](https://zsky.ai/api-mcp) for how\n  access works.\n- Gemini CLI, or Antigravity (App, CLI or IDE).\n\nThis package connects to ZSky's hosted MCP server, `https://mcp.zsky.ai/mcp`.\nYou sign in to ZSky once in your browser; the agent never sees your ZSky\npassword. There is no API key to manage.\n\nGenerations use your account's included allowance or are billed to your\naccount at ZSky's live rates. The skills read those rates with `zsky_usage`,\nquote the cost before large batches and before every video, and wait for your\nyes.\n\n## Install\n\nGemini CLI:\n\n```bash\ngemini extensions install https://github.com/zsky-ai/gemini-extension\n```\n\nAntigravity CLI:\n\n```bash\nagy plugin install https://github.com/zsky-ai/gemini-extension\n```\n\n## Sign in\n\n- **Gemini CLI:** start `gemini`. When the ZSky server first connects, your\n  browser opens ZSky's sign-in. To sign in again later, run `/mcp auth zsky`.\n- **Antigravity:** sign in when the browser opens as the ZSky server\n  connects. In the Antigravity App, Customizations > Installed lists the\n  ZSky server with an Authenticate button.\n\nDisconnect any time at [zsky.ai/connected-apps](https://zsky.ai/connected-apps).\n\n## Commands (Gemini CLI)\n\n| Command | Does |\n|---|---|\n| `/zsky:image <idea>` | One image, or a small set |\n| `/zsky:thumbnail <topic and headline>` | YouTube thumbnail, cover or social card with a real headline |\n| `/zsky:product-photos <product>` | Packshots, lifestyle scenes, flat lays, backdrops for your own cutout |\n| `/zsky:ads <offer>` | One ad idea as a matched set of feed, story, pin and banner sizes |\n| `/zsky:video <idea>` | A 1 to 10 second clip, or an animated ZSky image |\n| `/zsky:usage` | This month's usage, allowance and live prices |\n\nIn Antigravity, each skill is also available as a slash command, for example\n`/zsky-thumbnails`. You can also just ask in plain words; the skills load on\ntheir own when a request matches.\n\n## Skills\n\n| Skill | Ask for |\n|---|---|\n| `zsky` | Any image: illustration, concept art, wallpaper, scene. Also usage questions and deleting outputs |\n| `zsky-product-photos` | Studio packshots, lifestyle scenes, flat lays, hero banners, seasonal sets, and staged backdrops for your own product cutout |\n| `zsky-thumbnails` | YouTube thumbnails, podcast and video covers, blog headers and social cards with a crisp, correctly spelled headline |\n| `zsky-ad-creatives` | One ad concept as a matched set for feed, stories, pins, LinkedIn, X and display, with your exact copy |\n| `zsky-short-videos` | 1 to 10 second clips, animated ZSky images, b-roll, in fast, quality or cinematic mode |\n| `zsky-brand-kit` | Save your brand's colors, fonts, logo and approved copy as a local file, and reuse it across ads, product photos and thumbnails |\n\n## What it can do\n\n| | |\n|---|---|\n| Text to image | Yes |\n| Text to video: fast, quality, cinema | Yes |\n| Animate an image ZSky made for you | Yes |\n| Animate your own photo | No |\n| Edit, restyle or upscale your own photo | No |\n\n## Finishing on your machine\n\nHeadlines, logos, exact sizes and product cutouts are added after ZSky returns\nthe base image, on your machine, with the agent's own tools. This package\nships no scripts. Where the agent cannot edit image files, it says so before\ngenerating and offers the base image with the copy and layout notes instead.\n\n## What is sent where\n\n- **To ZSky** (`mcp.zsky.ai` and `zsky.ai`): your prompts and generation\n  settings. Sign-in happens on ZSky in your browser.\n- **From ZSky:** links to the finished files, valid for up to 24 hours, and\n  inline image previews when available.\n- **Stays on your machine:** headline overlays, crops, compositing, contact\n  sheets and brand kit files.\n- This package has no telemetry of its own. ZSky's handling of your data is\n  described in its [privacy policy](https://zsky.ai/privacy).\n\nEvery request passes ZSky's content-safety checks. A blocked request is final;\nthe skills never try to rephrase around it.\n\n## Support\n\n[zsky.ai/contact](https://zsky.ai/contact) or support@zsky.ai.\nTerms: [zsky.ai/terms](https://zsky.ai/terms).\nDocumentation: [zsky.ai/api-docs#mcp-hosted](https://zsky.ai/api-docs#mcp-hosted).\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "Initial release of the ZSky plugin for Google Antigravity and Gemini CLI.\n\n- Connects to ZSky's hosted MCP server (`https://mcp.zsky.ai/mcp`) via Streamable HTTP and OAuth (CIMD/DCR).\n- Includes 6 skills (`zsky`, `zsky-product-photos`, `zsky-thumbnails`, `zsky-ad-creatives`, `zsky-short-videos`, `zsky-brand-kit`), always-on rules (`rules/GEMINI.md`), and 6 Gemini CLI slash commands (`/zsky:*`).\n- Requires a paid ZSky account (Pro, Max, or prepaid API balance).",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "30a4ef93d7b0ffd8702469f1b1431c33fe46a70f",
+      "scannedAt": "2026-11-27T18:16:20.135Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

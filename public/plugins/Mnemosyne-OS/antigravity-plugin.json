@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "Mnemosyne-OS/antigravity-plugin",
+  "sha": "b7db9202cf47c0eda0dbef2128be3815a94e40e3",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:11.792Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "mnemosyne-os",
+    "displayName": "Mnemosyne OS",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "mnemosyne-desktop",
+        "slashCommand": "/mnemosyne-desktop",
+        "description": "Drive the Mnemosyne OS desktop board, windows, desktops, and interactive apps (God's Eye View, Atlas, Molecule, Vitrine Studio, MnemoClio, MnemoCRM, and more) through os_find and os_run. Use whenever the user asks to open, close, arrange, z",
+        "disableModelInvocation": false,
+        "file": "skills/mnemosyne-desktop/SKILL.md"
+      },
+      {
+        "name": "mnemosyne-memory",
+        "slashCommand": "/mnemosyne-memory",
+        "description": "Give your agent a sovereign, governed long-term memory backed by Mnemosyne OS. Use whenever the user has Mnemosyne OS installed and you need to recall past decisions, project history, or notes across sessions, persist decisions with provena",
+        "disableModelInvocation": false,
+        "file": "skills/mnemosyne-memory/SKILL.md"
+      },
+      {
+        "name": "mnemosyne-review",
+        "slashCommand": "/mnemosyne-review",
+        "description": "Show the human a video or image you made and get their answer to THAT file, from their desktop (the Review window of Mnemosyne OS) or from their phone (Telegram buttons, text or voice note). Use whenever you render something a person must a",
+        "disableModelInvocation": false,
+        "file": "skills/mnemosyne-review/SKILL.md"
+      },
+      {
+        "name": "mnemosyne-voice",
+        "slashCommand": "/mnemosyne-voice",
+        "description": "Turn a written script into an audio file using the local voices of Mnemosyne OS, including the human's own cloned voice. Use whenever the user asks for a voice-over, narration, podcast read, or TikTok/YouTube audio track and has Mnemosyne O",
+        "disableModelInvocation": false,
+        "file": "skills/mnemosyne-voice/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/mnemosyne-desktop",
+      "/mnemosyne-memory",
+      "/mnemosyne-review",
+      "/mnemosyne-voice"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Mnemosyne OS for Antigravity\n\nTurn [Mnemosyne OS](https://mnemosyne-os.io) into a visual cockpit for\nAntigravity and launch your own apps on a tier-1, local memory operating system\nfor Windows, macOS (Apple silicon) and Linux.\n\nThis plugin bundles always-on safety rules and four workflows for Antigravity.\nThey connect your agent to isolated vaults, live desktop canvases, offline\nvoice engines, Telegram render reviews and custom apps on your machine.\n\n| Surface | Link |\n|---|---|\n| Product site | [mnemosyne-os.io](https://mnemosyne-os.io) |\n| Documentation | [docs.mnemosyne-os.io](https://docs.mnemosyne-os.io) |\n| Company and labs | [mnemosyne-os.com](https://mnemosyne-os.com) |\n| App source repository | [Mnemosyne-OS/Mnemosyne-Neural-OS](https://github.com/Mnemosyne-OS/Mnemosyne-Neural-OS) |\n| Custom app and cartridge SDKs | [npmjs.com/org/mnemosyne_os](https://www.npmjs.com/org/mnemosyne_os) |\n\n## A visual cockpit for Antigravity\n\nOnce connected, Mnemosyne OS gives Antigravity users a spatial control room\nalongside every coding session.\n\n- **Live agent cards and radar:** Pin live session cards on the canvas with\n  `mnemosyne_cockpit_update`. Detect file and branch edits across Antigravity\n  and Claude Code transcripts, even app closed.\n- **Board, windows and apps:** Open, focus, fullscreen and arrange desktops,\n  links and widgets. Control interactive apps such as `God's Eye View`, `Atlas`,\n  `Molecule`, `Vitrine Studio`, `MnemoClio` and `MnemoCRM` via `os_find` and\n  `os_run`.\n- **Shared tasks and watches:** Track tasks in your To-do list, edit Agenda\n  appointments and read Pheme watch radars.\n- **Voice, video and Telegram review:** Generate offline voice-overs and voice\n  clones (`qwen3`, `chatterbox`, `zonos`, `piper`) locally. Render avatar films\n  and note videos, then review frames in Mnemosyne OS or on Telegram.\n\n## Launch your own apps on a tier-1 memory layer\n\nAntigravity users can build and launch their own apps on governed local\nvaults.\n\n- **Guided creation:** Build websites in **Vitrine Studio** or 3D objects in\n  **Lab 3D**. Frame custom app specs in **Muse** and hand them to Antigravity.\n- **Sandboxed canvas cartridges:** Build React or Vite widgets inside the canvas\n  with\n  [`@mnemosyne_os/cartridge-sdk`](https://www.npmjs.com/package/@mnemosyne_os/cartridge-sdk)\n  under user permissions.\n- **Standalone Layer 2 apps:** Connect Node or browser apps on `127.0.0.1:7799`\n  with [`@mnemosyne_os/sdk`](https://www.npmjs.com/package/@mnemosyne_os/sdk)\n  or `npm create @mnemosyne_os/app`.\n\nWatched folders feed isolated vaults on your machine. Search fuses vector\nranking with local BM25 (`mnemosyne_memory_query`) and RAG answers\n(`mnemosyne_memory_ask`). Protection tiers (`MAXIMUM`, `isolated`), Dream State\nlinks and Resonance keep memory separate and resumable.\n\n## Requirements\n\nYou need **[Mnemosyne OS Infinity Edition](https://mnemosyne-os.io/download)**\ninstalled on the same machine. The desktop app ships both MCP servers inside\nits own bundle.\n\nOnce connected, `mnemosyne_agent_list`, `mnemosyne_agent_collisions` and\n`mnemosyne_agent_files` read local coding-agent transcript metadata directly\nfrom disk. Those three tools work even while the desktop app is closed. Vault\nmemory, review, voice, To-do, calendar and desktop actions require the desktop\napp running locally.\n\n## What this plugin bundles\n\n| Type | Path | Purpose |\n|---|---|---|\n| Always-on rules | `rules/AGENTS.md` | Vault discovery, protection tiers and multi-agent Git safety |\n| Skill | `skills/mnemosyne-memory/SKILL.md` | Vault memory recall, ingest provenance and agent coordination |\n| Skill | `skills/mnemosyne-review/SKILL.md` | Video and image review on desktop and Telegram |\n| Skill | `skills/mnemosyne-voice/SKILL.md` | Local offline voice-over synthesis and voice cloning |\n| Skill | `skills/mnemosyne-desktop/SKILL.md` | Window, board and interactive app control via `os_run` |\n\n## Connect Mnemosyne OS and configure your vaults\n\nThis plugin supplies the rules and skills. The desktop application supplies and\nconnects the two local MCP servers: `mnemosyne` (memory, review, voice, To-do,\ncalendar and agent awareness) and `mnemosyne-actions` (`os_find`, `os_run`,\nimage and video tools).\n\n1. Install and open **Mnemosyne OS**.\n2. Open **Settings › Agents › Connect my coding agent**.\n3. Click **Antigravity**.\n\nThat button writes both server entries into `~/.gemini/config/mcp_config.json`.\n\nWithout `MNEMO_VAULTS`, a read that names no vault falls back to the first\nmounted vault, and a write that names no vault is refused. To choose specific vaults, add `MNEMO_VAULTS` and\n`MNEMO_DEFAULT_VAULT` inside the `env` block of the `mnemosyne` entry in\n`~/.gemini/config/mcp_config.json`:\n\n```json\n{\n  \"env\": {\n    \"MNEMO_DEFAULT_VAULT\": \"CODE\",\n    \"MNEMO_VAULTS\": \"CODE,JOURNAL,RESEARCH\"\n  }\n}\n```\n\nUse each vault folder name in uppercase. To enable local voice synthesis tools,\nadd `\"MNEMO_VOICE\": \"1\"` to that same `env` block and restart your session. The\napp preserves your custom `env` keys when reconnecting.\n\n## Privacy\n\nThe Mnemosyne OS memory server connects locally on `127.0.0.1:7799`. It\ncollects no telemetry, runs no analytics and stores no data of its own. What the\nagent reads goes to the AI session you run, and to your Telegram chat when you\nask it to send a file. Embeddings follow your Mnemosyne OS setting: with a\nlocal model, they are computed on your machine. Full policy:\n[mnemosyne-os.io/confidentialite](https://mnemosyne-os.io/confidentialite).\n\n## License\n\nThis Antigravity plugin is released under the MIT License. See\n[LICENSE](LICENSE). The Mnemosyne OS memory engine ships closed inside the\ndesktop application (open core).\n\n## Acknowledgments\n\nMnemosyne OS started on Gemini 1.5. Thanks to Google for Gemini and\nAntigravity.\n",
+  "latestReleaseNotes": "Initial official plugin release (MIT) for Google Antigravity. Bundles always-on safety rules (rules/AGENTS.md) and four workflows: mnemosyne-memory, mnemosyne-desktop, mnemosyne-review, and mnemosyne-voice. Connects to Mnemosyne OS Infinity Edition via Settings > Agents > Connect my coding agent > Antigravity.",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_rules_only"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "b7db9202cf47c0eda0dbef2128be3815a94e40e3",
+      "scannedAt": "2026-11-27T18:16:11.792Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_rules_only"
+      ]
+    }
+  ]
+}

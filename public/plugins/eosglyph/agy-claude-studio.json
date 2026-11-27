@@ -1,0 +1,1208 @@
+{
+  "schemaVersion": 1,
+  "id": "eosglyph/agy-claude-studio",
+  "sha": "bbd213c40253f080dffdaef415162fda848a1b93",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:32.557Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-claude-studio",
+    "displayName": "Claude Studio",
+    "version": "2.2.3",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "agy-claude-studio-host",
+        "runtimeName": "agy-claude-studio_agy-claude-studio-host",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/plugin/mcp-host.js"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "studio-doctor",
+        "slashCommand": "/studio-doctor",
+        "description": "Claude Studio 一键诊断、自愈与自然语言调参助手。当用户遇到「主题/汉化没生效」「Antigravity 更新后样式消失」「找不到调试端口」「侧边栏异常」「关闭插件后重启仍注入 / 旧版守护迁移」，或想直接用自然语言切换配色/定制 /compact 预设时触发。",
+        "disableModelInvocation": false,
+        "file": "skills/studio-doctor/SKILL.md"
+      },
+      {
+        "name": "studio-notify",
+        "slashCommand": "/studio-notify",
+        "description": "Claude Studio 0-Token 手机推送配置与排障向导。当用户想配置任务完成手机提醒（Server酱微信、Bark iOS、ntfy、飞书、钉钉、企业微信、Telegram、Webhook），或排查「为什么没收到手机推送」「开启 Server酱 28KB 全文 Markdown 推送」时触发。",
+        "disableModelInvocation": false,
+        "file": "skills/studio-notify/SKILL.md"
+      },
+      {
+        "name": "studio-setup",
+        "slashCommand": "/studio-setup",
+        "description": "Claude Studio 30 秒新手引导与偏好配置向导。当用户刚安装 Claude Studio、请求「新手引导 / 初始配置 / 快速设置主题与功能偏好 / 一键调教 Claude Studio」时触发。通过原生交互选择卡片一次性收集偏好并热应用，零弹窗打扰。",
+        "disableModelInvocation": false,
+        "file": "skills/studio-setup/SKILL.md"
+      },
+      {
+        "name": "studio-translation-protect",
+        "slashCommand": "/studio-translation-protect",
+        "description": "Claude Studio 翻译保护名单管理助手。当用户说「某插件/某区域被 Claude Studio 误翻了」「把 XX 加入翻译保护名单」「查看或移除翻译保护名单」「不要翻译 XX」时触发。交互式定位精准 DOM 选择器并安全写入 i18nIgnoreSelectors。",
+        "disableModelInvocation": false,
+        "file": "skills/studio-translation-protect/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/studio-doctor",
+      "/studio-notify",
+      "/studio-setup",
+      "/studio-translation-protect"
+    ],
+    "mcpServerNames": [
+      "agy-claude-studio_agy-claude-studio-host"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/clawd-banner.svg\" alt=\"Claude Studio Banner\" width=\"840\" />\n\n# Claude Studio\n\n**`agy-claude-studio`** — Native UI Aesthetics & Productivity Plugin for **Google Antigravity 2.33.1+ (v2.35.x Ready)**\n\nClaude Warm-Gray & Obsidian Palettes · 3-Tab Studio Sidecar (`Chat | Tools | Settings`) · Mobile Push Alerts · Gemini 4 Periodic Table & Direct Sync · 4 Native Skills · Pixel Clawd Mascot\n\n<p>\n  <img src=\"https://img.shields.io/badge/Antigravity-2.33.1%2B%20%7C%202.35.x-18181b?style=flat-square\" alt=\"Antigravity 2.33.1+ / 2.35.x\" />\n  <img src=\"https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-18181b?style=flat-square\" alt=\"Platform\" />\n  <img src=\"https://img.shields.io/badge/Zero_Deps-Node_22%2B-2f855a?style=flat-square\" alt=\"Zero Dependencies (Node 22+)\" />\n  <img src=\"https://img.shields.io/badge/i18n-5_Languages-3b82f6?style=flat-square\" alt=\"5 Languages\" />\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-d97757?style=flat-square\" alt=\"MIT License\" /></a>\n</p>\n\n<p>\n  <b>English</b> · <a href=\"README.zh-CN.md\">简体中文</a>\n</p>\n\n[Preview](#preview) · [Features](#features) · [Quick Install](#quick-install) · [Companion Plugin](#companion-plugin) · [Configuration](#configuration) · [FAQ](#faq) · [Credits](#credits--license)\n\n</div>\n\n---\n\n> **About this project**: `Claude Studio` (`agy-claude-studio`) is a community-driven enhancement for Google Antigravity, evolved from [0DNANCY/agy-claude-style](https://github.com/0DNANCY/agy-claude-style). It connects seamlessly at runtime through Antigravity's built-in **Chrome DevTools Protocol (CDP)** — leaving host installation files completely untouched, adding no extra messages or prompt overhead to your conversations, and letting you return to the stock UI with a single click whenever you like.\n\n---\n\n<a id=\"preview\"></a>\n## Preview\n\n<div align=\"center\">\n\n#### Full Workspace Overview (Claude Warm-Gray + 3-Tab Sidecar + Live Activity)\n<img src=\"assets/screenshots/studio-overview.png\" alt=\"Claude Studio Full Workspace Overview\" width=\"880\" />\n\n<br/>\n\n#### Gemini 4 Periodic Table Model Selector\n<img src=\"assets/screenshots/periodic-selector.png\" alt=\"Gemini 4 Periodic Table Model Selector\" width=\"760\" />\n\n<br/>\n\n#### 60fps Effort Slider & Minimalist Composer\n<img src=\"assets/screenshots/effort-slider.png\" alt=\"Effort Slider and Restyled Composer\" width=\"760\" />\n\n<br/>\n\n#### Native \"Claude Studio\" Tools Tab × \"Usage Monitor\" Synergy\n<table>\n  <tr>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"assets/screenshots/studio-panel.png\" alt=\"Claude Studio Control Panel\" width=\"308\" /><br/>\n      <sub><b>Claude Studio Tools Tab</b>: 1-click apply, mobile push quick panel &amp; local script runner with wide in-chat output card</sub>\n    </td>\n    <td align=\"center\" width=\"50%\">\n      <img src=\"assets/screenshots/usage-monitor-pair.png\" alt=\"Usage Monitor Companion\" width=\"308\" /><br/>\n      <sub><b>Usage Monitor Companion</b>: selectable right-pane pinning (<code>Studio Chat Pane</code> / <code>Usage Monitor</code> / <code>Off</code>) with smart footer splitting</sub>\n    </td>\n  </tr>\n</table>\n\n</div>\n\n---\n\n<a id=\"features\"></a>\n## Features\n\nHere is a quick tour of what Claude Studio adds on top of Antigravity—everything runs in memory over CDP, so your installation files stay untouched and you can switch back to the stock UI anytime.\n\n### 3-Tab Studio Sidecar (`Chat | Tools | Settings`)\nDocked in the right Aux Pane, the sidecar keeps things clean and flat with a full-width 3-column tab bar. The header stays on a single row even when you narrow the sidebar (secondary metadata tucks away automatically), and includes a 1-click button to check for and apply updates in place without touching your local configs.\n- **Chat**: Shows your workspace path, active Git branch, connected tools, and a billing-aligned context breakdown by category (system prompt, MCP tools, skills, rules, and conversation). At the bottom, you get live task activity—waiting indicators, streaming previews, and an expandable list of running subagents.\n- **Tools**: A local script runner for Node, Python, and Shell scripts, pre-seeded with an Antigravity changelog checker (`scripts/fetch-agy-changelog.mjs`). When you run a script, the output pops open in a **wide Markdown card right above the chat box** so it is comfortable to read—purely local, never triggering an AI turn. You can copy the output, collapse or expand it without losing logs, or re-open it anytime from the `Wide` button in the sidecar.\n- **Settings**: Live toggles for themes, layout, effort slider style, language packs, and HUD options, all saved automatically.\n\n### Chat File Link Right-Click Menu\nWhen the assistant links a local file or drops an `@` mention pill in chat, you can right-click it to:\n- **Open File** with your OS default app (restricted to safe document, code, and media file types).\n- **Reveal in Folder** — on Windows, it uses `explorer.exe /select` directly for fast, flicker-free selection (falling back to the native helper only for edge cases like commas in paths); on macOS, it highlights the file in Finder.\n- **Copy Full Path** straight to your clipboard.\n\nToggleable anytime via `fileLinkContextMenu` in Settings.\n\n### Mobile Push Notifications\nIf you kick off a long refactor or batch run and step away from your desk, Claude Studio can ping your phone directly from your machine when the run finishes or hits an error.\n- **8 supported channels**: ServerChan (supports full Markdown up to ~28KB), Bark (iOS), ntfy, Feishu, DingTalk, WeCom, Telegram Bot, and custom Webhooks.\n- **Sensible defaults**: Filters out quick turns (default threshold is 3 minutes), alerts immediately on errors, and stays quiet if you cancel a run manually.\n- Credentials and webhook URLs stay local in `PLUGIN_DATA/notify.json`—nothing is written to `config.json` or injected into web views.\n\n### Model Picker, Reasoning Effort & `/compact`\n- **Gemini 4 Periodic Table**: Organizes models into a clean periodic-table grid by tier and capability, with a direct sync option that pulls the latest model catalog and color accents from Google AI Studio.\n- **Orchestrator Quick Switch**: Sits right next to the model picker so you can toggle multi-agent mode in one click. It remembers your choice across restarts and locks while a turn is running so you don't flip it mid-stream.\n- **60fps Effort Slider**: A smooth reasoning-effort slider with both ChatGPT and Claude visual styles.\n- **`/compact` Presets**: Four customizable context-compression presets — **Empty** (`empty`), **Clean Focus** (`clean`, default), **Dev Handoff** (`dev`), and **Custom** (`custom`). Picking one fills the composer without auto-sending, so you can tweak the prompt before hitting Enter.\n\n### Localization & Marketplace Translation\n- **Full Antigravity v2.35.2 Coverage**: Translates the main window, dialogs, and the `/swarm` multi-agent sidecar with a fast DOM observer engine.\n- **On-Demand Language Packs**: English (`en`), Simplified Chinese (`zh-CN`), and Traditional Chinese (`zh-TW`) come bundled; Cantonese (`yue`) and Japanese (`ja`) download on demand with SHA-256 verification so the base install stays small.\n- **Marketplace Translate Pill**: Adds an on-demand translate button on the Plugin Marketplace page. It makes no network requests until you click it, falls back automatically to a secondary provider if Google Translate rate-limits, and toggles cleanly back to the original text. Respects `translate=\"no\"`, `.notranslate`, a cloud protection list, and your own custom CSS ignore selectors.\n\n### Visual Polish, Loading Animation & Clawd\n- **Themes & Craft**: Switch between warm `claude` paper gray, high-contrast `obsidian`, or your `host` theme, paired with optional frosted glass borders, `logoInk` top-left icon tinting, a CJK-friendly smooth typing caret, and a Studio home dashboard with an interactive ASCII wave ripple.\n- **Loading Animation (`geminiLoader`)**: An optional toggle under Settings → UI Polish that swaps out Antigravity's large stock loading spinners for animated Gemini-chan with a crisp 12-tick overhead ring.\n- **Pixel Companion Clawd**: A 19-state pixel crab that hangs out on your composer, reacts to pokes, tickles, drags, and assistant activity (thinking, typing, error, done), and automatically dodges Q&A cards or queue bars.\n\n### 4 Native Skills\nBuilt-in conversational workflows you can invoke right in chat:\n- **`studio-setup`**: 30-second guided initial configuration.\n- **`studio-doctor`**: Checks CDP connectivity, permissions, and running processes, and fixes common issues.\n- **`studio-notify`**: Step-by-step wizard to set up and test mobile push notifications.\n- **`studio-translation-protect`**: Helps you add custom CSS selectors to the translation exclusion list.\n\n---\n\n<a id=\"companion-plugin\"></a>\n## Companion Plugin: `antigravity-usage-monitor`\n\n`Claude Studio` focuses on **visual aesthetics, interaction craft, live workspace inspection, and localization**. If you also want real-time generation speed (`tok/s`), time-to-first-token (TTFT) latency, cost estimates, and multi-model quota pools, we recommend pairing it with the independent companion plugin **[yuhuan-dev/antigravity-usage-monitor](https://github.com/yuhuan-dev/antigravity-usage-monitor)**:\n\n- **Zero-Conflict Coexistence**: Claude Studio's built-in lightweight HUD defaults to a clean top bar (`usageStatsEnabled: true`, `hudTopBar: true`, `hudBottomBar: false`, `hudRimProgress: false`) and can be toggled off at any time in Settings. The localization engine permanently skips `#ag-usage-monitor-*` elements through the built-in `i18n-compat.json` protection list.\n- **Smart Footer Splitting**: When `usage-monitor` docks into the composer footer, Claude Studio mirrors its context progress ring cleanly to the far right, eliminating layout collisions or visual clutter.\n- **3-Way Right-Pane Pinning (`pinRightPane`)**: Choose `Off`, `Studio Chat Pane` (default), or `Usage Monitor` in Settings. Legacy `pinUsageMonitorPane` settings migrate automatically, and systems without `usage-monitor` fall back gracefully.\n- **Clean License Boundary**: Claude Studio is licensed under **MIT**, while `antigravity-usage-monitor` is licensed under **GPLv3**. Both plugins are completely decoupled and install independently.\n\n---\n\n<a id=\"quick-install\"></a>\n## Quick Install\n\n### Requirements\n- **Google Antigravity Desktop `2.33.1+`** (tested through `2.35.x`; Windows / macOS / Linux) launched with `--remote-debugging-port=0`.\n- **Node.js `>= 22`** (zero third-party npm dependencies; uses built-in `fetch`, `WebSocket`, and `node:test`).\n\n### Fastest Way: Ask Gemini in Antigravity (Recommended)\n\nNo terminal commands needed. Simply paste this repository URL into any Antigravity conversation and ask:\n\n> **Help me install this Antigravity plugin: `https://github.com/eosglyph/agy-claude-studio`**\n\nOnce installed, you can ask Gemini to run the built-in setup skills:\n- *\"Walk me through 30s Claude Studio setup\"* (`studio-setup`)\n- *\"Help me set up mobile push alerts\"* (`studio-notify`)\n- *\"Diagnose Claude Studio\"* (`studio-doctor`)\n\n#### Upgrading from an Older Version\nIf you already have Claude Studio installed and want to upgrade to the latest release, paste this prompt into Antigravity:\n\n> **Please follow the Upgrade & Legacy Migration Checklist in README.md and the latest Release Notes at `https://github.com/eosglyph/agy-claude-studio` to upgrade/migrate my local Claude Studio to the latest version.**\n\n*(Note: If you previously gave an upgrade instruction mentioning a specific older release like v2.2.1, this exact same checklist applies to upgrading to the latest version.)*\n\n#### Optional Dual-Pane Setup\nTo install Claude Studio alongside the independent usage monitor companion in a single step, ask Gemini:\n\n> **Help me install `https://github.com/eosglyph/agy-claude-studio` along with the companion plugin `https://github.com/yuhuan-dev/antigravity-usage-monitor`**\n\n---\n\n### Upgrade & Legacy Migration Checklist\n\nWhether upgrading manually, running the installer, or delegating the upgrade to an AI coding assistant, follow this checklist:\n\n1. **Preserve User Data**:\n   All user preferences, webhook credentials, script definitions, and downloaded language packs reside in `~/.gemini/antigravity/plugin_data/agy-claude-studio/` (`config.json`, `notify.json`, `notify-state.json`, `scripts.json`, `i18n-packs/`) and custom operational scripts in `scripts/ops/`. These files must be preserved across updates. First-time launches automatically migrate legacy configurations from `plugin_data/agy-claude-style/config.json`.\n2. **Legacy Windows Watcher Migration (`agy-claude-style-watcher.exe`)**:\n   - Simply updating plugin files or extracting into a new `agy-claude-studio` directory does **not** stop or replace an older standalone `agy-claude-style-watcher.exe` running from a previous installation directory (such as `%LOCALAPPDATA%\\agy-claude-style`).\n   - If running the Windows 1-Click Installer (`Claude-Studio-v<version>-Windows-x64.exe`), legacy cleanup and migration are handled completely automatically.\n   - If upgrading manually or via an AI coding assistant from `v2.1` / `v2.2` / `agy-claude-style`: perform a read-only check first for any running `agy-claude-style-watcher.exe` process or legacy Startup / Add-or-Remove-Programs entries. Ask the user for confirmation before stopping or uninstalling the legacy watcher. Once the legacy watcher has exited, enable the new native plugin (which cleanly unloads and stops injecting whenever toggled off in Plugins).\n3. **Hot-Refresh & Verify**:\n   If Antigravity is already running with `--remote-debugging-port=0`, run `node inject.js` from the plugin directory to hot-refresh active windows without restarting. **Never force-kill a running Antigravity process without explicit user confirmation.** After enabling the plugin, run `studio-setup` or `studio-doctor` to confirm everything is operational.\n\n---\n\n### Installation Options\n\n#### Option 1: Windows 1-Click Native Plugin Installer (Recommended for Windows)\n\nDownload `Claude-Studio-v<version>-Windows-x64.exe` from [GitHub Releases](https://github.com/eosglyph/agy-claude-studio/releases) and double-click to run:\n- Automatically detects and cleans up legacy `v2.1.0 / v2.2.0 / v2.2.1` standalone watchers and older `agy-claude-style` plugins while preserving all configuration files and custom scripts.\n- Installs and enables the complete native plugin into `%USERPROFILE%\\.gemini\\config\\plugins\\agy-claude-studio`.\n- Creates Desktop and Start Menu shortcuts featuring the custom **Gemini × Clawd** icon pointing directly to your local `Antigravity.exe --remote-debugging-port=0`.\n- Supports clean uninstallation via Windows Settings → Installed Apps.\n\n#### Option 2: Cross-Platform Universal Plugin ZIP & Manual Clone\n\nDownload `Claude-Studio-v<version>-plugin.zip` from [GitHub Releases](https://github.com/eosglyph/agy-claude-studio/releases):\n- Extract the archive into `~/.gemini/config/plugins/` (creating `~/.gemini/config/plugins/agy-claude-studio`).\n- Fully quit Antigravity (including the system tray icon) and relaunch with `--remote-debugging-port=0` (or run `launch.bat` / `./launch.sh`).\n- Confirm **`Claude Studio`** is enabled under **Customizations → Plugins**.\n\n> **Platform Note**: The maintainer does not currently have access to physical Mac hardware. macOS and Linux users are encouraged to install via the universal `plugin.zip` or by asking Gemini in Antigravity. Real-hardware feedback is warmly welcomed!\n\n<details>\n<summary><b>Manual Git Clone, Local Builds & Companion Scripts</b></summary>\n\n- **Manual Git Clone**:\n  ```powershell\n  # Windows (PowerShell)\n  git clone https://github.com/eosglyph/agy-claude-studio.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\agy-claude-studio\"\n  ```\n  ```bash\n  # macOS / Linux\n  git clone https://github.com/eosglyph/agy-claude-studio.git \"$HOME/.gemini/config/plugins/agy-claude-studio\"\n  ```\n\n- **Build Windows Native Plugin Installer / Universal Plugin ZIP Locally**:\n  ```bash\n  npm run build:installer\n  # Or build the universal plugin ZIP alongside\n  node scripts/build-installer.mjs --plugin-zip dist/Claude-Studio-plugin.zip\n  ```\n\n- **Windows Companion Launcher Pack (with Gemini × Clawd Icon)**:\n  ```powershell\n  npm run build:release\n  powershell -NoProfile -ExecutionPolicy Bypass -File .\\companion\\setup-companion.ps1\n  ```\n  When the native plugin is already installed, the companion launcher script automatically yields and simply launches Antigravity with `--remote-debugging-port=0` and the custom icon.\n\n- **Build macOS Universal `.app` / `.dmg` Locally**:\n  ```bash\n  npm run build:macos\n  ```\n  Produces a universal (`arm64` + `x86_64`) `Claude Studio.app` and `Claude-Studio-v<version>-macOS-universal.dmg`. If macOS Gatekeeper flags an ad-hoc signed binary on first launch, right-click → **Open** or run `xattr -cr \"/Applications/Claude Studio.app\"`.\n\n</details>\n\n<details>\n<summary><b>Option 3: Node.js CLI & Local Development</b></summary>\n\n```bash\ncp config.example.json config.json   # Optional; default configuration works out of the box\nnpm run inject                        # One-shot injection into active windows\nnpm run watch                         # Live hot-reloading watcher for local development\nnpm run remove                        # Disconnect and cleanly restore native UI\n```\n\n</details>\n\n---\n\n## Meet Clawd\n\n<div align=\"center\">\n  <img src=\"assets/clawd-moods.svg\" alt=\"Clawd Pixel Moods\" width=\"840\" />\n</div>\n\n| Interaction | How to Trigger | What Happens |\n| --- | --- | --- |\n| Poke | Click on the left or right side of Clawd | Shy head-turn reaction (`poke-left` / `poke-right`) |\n| Tickle | 4 rapid clicks within `450ms` | Laughing leg-kick celebration (`tickle`) |\n| Pick up | Click & drag across the screen | Dangling wiggle, gently floats down on release (`drag`) |\n| Nap | Leave the app idle for 60s+ | Dozes off to sleep (`sleeping`), stretches awake on click or new message (`waking`) |\n| Live state | Thinking / typing / error / done | Mirrors your assistant's state in real time and automatically sidesteps Q&A cards and queue bars |\n\n---\n\n<a id=\"configuration\"></a>\n## Configuration\n\nAll settings can be adjusted in real time from the right-side **Claude Studio** sidecar panel (under the **Settings** tab) and persist automatically across restarts (see [config.example.json](config.example.json) for the complete reference schema). Mobile push notification settings and webhook tokens are stored privately on your local machine in `PLUGIN_DATA/notify.json` and are never written to `config.json` or injected into browser pages.\n\n<details>\n<summary><b>View all configuration keys</b></summary>\n\n| Group | Key | Values / Type | Default | Description |\n| --- | --- | --- | --- | --- |\n| Basic | `language` | `'zh-CN'` \\| `'zh-TW'` \\| `'yue'` \\| `'en'` \\| `'ja'` | `'zh-CN'` | UI & Studio panel language |\n| Basic | `homeLayout` | `'studio'` \\| `'classic'` \\| `'off'` | `'studio'` | New conversation home screen layout |\n| Basic | `palette` | `'claude'` \\| `'obsidian'` \\| `'host'` | `'claude'` | Solid color theme palette |\n| UI Polish | `glassEffect` | `boolean` | `true` | Frosted glassmorphism borders, floating image viewer pills & ambient glow |\n| UI Polish | `sidebarRestyle` / `sidebarCompact` | `boolean` | `true` | Claude-style sidebar density & hover polish |\n| UI Polish | `composerRestyle` / `placeholderStyle` | `boolean` / `'studio'` \\| `'host'` | `true` / `'studio'` | Minimalist composer & prompt placeholder copy |\n| UI Polish | `logoInk` | `'accent'` \\| `'foreground'` | `'accent'` | Home & top-left app logo tint mode |\n| UI Polish | `geminiLoader` | `boolean` | `true` | Swap default large loading spinner for Gemini-chan animation & 12-tick ring |\n| Interaction | `periodicSelector` / `orchestratorSwitch` | `boolean` | `true` | Gemini 4 Periodic Table selector & Orchestrator quick switch |\n| Interaction | `effortSliderStyle` / `effortAccent` | `'chatgpt'` \\| `'claude'` / `boolean` | `'chatgpt'` / `true` | 60fps effort slider style & color scale |\n| Interaction | `compactPreset` / `compactCustomText` | `'empty'` \\| `'clean'` \\| `'dev'` \\| `'custom'` / `string` | `'clean'` / `''` | `/compact` preset & custom prompt text |\n| Interaction | `fileLinkContextMenu` | `boolean` | `true` | Right-click chat file links & mentions to Open File, Reveal in Folder, or Copy Full Path |\n| Interaction | `smoothCaret` / `mascot` / `homeRipple` | `boolean` / `'crab'` \\| `'off'` / `boolean` | `true` / `'crab'` / `true` | Smooth caret, Clawd mascot & home ripple field |\n| Localization | `pluginPageTranslate` / `i18nIgnoreSelectors` | `boolean` / `string[]` | `true` / `[]` | Marketplace on-demand Google Translate pill & custom protected CSS selectors |\n| Usage & Pane | `pinRightPane` | `'off'` \\| `'studio'` \\| `'usage-monitor'` | `'studio'` | Auto-open right Aux Pane per conversation (migrates legacy `pinUsageMonitorPane`) |\n| Usage & Pane | `usageStatsEnabled` | `boolean` | `true` | Master toggle for built-in HUD (preserves child preferences when turned off) |\n| Usage & Pane | `inlineStats` / `ringMode` / `turnBadges` | `boolean` / `'context'` \\| `'quota'` / `boolean` | `true` / `'context'` / `true` | *(Requires `usageStatsEnabled`)* Inline stats, context/quota ring & turn `#T` badges |\n| Usage & Pane | `hudTopBar` / `hudBottomBar` / `hudRimProgress` | `boolean` | `true` / `false` / `false` | *(Requires `usageStatsEnabled`)* Top HUD bar, bottom bar & rim progress bar |\n| Runtime | `autoRelaunchWithCdp` / `exitOnHostClose` / `pollIntervalMs` | `boolean` / `boolean` / `number` | `true` / `false` / `2500` | CDP relaunch behavior, host-exit lifecycle & polling interval |\n\n</details>\n\n---\n\n<a id=\"faq\"></a>\n## FAQ\n\n<details>\n<summary><b>1. Not injecting automatically after updating to Antigravity 2.33.0+?</b></summary>\n\nStarting in `2.33.0`, Antigravity disables the CDP remote debugging port by default. Fully quit Antigravity (including the background system tray icon) and relaunch it with `--remote-debugging-port=0`, or use the one-click relaunch button in the Studio panel / `launch.bat` / `./launch.sh`. You can also ask Gemini *\"Diagnose Claude Studio\"* to trigger the `studio-doctor` skill for automated troubleshooting.\n\n</details>\n\n<details>\n<summary><b>2. Why is the \"Usage Monitor\" option unavailable under Right Pane Pinning?</b></summary>\n\nThat option is designed to pair with the independent companion plugin [yuhuan-dev/antigravity-usage-monitor](https://github.com/yuhuan-dev/antigravity-usage-monitor). Once that plugin is installed, refresh status in the Studio panel to activate the option. If you prefer not to install third-party plugins, keep `pinRightPane` set to **Studio Chat Pane** to enjoy the built-in lightweight HUD out of the box.\n\n</details>\n\n<details>\n<summary><b>3. Why are sidebar right-click context menus still in English?</b></summary>\n\nSidebar item context menus are rendered directly by Electron via operating system APIs (Win32 / NSMenu) outside the browser DOM. Non-destructive CDP injection operates purely within the web environment and cannot modify OS-level menus. All application DOM views, settings pages, dialogs, and the Swarm sidecar support full 5-language localization.\n\n</details>\n\n<details>\n<summary><b>4. How do I completely restore the native Antigravity UI?</b></summary>\n\nClick **Restore Native** in the **Claude Studio** panel, toggle `Claude Studio` off in Antigravity Plugins, or run `npm run remove`. No host files are ever modified, and the stock UI is restored immediately.\n\n</details>\n\n---\n\n## Development & Testing\n\n```bash\nnpm test                 # Run automated test suite (Node.js >= 22, zero dependencies)\nnpm run build:installer  # Build Windows single-file x64 installer\nnpm run build:release    # Build Windows companion launcher release pack\nnpm run build:macos      # Build macOS Universal .app & .dmg (requires macOS environment)\n```\n\n<details>\n<summary><b>Project Structure</b></summary>\n\n```text\nagy-claude-studio/\n├── plugin.json / mcp_config.json / hooks.json  # Native plugin manifest, MCP host & Stop hook\n├── plugin/mcp-host.js                          # Native lifecycle host (PID reuse check & hot takeover)\n├── sidecars/studio/                            # 3-Tab right Aux Pane (Chat | Tools | Settings)\n├── skills/                                     # 4 native skills (setup, doctor, notify, translation-protect)\n├── cdp.js / lifecycle.js                       # CDP client, config migration, process guard & host watchdog\n├── watcher-core.js / inject.js                 # Multi-window hot-reload controller & CLI injection entry\n├── style.css / ui-runtime.js                   # Core theme styles & UI runtime (home, periodic table, slider, /compact)\n├── sidecar-core.js                             # Lightweight reversible translation runtime for Swarm sidecar (/swarm)\n├── periodic-core.js / periodic-sync.js         # Gemini 4 Periodic Table catalog & direct AI Studio sync\n├── effort-core.js                              # Dual-style 60fps reasoning effort slider math model\n├── notify-core.js / scripts/notify-stop.mjs    # 8-channel mobile push engine & Stop hook runner\n├── scripts-core.js / scripts/fetch-agy-changelog.mjs # Local scripts toolbox & Antigravity changelog fetcher\n├── scripts/WindowsFileAction.cs                # Native Windows file action helper (flicker-free Explorer selection & open)\n├── i18n-core.js / i18n-locales.js / i18n-sync.js # 5-language localization engine, locale pack loader & sync pipeline\n├── locales/                                    # Bundled and on-demand language pack dictionaries\n├── usage-core.js                               # Built-in trajectory parser, token breakdown & heatmap engine\n├── mascot-core.js / crab-assets.js             # Clawd state machine & 19 dual-layer pixel sprite sets\n├── ripple-core.js                              # Home ASCII noise field & 2D wave solver\n├── installer/ & companion/                     # Windows (C#) / macOS (Swift) installers & companion scripts\n├── scripts/ & test/                            # Build pipelines & node:test automated test suite\n└── assets/                                     # Icons, animated banners & UI screenshots\n```\n\n</details>\n\n---\n\n<a id=\"credits--license\"></a>\n## Credits & License\n\nReleased under the [MIT License](LICENSE). Heartfelt thanks to the upstream authors and community contributors:\n\n- **Upstream Repository**: [0DNANCY/agy-claude-style](https://github.com/0DNANCY/agy-claude-style) (MIT License)\n- **Original Inspiration & Early Source**: [Nwflower/dsh-claude-style](https://github.com/Nwflower/dsh-claude-style)\n- **macOS Daemon Memory Pool & CDP Connection Reuse**: [SeredenFei/agy-claude-style](https://github.com/SeredenFei/agy-claude-style)\n- **Native Plugin Hosting, Aux Pane & 2.33.1 Compat**: [Gruu6y/agy-claude-style](https://github.com/Gruu6y/agy-claude-style)\n- **Glassmorphism & Floating Image Viewer Inspiration**: [MCRYII/antigravity-custom-themes](https://github.com/MCRYII/antigravity-custom-themes)\n- **Codex Effort Slider Visual Design**: [Microqian2th/dsh-codex-effort-slider](https://github.com/Microqian2th/dsh-codex-effort-slider)\n- **Recommended Companion Usage Monitor (GPLv3, standalone)**: [yuhuan-dev/antigravity-usage-monitor](https://github.com/yuhuan-dev/antigravity-usage-monitor)\n",
+  "latestReleaseNotes": "`v2.2.3` 全面收敛为 Antigravity 原生插件架构：推出全新 Windows 一键原生插件安装器，补齐 Antigravity `v2.35.2` 全量中文本地化并支持粤语、日语按需云端下载，新增 Gemini 娘加载动效与聊天区内嵌宽屏脚本输出卡片，并针对输入框同步、光标测量与侧边栏轮询做了一轮实测驱动的性能优化。\r\n\r\n> `v2.2.2` 被猫猫吃掉了\r\n\r\n### Windows 一键原生安装器与统一发布产物\r\n- **开箱即用的原生插件安装**：新版 Windows `.exe` 安装器直接将完整原生插件部署到宿主插件目录并自动启用，同时创建带有定制图标的桌面与开始菜单启动入口，支持自动定位自定义盘符中的 Antigravity 程序。\r\n- **无损清理旧版遗留**：安装时自动检测并卸载早期 `v2.1.0 / v2.2.0 / v2.2.1` 独立守护进程与旧版 `agy-claude-style` 插件，同时完整保留个人偏好、推送配置与自定义脚本。\r\n- **跨平台通用插件包**：同步提供精简的跨平台 `plugin.zip` 供 macOS / Linux 及手动安装使用，并在 README 中补充了可直接发给 Gemini 的一键升级指引。\r\n\r\n### Antigravity v2.35.2 汉化补齐与按需语言包\r\n- **补齐新版本界面词条**：覆盖 Antigravity `v2.35.2` 新增的界面提示与蜂群侧栏文案，同时精简了内置语言包体积。\r\n- **云端按需语言包**：插件默认内置简体中文、繁体中文与英文；粤语和日语改为在设置页按需从 GitHub 手动下载，附带完整性校验，随时可一键更新或恢复默认，原地升级时也会保留已下载的语言包。\r\n- **插件页翻译胶囊更稳**：遇到 Google 翻译接口临时限流时自动切换备用翻译通道，减少网络报错。\r\n\r\n### 界面体验与日常细节打磨\r\n- **Gemini 娘加载动效**：在「设置 → 界面微调」中新增「加载动效（Gemini发现了新玩具）」开关，开启后可将开屏与面板加载转圈替换为 Gemini 娘形象与头顶刻度环，随时可一键切回原版。\r\n- **侧边栏更紧凑顺手**：重排右侧 Claude Studio 面板顶栏与三栏切换条，在窄栏宽度下保持单行清爽显示，并修正了顶栏窗口数量统计。\r\n- **聊天区内嵌宽屏脚本输出**：在工具页运行本地脚本后，可直接把完整 Markdown 输出以可收起/展开的宽屏卡片展示在聊天输入框上方，不影响对话上下文，收起后也能随时重新打开。\r\n- **Windows 文件右键更流畅**：修复聊天文件右键菜单图标在部分环境下显示偏大的问题；在文件夹中显示文件时改用原生资源管理器定位，消除此前偶发的窗口缩小闪烁。\r\n\r\n### 性能与稳定性优化\r\n- **消除输入框重复计算**：合并输入框同步链路的草稿统计与回合徽标更新，避免同一轮刷新里重复测量草稿和重复扫描历史回合；环绕 HUD 全关时直接跳过多余计算。\r\n- **光标测量更克制**：未聚焦的输入框不再执行光滑光标的几何与样式读取，并将滚动监听收敛到当前聚焦编辑器及其滚动容器。\r\n- **异步会话防串写**：切换回首页或新对话时，若旧会话的异步统计结果迟到返回，会直接丢弃而不覆盖当前界面。\r\n- **侧边栏轮询减负**：设置页状态未变化时不再重复重建表单（避免打断自定义提示词编辑），会话检查器按会话合并在途请求，状态轮询中的仓库状态检测改为异步短缓存。\r\n\r\n### Summary (English)\r\n- **Note**: `v2.2.2` was eaten by the cat — this release jumps directly from `v2.2.1` to `v2.2.3`.\r\n- **Native Windows 1-Click Installer & Unified Artifacts**: Deploys the full native plugin, automatically cleans up legacy `v2.1.0 / v2.2.0 / v2.2.1` standalone watchers while preserving personal settings, notification credentials, and scripts, and ships alongside a cross-platform `plugin.zip`.\r\n- **Antigravity v2.35.2 Localization & On-Demand Packs**: Ships Simplified Chinese, Traditional Chinese, and English built-in; Cantonese and Japanese download on demand with integrity checks. Marketplace page translation now falls back cleanly when rate-limited.\r\n- **UI & Workflow Polish**: Adds the optional Gemini-chan loading spinner toggle, tightens the narrow Studio sidecar header, adds a collapsible wide in-chat output card for local scripts, and fixes Windows file-reveal flicker and context-menu icon sizing.\r\n- **Performance & Stability**: Deduplicates per-sync draft measurement and turn-badge scans, skips smooth-caret layout reads for unfocused editors, discards late async responses after navigating away from a conversation, and avoids redundant sidecar form rebuilds and blocking status polls.\r\n\r\n**Full Changelog**: https://github.com/eosglyph/agy-claude-studio/compare/v2.2.1...v2.2.3\r\n\r\n---\r\n\r\n## 下载与安装 / Downloads & Install\r\n\r\n本版本采用 **Antigravity 原生插件架构**，安装后即可在右侧栏使用完整的三栏控制室（对话、工具、设置）、手机推送提醒、本地脚本工具箱、内置技能与顶栏一键更新。\r\n\r\n- **Windows 一键安装器（推荐）**：下载 `Claude-Studio-v2.2.3-Windows-x64.exe` 双击运行，自动清理旧版 `v2.1.0 / v2.2.0 / v2.2.1` 遗留守护进程与旧版插件（完整保留个人配置、推送凭据与自定义脚本），自动部署并启用原生插件，同时创建带定制图标的桌面与开始菜单启动入口。\r\n- **macOS / Linux / 跨平台通用插件包**：下载 `Claude-Studio-v2.2.3-plugin.zip` 解压至 `~/.gemini/config/plugins/`（形成 `~/.gemini/config/plugins/agy-claude-studio`），重启开启本地调试端口的 Antigravity 并在插件列表中启用即可；也可以直接把仓库链接发给 Antigravity 里的 Gemini 自动完成安装。\r\n  > 维护者目前没有 Mac 真机环境，macOS/Linux 暂不提供独立打包安装器，请使用通用插件包或由 Gemini 按仓库说明协助安装。\r\n- **已安装原生插件的用户**：直接在 Antigravity 右侧 **Claude Studio** 面板顶栏点击「升级」即可原地无损更新。\r\n\r\n### SHA256 Checksums\r\n```text\r\n73776b981b5868ac6c6558b1ec36101d5984f26d87c5e14c8a1de576c6074044  Claude-Studio-v2.2.3-Windows-x64.exe\r\n0c3963b743786e327549c51820176355d749a24ccf6b1a1a907de7d85f440d3a  Claude-Studio-v2.2.3-plugin.zip\r\n```\r\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 962,
+        "snippet": "const out = execFileSync('/bin/ps', ['-ax', '-o', 'pid=,comm='], { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L962"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 986,
+        "snippet": "const out = execFileSync( 'tasklist', ['/FI', 'IMAGENAME eq Antigravity.exe', '/FO', 'CSV', '/NH'], { encoding: 'utf8', timeout: 3000, windowsHide: true, stdio: ['ignore', 'pipe', ",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L986"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1008,
+        "snippet": "const out = execFileSync('ps', ['-eo', 'pid=,comm='], { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1008"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1064,
+        "snippet": "const out = execFileSync('/bin/ps', args, { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1064"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1081,
+        "snippet": "const out = execFileSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-Command', \"Get-CimInstance Win32_Process -Filter \\\"Name='Antigravity.exe'\\\" | Select-Object -Expand",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1081"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1119,
+        "snippet": "const out = execFileSync('/bin/ps', ['-p', validPids.join(','), '-o', 'args='], { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1119"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1127,
+        "snippet": "const out = execFileSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-Command', \"Get-CimInstance Win32_Process -Filter \\\"Name='Antigravity.exe'\\\" | Select-Object -Expand",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1127"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1206,
+        "snippet": "const cmd = execFileSync('/bin/ps', ['-p', String(pid), '-o', 'command='], { encoding: 'utf8', timeout: 1500, stdio: ['ignore', 'pipe', 'ignore'], }).trim();",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1206"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1214,
+        "snippet": "exePath = execFileSync('/bin/ps', ['-p', String(pid), '-o', 'comm='], { encoding: 'utf8', timeout: 1500, stdio: ['ignore', 'pipe', 'ignore'], }).trim() || null;",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1214"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1223,
+        "snippet": "const out = execFileSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-Command', `$p = Get-CimInstance Win32_Process -Filter \"ProcessId=${pid}\"; if ($p) { $p | Select-Obj",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1223"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1575,
+        "snippet": "const child = spawn('/usr/bin/open', ['-a', appTarget], { detached: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1575"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1699,
+        "snippet": "execFileSync('taskkill', ['/PID', String(pid), '/T'], { timeout: 4000, windowsHide: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1699"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1707,
+        "snippet": "execFileSync('taskkill', ['/IM', 'Antigravity.exe'], { timeout: 4000, windowsHide: true, stdio: 'ignore', });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1707"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "cdp.js",
+        "line": 1878,
+        "snippet": "const child = spawn( csc, [ '/nologo', '/utf8output', '/codepage:65001', '/target:winexe', '/optimize+', `/out:${tmpExe}`, '/r:System.dll', '/r:System.Core.dll', info.helperSrcPath",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1878"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lifecycle.js",
+        "line": 77,
+        "snippet": "const out = execFileSync( 'tasklist', ['/FI', `PID eq ${pid}`, '/FO', 'CSV', '/NH'], { encoding: 'utf8', timeout: 1500, windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'], } );",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L77"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lifecycle.js",
+        "line": 101,
+        "snippet": "const out = execFileSync('ps', ['-p', String(pid), '-o', 'args='], { encoding: 'utf8', timeout: 1500, stdio: ['ignore', 'pipe', 'ignore'], });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L101"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lifecycle.js",
+        "line": 1225,
+        "snippet": "execFile(file, args, opts, (err, stdout) => { if (err) { reject(err); return; } resolve(String(stdout || '')); });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L1225"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lifecycle.js",
+        "line": 1520,
+        "snippet": "execFile( file, args, { windowsHide: true, timeout: options.timeoutMs || 8000, maxBuffer: 1024 * 1024, env: options.env || process.env, }, (err, stdout) => { if (err) { reject(err)",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L1520"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lifecycle.js",
+        "line": 1541,
+        "snippet": "const child = spawn(file, args, { detached: true, stdio: 'ignore', windowsHide: true, cwd: options.cwd || undefined, env: options.env || process.env, });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L1541"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "notify-core.js",
+        "line": 625,
+        "snippet": "const sc3Match = /^sctp(\\d+)t/i.exec(key);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/notify-core.js#L625"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "periodic-sync.js",
+        "line": 235,
+        "snippet": "while ((m = re.exec(String(cssText || ''))) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L235"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "periodic-sync.js",
+        "line": 283,
+        "snippet": "while ((m = entryRe.exec(src)) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L283"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "periodic-sync.js",
+        "line": 330,
+        "snippet": "while ((tm = themeRuleRe.exec(src)) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L330"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "periodic-sync.js",
+        "line": 368,
+        "snippet": "while ((m = cardRe.exec(modelsText)) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L368"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "periodic-sync.js",
+        "line": 393,
+        "snippet": "while ((m = tableSlugRe.exec(modelsText)) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L393"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "periodic-sync.js",
+        "line": 403,
+        "snippet": "while ((m = sectionRe.exec(pricingText)) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L403"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ripple-core.js",
+        "line": 222,
+        "snippet": "const m = /rgba?\\(\\s*([\\d.]+)[,\\s]+([\\d.]+)[,\\s]+([\\d.]+)/i.exec(s);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/ripple-core.js#L222"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts-core.js",
+        "line": 272,
+        "snippet": "execFile(taskkill, ['/T', '/F', '/PID', String(child.pid)], { timeout: 3000, windowsHide: true, }, (error) => done(!error));",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts-core.js#L272"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts-core.js",
+        "line": 366,
+        "snippet": "child = spawn(cmd, argv, { cwd, shell: false, detached: process.platform !== 'win32', windowsHide: true, env: scriptChildEnv(dataDir), stdio: ['ignore', 'pipe', 'pipe'], });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts-core.js#L366"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-installer.mjs",
+        "line": 219,
+        "snippet": "execFileSync(csc, [ '/nologo', '/utf8output', '/codepage:65001', '/target:winexe', '/optimize+', `/win32icon:${icoPath}`, `/win32manifest:${setupManifest}`, `/resource:${payloadZip",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-installer.mjs#L219"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 81,
+        "snippet": "const sdkPath = execFileSync('xcrun', ['--show-sdk-path', '--sdk', 'macosx'], { encoding: 'utf8', }).trim();",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L81"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 84,
+        "snippet": "const swiftc = execFileSync('xcrun', ['--find', 'swiftc'], { encoding: 'utf8' }).trim();",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L84"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 85,
+        "snippet": "const lipo = execFileSync('xcrun', ['--find', 'lipo'], { encoding: 'utf8' }).trim();",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 109,
+        "snippet": "execFileSync(swiftc, buildArgs('11.0'), { stdio: 'pipe' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L109"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 113,
+        "snippet": "execFileSync(swiftc, buildArgs('13.0'), { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L113"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 116,
+        "snippet": "execFileSync(swiftc, buildArgs('11.0'), { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L116"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 120,
+        "snippet": "execFileSync(lipo, ['-create', ...slices, '-output', outputPath], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L120"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 143,
+        "snippet": "execFileSync('iconutil', ['-c', 'icns', iconsetDir, '-o', outPath], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L143"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 155,
+        "snippet": "execFileSync( 'hdiutil', ['create', '-volname', 'Claude Studio', '-srcfolder', srcFolder, '-ov', '-format', 'UDZO', dmgPath], { stdio: 'inherit' } );",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L155"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 263,
+        "snippet": "execFileSync('codesign', ['--force', '--deep', '--sign', '-', stagedApp], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L263"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 269,
+        "snippet": "execFileSync('ditto', [stagedApp, resolvedAppOut], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L269"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/build-macos.mjs",
+        "line": 275,
+        "snippet": "execFileSync('ditto', [stagedApp, path.join(dmgStage, 'Claude Studio.app')], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/build-macos.mjs#L275"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/notify-stop.mjs",
+        "line": 118,
+        "snippet": "const child = spawn(process.execPath, [__filename, '--deliver'], { cwd: PLUGIN_ROOT_DIR, detached: true, stdio: 'ignore', windowsHide: true, env: { ...process.env, AGY_NOTIFY_PAYLO",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/notify-stop.mjs#L118"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/ops/check-repo-metrics.mjs",
+        "line": 83,
+        "snippet": "const out = execFileSync('gh', ['auth', 'token'], { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts/ops/check-repo-metrics.mjs#L83"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/studio/main.mjs",
+        "line": 324,
+        "snippet": "execFile('git', args, { cwd, encoding: 'utf8', timeout: timeoutMs }, (err, stdout) => { if (err) return rejectPromise(err); resolvePromise(String(stdout || '').trim()); });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/sidecars/studio/main.mjs#L324"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "ui-runtime.js",
+        "line": 8453,
+        "snippet": "while ((m = tokenRe.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/ui-runtime.js#L8453"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "usage-core.js",
+        "line": 649,
+        "snippet": "const m = /^\\s*(-?\\d+(?:\\.\\d+)?)s?\\s*$/i.exec(d);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/usage-core.js#L649"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "usage-core.js",
+        "line": 1294,
+        "snippet": "const m = /^(\\d+):\\s*(\\S+)/.exec(c.name);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/usage-core.js#L1294"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 93,
+        "snippet": "fs.writeFileSync(tmpPath, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L93"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 97,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L97"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 99,
+        "snippet": "fs.writeFileSync(filePath, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L99"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 218,
+        "snippet": "fs.writeFileSync(tmpPath, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L218"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 222,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L222"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "cdp.js",
+        "line": 558,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(2000), });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L558"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "cdp.js",
+        "line": 635,
+        "snippet": "const ws = new WebSocket(wsUrl);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L635"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1567,
+        "snippet": "if (fs.existsSync(PORT_FILE)) fs.unlinkSync(PORT_FILE);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1567"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1877,
+        "snippet": "fs.writeFileSync(stubPath, WINDOWS_FILE_ACTION_MAIN_CS, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1877"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1895,
+        "snippet": "try { if (stubPath && fs.existsSync(stubPath)) fs.unlinkSync(stubPath); } catch {}",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1895"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1896,
+        "snippet": "try { if (tmpExe && fs.existsSync(tmpExe)) fs.unlinkSync(tmpExe); } catch {}",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1896"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1903,
+        "snippet": "try { if (stubPath && fs.existsSync(stubPath)) fs.unlinkSync(stubPath); } catch {}",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1903"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1909,
+        "snippet": "fs.unlinkSync(tmpExe);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1909"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "cdp.js",
+        "line": 1916,
+        "snippet": "try { fs.unlinkSync(full); } catch {}",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/cdp.js#L1916"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "crab-assets.js",
+        "line": 219,
+        "snippet": "\"body\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAADkCAYAAAB30PpGAAAHA0lEQVR42u3dMY7bOBgG0F8D3yEp000zN3DhxsA2029rwIfYM8whDGwzxRzBg",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/crab-assets.js#L219"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "i18n-sync.js",
+        "line": 79,
+        "snippet": "fs.writeFileSync(tmpPath, text, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/i18n-sync.js#L79"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "i18n-sync.js",
+        "line": 83,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/i18n-sync.js#L83"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "i18n-sync.js",
+        "line": 421,
+        "snippet": "fs.unlinkSync(p);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/i18n-sync.js#L421"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "i18n-sync.js",
+        "line": 432,
+        "snippet": "fs.unlinkSync(p);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/i18n-sync.js#L432"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "inject.js",
+        "line": 69,
+        "snippet": "fs.writeFileSync(LOG_FILE, '');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/inject.js#L69"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "inject.js",
+        "line": 71,
+        "snippet": "fs.appendFileSync(LOG_FILE, `[${new Date().toISOString()}] ${line}\\n`);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/inject.js#L71"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "inject.js",
+        "line": 181,
+        "snippet": "fs.unlinkSync(PID_FILE);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/inject.js#L181"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "inject.js",
+        "line": 345,
+        "snippet": "fs.writeFileSync(LOG_FILE, '');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/inject.js#L345"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 191,
+        "snippet": "fs.writeFileSync(logFile, '', 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L191"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 194,
+        "snippet": "fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${line}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L194"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 220,
+        "snippet": "fs.writeFileSync(logFile, '', 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L220"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lifecycle.js",
+        "line": 385,
+        "snippet": "await fetch(healthzUrl, { signal: AbortSignal.timeout(1500) });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L385"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 555,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L555"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 571,
+        "snippet": "fs.unlinkSync(lockFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L571"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 577,
+        "snippet": "fs.unlinkSync(lockFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L577"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 599,
+        "snippet": "fs.writeFileSync(lockFile, lockPayload, { encoding: 'utf8', flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L599"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 601,
+        "snippet": "fs.writeFileSync(pidFile, String(process.pid), 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L601"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 604,
+        "snippet": "fs.writeFileSync(pidFile, String(process.pid), { encoding: 'utf8', flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L604"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 634,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L634"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 641,
+        "snippet": "fs.unlinkSync(lockFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L641"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 684,
+        "snippet": "fs.writeFileSync(filePath, payload, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L684"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 692,
+        "snippet": "fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L692"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 744,
+        "snippet": "fs.unlinkSync(fullPath);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L744"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 849,
+        "snippet": "fs.writeFileSync(argvPath, fresh, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L849"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 865,
+        "snippet": "fs.writeFileSync(argvPath, fresh, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L865"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lifecycle.js",
+        "line": 904,
+        "snippet": "fs.writeFileSync(argvPath, nextText, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/lifecycle.js#L904"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "notify-core.js",
+        "line": 253,
+        "snippet": "fs.writeFileSync(tempPath, JSON.stringify(sanitized, null, 2) + '\\n', { encoding: 'utf8', mode: 0o600, flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/notify-core.js#L253"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "notify-core.js",
+        "line": 256,
+        "snippet": "try { fs.unlinkSync(tempPath); } catch (err) { if (err.code !== 'ENOENT') throw err; }",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/notify-core.js#L256"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "periodic-sync.js",
+        "line": 533,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(sanitized, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L533"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "periodic-sync.js",
+        "line": 537,
+        "snippet": "fs.writeFileSync(filePath, JSON.stringify(sanitized, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L537"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "periodic-sync.js",
+        "line": 539,
+        "snippet": "fs.unlinkSync(tmp);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/periodic-sync.js#L539"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "plugin/mcp-host.js",
+        "line": 124,
+        "snippet": "await fetch(healthzUrl, { signal: AbortSignal.timeout(450) });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/plugin/mcp-host.js#L124"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "plugin/mcp-host.js",
+        "line": 220,
+        "snippet": "fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/plugin/mcp-host.js#L220"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "remove.js",
+        "line": 34,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/remove.js#L34"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "remove.js",
+        "line": 48,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/remove.js#L48"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "remove.js",
+        "line": 100,
+        "snippet": "if (stopped && LOCK_FILE) fs.unlinkSync(LOCK_FILE);",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/remove.js#L100"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts-core.js",
+        "line": 39,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + '\\n', { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/eosglyph/agy-claude-studio/blob/bbd213c40253f080dffdaef415162fda848a1b93/scripts-core.js#L39"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.2.3",
+      "sha": "bbd213c40253f080dffdaef415162fda848a1b93",
+      "scannedAt": "2026-11-27T18:13:32.557Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "id": "yeyuhants-prog/codex-bridge",
+  "sha": "f1847647e7a38b305c5b8eff381a4a7bd5ace8d7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:30.703Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-bridge",
+    "displayName": "Codex Bridge",
+    "version": "1.5.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "codex",
+        "runtimeName": "codex-bridge_codex",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "server/mcp-server.js"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-worker",
+        "slashCommand": "/codex-worker",
+        "description": "Orchestrate local OpenAI Codex CLI via the codex-bridge MCP server in a Mastermind (Gemini) + Worker (Codex) closed loop: delegate heavy coding, backend debugging, and meta-analysis/data pipelines to Codex while Gemini handles specification",
+        "disableModelInvocation": false,
+        "file": "skills/codex-worker/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-worker"
+    ],
+    "mcpServerNames": [
+      "codex-bridge_codex"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.png\" alt=\"Codex Bridge Logo\" width=\"128\" height=\"128\" />\n\n# Codex Bridge\n\n**An Antigravity plugin with an interactive control panel, persistent goal & milestone board, auto-callback progression loop, and zero-dependency MCP bridge to orchestrate your local OpenAI Codex CLI.**\n\n[![Version](https://img.shields.io/badge/version-1.5.0-7c3aed?style=flat-square)](./plugin.json)\n[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-22c55e?style=flat-square)](https://nodejs.org/)\n[![Dependencies](https://img.shields.io/badge/dependencies-zero-0ea5e9?style=flat-square)](#architecture)\n[![MCP](https://img.shields.io/badge/protocol-MCP%20Stdio-f59e0b?style=flat-square)](https://modelcontextprotocol.io/)\n[![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](./LICENSE)\n\n**English** · [简体中文](./README.zh-CN.md)\n\n</div>\n\n---\n\n## Why Codex Bridge?\n\n**Codex Bridge** turns your local **OpenAI Codex CLI** into a persistent, goal-driven coding & analysis worker inside **Google Antigravity** — built specifically for iterative workflows like **backend debugging/refactoring** and **meta-analysis / data pipelines** that require continuous investigation, execution, and verification.\n\n- Let **Antigravity** analyze requirements, design verifiable milestones, inspect diffs, and verify outcomes.\n- Let **Codex** execute edits, run backend tests/scripts, resume multi-turn sessions, and wake Antigravity automatically when background runs finish.\n\n## Features\n\n- **Mastermind + Worker Role Division (`orchestrator` / `flexible`)** — Defaults to **Mastermind Mode**: Antigravity leverages its strengths in text synthesis, specification writing, lightweight tools/plugins, and stage verification, while delegating all heavy coding, backend debugging, and data/meta-analysis script execution to Codex in a closed callback loop (`codex_start` with `conversation_id`).\n- **Native Interactive Sidecar Panel (EN / 中文)** — Appears right inside Antigravity's **Plugins** side-pane menu with one-click live **English / Chinese** switching and two clean tabs (**Controls** & **Goals & Jobs**):\n  - **Model selection** (auto-populated from your local `~/.codex/models_cache.json`)\n  - **Reasoning effort** (dynamically adapts to each model's supported levels: `low`, `medium`, `high`, `xhigh`, `max`, `ultra`)\n  - **Progression mode** (switchable live):\n    - `manual` — No automatic callbacks; wait for your next prompt.\n    - `notify` — Automatically wakes Antigravity when a background Codex job finishes so it can verify and report findings.\n    - `autonomous` — Automatically verifies completed milestones, calls `codex_resume` on failure, or advances to the next pending milestone until done (guarded by a configurable `maxAutoIterations` cap and one-click **Pause** button).\n  - **Sandbox policy** (`read-only`, `workspace-write`, `danger-full-access`) & **Briefing workflow** (`direct` vs. `plan_first`)\n- **Persistent Goal & Milestone State Machine** — Goals, ordered milestones, verification commands, blockers, and linked `Session ID`s persist on disk (`goals.json`), surviving conversation compaction and restarts.\n- **Per-Job Locked Callbacks & Explicit Retry** — Callback targets (`conversationId` / `projectId`) are locked from trusted Antigravity host context at job dispatch time (`GET /api/state` is strictly read-only, preventing cross-conversation leaks). Failed deliveries remain visibly marked `failed` with one-click retry strictly to the original source conversation.\n- **Restart-Resilient Jobs & Cross-Process Session Locks** — Background jobs (`codex_start`) persist to `jobs.json` with atomic per-session file locks (`locks/`). If the MCP server restarts while a Codex process is still alive, the job transitions to `running_detached` (blocking duplicate spawns until it finishes or is explicitly stopped). Structured resume (`resume_job_id` or panel **Resume Job**) preserves original `session_id`, `cwd`, `sandbox`, `goal_id`, and `milestone_id`, places `-C` / `-s` before `resume`, and blocks accidental sandbox widening unless explicitly confirmed.\n- **Automatic Codex Discovery** — Automatically locates the newest `codex.exe` bundled with Codex Desktop on Windows (survives hash-folder auto-updates), falls back to `codex` on `PATH`, or respects `CODEX_BIN`.\n- **Zero External Dependencies** — Pure Node.js ESM (`>= 18`). No `npm install`, no build step, instant startup, UTF-8 `stdin` prompting.\n\n## Architecture\n\n```mermaid\nflowchart LR\n  User[\"User in Antigravity\"] <--> Agent[\"Antigravity Agent\"]\n  User <--> Panel[\"Sidecar Control Panel & Goal Watcher<br/>(sidecars/codex_panel)\"]\n  Panel -->|Auto-Callback on Job Done| Agent\n  Panel <--> Store[\"Persistent State<br/>(settings.json / goals.json / jobs.json)\"]\n  Agent <-->|MCP Stdio JSON-RPC| Server[\"Codex MCP Bridge<br/>(server/mcp-server.js)\"]\n  Store <--> Server\n  Server <-->|JSONL Stream + UTF-8 stdin| Codex[\"Local OpenAI Codex CLI<br/>(codex exec / resume / review)\"]\n```\n\n## Quick Start\n\n### Prerequisites\n\n- **Google Antigravity** (Desktop or CLI)\n- **Node.js `>= 18`**\n- **OpenAI Codex** (Codex Desktop app or `codex` CLI installed and signed in)\n\n### Install\n\n**macOS / Linux:**\n```bash\ngit clone https://github.com/yeyuhants-prog/codex-bridge.git ~/.gemini/config/plugins/codex-bridge\n```\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/yeyuhants-prog/codex-bridge.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-bridge\"\n```\n\n### Enable & Open the Panel\n\n1. Open **Skills & Customizations** (自定义扩展) in Antigravity's left sidebar and ensure **Codex Bridge** is toggled **ON**.\n2. Open the interactive control panel from the right-hand **Plugins** (`插件`) menu → **Codex Bridge**.\n3. Pick your **Codex model**, **reasoning effort**, **progression mode** (`manual` / `notify` / `autonomous`), and **sandbox** — each new job binds its callback when dispatched. Conflicting request and host conversation IDs are rejected.\n\n## MCP Tools (9)\n\n| Tool | Description |\n| --- | --- |\n| `codex_goal` | Create, inspect, update milestones, pause/resume, or delete persistent multi-step Goals shared with the Sidecar goal board. |\n| `codex_run` | Run a task synchronously via `codex exec` using active panel settings (or per-call overrides). Supports optional `goal_id` & `milestone_id`. |\n| `codex_resume` | Continue by `resume_job_id` or an exact session UUID. Unknown sessions default to read-only. |\n| `codex_review` | Run Codex's built-in non-interactive Git code review (`uncommitted`, `base` branch, or `commit` SHA). |\n| `codex_start` | Launch a persistent background Codex worker and return `job_id` immediately; triggers auto-callback upon completion in `notify`/`autonomous` modes. |\n| `codex_status` | Inspect progress events, `Session ID`, or final output of a background job (including restart-interrupted jobs), with optional `wait_seconds` long-polling. |\n| `codex_cancel` | Terminate a running background Codex job along with its child process tree. |\n| `codex_config` | Read or update shared preferences (`model`, `reasoning_effort`, `sandbox`, `workflow_mode`, `progression_mode`, `max_auto_iterations`) and list local Codex models. |\n| `codex_info` | Health check showing resolved Codex binary & version, active panel settings, bound conversation, active goal progress, and tracked jobs. |\n\n## Example Prompts\n\n- **Continuous backend debugging:**\n  > *\"Create a persistent Codex Bridge goal to reproduce the 500 error in `backend/auth`, fix the root cause, and pass `pytest`. Start milestone 1 in the background and keep verifying until all tests pass.\"*\n- **Iterative meta-analysis pipeline:**\n  > *\"Set up a goal with milestones for cleaning the dataset, checking heterogeneity (I² / Q-test), running sensitivity analysis, and exporting forest plots. Dispatch Codex step-by-step and verify each output table.\"*\n- **Code review:**\n  > *\"Have Codex review my uncommitted Git changes in this repository and summarize bugs or edge cases.\"*\n- **Per-call model override:**\n  > *\"Use `gpt-6.2-astra` with `xhigh` reasoning effort and have Codex refactor the parser module.\"*\n\n## Environment Variables\n\n| Variable | Default | Purpose |\n| --- | --- | --- |\n| `CODEX_BIN` | Auto-discovered | Explicit path to the `codex` / `codex.exe` binary. |\n| `CODEX_HOME` | `~/.codex` | Directory containing Codex's `config.toml` and `models_cache.json`. |\n| `CODEX_BRIDGE_DATA_DIR` | `~/.gemini/antigravity/plugin_data/codex-bridge` | Directory storing `settings.json`, `goals.json`, `jobs.json`, and `history.json`. |\n\n## Testing\n\n```bash\n# Zero-token MCP protocol, settings & persistent goal board smoke test\nnpm test\n\n# End-to-end live check against your local Codex CLI (read-only, ephemeral)\nnpm run test:live\n```\n\nStructured resumes retain the parent directory, session, goal, callback destination and execution policy. A milestone override must belong to that goal. A cross-conversation panel resume returns HTTP 409 until the caller selects `keepOriginalCallback: true` or `transferCallback: true`. MCP callers can explicitly transfer with `transfer_callback: true`. The child records the previous destination in `transferredFrom`. Expanding writable directories or sandbox permissions requires boolean `allow_sandbox_escalation: true`.\n\n## Project Structure\n\n```text\ncodex-bridge/\n├── plugin.json                 # Antigravity plugin manifest\n├── mcp_config.json             # Portable MCP server definition\n├── assets/\n│   └── logo.png                # Plugin icon (512×512 transparent PNG)\n├── server/\n│   ├── mcp-server.js           # Zero-dependency MCP Stdio JSON-RPC server\n│   ├── codex-runner.js         # Codex CLI auto-discovery, spawn & JSONL parser\n│   ├── goal-store.js           # Persistent Goal & Milestone state machine\n│   ├── job-manager.js          # Persistent async worker & process-tree manager\n│   └── settings-store.js       # Shared preferences, history & model catalog reader\n├── sidecars/\n│   └── codex_panel/            # Native Antigravity side-pane UI & callback watcher\n│       ├── sidecar.json\n│       ├── main.mjs\n│       ├── index.html\n│       ├── app.js\n│       └── styles.css\n├── skills/\n│   └── codex-worker/SKILL.md   # Orchestration skill for Antigravity\n├── rules/\n│   └── AGENTS.md               # Active rules while plugin is enabled\n└── test/\n    └── smoke-test.mjs          # End-to-end MCP smoke test\n```\n\n## License\n\nReleased under the [MIT License](./LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/codex-runner.js",
+        "line": 89,
+        "snippet": "const paths = execFileSync(IS_WINDOWS ? \"where.exe\" : \"which\", [\"codex\"], { encoding: \"utf8\", timeout: 2000, windowsHide: true, stdio: [\"ignore\",\"pipe\",\"ignore\"] });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/codex-runner.js#L89"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/codex-runner.js",
+        "line": 108,
+        "snippet": "return execFileSync(bin, argv, { encoding: \"utf8\", windowsHide: true, timeout: 3000, stdio: [\"ignore\", \"pipe\", \"ignore\"] }).trim();",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/codex-runner.js#L108"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/codex-runner.js",
+        "line": 141,
+        "snippet": "execFileSync(windowsPowerShell, [\"-NoProfile\",\"-NonInteractive\",\"-Command\",script], { stdio: \"ignore\", windowsHide: true, timeout: 5000, env: { ...process.env, BRIDGE_STOP_PID: Str",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/codex-runner.js#L141"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/codex-runner.js",
+        "line": 155,
+        "snippet": "try { execFileSync(path.join(process.env.SystemRoot || \"C:\\\\Windows\", \"System32\", \"taskkill.exe\"), [\"/pid\", String(child.pid), \"/T\", \"/F\"], { stdio: \"ignore\", windowsHide: true, ti",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/codex-runner.js#L155"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/codex-runner.js",
+        "line": 404,
+        "snippet": "const child = spawn(spawnCmd, spawnArgs, { cwd, env: { ...process.env }, detached: !IS_WINDOWS, stdio: [\"pipe\", \"pipe\", \"pipe\"], windowsHide: true });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/codex-runner.js#L404"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/file-store.js",
+        "line": 75,
+        "snippet": "const match = /^(\\d+)-(unknown|[\\da-f]{16})-[\\da-f-]+$/.exec(name);",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/process-identity.js",
+        "line": 19,
+        "snippet": "const [name, started] = execFileSync(windowsPowerShell, [\"-NoProfile\", \"-NonInteractive\", \"-Command\", script], { encoding: \"utf8\", windowsHide: true, timeout: 3000, stdio: [\"ignore",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/process-identity.js#L19"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/process-identity.js",
+        "line": 28,
+        "snippet": "const row = execFileSync(\"ps\", [\"-p\", String(pid), \"-o\", \"lstart=\", \"-o\", \"comm=\"], { encoding: \"utf8\", timeout: 2000 }).trim();",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/process-identity.js#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/settings-store.js",
+        "line": 200,
+        "snippet": "const m = /^([a-zA-Z0-9_]+)\\s*=\\s*\"([^\"]*)\"/.exec(line);",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/settings-store.js#L200"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 41,
+        "snippet": "try { fs.writeFileSync(backup, raw, { flag: \"wx\" }); }",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L41"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 52,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + \"\\n\", { flag: \"wx\" });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L52"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 55,
+        "snippet": "fs.rmSync(tmp, { force: true });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L55"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 83,
+        "snippet": "if (current !== \"unknown\" && current !== match[2]) { fs.rmSync(entry, { force: true }); continue; }",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L83"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 87,
+        "snippet": "if (err.code === \"ESRCH\") { fs.rmSync(entry, { force: true }); continue; }",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L87"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 95,
+        "snippet": "fs.writeFileSync(ticketPath, \"0\", { flag: \"wx\" });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L95"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/file-store.js",
+        "line": 109,
+        "snippet": "fs.rmSync(ticketPath, { force: true });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/file-store.js#L109"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/session-lock.js",
+        "line": 84,
+        "snippet": "return changeOwnedLock(sid, token, file => fs.unlinkSync(file));",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/server/session-lock.js#L84"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/codex_panel/app.js",
+        "line": 104,
+        "snippet": "return fetch(url, { ...options, headers: { \"Content-Type\": \"application/json\", ...(options.headers || {}) }, });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/f1847647e7a38b305c5b8eff381a4a7bd5ace8d7/sidecars/codex_panel/app.js#L104"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.5.0",
+      "sha": "f1847647e7a38b305c5b8eff381a4a7bd5ace8d7",
+      "scannedAt": "2026-11-27T18:14:30.703Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

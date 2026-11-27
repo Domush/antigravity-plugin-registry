@@ -1,0 +1,1660 @@
+{
+  "schemaVersion": 1,
+  "id": "HengWeiBin/oh-my-antigravity",
+  "sha": "113a8c5558783df528c7d8128c54df7d94d8bf8e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:51.256Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "oh-my-antigravity",
+    "displayName": "Oh-My-Antigravity",
+    "version": "0.6.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "default",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "^(write_to_file|replace_file_content|multi_replace_file_content|write_file|edit_file|run_command)$",
+        "type": "command",
+        "command": "uv run python ./scripts/pre_tool_use.py",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "default",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "^(invoke_subagent|write_to_file|replace_file_content|multi_replace_file_content|write_file|edit_file|view_file|view_file_outline|view_code_item|read_file)$",
+        "type": "command",
+        "command": "uv run python ./scripts/post_tool_use.py",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "agent-browser",
+        "slashCommand": "/agent-browser",
+        "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, test web applications, or extract informati",
+        "disableModelInvocation": false,
+        "file": "skills/agent-browser/SKILL.md"
+      },
+      {
+        "name": "antigravity-hooks",
+        "slashCommand": "/antigravity-hooks",
+        "description": "Guide and best practices for creating, configuring, and testing Google Antigravity Hooks. Use this skill when asked to define, create, inspect, debug, or write hooks.json configurations and hook script files.",
+        "disableModelInvocation": false,
+        "file": "skills/antigravity-hooks/SKILL.md"
+      },
+      {
+        "name": "antigravity-subagents",
+        "slashCommand": "/antigravity-subagents",
+        "description": "Complete guide and best practices for defining, configuring, and prompting sub-agents in Google Antigravity 2.0. Covers agent discovery paths, package formats, complete YAML frontmatter specification, tool whitelisting rules, tool validatio",
+        "disableModelInvocation": false,
+        "file": "skills/antigravity-subagents/SKILL.md"
+      },
+      {
+        "name": "ast-grep",
+        "slashCommand": "/ast-grep",
+        "description": "Searches and rewrites code by AST shape across 25 languages. Use when the target is a syntax pattern (every call/class/import shaped like X, a codemod, a YAML rule) rather than literal text; for plain strings, comments, or filenames, use rg",
+        "disableModelInvocation": false,
+        "file": "skills/ast-grep/SKILL.md"
+      },
+      {
+        "name": "browser",
+        "slashCommand": "/browser",
+        "description": "Drives a real browser through the omowright library from the js eval kernel: sites the user is already signed into, forms and clicks, JS-rendered pages, screenshots, web QA, extension popups, a human handoff for login, CAPTCHA or OTP, and a",
+        "disableModelInvocation": false,
+        "file": "skills/browser/SKILL.md"
+      },
+      {
+        "name": "call-atlas",
+        "slashCommand": "/call-atlas",
+        "description": "Call Atlas subagent directly to execute tasks. Trigger when the user mentions Atlas, asks to send a message to Atlas, or requests Atlas. Triggers: call-atlas, atlas, 呼叫 atlas, 傳送給 atlas, atlas subagent.",
+        "disableModelInvocation": false,
+        "file": "skills/call-atlas/SKILL.md"
+      },
+      {
+        "name": "call-prometheus",
+        "slashCommand": "/call-prometheus",
+        "description": "Call Prometheus subagent directly to execute tasks. Trigger when the user mentions Prometheus, asks to send a message to Prometheus, or requests Prometheus. Triggers: call-prometheus, prometheus, 呼叫 prometheus, 傳送給 prometheus, prometheus su",
+        "disableModelInvocation": false,
+        "file": "skills/call-prometheus/SKILL.md"
+      },
+      {
+        "name": "coding-agent-sessions",
+        "slashCommand": "/coding-agent-sessions",
+        "description": "Finds, reads, and reconstructs coding-agent sessions across Codex, Claude, OpenCode, OMO/Senpi, and other local agent logs. Use when asked to find or search past sessions, transcripts, or subagent runs, or to recover what an earlier session",
+        "disableModelInvocation": false,
+        "file": "skills/coding-agent-sessions/SKILL.md"
+      },
+      {
+        "name": "comment-checker",
+        "slashCommand": "/comment-checker",
+        "description": "Use when Codex needs to understand or respond to automatic comment-checker feedback emitted after an edit-like PostToolUse hook.",
+        "disableModelInvocation": false,
+        "file": "skills/comment-checker/SKILL.md"
+      },
+      {
+        "name": "data-scientist",
+        "slashCommand": "/data-scientist",
+        "description": "Processes and analyzes data with resident-kernel engines (DuckDB, Polars) and one-shot tools. Use for CSV/parquet/JSON analysis, group-by/join/aggregation, time series, distributions, cleaning, or plotting a dataset.",
+        "disableModelInvocation": false,
+        "file": "skills/data-scientist/SKILL.md"
+      },
+      {
+        "name": "debugging",
+        "slashCommand": "/debugging",
+        "description": "Runs a hypothesis-driven debugging loop across any language or binary, escalating to orthogonal oracle angles and locking the fix with a failing test. Use for crashes, silent failures, hangs, wrong responses, memory leaks, async misbehavior",
+        "disableModelInvocation": false,
+        "file": "skills/debugging/SKILL.md"
+      },
+      {
+        "name": "dev-browser",
+        "slashCommand": "/dev-browser",
+        "description": "Browser automation with persistent page state. Use when users ask to navigate websites, fill forms, take screenshots, extract web data, test web apps, or automate browser workflows. Trigger phrases include \"go to [url]\", \"click on\", \"fill o",
+        "disableModelInvocation": false,
+        "file": "skills/dev-browser/SKILL.md"
+      },
+      {
+        "name": "eval-integrity",
+        "slashCommand": "/eval-integrity",
+        "description": "Assess integrity of an eval, benchmark, metric, A/B test, holdout, LLM-judge, or user-study claim when the question is whether measurement, comparison, or evidence is independent and trustworthy.",
+        "disableModelInvocation": false,
+        "file": "skills/eval-integrity/SKILL.md"
+      },
+      {
+        "name": "frontend",
+        "slashCommand": "/frontend",
+        "description": "Builds, styles, and polishes anything drawn with HTML, CSS, or SVG: web UI, pages, components, HTML reports rendered to PDF or print, figures, PNG/SVG diagrams, slides, and images for Notion or Slack. Use for any styling, layout, animation,",
+        "disableModelInvocation": false,
+        "file": "skills/frontend/SKILL.md"
+      },
+      {
+        "name": "get-unpublished-changes",
+        "slashCommand": "/get-unpublished-changes",
+        "description": "Compare HEAD with the latest published npm versions and list all unpublished changes by release layer. Triggers: unpublished changes, changelog, what changed, whats new.",
+        "disableModelInvocation": false,
+        "file": "skills/get-unpublished-changes/SKILL.md"
+      },
+      {
+        "name": "git-master",
+        "slashCommand": "/git-master",
+        "description": "MUST USE for ANY git operations: atomic commits, rebase/squash/fixup, and history search (blame, bisect, log -S, reflog). Load it before running git yourself, or pass load_skills=['git-master'] to the task that commits. Triggers: 'commit', ",
+        "disableModelInvocation": false,
+        "file": "skills/git-master/SKILL.md"
+      },
+      {
+        "name": "github-triage",
+        "slashCommand": "/github-triage",
+        "description": "Read-only GitHub triage for issues AND PRs. 1 item = 1 background task (category: quick). Analyzes all open items and writes evidence-backed reports to /tmp/{datetime}/. Every claim requires a GitHub permalink as proof. NEVER takes any acti",
+        "disableModelInvocation": false,
+        "file": "skills/github-triage/SKILL.md"
+      },
+      {
+        "name": "hyperplan",
+        "slashCommand": "/hyperplan",
+        "description": "Adversarial multi-agent planning skill. Self-orchestrates 5 hostile category members (unspecified-low, unspecified-high, deep, ultrabrain, artistry) via team-mode for ruthless cross-critique debate, distills only the defensible insights, th",
+        "disableModelInvocation": false,
+        "file": "skills/hyperplan/SKILL.md"
+      },
+      {
+        "name": "init-deep",
+        "slashCommand": "/init-deep",
+        "description": "Initializes a hierarchical AGENTS.md knowledge base for a project. Use when a repo needs its structure, commands, and conventions documented for agents.",
+        "disableModelInvocation": false,
+        "file": "skills/init-deep/SKILL.md"
+      },
+      {
+        "name": "init",
+        "slashCommand": "/init",
+        "description": "Create or update root AGENTS.md for this repository to provide a compact, high-signal instruction file for future agents. Use when the user asks to initialize, create, or update AGENTS.md, or triggers /init or $init.",
+        "disableModelInvocation": false,
+        "file": "skills/init/SKILL.md"
+      },
+      {
+        "name": "lsp-setup",
+        "slashCommand": "/lsp-setup",
+        "description": "Configures a language server so editor/agent tooling (diagnostics, go-to-definition, references, rename) works. Use when a project needs an LSP installed or wired, or a 'no LSP server configured' error appears.",
+        "disableModelInvocation": false,
+        "file": "skills/lsp-setup/SKILL.md"
+      },
+      {
+        "name": "lsp",
+        "slashCommand": "/lsp",
+        "description": "Use when Codex needs language-server diagnostics, definitions, references, symbols, or rename safety checks in the current workspace.",
+        "disableModelInvocation": false,
+        "file": "skills/lsp/SKILL.md"
+      },
+      {
+        "name": "mass-ulw",
+        "slashCommand": "/mass-ulw",
+        "description": "Drives dependency-ordered child work through the native workflow tool, each phase's stages defined up front in one run, with retry/amend/send recovery. Use when the user asks for mass-ulw, a DAG of tasks, or fan-out work where some tasks mu",
+        "disableModelInvocation": false,
+        "file": "skills/mass-ulw/SKILL.md"
+      },
+      {
+        "name": "omomomo",
+        "slashCommand": "/omomomo",
+        "description": "Easter egg command - about oh-my-opencode. Triggers: omomomo, about, easter egg.",
+        "disableModelInvocation": false,
+        "file": "skills/omomomo/SKILL.md"
+      },
+      {
+        "name": "pi-goal",
+        "slashCommand": "/pi-goal",
+        "description": "Persistent Codex-style goal tracking for pi. Use when the user explicitly asks to set, continue, audit, pause, resume, complete, or inspect a long-running goal.",
+        "disableModelInvocation": false,
+        "file": "skills/pi-goal/SKILL.md"
+      },
+      {
+        "name": "pre-publish-review",
+        "slashCommand": "/pre-publish-review",
+        "description": "Nuclear-grade 16-agent pre-publish release gate. Runs /get-unpublished-changes to detect all changes since last npm release, spawns up to 10 ultrabrain agents for deep per-change analysis, invokes /review-work (5 agents) for holistic review",
+        "disableModelInvocation": false,
+        "file": "skills/pre-publish-review/SKILL.md"
+      },
+      {
+        "name": "programming",
+        "slashCommand": "/programming",
+        "description": "Applies strict, modern language practice (typed errors, exhaustive match, tests that can fail) for Python, Rust, TypeScript, JavaScript, and Go. Use for work on .py, .rs, .ts, .js, or .go files, and whenever a test or spec file is written, ",
+        "disableModelInvocation": false,
+        "file": "skills/programming/SKILL.md"
+      },
+      {
+        "name": "publish",
+        "slashCommand": "/publish",
+        "description": "Publish oh-my-opencode to npm by triggering the GitHub Actions publish workflow and verifying its artifacts. Ship-only: never runs pre-publish-review or re-reviews merged code unless the user explicitly asks. Argument: <patch|minor|major>. ",
+        "disableModelInvocation": false,
+        "file": "skills/publish/SKILL.md"
+      },
+      {
+        "name": "refactor",
+        "slashCommand": "/refactor",
+        "description": "Guides a refactor, cleanup, or restructure with the right decomposition. Use when the user asks to refactor, simplify, extract, or modernize code.",
+        "disableModelInvocation": false,
+        "file": "skills/refactor/SKILL.md"
+      },
+      {
+        "name": "remove-ai-slops",
+        "slashCommand": "/remove-ai-slops",
+        "description": "Removes AI-generated code smells from branch changes or an explicit file list behind regression tests, including junk tests (prose pins, source greps, copied inventories, mock echoes), each proven by its class's rule before a cut. Use when ",
+        "disableModelInvocation": false,
+        "file": "skills/remove-ai-slops/SKILL.md"
+      },
+      {
+        "name": "remove-deadcode",
+        "slashCommand": "/remove-deadcode",
+        "description": "Remove unused code from this project with ultrawork mode, LSP-verified safety, atomic commits. Triggers: remove dead code, dead code, cleanup, remove unused.",
+        "disableModelInvocation": false,
+        "file": "skills/remove-deadcode/SKILL.md"
+      },
+      {
+        "name": "review-work",
+        "slashCommand": "/review-work",
+        "description": "Post-implementation gate review: run manual QA on the real surface yourself, then launch ONE gate reviewer (never a panel) to audit goal, constraints, code quality, security, missed context, and QA evidence. Use before a PR handoff or when ",
+        "disableModelInvocation": false,
+        "file": "skills/review-work/SKILL.md"
+      },
+      {
+        "name": "rules",
+        "slashCommand": "/rules",
+        "description": "Use when the user asks about Codex Rules behavior, injected project rules, supported rule file locations, matching, or environment configuration.",
+        "disableModelInvocation": false,
+        "file": "skills/rules/SKILL.md"
+      },
+      {
+        "name": "security-research",
+        "slashCommand": "/security-research",
+        "description": "Team Mode security research skill. Orchestrates 3 vulnerability hunters and 2 PoC engineers to audit a codebase in parallel, prove exploitability, classify root causes, and calibrate severity by actual exploitability. Use for security revie",
+        "disableModelInvocation": false,
+        "file": "skills/security-research/SKILL.md"
+      },
+      {
+        "name": "start-work",
+        "slashCommand": "/start-work",
+        "description": "Execute a Prometheus work plan in Codex with Boulder state, evidence ledger updates, worktree discipline, parallel subagents, and Stop-hook continuation. Use after planning when the user says start work, execute plan, continue plan, resume ",
+        "disableModelInvocation": false,
+        "file": "skills/start-work/SKILL.md"
+      },
+      {
+        "name": "teammode",
+        "slashCommand": "/teammode",
+        "description": "Parallel subagent orchestration for Antigravity: run multiple cooperating workers to work on a task in parallel. The main session acts as the conductor, managing and coordinating subagents via invoke_subagent. Use when the work is not perfe",
+        "disableModelInvocation": false,
+        "file": "skills/teammode/SKILL.md"
+      },
+      {
+        "name": "tech-debt-audit",
+        "slashCommand": "/tech-debt-audit",
+        "description": "Thorough, file-cited technical debt audit across 9 dimensions using AST-grep (tree-sitter), grep, language-native tooling, and optionally CodeGraph knowledge graph. Produces TECH_DEBT_AUDIT.md with severity, effort estimates, and prioritize",
+        "disableModelInvocation": false,
+        "file": "skills/tech-debt-audit/SKILL.md"
+      },
+      {
+        "name": "ultimate-browsing",
+        "slashCommand": "/ultimate-browsing",
+        "description": "Reaches web pages the user's browser cannot open: WAF-blocked and bot-scored hosts, platform-native readers (Chinese and social platforms), archive snapshots with provenance, and a browser you own for stealth or throwaway profiles. Not for ",
+        "disableModelInvocation": false,
+        "file": "skills/ultimate-browsing/SKILL.md"
+      },
+      {
+        "name": "ultraresearch",
+        "slashCommand": "/ultraresearch",
+        "description": "Legacy alias for ulw-research. MUST USE when the user asks for ultraresearch, /ultraresearch, or $ultraresearch; immediately load and follow the ulw-research skill.",
+        "disableModelInvocation": false,
+        "file": "skills/ultraresearch/SKILL.md"
+      },
+      {
+        "name": "ultrawork",
+        "slashCommand": "/ultrawork",
+        "description": "Binding ultrawork mode directive for omo on Codex. When a prompt contains ultrawork or ulw, the omo UserPromptSubmit hook injects a short bootstrap that points at this file. Read the whole file and follow every rule in it for the rest of th",
+        "disableModelInvocation": false,
+        "file": "skills/ultrawork/SKILL.md"
+      },
+      {
+        "name": "ulw-execute",
+        "slashCommand": "/ulw-execute",
+        "description": "Executes a written ulw-plan work plan with Boulder state, evidence ledger, worktree discipline, and parallel subagents. Use when the user says ulw-execute or asks to run a .omo/plans plan.",
+        "disableModelInvocation": false,
+        "file": "skills/ulw-execute/SKILL.md"
+      },
+      {
+        "name": "ulw-loop",
+        "slashCommand": "/ulw-loop",
+        "description": "Goal-like loop that uses ultrawork mode to decompose work into systematic, evidence-bound steps.",
+        "disableModelInvocation": false,
+        "file": "skills/ulw-loop/SKILL.md"
+      },
+      {
+        "name": "ulw-plan",
+        "slashCommand": "/ulw-plan",
+        "description": "Explore-first planning consultant that writes one decision-complete work plan before coding. Use only on an explicit user request for the ulw-plan workflow or a plan before implementation; it never self-activates on a bare ulw run.",
+        "disableModelInvocation": false,
+        "file": "skills/ulw-plan/SKILL.md"
+      },
+      {
+        "name": "ulw-research",
+        "slashCommand": "/ulw-research",
+        "description": "Runs maximum-saturation research with a cooperating team, claim-graph gating, and a cited, QA'd deliverable. Use when the user explicitly asks for research or a deep investigation, including any 'ulw' research wording.",
+        "disableModelInvocation": false,
+        "file": "skills/ulw-research/SKILL.md"
+      },
+      {
+        "name": "visual-qa",
+        "slashCommand": "/visual-qa",
+        "description": "Runs rigorous visual QA across web, terminal, and paginated surfaces: an Apple HIG-based checklist, paired light/dark captures at phone and desktop widths, screenshot evidence, and a per-item PASS/FAIL verdict. Use for any UI build or chang",
+        "disableModelInvocation": false,
+        "file": "skills/visual-qa/SKILL.md"
+      },
+      {
+        "name": "visualize",
+        "slashCommand": "/visualize",
+        "description": "Autonomous generation of self-contained, zero-network, responsive HTML data visualizations, interactive charts, and dashboards. Triggers: visualize, visual dashboard, html chart, chart generation, data visualization, 視覺化, 圖表生成.",
+        "disableModelInvocation": false,
+        "file": "skills/visualize/SKILL.md"
+      },
+      {
+        "name": "work-with-pr",
+        "slashCommand": "/work-with-pr",
+        "description": "Full PR lifecycle in a fresh task-owned git worktree: implement via the ulw-loop skill with mandatory evidence-bound manual QA → reviewer-readable English PR → verification loop (CI + review-work reviewers + Cubic, where Cubic is skipped on",
+        "disableModelInvocation": false,
+        "file": "skills/work-with-pr/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "atlas",
+        "description": "Orchestrates work via invoke_subagent to complete ALL tasks in a todo list/plan until fully done. (Atlas - Master Orchestrator, Gemini Optimized)",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/atlas.md"
+      },
+      {
+        "name": "explore",
+        "description": "Read-only codebase search specialist. Answers \"Where is X?\" and locates specific implementation patterns. (Explore - Contextual Grep)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/explore.md"
+      },
+      {
+        "name": "hephaestus",
+        "description": "Autonomous Deep Worker agent for complex, multi-step implementation tasks. Explores thoroughly and executes end-to-end. (Hephaestus - Deep Worker, Gemini Optimized)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/hephaestus.md"
+      },
+      {
+        "name": "librarian",
+        "description": "Specialized open-source codebase and external documentation lookup agent. Retrieves official docs and implementation examples. (Librarian - Docs Search)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/librarian.md"
+      },
+      {
+        "name": "metis",
+        "description": "Pre-planning consultant agent. Analyzes user requests before planning to prevent over-engineering, scope creep, and ambiguities. (Metis - Plan Consultant)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/metis.md"
+      },
+      {
+        "name": "momus",
+        "description": "Practical work plan reviewer. Cruelly spots gaps, missing context, and unexecutable tasks in plans. (Momus - Plan Reviewer)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/momus.md"
+      },
+      {
+        "name": "multimodal-looker",
+        "description": "Read-only utility agent for analyzing media files (PDFs, images, diagrams) attached to messages. (Multimodal Looker - Media Analysis)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/multimodal-looker.md"
+      },
+      {
+        "name": "oracle",
+        "description": "Strategic technical advisor for complex architecture decisions, tradeoffs, and debugging strategies. (Oracle - Advisor)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/oracle.md"
+      },
+      {
+        "name": "prometheus",
+        "description": "Planning consultant agent. Gathers information, checks codebase conventions, and constructs the implementation plan. (Prometheus - Planner)",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/prometheus.md"
+      },
+      {
+        "name": "sisyphus-junior",
+        "description": "Focused task executor agent that completes individual implementation tasks with strict discipline. (Sisyphus-Junior - Task Executor, Gemini Optimized)",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/sisyphus-junior.md"
+      },
+      {
+        "name": "sisyphus",
+        "description": "Main orchestrator agent that plans, delegates, and coordinates multi-step development workflows. (Sisyphus - Lead Developer, Gemini Optimized)",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/sisyphus.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agent-browser",
+      "/antigravity-hooks",
+      "/antigravity-subagents",
+      "/ast-grep",
+      "/browser",
+      "/call-atlas",
+      "/call-prometheus",
+      "/coding-agent-sessions",
+      "/comment-checker",
+      "/data-scientist",
+      "/debugging",
+      "/dev-browser",
+      "/eval-integrity",
+      "/frontend",
+      "/get-unpublished-changes",
+      "/git-master",
+      "/github-triage",
+      "/hyperplan",
+      "/init",
+      "/init-deep",
+      "/lsp",
+      "/lsp-setup",
+      "/mass-ulw",
+      "/omomomo",
+      "/pi-goal",
+      "/pre-publish-review",
+      "/programming",
+      "/publish",
+      "/refactor",
+      "/remove-ai-slops",
+      "/remove-deadcode",
+      "/review-work",
+      "/rules",
+      "/security-research",
+      "/start-work",
+      "/teammode",
+      "/tech-debt-audit",
+      "/ultimate-browsing",
+      "/ultraresearch",
+      "/ultrawork",
+      "/ulw-execute",
+      "/ulw-loop",
+      "/ulw-plan",
+      "/ulw-research",
+      "/visual-qa",
+      "/visualize",
+      "/work-with-pr"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "atlas",
+      "explore",
+      "hephaestus",
+      "librarian",
+      "metis",
+      "momus",
+      "multimodal-looker",
+      "oracle",
+      "prometheus",
+      "sisyphus",
+      "sisyphus-junior"
+    ],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "PreToolUse",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "![Oh-My-Antigravity](assets/banner.svg)\n\n<div align=\"center\">\n\n[English](README.md) | [繁體中文](README.zh-TW.md)\n\n[![Antigravity](https://img.shields.io/badge/Antigravity-2.32.0%2B-blue?logo=google&style=flat-square)](https://github.com/HengWeiBin/oh-my-antigravity)\n[![Python](https://img.shields.io/badge/Python-3.13%2B-blue?logo=python&logoColor=white&style=flat-square)](https://www.python.org/)\n[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)\n[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=flat-square)](https://github.com/HengWeiBin/oh-my-antigravity/actions)\n[![Release](https://img.shields.io/badge/Release-v0.6.0-orange?style=flat-square)](https://github.com/HengWeiBin/oh-my-antigravity/releases)\n\n</div>\n\n---\n\n## Overview\n\n**Oh-My-Antigravity** is the premier multi-agent orchestration harness engineered specifically for **Google Antigravity 2.0**.\n\nPorted and redesigned from [`code-yeongyu/oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent), `oh-my-antigravity` transforms Antigravity into a coordinated software engineering team. It features a unified, zero-overhead Python lifecycle hook engine, strict role-based permission boundaries, and 11 specialized agent personas equipped with 47 turnkey domain skills.\n\n### Key Pillars\n\n- **Conductor Mindset**: Main orchestrators (`sisyphus`, `atlas`, `prometheus`) direct architecture, maintain plans, and delegate tasks without polluting source code directly.\n- **Strict Role Permissions**: High-level orchestrators are blocked from mutating source code directly, while worker agents (`hephaestus`, `sisyphus-junior`) are prohibited from tampering with configuration manifests or rules.\n- **Zero-Overhead Hook Pipeline**: Built entirely on standard Python 3.13 libraries, hooks run synchronously with sub-millisecond overhead and zero runtime pip dependencies.\n- **4-Phase Verification Protocol**: Guarantees that code implementations are never marked finished until files are inspected, tests pass, QA verification is conducted, and exit gates are satisfied.\n\n---\n\n## Quickstart & Installation\n\nChoose one of three installation methods depending on your environment.\n\n### Method 1: Official Antigravity CLI (Recommended)\n\nInstall directly through the Antigravity plugin manager:\n\n```bash\nagy plugin install https://github.com/HengWeiBin/oh-my-antigravity.git\n```\n\nVerify installation:\n\n```bash\nagy plugin list\n```\n\n---\n\n### Method 2: One-Line Automated Installer\n\nRun the automated installer script to verify prerequisites, install dependencies, and configure the plugin path automatically.\n\n#### macOS & Linux\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/HengWeiBin/oh-my-antigravity/main/install.sh | bash\n```\n\n#### Windows (PowerShell)\n\n```powershell\nirm https://raw.githubusercontent.com/HengWeiBin/oh-my-antigravity/main/install.ps1 | iex\n```\n\nBoth installers automatically verify that **Python 3.13+** and **Git** are present before completing the setup.\n\n---\n\n### Method 3: Manual Installation (Git Clone)\n\n#### Global Installation (User Configuration)\n\nDeploy user-wide across all Antigravity workspaces:\n\n```bash\n# macOS / Linux\ngit clone https://github.com/HengWeiBin/oh-my-antigravity.git ~/.gemini/config/plugins/oh-my-antigravity\n\n# Windows (PowerShell)\ngit clone https://github.com/HengWeiBin/oh-my-antigravity.git \"$HOME\\.gemini\\config\\plugins\\oh-my-antigravity\"\n```\n\n#### Workspace-Local Installation\n\nDeploy isolated to a single project workspace:\n\n```bash\ngit clone https://github.com/HengWeiBin/oh-my-antigravity.git <workspace>/.agents/plugins/oh-my-antigravity\n```\n\n---\n\n## Architecture & Hook Engine\n\nAntigravity invokes `oh-my-antigravity` through a multi-phase interceptor pipeline configured in [`hooks.json`](hooks.json). Every hook is an isolated Python script reading JSON payloads from `stdin` and emitting validated directives to `stdout`.\n\n### Lifecycle Phases\n\n1. **SessionStart (`scripts/session_start.py`)**:\n   - Executes once per conversation session upon initialization.\n   - Evaluates workspace capabilities and recommends optimal tools (such as `codegraph_explore` when `.codegraph` and CodeGraph MCP are active).\n2. **PreInvocation (`scripts/pre_invocation.py`)**:\n   - Executes at the beginning of each user turn.\n   - Enforces todo/plan continuation, agent reminders, keyword triggers, and dynamically mounts requested skills matching slash-command syntax. (`AGENTS.md` and behavioral rules are loaded natively by Antigravity).\n3. **PreToolUse (`scripts/pre_tool_use.py`)**:\n   - Intercepts mutating tool operations (`write_file`, `edit_file`, `write_to_file`, `replace_file_content`, `multi_replace_file_content`, `run_command`).\n   - Enforces role-based permissions: orchestrators cannot edit source code directly; workers cannot modify plugin manifests or task states.\n4. **PostToolUse (`scripts/post_tool_use.py`)**:\n   - Fires upon completion of subagent invocations or file modifications (`write_file`, `edit_file`, `write_to_file`, `replace_file_content`, `multi_replace_file_content`).\n   - Enforces the 4-Phase Verification Protocol, checks plan format compliance, validates source code comments via comment checker, and alerts on empty responses.\n5. **Stop (`scripts/stop.py`)**:\n   - Runs during session shutdown or task conclusion to clean scratch files, log session metrics, and enforce plan continuation.\n\n### Hook Interception Lifecycle\n\n```mermaid\nflowchart TD\n    SessInit([Session Start]) --> SessStart[SessionStart Hook]\n    SessStart --> DetectEnv[Probe CodeGraph & Session Context]\n    DetectEnv --> User([User Prompt / Turn])\n    \n    User --> PreInv[PreInvocation Hook]\n    \n    subgraph PreInvPhase [Phase 1: PreInvocation Dynamic Context]\n        PreInv --> SkillMount[Detect Slash Triggers & Auto-load Skills]\n        SkillMount --> PlanCont[Enforce Todo / Plan Continuation]\n        PlanCont --> UsageRemind[Agent Usage & Inactivity Reminders]\n    end\n    \n    UsageRemind --> AgentDecision{Agent Selects Action}\n    \n    AgentDecision -->|Calls Tool| PreTool[PreToolUse Hook]\n    \n    subgraph PreToolPhase [Phase 2: PreToolUse Security Gate]\n        PreTool --> RoleCheck{Role Permission Check}\n        RoleCheck -->|Orchestrator editing source| DenyTool[Block: Delegate to Worker]\n        RoleCheck -->|Worker tampering configs| DenyConfig[Block: Config Protection]\n        RoleCheck -->|Permitted Action| ExecTool[Execute Native Tool]\n    end\n    \n    DenyTool --> AgentDecision\n    DenyConfig --> AgentDecision\n    \n    ExecTool --> PostTool[PostToolUse Hook]\n    \n    subgraph PostToolPhase [Phase 3: PostToolUse Validation]\n        PostTool --> VerifyCheck[4-Phase Verification Protocol]\n        VerifyCheck --> CommentCheck[Comment & Docstring Checker]\n        CommentCheck --> EmptyCheck[Empty Response & Drift Detection]\n    end\n    \n    EmptyCheck --> NextAction{Task Complete?}\n    NextAction -->|Iterate / Delegate| AgentDecision\n    NextAction -->|All Goals Met| StopHook[Stop Hook / Session Finalize]\n    StopHook --> FinalResponse([Deliver Verified Result])\n```\n\n### Orchestrator-Worker Delegation Model\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor User as Developer / User\n    participant Orch as Orchestrator (Sisyphus / Atlas)\n    participant Spec as Specialist (Explore / Librarian)\n    participant Worker as Worker (Hephaestus / Sisyphus-Jr)\n    participant Hooks as Lifecycle Hooks Engine\n\n    User->>Orch: Submit Goal / Issue Request\n    Hooks-->>Orch: PreInvocation (Inject Context, Rules, & Plan State)\n    \n    rect rgb(240, 248, 255)\n        note over Orch,Spec: Phase A: Discovery & Research\n        Orch->>Spec: invoke_subagent(Explore / Librarian)\n        Spec-->>Orch: Return Symbols, File Paths, and Documentation\n    end\n\n    rect rgb(255, 250, 240)\n        note over Orch: Phase B: Plan Formulation\n        Orch->>Orch: Construct Structured Todo / Plan Tasks\n    end\n\n    rect rgb(245, 255, 245)\n        note over Orch,Worker: Phase C: Delegation & Implementation\n        Orch->>Worker: invoke_subagent(Hephaestus: Implement Task 1)\n        Worker->>Hooks: PreToolUse (write_to_file / replace_file_content)\n        Hooks-->>Worker: Gate Passed (Worker Role Permitted)\n        Worker->>Hooks: PreToolUse (run_command: tests & linters)\n        Hooks-->>Worker: Gate Passed\n        Worker-->>Orch: Task 1 Completed with Diff & Test Evidence\n    end\n\n    rect rgb(255, 240, 245)\n        note over Orch: Phase D: Verification Gate\n        Hooks-->>Orch: PostToolUse (Verify Diff & Evidence Protocol)\n        Orch->>Orch: Phase 1-4 Verification (Confirm Tests Pass)\n    end\n\n    Orch->>User: Deliver Production-Ready Result & Changelog\n```\n\n---\n\n## Agent Roster\n\n`oh-my-antigravity` bundles 11 specialized agent personas, organized into three distinct tiers: Orchestrators, Workers, and Research Specialists.\n\n| Agent | Type / Role | Model Tier | Description | Permitted Tools Scope |\n|---|---|---|---|---|\n| **`sisyphus`** | Lead Orchestrator | `inherit` | Primary workflow coordinator. Plans, breaks down epics, delegates tasks to workers, and tracks completion. Blocked from editing source code. | `read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`, `invoke_subagent`, `manage_task`, `define_subagent`, `manage_subagents`, `.md` / `.omo/` writes (`write_file`, `edit_file`, etc.). |\n| **`atlas`** | Master Orchestrator | `flash` | Relentless execution driver. Tracks multi-item todo lists and work plans, continuously delegating until all checklist tasks are 100% finished. | Read tools (`read_file`, `view_file`), web search, `invoke_subagent`, task management, `.md` / plan state updates (`write_file`, `edit_file`, etc.). |\n| **`prometheus`** | Strategic Planner | `flash` | Strategic planning consultant. Investigates conventions, gathers codebase facts, and synthesizes complete, decision-complete work plans. | Read tools (`read_file`, `view_file`), web search, `invoke_subagent`, task management, `.md` / plan documentation (`write_file`, `edit_file`, etc.). |\n| **`metis`** | Pre-Planning Consultant | `flash` | Pre-planning analyst. Scrutinizes requirements before planning starts to prevent over-engineering, scope creep, and ambiguous specifications. | Read-only inspection tools (`read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`). |\n| **`momus`** | Plan Reviewer | `flash` | Hostile plan auditor. Ruthlessly challenges assumptions, spots missing files, identifies unexecutable steps, and exposes blind spots. | Read-only inspection tools (`read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`). |\n| **`hephaestus`** | Deep Worker | `flash` | Senior staff autonomous engineer. Handles complex, multi-step implementations, architectural refactors, and test suites end-to-end. | Full tool access: all read tools (`read_file`, `view_file`), file edits (`write_file`, `edit_file`, `write_to_file`, `replace_file_content`), command execution (`run_command`), subagents. Config-protected. |\n| **`sisyphus-junior`** | Task Executor | `flash` | Fast, disciplined executor focused on bite-sized implementations, bug fixes, and surgical edits with strict adherence to instructions. | Full tool access: all read tools (`read_file`, `view_file`), file edits (`write_file`, `edit_file`, `write_to_file`, `replace_file_content`), command execution (`run_command`). Config-protected. |\n| **`explore`** | Contextual Search | `flash` | Lightning-fast codebase researcher. Locates symbol definitions, implementation files, and usages without modifying files. | Read-only exploration (`read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`). |\n| **`librarian`** | Docs & OSS Specialist | `flash` | External research specialist. Fetches official documentation, external package references, and open-source implementation patterns. | Read-only web and local inspection (`read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`). |\n| **`oracle`** | Architecture Advisor | `flash` | Strategic technical advisor. Provides deep reasoning for architectural trade-offs, deadlock resolution, security postures, and system debugging. | Read-only analytical tools (`read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`). |\n| **`multimodal-looker`**| Media Analyst | `flash` | Visual inspector for UI screenshots, architecture diagrams, PDF documentation, and visual regression artifacts. | Read-only media & file inspection (`read_file`, `view_file`, `grep_search`, `list_dir`, `find_by_name`, `read_url_content`, `search_web`). |\n\n---\n\n## Bundled Skills Catalog\n\n`oh-my-antigravity` includes **47 production skills**. Any skill can be auto-loaded into an agent turn using slash-command syntax (e.g., `/debugging` or `/programming`).\n\n### 1. Planning & Strategy\n\n| Command | Skill | Description |\n|---|---|---|\n| `/hyperplan` | `hyperplan` | Hostile multi-agent planning orchestrating 5 competing perspectives for battle-tested blueprints. |\n| `/ulw-plan` | `ulw-plan` | Explore-first planning engine (Prometheus) producing decision-complete execution plans before coding. |\n| `/start-work` | `start-work` | Executes Prometheus work plans with boulder state tracking and Stop-hook resumption. |\n| `/ulw-execute` | `ulw-execute` | Direct boulder-driven plan execution orchestrating parallel worker subagents. |\n| `/mass-ulw` | `mass-ulw` | Massive parallel ultrawork execution swarm running multiple decoupled tasks concurrently. |\n| `/teammode` | `teammode` | Orchestrates parallel cooperating subagent workers for concurrent workflow execution. |\n| `/ultrawork` | `ultrawork` | Binding ultrawork mode enforcing parallel execution, proactive debugging, and 100% completion. |\n| `/ulw-loop` | `ulw-loop` | Systematic evidence-bound task iteration loop breaking goals into atomic verification steps. |\n| `/pi-goal` | `pi-goal` | Persistent long-running goal tracking, state auditing, and session progress resumption. |\n\n### 2. Engineering & Modernization\n\n| Command | Skill | Description |\n|---|---|---|\n| `/programming` | `programming` | Modern strict typing (.py, .rs, .ts, .go), parse-don't-validate, zero unwrap/panic, 250 LOC ceiling. |\n| `/frontend` | `frontend` | Production UI/UX design, modern CSS/React architecture, animations, and typography excellence. |\n| `/refactor` | `refactor` | Intelligent code modernization, structural refactoring, and simplification. |\n| `/remove-ai-slops` | `remove-ai-slops` | Purges repetitive AI code smells, verbose boilerplate, and oversized modules locked by tests. |\n| `/remove-deadcode` | `remove-deadcode` | Safely detects and purges unused code backed by LSP validation and atomic commits. |\n| `/ast-grep` | `ast-grep` | AST-aware structural search and deterministic codemods across 25 programming languages. |\n| `/data-scientist` | `data-scientist` | High-throughput exploratory data analysis, tabular profiling, and DuckDB/Polars analytics. |\n| `/visualize` | `visualize` | Autonomous interactive HTML data visualization, charts, and standalone dashboards. |\n\n### 3. Verification, QA & Research\n\n| Command | Skill | Description |\n|---|---|---|\n| `/eval-integrity` | `eval-integrity` | High-rigor benchmark and LLM-as-a-judge evaluation integrity auditing against contamination. |\n| `/visual-qa` | `visual-qa` | Visual verification across responsive screen widths, pixel diffs, and terminal UI layouts. |\n| `/review-work` | `review-work` | Nuclear 5-agent post-implementation review gate covering correctness, security, and quality. |\n| `/pre-publish-review` | `pre-publish-review`| 16-agent release barrier analyzing all unpublished changes prior to distribution. |\n| `/debugging` | `debugging` | Hypothesis-driven debugging loop forming ≥3 orthogonal hypotheses with failing regression tests. |\n| `/comment-checker` | `comment-checker` | Intercepts code modifications to flag misleading, stale, or superfluous code comments. |\n| `/ulw-research` | `ulw-research` | Maximum-saturation research swarm orchestrating parallel explore and librarian agents. |\n| `/ultraresearch` | `ultraresearch` | Fast alias for ulw-research deep investigation and exhaustive codebase exploration. |\n\n### 4. Browser Automation\n\n| Command | Skill | Description |\n|---|---|---|\n| `/browser` | `browser` | Built-in browser subagent driver for page interaction, rendering, and visual QA verification. |\n| `/agent-browser` | `agent-browser` | Headless browser driver for web testing, form completion, and DOM extraction. |\n| `/dev-browser` | `dev-browser` | Persistent-session browser automation for interactive testing and stateful workflows. |\n| `/ultimate-browsing` | `ultimate-browsing` | Stealth browser automation with WAF/bot bypass, TLS impersonation, and anti-scraping evasion. |\n\n### 5. Git, Releases & Triage\n\n| Command | Skill | Description |\n|---|---|---|\n| `/git-master` | `git-master` | Atomic git commits, clean interactive rebasing, branch squashing, and bisect search. |\n| `/github-triage` | `github-triage` | Read-only triage for GitHub issues and PRs with evidence-backed Markdown reports. |\n| `/work-with-pr` | `work-with-pr` | End-to-end PR workflow inside isolated task worktrees with CI gates and automatic merging. |\n| `/publish` | `publish` | Automated release pipeline triggering GitHub Actions and verifying deployment artifacts. |\n| `/get-unpublished-changes` | `get-unpublished-changes` | Computes diffs between HEAD and published package registry versions. |\n\n### 6. Antigravity System Tools & Extended Specialists\n\n| Command | Skill | Description |\n|---|---|---|\n| `/antigravity-hooks` | `antigravity-hooks` | Guide and best practices for creating, configuring, and testing Antigravity hooks. |\n| `/antigravity-subagents`| `antigravity-subagents`| Blueprint for subagent definitions, YAML frontmatter, tool whitelists, and lifecycle states. |\n| `/lsp` | `lsp` | Language Server Protocol diagnostics, symbol navigation, and rename verification. |\n| `/lsp-setup` | `lsp-setup` | Language server configuration and installation across 20+ language environments. |\n| `/rules` | `rules` | Behavioral rule injection engine and workspace configuration inspector. |\n| `/init` | `init` | Bootstraps project root `AGENTS.md` instruction indexes for AI engineering teams. |\n| `/init-deep` | `init-deep` | Generates hierarchical multi-level `AGENTS.md` architecture guides. |\n| `/call-atlas` | `call-atlas` | Direct invocation trigger routing execution tasks directly to Atlas orchestrator. |\n| `/call-prometheus` | `call-prometheus` | Direct invocation trigger routing architectural planning to Prometheus. |\n| `/coding-agent-sessions`| `coding-agent-sessions`| Searches and reconstructs past agent transcripts, session IDs, and context logs. |\n| `/security-research` | `security-research` | Multi-agent vulnerability hunting, threat modeling, and exploitability verification. |\n| `/tech-debt-audit` | `tech-debt-audit` | 9-dimensional technical debt assessment producing prioritized remediation ledgers. |\n| `/omomomo` | `omomomo` | Easter egg module celebrating oh-my-opencode roots and architecture history. |\n\n---\n\n## Configuration & Customization\n\n### Plugin Manifest (`plugin.json`)\n\nThe plugin manifest declares metadata loaded by Antigravity:\n\n```json\n{\n  \"name\": \"oh-my-antigravity\",\n  \"version\": \"0.6.0\",\n  \"description\": \"The ultimate agent orchestration harness for Google Antigravity 2.0, ported from oh-my-openagent.\",\n  \"logo\": \"assets/logo.svg\"\n}\n```\n\n- **`name`**: Unique plugin identifier.\n- **`version`**: Semantic versioning of the installed package.\n- **`description`**: Summary displayed in Antigravity plugin listings.\n- **`logo`**: Path to the vector brand emblem (`assets/logo.svg`).\n\n### Lifecycle Routing (`hooks.json`)\n\nConfigures which lifecycle events and tool matchers trigger interceptor scripts:\n\n```json\n{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"type\": \"command\",\n        \"command\": \"uv run python ./scripts/session_start.py\",\n        \"timeout\": 5\n      }\n    ],\n    \"PreInvocation\": [\n      {\n        \"type\": \"command\",\n        \"command\": \"uv run python ./scripts/pre_invocation.py\",\n        \"timeout\": 8\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"^(write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content|run_command)$\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run python ./scripts/pre_tool_use.py\",\n            \"timeout\": 5\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"^(invoke_subagent|write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content)$\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"uv run python ./scripts/post_tool_use.py\",\n            \"timeout\": 5\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"type\": \"command\",\n        \"command\": \"uv run python ./scripts/stop.py\",\n        \"timeout\": 5\n      }\n    ]\n  }\n}\n```\n\n---\n\n## Contributing\n\nWe welcome contributions from the community! Check out our comprehensive [`CONTRIBUTING.md`](CONTRIBUTING.md) guide for details on:\n\n- Setting up the local environment with `uv` and Python 3.13.\n- Running test suites: `uv run pytest scripts/tests/`\n- Running linters and formatters: `uv run ruff check scripts/`\n- Authoring custom subagents and defining YAML frontmatter.\n- Creating modular skills and adhering to standard library runtime constraints.\n\n---\n\n## Acknowledgments & Credits\n\n`oh-my-antigravity` is derived and ported from the outstanding work on [`oh-my-openagent`](https://github.com/code-yeongyu/oh-my-openagent) created by [@code-yeongyu](https://github.com/code-yeongyu). We express our sincere gratitude to code-yeongyu and the open-source community for pioneering multi-agent orchestration patterns and developer workflows.\n\n---\n\n## License\n\nThis project is licensed under the [MIT License](LICENSE).\nPortions derived from `oh-my-openagent`, Copyright (c) 2024–2026 code-yeongyu.\n",
+  "latestReleaseNotes": "# Release Notes: oh-my-antigravity v0.6.0\n\nWe are pleased to release **oh-my-antigravity v0.6.0**! Building on `v0.5.0`/`v0.5.1`, this release aligns the hook engine, agent definitions, and Antigravity skill guides with **Google Antigravity `v2.34.0`**, modernizes injected hook messages from deprecated `ephemeralMessage` to `systemMessage`, enriches `HookContext`, fixes `EditErrorRecoveryHook` file unlocking in production `hooks.json`, and binds continuation hooks strictly to active Boulder plans.\n\n---\n\n## 🌟 What's New in v0.6.0\n\n### 1. ⚡ Hook Engine Modernization (`systemMessage`, `HookContext`, & `EditErrorRecoveryHook` Fix)\n- **Migrated Deprecated `ephemeralMessage` → `systemMessage`**: Updated all 6 production hook emitters (`CodegraphRecommendationHook`, `SubagentSkillAutoloaderHook`, `AgentUsageReminderHook`, `CompactionTodoPreserverHook`, `InitProjectDirReplacerHook`, `KeywordDetectorHook`, and `TodoContinuationEnforcerHook`) to emit `{\"systemMessage\": {\"systemMessage\": ...}}` per the official Antigravity Hooks contract.\n- **Fixed `EditErrorRecoveryHook` Production Unlock Matcher**: Added `view_file`, `view_file_outline`, `view_code_item`, and `read_file` to `PostToolUse.matcher` in `hooks.template.json` and portable `hooks.json` so locked files actually unlock when inspected after an edit failure.\n- **Enriched `HookContext`**: Added `workspace_paths`, `transcript_path`, `artifact_directory_path`, `invocation_num`, and `execution_num` fields to `HookContext` (`scripts/hooks/models.py`) and populated them cleanly in `HookEngine.build_context`.\n- **Boulder Session Binding (`v0.5.1`)**: Scoped `StopPlanContinuationHook`, `CompactionTodoPreserverHook`, and `TodoContinuationEnforcerHook` to active `.omo/boulder.json` plans bound to the current conversation.\n\n### 2. 🤖 Agent Frontmatter & Antigravity `v2.34.0` Docs Alignment\n- **Clean Static Agent Frontmatter**: Removed redundant runtime-only `enable_mcp_tools: true` from all 11 agent profiles (`agents/*.md`), retaining `inheritMcp: true` and `inheritCustomizations: true`, and added a regression check in `test_release_readiness.py`.\n- **`/antigravity-subagents` Guide Refresh**: Updated coverage to `v2.34.0` (including `browser` host input lock protections), added a `Tool Alias Reminder` note, and aligned the `atlas` example with `agents/atlas.md`.\n- **`/antigravity-hooks` Guide Refresh**: Removed the duplicated `PostInvocation` section, clarified top-level named hook groups and committed portable `hooks.json`, and synchronized Section 4.1 `HookContext` / `BaseHook` contracts with `scripts/hooks/models.py` and `engine.py`.\n\n### 3. 📦 Release, Installers & Verification\n- **Version & Asset Sync**: Bumped `plugin.json`, `pyproject.toml`, `uv.lock`, `assets/banner.svg`, `README.md`, `README.zh-TW.md`, `install.ps1`, and `install.sh` to `v0.6.0`, updated Antigravity README badges to `2.32.0+`, and synced `scripts/verify_assets.py` to `47 Bundled Skills`.\n- **Full Verification**:\n  - `uv run pytest scripts/tests/`: **226 passed**\n  - `uv run ruff check scripts/`: **0 errors**\n  - `uv run python scripts/verify_assets.py`: **All SVG/XML assets compliant**\n  - `agy plugin validate .`: **47 skills, 11 agents, 1 hooks validated**\n\n---\n\n**Full Changelog**: https://github.com/HengWeiBin/oh-my-antigravity/compare/v0.5.1...v0.6.0\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "credential_access",
+      "dynamic_code_exec",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "prompt_injection_suspect",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_OVERRIDE_GUARDRAILS",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_injection_suspect",
+        "message": "Prompt instructs the agent to override safety rules or hide actions from the user.",
+        "file": "rules/oh-my-openagent-rules.md",
+        "line": 17,
+        "snippet": "- Do not ask the user \"should I continue\", \"proceed to next task\", or any approval questions between steps.",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/rules/oh-my-openagent-rules.md#L17"
+      },
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "skills/lsp-setup/SKILL.md",
+        "line": 148,
+        "snippet": "Run with [Bun](https://bun.sh): `curl -fsSL https://bun.sh/install | bash`.",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/lsp-setup/SKILL.md#L148"
+      },
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/ultimate-browsing/SKILL.md",
+        "line": 38,
+        "snippet": "**Why first**: ~10x faster than a browser, no process spin-up; handles most \"fetch this blocked page\" requests via curl_cffi TLS impersonation, yt-dlp (1858 sites), official public",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/ultimate-browsing/SKILL.md#L38"
+      },
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/ultimate-browsing/SKILL.md",
+        "line": 75,
+        "snippet": "curl -s -H \"Authorization: Bearer ${JINA_API_KEY}\" \"https://r.jina.ai/https://weibo.com/<uid>/<pid>\" # weibo via Jina (key required)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/ultimate-browsing/SKILL.md#L75"
+      },
+      {
+        "id": "PROMPT_OVERRIDE_GUARDRAILS",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_injection_suspect",
+        "message": "Prompt instructs the agent to override safety rules or hide actions from the user.",
+        "file": "skills/ulw-plan/SKILL.md",
+        "line": 46,
+        "snippet": "- **UNCLEAR** - the outcome itself is fuzzy (a vague brief, a bootstrap, `$ulw-execute` with no selectable plan, a goal the user cannot yet articulate). Asking would offload your o",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/ulw-plan/SKILL.md#L46"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"default\" executes a shell command on PreToolUse (matcher: ^(write_to_file|replace_file_content|multi_replace_file_content|write_file|edit_file|run_command)$).",
+        "file": "hooks.json",
+        "line": 23,
+        "snippet": "uv run python ./scripts/pre_tool_use.py",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/hooks.json#L23"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"default\" executes a shell command on PostToolUse (matcher: ^(invoke_subagent|write_to_file|replace_file_content|multi_replace_file_content|write_file|edit_file|view_file|view_file_outline|view_code_item|read_file)$).",
+        "file": "hooks.json",
+        "line": 35,
+        "snippet": "uv run python ./scripts/post_tool_use.py",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/hooks.json#L35"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/setup_hooks.py",
+        "line": 36,
+        "snippet": "res = subprocess.run( [p, \"-c\", \"import sys; sys.exit(0 if sys.version_info >= (3, 13) else 1)\"], capture_output=True, check=False, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/scripts/setup_hooks.py#L36"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/ast-grep/scripts/ast_grep_helper.py",
+        "line": 187,
+        "snippet": "out = subprocess.run( [str(p), \"--version\"], capture_output=True, text=True, timeout=5, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/ast-grep/scripts/ast_grep_helper.py#L187"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/ast-grep/scripts/ast_grep_helper.py",
+        "line": 404,
+        "snippet": "return subprocess.run( cmd, capture_output=capture, text=True, timeout=timeout, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/ast-grep/scripts/ast_grep_helper.py#L404"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/ast-grep/scripts/ast_grep_helper.py",
+        "line": 618,
+        "snippet": "return subprocess.run(cmd).returncode",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/ast-grep/scripts/ast_grep_helper.py#L618"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/coding-agent-sessions/scripts/agent_sessions/opencode.py",
+        "line": 204,
+        "snippet": "proc = subprocess.run( [binary, *args], check=False, capture_output=True, text=True, timeout=OPENCODE_TIMEOUT_SECONDS, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/coding-agent-sessions/scripts/agent_sessions/opencode.py#L204"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/debugging/references/scripts/dap.mjs",
+        "line": 167,
+        "snippet": "const child = spawn(cmd, argv, { stdio: [\"pipe\", \"pipe\", \"inherit\"] })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/debugging/references/scripts/dap.mjs#L167"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/debugging/references/scripts/dap.test.ts",
+        "line": 45,
+        "snippet": "const child = spawn(\"bun\", [client], { cwd: dir, env: { ...process.env, DAP_TIMEOUT_MS: noAnswer ? \"300\" : \"5000\", ...(noAnswer ? { DAP_FIXTURE_NO_ANSWER: \"1\" } : {}), }, })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/debugging/references/scripts/dap.test.ts#L45"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/core/color.ts",
+        "line": 88,
+        "snippet": "const m = /^(rgba?|color|oklab|oklch|lab|lch)\\((.*)\\)$/.exec(s)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/core/color.ts#L88"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/core/page.ts",
+        "line": 9,
+        "snippet": "const m = /^(-?\\d*\\.?\\d+)px$/.exec(value.trim())",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/core/page.ts#L9"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/core/shadow.ts",
+        "line": 33,
+        "snippet": "const colorMatch = /(rgba?|color|oklab|oklch)\\([^()]*\\)|#[0-9a-f]{3,8}\\b|\\btransparent\\b/i.exec(layer)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/core/shadow.ts#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/core/source.ts",
+        "line": 3,
+        "snippet": "export const extensionOf = (path: string): string => (/\\.([a-z0-9]+)$/i.exec(path)?.[1] ?? \"\").toLowerCase()",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/core/source.ts#L3"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/animation-opacity.ts",
+        "line": 12,
+        "snippet": "const marker = new RegExp(`@(?:-webkit-)?keyframes\\\\s+${name.replace(/[.*+?^${}()|[\\]\\\\]/g, \"\\\\$&\")}\\\\s*\\\\{`).exec( css, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/animation-opacity.ts#L12"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/animation-opacity.ts",
+        "line": 24,
+        "snippet": "const value = /(?:^|;)\\s*opacity\\s*:\\s*([\\d.]+)/.exec(block.body)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/animation-opacity.ts#L24"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/gradient-samples.ts",
+        "line": 22,
+        "snippet": "const degrees = /^(-?[\\d.]+)deg$/.exec(head)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/gradient-samples.ts#L22"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/gradient-samples.ts",
+        "line": 63,
+        "snippet": "const token = /(-?[\\d.]+)(%|px)\\s*$/.exec(stop.raw)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/gradient-samples.ts#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/gradients.ts",
+        "line": 28,
+        "snippet": "const match = /^(rgba?|color|oklab|oklch)\\([^()]*\\)|^#[0-9a-f]{3,8}\\b|^transparent\\b|^(white|black)\\b/i.exec(raw)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/gradients.ts#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/gradients.ts",
+        "line": 33,
+        "snippet": "const position = /(-?\\d*\\.?\\d+)%/.exec(raw.slice(match[0].length))",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/gradients.ts#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/painted-text.ts",
+        "line": 46,
+        "snippet": "const alpha = /rgba\\([^)]*,\\s*([\\d.]+)\\s*\\)/.exec(bg)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/painted-text.ts#L46"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/painted-text.ts",
+        "line": 60,
+        "snippet": "const terminal = /([\\d.]+)(px|%)(?:\\s*\\))?$/.exec(last.raw)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/painted-text.ts#L60"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/painted-text.ts",
+        "line": 175,
+        "snippet": "const matrix = /^matrix\\(([^)]+)\\)/.exec(style[\"transform\"] ?? \"\")",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/painted-text.ts#L175"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/color/support/text-colors.ts",
+        "line": 63,
+        "snippet": "const radius = /([\\d.]+)px/.exec(stops[0]?.raw ?? \"\")",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/color/support/text-colors.ts#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/copy/numbered-section-labels.ts",
+        "line": 44,
+        "snippet": ".map((c) => /^#\\d+\\s+(\\S+)/.exec(c.text)?.[1]?.toLowerCase())",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/copy/numbered-section-labels.ts#L44"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/copy/support/numbered-label.ts",
+        "line": 9,
+        "snippet": "const hash = /^#([0-9]{1,2})(?: [^ ].*)?$/.exec(text)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/copy/support/numbered-label.ts#L9"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/copy/support/numbered-label.ts",
+        "line": 17,
+        "snippet": "const match = hash ?? /^([0-9]{2})$/.exec(text) ?? /^([0-9]{1,2})\\s*[^0-9A-Za-z_\\s]\\s*\\S/.exec(text)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/copy/support/numbered-label.ts#L17"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/bounce-easing.ts",
+        "line": 13,
+        "snippet": "const curve = /cubic-bezier\\(([^)]+)\\)/i.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/bounce-easing.ts#L13"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/organic-clip-path.ts",
+        "line": 22,
+        "snippet": "kind = /^(polygon|path)\\(([\\s\\S]*)\\)$/.exec(clip),",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/organic-clip-path.ts#L22"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/pulsing-dot.ts",
+        "line": 49,
+        "snippet": "const m = /^([\\d.]+)(px|rem|em)?$/.exec(resolved)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/pulsing-dot.ts#L49"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/pulsing-dot.ts",
+        "line": 83,
+        "snippet": "const value = new RegExp(\"(?:^|\\\\s)\" + name + \"-([\\\\d.]+)(?:$|\\\\s)\").exec(classes)?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/pulsing-dot.ts#L83"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/support/appearance.ts",
+        "line": 50,
+        "snippet": "const fn = /^(oklch|oklab|lch|lab|hsl|hsla|hwb)\\(([^)]*)\\)$/i.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/support/appearance.ts#L50"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/support/css-candidates.ts",
+        "line": 6,
+        "snippet": "const tag = /^[a-z][\\w-]*|^\\*/i.exec(selector)?.[0]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/support/css-candidates.ts#L6"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/support/gradient-pattern.ts",
+        "line": 8,
+        "snippet": "const match = /^([-+]?[\\d.]+)(%|deg|grad|turn|px)?$/.exec(token)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/support/gradient-pattern.ts#L8"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/decoration/support/gradient-pattern.ts",
+        "line": 24,
+        "snippet": "const m = /^repeating-(linear|radial)-gradient\\(([\\s\\S]*)\\)$/i.exec(layer)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/decoration/support/gradient-pattern.ts#L24"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/layout/support/motion.ts",
+        "line": 47,
+        "snippet": "const match = /^scale(?:[XYZ]|3d)?\\(([^)]*)\\)\\s*/i.exec(rest)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/layout/support/motion.ts#L47"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/layout/support/padding.ts",
+        "line": 23,
+        "snippet": "/^linear-gradient\\(to (right|left|bottom|top), rgba\\(0, 0, 0, 0\\) ([\\d.]+)(px|%), (rgba?\\([^)]*\\)) ([\\d.]+)(px|%)\\)$/.exec( image, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/layout/support/padding.ts#L23"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/side-tab.ts",
+        "line": 49,
+        "snippet": "const color = /\\bsolid\\s+([\\s\\S]*)/i.exec(match[0])?.[1]?.trim() ?? \"\"",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/side-tab.ts#L49"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/corners.ts",
+        "line": 26,
+        "snippet": "const m = /^(-?\\d*\\.?\\d+)(px|rem|em|%)?$/.exec(v)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/corners.ts#L26"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/corners.ts",
+        "line": 139,
+        "snippet": "const classText = /(?:className|class|tw)\\s*=\\s*[\"']([^\"']*)/.exec(tag)?.[1] ?? \"\"",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/corners.ts#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/corners.ts",
+        "line": 142,
+        "snippet": "const tagName = /^<([\\w-]+)/.exec(tag)?.[1] ?? \"\"",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/corners.ts#L142"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/corners.ts",
+        "line": 150,
+        "snippet": "const styled = new RegExp(`\\\\b(?:const|let)\\\\s+${tagName}\\\\s*=\\\\s*styled[^\\\\x60]*\\\\x60([^\\\\x60]*)\\\\x60`).exec( styleText, )?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/corners.ts#L150"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/corners.ts",
+        "line": 168,
+        "snippet": "const style = /\\bstyle\\s*=\\s*[\"']([^\"']*)[\"']/.exec(tag)?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/corners.ts#L168"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/corners.ts",
+        "line": 169,
+        "snippet": "const object = /\\b(?:style|sx)\\s*=\\s*\\{\\{([\\s\\S]*)\\}\\}/.exec(tag)?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/corners.ts#L169"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/css-scopes.ts",
+        "line": 120,
+        "snippet": "const m = /^\\s*[\"']?([-\\w]+)[\"']?\\s*:\\s*([\\s\\S]*)$/.exec(body.slice(start, end))",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/css-scopes.ts#L120"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/image-tags.ts",
+        "line": 69,
+        "snippet": "const end = new RegExp(`</${/^<(\\w+)/.exec(tag)?.[1] ?? \"\"}\\\\s*>`, \"gi\")",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/image-tags.ts#L69"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/image-tags.ts",
+        "line": 71,
+        "snippet": "const close = end.exec(text)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/image-tags.ts#L71"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/source/support/source-color.ts",
+        "line": 42,
+        "snippet": "const match = /^(hsla?|hwb)\\((.*)\\)$/.exec(text)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/source/support/source-color.ts#L42"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/typography/support/drawn-enlargement.ts",
+        "line": 15,
+        "snippet": "const match = /^([-+]?[\\d.]+)(deg|grad|rad|turn)$/.exec(angle ?? \"\")",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/typography/support/drawn-enlargement.ts#L15"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/typography/support/drawn-enlargement.ts",
+        "line": 44,
+        "snippet": "const matrix = /^matrix\\(([^)]+)\\)$/.exec(transform)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/typography/support/drawn-enlargement.ts#L44"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/typography/support/fading-text.ts",
+        "line": 6,
+        "snippet": "const match = /^([-+]?(?:\\d*\\.)?\\d+)(ms|s)$/.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/typography/support/fading-text.ts#L6"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/detect/rules/typography/support/svg-size.ts",
+        "line": 7,
+        "snippet": "const matrix = /^matrix\\(([^)]+)\\)$/.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/detect/rules/typography/support/svg-size.ts#L7"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/color.ts",
+        "line": 201,
+        "snippet": "const hex = /^#([0-9a-f]{3,8})$/.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/color.ts#L201"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/color.ts",
+        "line": 209,
+        "snippet": "const varMatch = /^var\\(\\s*(--[\\w-]+)\\s*(?:,\\s*(.+))?\\)$/.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/color.ts#L209"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/color.ts",
+        "line": 215,
+        "snippet": "const theme = /^theme\\(\\s*['\"]?([\\w.-]+)['\"]?\\s*\\)$/.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/color.ts#L215"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/color.ts",
+        "line": 217,
+        "snippet": "const fn = /^([a-z]+)\\((.*)\\)$/.exec(value)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/color.ts#L217"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/declarations.ts",
+        "line": 26,
+        "snippet": "const m = /^(-?\\d*\\.?\\d+)(px|rem|em)?$/.exec(t)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/declarations.ts#L26"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/declarations.ts",
+        "line": 33,
+        "snippet": "const m = token ? /^(\\d*\\.?\\d+)%$/.exec(token.trim()) : null",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/declarations.ts#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/declarations.ts",
+        "line": 69,
+        "snippet": "/^border-(top|right|bottom|left|block-start|block-end|inline-start|inline-end)(?:-(width|color))?$/.exec(prop)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/declarations.ts#L69"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/declarations.ts",
+        "line": 114,
+        "snippet": "const m = /^border-([a-z]+-[a-z]+)-radius$/.exec(prop)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/declarations.ts#L114"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/gradient.ts",
+        "line": 33,
+        "snippet": "const far = /^calc\\(\\s*100%\\s*-\\s*([\\d.]+(?:px|rem|em)?)\\s*\\)$/i.exec(position)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/gradient.ts#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/markup.ts",
+        "line": 73,
+        "snippet": "return /^<([A-Za-z][\\w.-]*)/.exec(text.slice(open))?.[1] ?? \"\"",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/markup.ts#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/selector.ts",
+        "line": 26,
+        "snippet": "tag: (/^[a-z][\\w-]*/i.exec(bare)?.[0] ?? \"\").toLowerCase(),",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/selector.ts#L26"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 69,
+        "snippet": "return isWide(/^border-(?:[tlrbsexy]|bs|be)-(\\d+|\\[[^\\]]+\\])$/.exec(util)?.[1])",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L69"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 75,
+        "snippet": "const m = /^rounded(?:-(tl|tr|br|bl|ss|se|ee|es|[trblse]))?(?:-(.+))?$/.exec(util)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 94,
+        "snippet": "return colorIsChromatic(/^border(?:-(?:[tlrbsexy]|bs|be))?-(.+)$/.exec(util)?.[1])",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L94"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 98,
+        "snippet": "const border = utils.some((u) => isWide(/^border-(\\d+|\\[[^\\]]+\\])$/.exec(u)?.[1]))",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L98"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 100,
+        "snippet": "const fragment = /^border-(.+)$/.exec(u)?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L100"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 103,
+        "snippet": "const ring = utils.some((u) => isWide(/^ring-(\\d+|\\[[^\\]]+\\])$/.exec(u)?.[1]))",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L103"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 105,
+        "snippet": "const fragment = /^ring-(.+)$/.exec(u)?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L105"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/accent-stripes/tailwind.ts",
+        "line": 113,
+        "snippet": "const m = new RegExp(`^${axis}-(px|0\\\\.5|1|1\\\\.5|2|\\\\[[^\\\\]]+\\\\])$`).exec(u)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/accent-stripes/tailwind.ts#L113"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/check-accent-stripes.test.ts",
+        "line": 122,
+        "snippet": "spawnSync(process.execPath, [SCRIPT, ...args], { encoding: \"utf8\", timeout: 30_000 })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/check-accent-stripes.test.ts#L122"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/check-draft-guard.test.ts",
+        "line": 102,
+        "snippet": "spawnSync(process.execPath, [SCRIPT, ...args], { encoding: \"utf8\", timeout: 30_000 })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/check-draft-guard.test.ts#L102"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/draft-guard/rules.ts",
+        "line": 47,
+        "snippet": "const direct = EMOJI.exec(text)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/draft-guard/rules.ts#L47"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/draft-guard/text-nodes.ts",
+        "line": 56,
+        "snippet": "const m = CLASS_ATTR.exec(attrs)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/draft-guard/text-nodes.ts#L56"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/draft-guard/text-nodes.ts",
+        "line": 82,
+        "snippet": "const m = LITERAL_VALUE.exec(attrs.slice(from))",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/draft-guard/text-nodes.ts#L82"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/draft-guard/text-nodes.ts",
+        "line": 90,
+        "snippet": "const lit = /^\\{\\s*([\"'`])([^\"'`]*)\\1\\s*\\}$/.exec(m)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/draft-guard/text-nodes.ts#L90"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/frontend/scripts/perfection/draft-guard/text-nodes.ts",
+        "line": 134,
+        "snippet": "const v = isStatElement(element) ? VALUE_NAME.exec(names) : null",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/draft-guard/text-nodes.ts#L134"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/frontend/scripts/perfection/lighthouse-audit.py",
+        "line": 81,
+        "snippet": "result = subprocess.run( [\"node\", \"-e\", \"require('lighthouse'); require('chrome-launcher')\"], capture_output=True, text=True, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/lighthouse-audit.py#L81"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/frontend/scripts/perfection/lighthouse-audit.py",
+        "line": 92,
+        "snippet": "subprocess.run( [\"npm\", \"install\", \"-g\", \"lighthouse\", \"chrome-launcher\"], capture_output=True, check=True, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/lighthouse-audit.py#L92"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/frontend/scripts/perfection/lighthouse-audit.py",
+        "line": 106,
+        "snippet": "result = subprocess.run( [\"node\", js_path, url, str(cdp_port), preset], capture_output=True, text=True, timeout=120, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/frontend/scripts/perfection/lighthouse-audit.py#L106"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/pi-goal/scripts/qa/drive.mjs",
+        "line": 136,
+        "snippet": "const child = spawn( process.execPath, [piBin, \"--mode\", \"rpc\", \"--offline\", \"-e\", mockProviderEntry, \"-e\", goalExtensionEntry, \"--provider\", \"omo-mock\", \"--model\", \"mock-1\"], { cw",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/pi-goal/scripts/qa/drive.mjs#L136"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/programming/scripts/go/new-project.py",
+        "line": 71,
+        "snippet": "subprocess.run( [\"go\", \"mod\", \"init\", module], cwd=project_dir, check=True, capture_output=True, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/go/new-project.py#L71"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/programming/scripts/python/new-project.py",
+        "line": 115,
+        "snippet": "result = subprocess.run(cmd, capture_output=True, text=True, check=False)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/python/new-project.py#L115"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/programming/scripts/python/new-project.py",
+        "line": 146,
+        "snippet": "subprocess.run( [\"uv\", \"add\", \"--dev\", \"basedpyright\", \"ruff\", \"pytest\", \"pytest-cov\"], cwd=project_dir, capture_output=True, check=False, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/python/new-project.py#L146"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/rust/check-no-excuse-rules.test.ts",
+        "line": 16,
+        "snippet": "const result = spawnSync(\"bash\", [script, file], { encoding: \"utf8\", timeout: 30_000 })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/rust/check-no-excuse-rules.test.ts#L16"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/programming/scripts/rust/new-project.py",
+        "line": 134,
+        "snippet": "subprocess.run( [\"cargo\", \"init\", str(project_dir), \"--name\", name], check=True, capture_output=True, text=True, )",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/rust/new-project.py#L134"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/scaffolders.test.ts",
+        "line": 23,
+        "snippet": "const child = Bun.spawn([process.execPath, join(import.meta.dir, script), ...args], { cwd: runRoot, env: { ...process.env, PATH: emptyBin }, stdout: \"ignore\", stderr: \"pipe\", })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/scaffolders.test.ts#L23"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/scaffolders.test.ts",
+        "line": 34,
+        "snippet": "const block = /^# \\/\\/\\/ script\\n((?:#.*\\n)*?)# \\/\\/\\/$/m.exec(source)?.[1] ?? \"\"",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/scaffolders.test.ts#L34"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/scaffolders.test.ts",
+        "line": 97,
+        "snippet": "const child = Bun.spawn( [ process.execPath, join(scriptsCopy, \"go\", \"new-project.ts\"), \"crlf-svc\", \"--path\", runRoot, \"--module\", \"example.com/acme/crlf\", \"--purpose\", \"billing\", ",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/scaffolders.test.ts#L97"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/shared/run-tool.ts",
+        "line": 11,
+        "snippet": "const result = spawnSync(command, args, { cwd, encoding: \"utf8\" })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/shared/run-tool.ts#L11"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/typescript/check-no-excuse-rules.test.ts",
+        "line": 22,
+        "snippet": "return spawnSync(process.execPath, [\"--no-install\", cachedScript, target], { cwd, encoding: \"utf8\", timeout: 60_000, })",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/typescript/check-no-excuse-rules.test.ts#L22"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/typescript/check-no-excuse-rules.ts",
+        "line": 353,
+        "snippet": "while ((match = commentRegex.exec(source)) !== null) {",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/typescript/check-no-excuse-rules.ts#L353"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/typescript/check-test-junk-rules.ts",
+        "line": 136,
+        "snippet": "const match = pattern.exec(line)",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/typescript/check-test-junk-rules.ts#L136"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/typescript/check-test-junk-rules.ts",
+        "line": 146,
+        "snippet": "return /\\bassert\\s+(?:not\\s+)?[\"'][^\"']*[\"']\\s+(?:not\\s+)?in\\s+(\\w+)/.exec(line)?.[1]",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/typescript/check-test-junk-rules.ts#L146"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/programming/scripts/typescript/check-test-junk-rules.ts",
+        "line": 149,
+        "snippet": "/\\bexpect\\s*\\(\\s*(\\w+)\\s*\\)\\s*(?:\\.not)?\\.(?:toContain|toMatch|toMatchSnapshot|toMatchInlineSnapshot|toInclude|toStartWith|toEndWith)\\s*\\(/.exec( line, )?.[1] ?? /\\bexpect\\s*\\(\\s*(",
+        "githubBlobUrl": "https://github.com/HengWeiBin/oh-my-antigravity/blob/113a8c5558783df528c7d8128c54df7d94d8bf8e/skills/programming/scripts/typescript/check-test-junk-rules.ts#L149"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.6.0",
+      "sha": "113a8c5558783df528c7d8128c54df7d94d8bf8e",
+      "scannedAt": "2026-11-27T18:20:51.256Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_injection_suspect",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

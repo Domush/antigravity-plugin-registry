@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "id": "jsifalda/signalseek-mcp",
+  "sha": "e93cc4a1075cd89324c01966620324057b4b6edf",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:12.093Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "signalseek",
+    "displayName": "SignalSeek",
+    "version": "1.0.2",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "signalseek",
+        "runtimeName": "signalseek_signalseek",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://signalseek.cc/api/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "find-reddit-buyers",
+        "slashCommand": "/find-reddit-buyers",
+        "description": "Find live Reddit threads where people ask for what your product does, score each one for buying intent, and draft a helpful reply that you post by hand. Use when the user asks to find customers, leads or buyer-intent posts on Reddit for a p",
+        "disableModelInvocation": false,
+        "file": "skills/find-reddit-buyers/SKILL.md"
+      },
+      {
+        "name": "signalseek-daily-leads",
+        "slashCommand": "/signalseek-daily-leads",
+        "description": "Review the Reddit leads SignalSeek found, write each reply in your company's own voice from your own docs, save it, approve it on the user's OK, and record the link after you post by hand. Use when the user asks what came in on Reddit, to r",
+        "disableModelInvocation": false,
+        "file": "skills/signalseek-daily-leads/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/find-reddit-buyers",
+      "/signalseek-daily-leads"
+    ],
+    "mcpServerNames": [
+      "signalseek_signalseek"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": [
+      "signalseek"
+    ]
+  },
+  "readmeMarkdown": "<p align=\"center\"><img src=\"icon.svg\" width=\"72\" alt=\"SignalSeek\"></p>\n\n[![M8ven Score](https://m8ven.ai/badge/mcp/jsifalda-signalseek-mcp-14ersf?v=ae70c2dc1b2e59414ee0db2cb8799155)](https://m8ven.ai/mcp/jsifalda-signalseek-mcp-14ersf?s=readme)\n\n# SignalSeek MCP server\n\nSomeone on Reddit is asking for what you sell right now. Ask your AI agent, and SignalSeek shows you who they are, with a drafted reply.\n\n**SignalSeek never posts.** The server has no posting tool of any kind.\n\n- Endpoint: `https://signalseek.cc/api/mcp`\n- Transport: streamable HTTP\n- Auth: OAuth. You sign in to your own SignalSeek account. Your AI client reaches that one account and no other.\n- Registry name: `io.github.jsifalda/signalseek` in the [official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=signalseek)\n- Website: [signalseek.cc](https://signalseek.cc) · Connector page: [signalseek.cc/mcp](https://signalseek.cc/mcp)\n\n## Connect in Claude\n\n1. Open Claude on the web or in the Desktop app.\n2. Pro and Max: open **Customize**, then **Connectors**, then **+ Add**, then **Add custom connector**.\n3. Enter a name and the URL `https://signalseek.cc/api/mcp`. Paste `/api/mcp`, not `/mcp`. Click **Continue**.\n4. Under OAuth client, keep **Use Claude's published identity (Recommended)**. Click **Add**, then **Connect**.\n5. Sign in to SignalSeek and approve.\n6. Ask Claude: \"List my SignalSeek campaigns.\"\n\nTeam and Enterprise: an Owner adds the connector under **Organization settings → Connectors → Add → Custom → Web**. Members then click **Connect** under **Customize → Connectors**.\n\nThe connector syncs to your account, so it also works in the Claude iOS app.\n\n## Connect in Claude Code\n\nThis repo is a Claude Code plugin. It holds the MCP server config and both agent skills.\n\n```bash\n/plugin marketplace add jsifalda/signalseek-mcp\n/plugin install signalseek@signalseek\n```\n\nThen run `/mcp`, pick signalseek, sign in to SignalSeek and approve. Then ask: \"Work my SignalSeek leads.\"\n\n## Connect in ChatGPT\n\n1. Open ChatGPT on the web and go to **Plugins**. Click the plus button, then **Add custom MCP server**.\n2. Enter a name, for example SignalSeek. Under **Connection**, paste `https://signalseek.cc/api/mcp`.\n3. Pick **OAuth** for authentication. If ChatGPT asks how to register the client, pick the client ID metadata document (CIMD).\n4. Read the risk warning, confirm it, and click **Create as a plugin**. Then install the plugin.\n5. ChatGPT opens the SignalSeek sign-in page. Sign in and approve.\n6. In a chat, type `@`, pick SignalSeek, and ask: \"List my SignalSeek campaigns.\"\n\nWorkspace rules can block custom MCP servers. OpenAI can rename these menus, see [OpenAI's setup guide](https://developers.openai.com/api/docs/guides/developer-mode).\n\n## Connect in Google Antigravity\n\nThis repo is an Antigravity plugin (`plugin.json`, `mcp_config.json`).\n\n1. Install the plugin from this repo, or from the Antigravity Marketplace when it is listed.\n2. Antigravity opens your browser when the server connects. Sign in to SignalSeek and approve.\n3. Ask: \"List my SignalSeek campaigns.\"\n\n## Connect in Gemini CLI\n\nThis repo is a Gemini CLI extension (`gemini-extension.json`).\n\n```bash\ngemini extensions install https://github.com/jsifalda/signalseek-mcp\n```\n\nThen run `/mcp auth signalseek`, sign in to SignalSeek and approve.\n\n## Connect in GitHub Copilot CLI\n\nThe `copilot/` folder is an Agent Plugins plugin for Copilot CLI (`plugin.json`, `mcp.json`).\n\n1. Install the plugin from the `copilot/` folder of this repo, or from awesome-copilot when it is listed.\n2. The server has no dynamic client registration, so Copilot CLI asks for an OAuth client ID. Enter `https://github.com/copilot/cli/client-metadata.json`.\n3. Sign in to SignalSeek and approve.\n4. Ask: \"List my SignalSeek campaigns.\"\n\n## Other MCP clients\n\nSignalSeek works in any MCP client that signs in with OAuth and a client ID metadata document. Point the client at `https://signalseek.cc/api/mcp` over streamable HTTP. The server does not support OAuth dynamic client registration. Use a client that supports OAuth client ID metadata documents, or set a client ID by hand.\n\nThe `clients/` folder holds the published client ID documents for Claude Code, Cursor, Gemini CLI, Antigravity and Meta Muse. Each file's raw GitHub URL is its client ID.\n\n## Tools\n\n| Tool | What it does | Access |\n|---|---|---|\n| `list_campaigns` | Lists your campaigns with status, interval and match counts | Read |\n| `get_campaign` | Reads one campaign in full, plus its strategy summary | Read |\n| `get_campaign_strategy` | Reads a campaign's persona, subreddits and search terms. A search term reports `isExcluded` and `autoExcluded` | Read |\n| `get_campaign_stats` | Reads a campaign's draft counts and last monitoring run | Read |\n| `list_drafts` | Lists the Reddit opportunities SignalSeek found, with a summary of each draft | Read |\n| `get_draft` | Reads one draft in full | Read |\n| `create_campaign` | Creates a campaign and, by default, generates its strategy | Write |\n| `generate_campaign_strategy` | Generates search terms, subreddits and a reply persona for a draft campaign | Write |\n| `update_campaign` | Changes a campaign's settings or status (pause, resume, archive) | Write |\n| `update_persona` | Changes a campaign's reply persona | Write |\n| `add_subreddits` | Adds subreddits to a campaign, each checked against Reddit first | Write |\n| `update_subreddit` | Excludes, restores or removes one subreddit. Remove works only on subreddits you added | Write |\n| `add_search_terms` | Adds search terms to a campaign | Write |\n| `update_search_term` | Excludes, restores or removes one search term, and restores one that the daily job auto-excluded | Write |\n| `generate_draft_reply` | Writes the reply for a draft and stores it on that draft | Write |\n| `save_draft_reply` | Saves your own reply text on a draft, after a content-rule check. It does not approve the draft | Write |\n| `approve_draft` | Marks a draft ready for you to use by hand. It approves the text you saved with `save_draft_reply`, or the generated reply, and tells you which one. It does not post | Write |\n| `record_reply_link` | Records that you posted an approved reply by hand, with the link to your comment. It never checks or touches Reddit | Write |\n| `reject_draft` | Turns a draft down, with an optional tag and reason that tune later matches | Write |\n\n\"Write\" tools change data inside your SignalSeek account only. No tool writes to Reddit.\n\n## Things you can ask\n\n- \"What came in overnight?\"\n- \"Show me the draft for the best match.\"\n- \"Create a SignalSeek campaign for my invoicing app. It is for freelance designers who hate chasing late payments.\"\n- \"Pause the campaign for the product I shut down.\"\n\n## Agent skill: daily leads\n\nA skill that needs the SignalSeek MCP server. It lists the leads SignalSeek found. It writes each reply in your agent from your own brand and product docs. It reads those docs fresh each run and never copies them into SignalSeek. It saves and approves the reply on your OK. It records the link after you post by hand.\n\n- File: [`skills/signalseek-daily-leads/SKILL.md`](skills/signalseek-daily-leads/SKILL.md)\n- The Claude Code plugin installs it.\n\n## Agent skill: find Reddit buyers\n\nA one-shot skill that needs no account and no MCP server. It uses web search to find Reddit threads where people ask for what your product does, scores them, and drafts replies you post by hand.\n\n- File: [`skills/find-reddit-buyers/SKILL.md`](skills/find-reddit-buyers/SKILL.md)\n- Live copy: https://signalseek.cc/skills/find-reddit-buyers/SKILL.md\n- Use it in any agent:\n\n```text\nRead https://signalseek.cc/skills/find-reddit-buyers/SKILL.md and follow it to find people on Reddit who need my product.\n```\n\n## Privacy\n\n- SignalSeek reads public Reddit content. It never posts, comments or sends messages.\n- Each OAuth token is tied to one SignalSeek account.\n- Pricing and terms: [signalseek.cc](https://signalseek.cc)\n\n## About this repo\n\nThis repo holds the public docs, the MCP Registry manifest (`server.json`), the Claude Code plugin, the Cursor plugin, the Gemini CLI extension, the Antigravity plugin, the daily-leads and find-reddit-buyers agent skills and their OAuth client ID documents. The server itself is a hosted service, and its source is private.\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.2",
+      "sha": "e93cc4a1075cd89324c01966620324057b4b6edf",
+      "scannedAt": "2026-11-27T18:14:12.093Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

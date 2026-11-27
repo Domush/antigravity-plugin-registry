@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "id": "Bowen-0x00/agy-session-statusline",
+  "sha": "4ce9eeb87414a560aaae2dd22a8364c88ae33440",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:35.730Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-session-statusline",
+    "displayName": "AGY Session Statusline",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "session-statusline-setup",
+        "slashCommand": "/session-statusline-setup",
+        "description": "Install, verify (doctor), or uninstall the agy-session-statusline custom statusLine in Antigravity CLI (~/.gemini/antigravity-cli/settings.json). Use when the user asks to set up, enable, verify, configure, or remove agy-session-statusline.",
+        "disableModelInvocation": false,
+        "file": "skills/session-statusline-setup/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/session-statusline-setup"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-session-statusline\n\n**English** | [简体中文](README.zh-CN.md)\n\nA lightweight, zero-dependency **Antigravity CLI (`agy`)** `statusLine` plugin that stacks the current **Session ID** (`conversation_id`) and full **`transcript.jsonl`** path directly underneath the built-in status bar (`stack_with_default: true`).\n\nBuilt for fast **cross-agent context handoff**: copy the active transcript path at any time and hand it to another `agy` session, Claude Code, Codex, Cursor, or any CLI tool.\n\n```text\nREADY │ Gemini 4 Neon (High) │ 12% ctx │ ...          <-- built-in status bar kept intact\nID: 9cdb7034-5435-4f9d-9dc5-95f0a42eacae\nTranscript: ~/.gemini/antigravity-cli/brain/9cdb7034-5435-4f9d-9dc5-95f0a42eacae/.system_generated/logs/transcript.jsonl\n```\n\n---\n\n## Features\n\n- **Non-intrusive (`stack_with_default: true`)**: Keeps Antigravity CLI's default status bar intact and stacks session metadata below it.\n- **Zero external dependencies**: Pure Python 3.8+ standard library (`json`, `os`, `sys`). No `jq`, no Node.js, no `pip install`.\n- **Cross-platform**: Works out of the box on **Windows** (`cmd /c` with explicit Python path), **Linux**, **macOS**, and **WSL**.\n- **Safe & resilient**: Handles UTF-8 / CJK titles cleanly, gracefully renders `ID: (new session)` before the first message, and always exits `0` so `agy` never disables your status line.\n- **Safe installer & diagnostics**: Automatically backs up `settings.json`, verifies execution via `doctor`, and supports clean `uninstall`.\n\n---\n\n## Installation\n\n### Option 1: Install as an Antigravity Plugin (Recommended)\n\n```bash\nagy plugin install https://github.com/Bowen-0x00/agy-session-statusline\n```\n\nThen inside an `agy` session, run:\n\n```text\n/session-statusline-setup\n```\n\nRestart `agy` (or run `/statusline enable`) if the status bar does not refresh immediately.\n\n### Option 2: One-Line Installer (No Plugin Manager Needed)\n\n**macOS / Linux / WSL:**\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/Bowen-0x00/agy-session-statusline/main/scripts/install.py | python3 - install\n```\n\n**Windows (PowerShell):**\n\n```powershell\nirm https://raw.githubusercontent.com/Bowen-0x00/agy-session-statusline/main/scripts/install.py | python - install\n```\n\n### Option 3: Manual Git Clone\n\n```bash\ngit clone https://github.com/Bowen-0x00/agy-session-statusline.git\ncd agy-session-statusline\npython3 scripts/install.py install\n```\n\n---\n\n## Cross-Agent Context Handoff\n\nAntigravity CLI writes two JSONL logs for every conversation:\n\n- **`transcript.jsonl`** (compact): Summarizes large tool outputs (`truncated_fields`), ideal as the first file for another agent to read to save tokens.\n- **`transcript_full.jsonl`** (untruncated): Contains the full text for every step; read specific lines only when `transcript.jsonl` marks them as truncated.\n\nCopy the `Transcript:` path shown in your status bar and paste it into Claude Code, Codex, Cursor, or another `agy` session:\n\n> Read `<transcript.jsonl path>` first to understand the current session context. If any line has `\"truncated_fields\"`, inspect that line in `transcript_full.jsonl` in the same directory.\n\n---\n\n## Customization & CLI Options\n\n### Installer Commands\n\n```bash\n# Install and stack underneath the default status bar (default)\npython3 scripts/install.py install\n\n# Replace the default status bar instead of stacking\npython3 scripts/install.py install --replace\n\n# Verify settings.json and test stdout against sample payloads\npython3 scripts/install.py doctor\n\n# Remove statusLine config (backs up settings.json) and delete statusline.py\npython3 scripts/install.py uninstall\n```\n\n### Environment Variables\n\n| Variable | Effect |\n| :--- | :--- |\n| `NO_COLOR=1` or `AGY_STATUSLINE_NO_COLOR=1` | Disable ANSI dim styling on labels (`ID:`, `Transcript:`) |\n| `AGY_STATUSLINE_SINGLE_LINE=1` | Render on a single line (`ID: ... \\| Transcript: ...`) |\n| `AGY_STATUSLINE_SHOW_FULL=1` | Also print a `Full:` line pointing to `transcript_full.jsonl` |\n\n---\n\n## Running Tests\n\n```bash\npython3 -m unittest discover -s tests -v\n```\n\n---\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/install.py",
+        "line": 134,
+        "snippet": "proc = subprocess.run( shell_prefix + [cmd], input=payload.encode(\"utf-8\"), capture_output=True, )",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L134"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/install.py",
+        "line": 36,
+        "snippet": "with urllib.request.urlopen(DEFAULT_RAW_URL, timeout=15) as resp:",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L36"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/install.py",
+        "line": 44,
+        "snippet": "tmp_path.write_text(content, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L44"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/install.py",
+        "line": 164,
+        "snippet": "dest_script.write_bytes(script_bytes)",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L164"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.py",
+        "line": 81,
+        "snippet": "return \"~/.gemini/antigravity-cli/statusline.py\"",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L81"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.py",
+        "line": 243,
+        "snippet": "help=\"Target Antigravity CLI config directory (default: ~/.gemini/antigravity-cli)\",",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L243"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.py",
+        "line": 261,
+        "snippet": "help=\"Target Antigravity CLI config directory (default: ~/.gemini/antigravity-cli)\",",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L261"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.py",
+        "line": 269,
+        "snippet": "help=\"Target Antigravity CLI config directory (default: ~/.gemini/antigravity-cli)\",",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/scripts/install.py#L269"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/session-statusline-setup/SKILL.md",
+        "line": 19,
+        "snippet": "`../../scripts/install.py` (relative to `skills/session-statusline-setup/`).",
+        "githubBlobUrl": "https://github.com/Bowen-0x00/agy-session-statusline/blob/4ce9eeb87414a560aaae2dd22a8364c88ae33440/skills/session-statusline-setup/SKILL.md#L19"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "4ce9eeb87414a560aaae2dd22a8364c88ae33440",
+      "scannedAt": "2026-11-27T18:17:35.730Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

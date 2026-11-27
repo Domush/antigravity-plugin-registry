@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "id": "YukiKaguraA/agy-archive-manager",
+  "sha": "14e714dc322d179840c725f3b925e7a7ba20f2ef",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:14.235Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "archive-manager",
+    "displayName": "会话管理 (Session Manager)",
+    "version": "2.3.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "archive-manager",
+        "slashCommand": "/archive-manager",
+        "description": "Manage, search, preview, restore/archive, star, tag, and export archived and active Antigravity conversations in the Session Manager side panel. Use when the user asks to view archived conversations, find old chats, restore an archived chat",
+        "disableModelInvocation": false,
+        "file": "skills/archive-manager/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/archive-manager"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"logo.svg\" width=\"96\" height=\"96\" alt=\"会话管理 Logo\" />\n\n# 会话管理 · Session Manager\n\n**为 Google Antigravity 打造的会话归档 / 检索 / 预览 / 导出面板**\n\n五大视图 · 全文检索 · 免恢复预览 · 批量归档（可撤回） · 标签与备注 · Markdown 导出 · 四种界面语言\n\n[**简体中文**](./README.md) · [**English**](./README.en.md) · [**繁體中文**](./README.zh-TW.md) · [**日本語**](./README.ja.md) · [**更新日志**](./CHANGELOG.md) · [**版本发布**](https://github.com/YukiKaguraA/agy-archive-manager/releases) · [**问题反馈**](https://github.com/YukiKaguraA/agy-archive-manager/issues)\n\n<p>\n  <a href=\"https://github.com/YukiKaguraA/agy-archive-manager/releases\"><img src=\"https://img.shields.io/github/v/release/YukiKaguraA/agy-archive-manager?style=flat-square&color=3186ff&label=Release\" alt=\"Latest Release\" /></a>\n  <img src=\"https://img.shields.io/badge/Antigravity-%E2%89%A5%202.35.0-0f172a?style=flat-square\" alt=\"Antigravity 2.35.0+\" />\n  <img src=\"https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-1e293b?style=flat-square\" alt=\"Platform\" />\n  <img src=\"https://img.shields.io/badge/Node.js-22.13%2B%20%7C%2024%20LTS-339933?style=flat-square&logo=nodedotjs&logoColor=white\" alt=\"Node.js 22.13+ or 24 LTS\" />\n  <img src=\"https://img.shields.io/badge/i18n-4_languages-8b5cf6?style=flat-square\" alt=\"简体中文 | English | 繁體中文 | 日本語\" />\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-2563eb?style=flat-square\" alt=\"License: MIT\" /></a>\n</p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/hero-dark.png\" />\n  <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/hero-light.png\" />\n  <img src=\"docs/screenshots/hero-light.png\" width=\"100%\" alt=\"会话管理面板预览\" />\n</picture>\n\n<sub>主图由 <code>tools/render-hero.mjs</code> 直接渲染本仓库面板源码，亮 / 暗版本跟随 GitHub 主题切换；会话内容均为虚构示例。</sub>\n\n</div>\n\n> **非官方社区项目声明 (Non-Affiliation Disclaimer)**\n>\n> 本项目为独立的开源社区插件，与 Google LLC 无任何隶属、赞助或官方背书关系；文中提及的 “Antigravity” 与 “Google” 仅用于说明兼容性。\n\n---\n\n## ✨ 亮点\n\n- **五大视图，一眼分清**：活跃、已归档、收藏、闲置、全部。打开面板时默认显示活跃会话。\n- **什么都搜得到**：标题、项目、正文、标签、备注一起全文检索，命中处高亮。\n- **不恢复也能看**：直接预览历史对话，超长消息自动折叠，排版视图和原文视图一键切换。\n- **归档后悔了？撤回**：支持批量归档 / 恢复、按闲置天数一键归档，操作都能撤回。\n- **整理顺手**：置顶 📌、星标 ★、`#标签`、自动保存的备注、原地重命名。\n- **一键导出 Markdown**：连同会话信息、标签和备注一起导出到 `~/Documents/Antigravity-Exports`。\n- **四种界面语言**：可切换简体中文、English、繁體中文或日本語。面板会记住所选语言，配色跟随宿主主题。\n- **安全兜底**：运行中的会话禁止删除，SQLite 只读打开，本地备注原子保存。\n\n---\n\n## 🖼️ 界面预览\n\n### 1. 主面板与超长消息折叠\n\n活跃视图下，琥珀色「归档」按钮随手可点；单条超过 450px 的消息自动折叠，附带渐隐遮罩和「展开全文 / 收起」。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/preview-main.png\" width=\"100%\" alt=\"主面板与超长消息自动折叠\" />\n</p>\n\n### 2. 已归档视图与全文检索高亮\n\n在已归档视图中检索，命中词高亮显示；Markdown 预览可展开阅读，绿色「恢复」一键放回活跃视图。\n\n<p align=\"center\">\n  <img src=\"docs/screenshots/preview-archived.png\" width=\"100%\" alt=\"已归档视图、全文检索高亮与 Markdown 预览\" />\n</p>\n\n### 3. 功能速查表\n\n| 场景 | 操作 | 入口 |\n| :--- | :--- | :--- |\n| 找旧会话 | 原文片段 / 多关键词检索，配合项目 / 分组 / 标签筛选与排序 | 面板顶部 |\n| 归档 / 恢复 | 琥珀色「归档」/ 绿色「恢复」，可撤回 | 会话卡片、预览工具栏 |\n| 批量处理 | 多选后归档或恢复，在已归档视图可确认永久删除所选会话 | 「批量」按钮 |\n| 清理闲置 | 按 3 / 7 / 14 / 30 天批量归档闲置会话 | 闲置视图 |\n| 阅读长会话 | 展开全部 / 全部折叠、⬆ 顶部、⬇ 底部、排版 / 原文 | 预览工具栏 |\n| 整理 | 置顶、星标、重命名、`#标签`、备注 | 卡片与预览区 |\n| 导出 | 导出 `.md`，可定位文件或打开导出目录 | 预览工具栏、「导出目录」 |\n| 打开面板 | 左侧栏入口（需 CDP）/ 右侧插件菜单 / 对话指令 | 多处 |\n\n---\n\n## 🚀 快速安装\n\n### 方式一：安装脚本（推荐 · 普通用户）\n\n**Windows (PowerShell)：**\n\n```powershell\ngit clone https://github.com/YukiKaguraA/agy-archive-manager.git\ncd agy-archive-manager\n.\\scripts\\install.ps1\n```\n\n**macOS / Linux：**\n\n```bash\ngit clone https://github.com/YukiKaguraA/agy-archive-manager.git\ncd agy-archive-manager\nchmod +x scripts/install.sh\n./scripts/install.sh\n```\n\n再次运行同一脚本即可更新到仓库中的最新版本。\n\n### 方式二：手动复制（开发者 / 离线环境）\n\n将以下文件复制到 `~/.gemini/config/plugins/archive-manager/`（Windows 为 `%USERPROFILE%\\.gemini\\config\\plugins\\archive-manager\\`）：\n\n- `plugin.json`、`logo.svg`、`LICENSE`\n- `README.md`、`README.en.md`、`README.zh-TW.md`、`README.ja.md`、`CHANGELOG.md`\n- `docs/screenshots/`（文档预览图）\n- `skills/`、`sidecars/`\n\n安装完成后，在 Antigravity 的 **Customizations → Plugins** 中启用 **会话管理 (Session Manager)**，即可在右侧辅助面板打开，或在对话中说「打开会话管理面板」。\n\n### 让 AI 助手代装\n\n使用 Antigravity Agent、Claude Code、Cursor 等 AI 助手安装时，可直接让它执行以下步骤：\n\n```bash\ngit clone https://github.com/YukiKaguraA/agy-archive-manager.git\ncd agy-archive-manager\n\n# 1. 运行对应系统的安装脚本（Windows 用 .\\scripts\\install.ps1）\n./scripts/install.sh\n\n# 2. 确认 Sidecar 运行时支持 node:sqlite（应输出 function）\nnode -e \"import('node:sqlite').then(m => console.log(typeof m.DatabaseSync))\"\n```\n\n然后提醒用户在 **Customizations → Plugins** 中启用插件。\n\n---\n\n## 🆕 v2.3.1\n\n- 「活跃」成为首个视图，打开面板时默认显示全部未归档会话。\n- 新增繁體中文和日本語。界面、操作提示及 Markdown 导出的固定字段随所选语言切换。\n- GitHub README 新增繁體中文版和日文版。\n\n[查看完整更新日志](./CHANGELOG.md)\n\n---\n\n## ❓ 常见问题\n\n<details>\n<summary><strong>左侧栏没有出现「会话管理」入口？</strong></summary>\n\n左侧栏入口和归档角标依赖 Chrome DevTools Protocol（CDP），需要用 `--remote-debugging-port=0` 启动 Antigravity。不开启也没关系，右侧插件菜单和对话指令都能打开面板。\n\n</details>\n\n<details>\n<summary><strong>面板打不开，或者提示 <code>node:sqlite</code> 相关错误？</strong></summary>\n\nSidecar 通过 `node` 命令启动，要求 Antigravity 实际使用的 Node.js 默认启用 `node:sqlite`，例如 Node.js 22.13+（22.x LTS）或 Node.js 24 LTS。可以用上面「让 AI 助手代装」中的命令自检。\n\n</details>\n\n<details>\n<summary><strong>预览只显示了一部分消息？</strong></summary>\n\n预览优先读取 `transcript_full.jsonl`，可用时结合 `transcript.jsonl`；两者都缺失时回退到 FTS 摘要。较早的会话如果没有留下完整转录，就只能看到部分消息或摘要，面板会给出提示。\n\n</details>\n\n<details>\n<summary><strong>Antigravity 更新后功能异常？</strong></summary>\n\n归档等操作通过 Antigravity 内部的 `ConversationService` 完成，检索与预览读取内部数据文件，宿主更新可能改变这些接口。请附上 Antigravity 版本号到 [Issues](https://github.com/YukiKaguraA/agy-archive-manager/issues) 反馈。\n\n</details>\n\n<details>\n<summary><strong>导出的 Markdown 文件在哪里？标签和备注存在哪里？</strong></summary>\n\n导出文件保存在 `~/Documents/Antigravity-Exports`，每次导出生成独立文件，面板里可以一键定位。面板通过宿主服务更新原生标签，并读回核对。备注与旧版本留下的本地标签记录保存在 Sidecar 数据目录。Antigravity 2.35.2 可能忽略清空最后一个标签的请求，面板会读回核对，未生效时提示并保留本地记录。\n\n</details>\n\n---\n\n<details>\n<summary><strong>🔧 运行要求与数据来源（点击展开）</strong></summary>\n\n- **Google Antigravity**：设计目标为 Antigravity 2.35.0。面板和进程生命周期使用公开的 Sidecar 机制，参见 [Antigravity Sidecar 文档](https://antigravity.google/docs/sidecars/)。\n- **会话数据**：归档等操作通过内部 `ConversationService` 提交；搜索和预览读取内部 SQLite 摘要索引和转录文件，其中 SQLite 以只读方式打开。Antigravity 更新可能改变这些接口和数据格式。\n- **Node.js**：Sidecar 启动命令是 `node`，要求 Antigravity 实际启动的 Node.js 默认启用 `node:sqlite`，例如 Node.js 22.13+（22.x LTS 分支）或 Node.js 24 LTS。详见 [Node.js SQLite 文档](https://nodejs.org/api/sqlite.html)。\n- **左侧栏快捷入口（可选）**：入口和归档角标依赖 Antigravity 的界面结构和 CDP，使用时以 `--remote-debugging-port=0` 启动 Antigravity。\n\n</details>\n\n<details>\n<summary><strong>📁 目录结构、回归测试与主图渲染（点击展开）</strong></summary>\n\n#### 目录结构\n\n```text\nagy-archive-manager/\n├── plugin.json                         # 插件清单与元信息\n├── agy-market.json                     # AGY Market 市场伴随配置\n├── logo.svg                            # 插件图标\n├── README*.md                          # 四语说明文档\n├── CHANGELOG.md                        # 更新日志\n├── LICENSE                             # MIT 开源协议\n├── docs/\n│   ├── benchmark-v2.3.0.md             # v2.3.0 历史库基准测试报告\n│   └── screenshots/                    # 主图与界面预览截图\n├── scripts/\n│   ├── install.ps1                     # Windows 一键安装 / 更新脚本\n│   └── install.sh                      # macOS / Linux 一键安装 / 更新脚本\n├── skills/\n│   └── archive-manager/\n│       └── SKILL.md                    # 对话唤醒技能定义\n├── sidecars/\n│   └── archive_manager/\n│       ├── sidecar.json                # Sidecar 进程与面板入口配置\n│       ├── server.mjs                  # 本地 HTTP + ConversationService 后端\n│       ├── server-locale.mjs           # 后端提示与 Markdown 导出文案\n│       ├── search.mjs                  # 检索调度与取消控制\n│       ├── search-worker.mjs           # FTS5 / 流式正文检索工作线程\n│       ├── sidebar_injector.mjs        # 左侧栏快捷入口注入器（可选 CDP）\n│       └── index.html                  # 前端双栏管理面板\n├── tools/\n│   ├── benchmark-history.mjs           # 万条历史库性能基准脚本\n│   └── render-hero.mjs                 # README 亮 / 暗主图渲染脚本\n└── test/                               # 本地回归测试套件\n```\n\n#### 本地回归测试\n\n测试使用 Node.js 22.15+（22.x LTS 分支）或 Node.js 24 LTS，在仓库根目录运行：\n\n```sh\nnode --test\n```\n\n测试仅使用模拟的 Antigravity 服务和临时会话数据。\n\n#### 重新渲染主图\n\n面板 UI 改动后，可用本机的 Chrome 或 Edge 重新生成 `docs/screenshots/hero-{light,dark}.png`：\n\n```sh\nnode tools/render-hero.mjs\n# 找不到浏览器时手动指定：\nnode tools/render-hero.mjs --browser \"/path/to/chrome\"\n```\n\n</details>\n\n---\n\n## 📄 开源协议\n\n本项目基于 [MIT License](./LICENSE) 开源。欢迎通过 [Issues](https://github.com/YukiKaguraA/agy-archive-manager/issues) 和 [Pull Requests](https://github.com/YukiKaguraA/agy-archive-manager/pulls) 一起打磨。\n",
+  "latestReleaseNotes": "﻿## 会话管理 · Session Manager v2.3.1\n\n### 变更 / Changed\n- 将「活跃」移到首位并设为面板默认视图，打开即展示所有未归档会话。\n- Move **Active** to the first tab and open it by default.\n\n### 新增 / Added\n- 新增 **繁體中文** 与 **日本語** 界面支持，覆盖面板交互、操作提示、预览角色、左侧栏快捷入口以及 Markdown 导出字段（支持基于 Intl.Locale 自动识别）。\n- 新增繁体中文（[README.zh-TW.md](./README.zh-TW.md)）与日文（[README.ja.md](./README.ja.md)）说明文档，四语文档可互相切换，安装脚本同步包含四语 README。\n- Added **Traditional Chinese** (zh-TW) and **Japanese** (ja) across panel controls, prompts, preview roles, sidebar quick entry, and Markdown export labels, with Intl.Locale autodetection.\n- Added Traditional Chinese and Japanese READMEs with cross-links between all four editions and updated install scripts.\n\n### Release Asset Checksum\n- `archive-manager.tar.gz` SHA-256: `7869051aeee46a8b18128f2d05e2a6b7afecf8e2382929f3938000ca424e602c`\r\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 48,
+        "snippet": "db.exec(` CREATE TABLE conversation_summaries ( conversation_id TEXT PRIMARY KEY, step_count INTEGER, workspace_uris TEXT, preview TEXT); CREATE VIRTUAL TABLE conversations_fts USI",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L48"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 70,
+        "snippet": "db.exec('COMMIT');",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L70"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 81,
+        "snippet": "const files = execFileSync('git', ['ls-tree', '--name-only', revision + ':' + prefix.slice(0, -1)], { cwd: repo, encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L81"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 83,
+        "snippet": "writeFileSync(join(dir, file), execFileSync('git', ['show', revision + ':' + prefix + file], { cwd: repo }));",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L83"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 201,
+        "snippet": "const result = execFileSync(process.execPath, [script, '--worker', home, server, build, name, operation], { env, encoding: 'utf8', windowsHide: true });",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L201"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "tools/render-hero.mjs",
+        "line": 134,
+        "snippet": "execFileSync(browser, [ '--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', `--user-data-dir=${join(work, 'profile')}`, `--window-size=${WIDTH},${HEIGHT}`, `-",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/render-hero.mjs#L134"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/archive_manager/server.mjs",
+        "line": 43,
+        "snippet": "const res = await fetch(url, { method: 'POST', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Connect-Protocol-Version': '1', 'x-antigravity-cs",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/server.mjs#L43"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/archive_manager/server.mjs",
+        "line": 139,
+        "snippet": "writeFileSync(handle, JSON.stringify(store, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/server.mjs#L139"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/archive_manager/server.mjs",
+        "line": 147,
+        "snippet": "try { unlinkSync(tempFile); } catch {}",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/server.mjs#L147"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/archive_manager/server.mjs",
+        "line": 565,
+        "snippet": "writeFileSync(handle, markdown, 'utf8');",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/server.mjs#L565"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/archive_manager/server.mjs",
+        "line": 570,
+        "snippet": "try { unlinkSync(savedPath); } catch {}",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/server.mjs#L570"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/archive_manager/sidebar_injector.mjs",
+        "line": 38,
+        "snippet": "const req = http.get( { hostname: '127.0.0.1', port, path: resourcePath, timeout: timeoutMs }, (res) => { let raw = ''; res.on('data', (chunk) => { raw += chunk; }); res.on('end', ",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/sidebar_injector.mjs#L38"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/archive_manager/sidebar_injector.mjs",
+        "line": 59,
+        "snippet": "const ws = new WebSocket(wsUrl);",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/sidecars/archive_manager/sidebar_injector.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 83,
+        "snippet": "writeFileSync(join(dir, file), execFileSync('git', ['show', revision + ':' + prefix + file], { cwd: repo }));",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L83"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "tools/benchmark-history.mjs",
+        "line": 236,
+        "snippet": "rmSync(home, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/benchmark-history.mjs#L236"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "tools/render-hero.mjs",
+        "line": 132,
+        "snippet": "writeFileSync(page, buildPage(theme));",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/render-hero.mjs#L132"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "tools/render-hero.mjs",
+        "line": 143,
+        "snippet": "rmSync(work, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/YukiKaguraA/agy-archive-manager/blob/14e714dc322d179840c725f3b925e7a7ba20f2ef/tools/render-hero.mjs#L143"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.3.1",
+      "sha": "14e714dc322d179840c725f3b925e7a7ba20f2ef",
+      "scannedAt": "2026-11-27T18:14:14.235Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

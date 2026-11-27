@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "gregale-dev/gregale-antigravity-plugin",
+  "sha": "e839059e95ecbec10962e3cef1349360f84f8e2b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:48.240Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "gregale",
+    "displayName": "Gregale",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "gregale",
+        "runtimeName": "gregale_gregale",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://api.gregale.dev/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "deploy",
+        "slashCommand": "/deploy",
+        "description": "Deploy the current project to Gregale and check that it serves. Use when the user asks to deploy, ship, release or publish this project on Gregale, or to roll back a Gregale release.",
+        "disableModelInvocation": false,
+        "file": "skills/deploy/SKILL.md"
+      },
+      {
+        "name": "diagnose",
+        "slashCommand": "/diagnose",
+        "description": "Find out why a Gregale app is down, failing, slow or returning errors, from its deployments, health, error groups, request evidence and logs. Use when the user reports a broken, erroring or slow Gregale app or a failed Gregale deployment.",
+        "disableModelInvocation": false,
+        "file": "skills/diagnose/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/deploy",
+      "/diagnose"
+    ],
+    "mcpServerNames": [
+      "gregale_gregale"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Gregale plugin for Antigravity\n\nDeploy, diagnose and roll back Gregale apps from Antigravity. The plugin adds:\n\n- Gregale's hosted MCP server (`https://api.gregale.dev/mcp`) via\n  [`mcp_config.json`](./mcp_config.json). The first time Antigravity connects,\n  sign in to Gregale (or sign up), choose what the agent may do and which apps\n  it may use, and connect;\n- the `deploy` skill, which deploys the current project, verifies an application\n  response and rolls back a broken release with your approval;\n- the `diagnose` skill, which finds why an app is failing or slow from health,\n  error groups, logs, and request timelines;\n- `rules/AGENTS.md` with the safe operational defaults both skills follow.\n\n## Install\n\nInstall from Antigravity via the Plugin Manager by pointing to this repository,\nor run `agy plugin install https://github.com/gregale-dev/gregale-antigravity-plugin`.\n\nThe skills can also deploy with the `gregale` CLI; install it and log in (or set\n`GREGALE_TOKEN`): https://gregale.dev/docs/install\n\n## Links\n\n- [Antigravity & MCP setup docs](https://gregale.dev/docs/antigravity)\n- [Deploy from Antigravity IDE guide](https://gregale.dev/articles/antigravity-ide-mcp-server-deploy)\n- [Gregale agent guide](https://gregale.dev/docs/agents)\n- [CLI & MCP setup](https://gregale.dev/docs/cli)\n\n## License\n\nApache-2.0 — see [LICENSE](./LICENSE).\n",
+  "latestReleaseNotes": "Initial v1.0.0 release of Gregale plugin for Antigravity.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "e839059e95ecbec10962e3cef1349360f84f8e2b",
+      "scannedAt": "2026-11-27T18:16:48.240Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

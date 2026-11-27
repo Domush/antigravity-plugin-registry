@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "id": "AcademyCity-RND/AC-MyLaprak",
+  "sha": "c08d2d1ad12e62325e545dab3ce87180c5886669",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:54.612Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "make-laprak-plugin",
+    "displayName": "make-laprak-plugin",
+    "version": "0.4.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "breakdown-matkul",
+        "slashCommand": "/breakdown-matkul",
+        "description": "Ekstrak pedoman format matkul dari contoh laporan LaTeX (versi 0.3.0: baca dari folder kerja _contoh/, output ke matkul/ lokal).",
+        "disableModelInvocation": false,
+        "file": "skills/breakdown-matkul/SKILL.md"
+      },
+      {
+        "name": "icg-contextgenerate",
+        "slashCommand": "/icg-contextgenerate",
+        "description": "Use when implementing F2 ICG-ContextGenerate tasks — two-pass visual census + enriched context generation, narrative planning from screenshots, enriched inisiasi.txt format (@section, type=, group=), ACC-gated pending/final write, auto-save",
+        "disableModelInvocation": false,
+        "file": "skills/icg-contextgenerate/SKILL.md"
+      },
+      {
+        "name": "icg-renaming",
+        "slashCommand": "/icg-renaming",
+        "description": "Use when implementing F1 ICG Renaming Engine tasks — extracting module steps from PDF/PPTX, vision-based screenshot classification, deduplication via hash/perceptual hash, canonical naming (1.png, 1a.png, T1.png...), and ACC-gated output. V",
+        "disableModelInvocation": false,
+        "file": "skills/icg-renaming/SKILL.md"
+      },
+      {
+        "name": "make-laprak-info",
+        "slashCommand": "/make-laprak-info",
+        "description": "Menampilkan panduan penggunaan plugin make-laprak apa adanya (v0.3.0: alur ICG + parser dual-mode).",
+        "disableModelInvocation": false,
+        "file": "skills/make-laprak-info/SKILL.md"
+      },
+      {
+        "name": "make-laprak",
+        "slashCommand": "/make-laprak",
+        "description": "Menyusun laporan praktikum LaTeX iteratif dari inisiasi (v0.3.0: parser enriched + legacy, matkul/ lokal, type→width lookup, sitasi ICG).",
+        "disableModelInvocation": false,
+        "file": "skills/make-laprak/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/breakdown-matkul",
+      "/icg-contextgenerate",
+      "/icg-renaming",
+      "/make-laprak",
+      "/make-laprak-info"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# MyLaprak — Antigravity / Hermes Skill Plugin\n\nRepositori ini menyediakan _Skill_ AI untuk menyusun **Laporan Praktikum universitas** secara interaktif, terstruktur, analitis, dan siap pakai dalam format **LaTeX**. Versi **v0.4.0** memperkenalkan **skill ICG di-vendor** (Renaming + ContextGenerate) serta **dukungan alur penuh bersama ImageContext-Generator (ICG)**. Fitur v0.3.0 yang dibawa ke depan: folder kerja `_contoh/`, parser `inisiasi.txt` dual-mode (enriched + legacy), gaya matkul **lokal milik user**, sistem template Universal.\n\n---\n\n## 🌟 Fitur Unggulan (v0.4.0)\n\n- 🧩 **ICG Skills di-Vendor (BARU v0.4.0):**\n  - **`/icg-renaming`** — membersihkan, mengurutkan, dan menamai screenshot mengikuti struktur modul (PDF/PPTX) → `gambar/` (`1.png`, `1a.png`, `T1.png`, …). Dedup hash + perceptual hash, ACC gate sebelum write.\n  - **`/icg-contextgenerate`** — dua-pass (visual census → enriched context) menghasilkan `inisiasi.txt` enriched dengan `[@section]`, `type=`, `group=`, `Konteks:`, `Arah:`. Auto-save/resume via `.icg_cache`, ACC gate pending→final.\n  - Engine Python **self-contained** di `skills/icg-renaming/scripts/` dan `skills/icg-contextgenerate/scripts/`. Sumber pengembangan tetap di repo ICG (lihat `VENDOR.md` tiap skill).\n  - Kompatibel penuh dengan `inisiasi.txt` legacy (free-form) — backward compat dijamin.\n\n- 🌐 **Dual-Mode yang Jujur:**\n  - **Mode A — Gaya Matkul Lokal:** Pedoman `matkul/<NAMA>/` **dibuat dan disimpan di mesin Anda** lewat `/breakdown-matkul`. Folder ini sengaja **kosong di repo publik** (hanya `.gitkeep` + README) agar tidak ada gaya/data pribadi yang ikut ter-clone.\n  - **Mode B — General Fallback:** Selalu tersedia via `template-general/` (`general.md` + `template-master.tex` + komponen pecahan). Clone bersih = Mode B langsung pakai.\n- 📖 **Parser `inisiasi.txt` Dual-Mode:**\n  - **Enriched:** `[@section] S<n> | <judul>` + `N.png | S<n> | type=<...> | group=<single|pair:M> | <Label> | Konteks: ... | Arah: ...`\n  - **Legacy:** `N.png | Label | Konteks | Arah` (dan catatan bebas per baris) — **tetap didukung penuh**.\n  - Deteksi otomatis, validasi simetri `group=pair:M`, dukungan nama file `N.png`, `Na.png`, `TN.png`, `TN-Na.png`.\n- 📏 **Width dari `type`:** Lebar gambar diambil dari tabel `type`→width di `general.md` (atau override `matkul/<NAMA>.md`). Tidak lagi angka bebas yang tidak konsisten.\n- 🛡️ **Privacy-Safe Architecture:** Tidak ada laporan riil di repo. Contoh masuk `_contoh/` (folder kerja user), hasil breakdown masuk `matkul/` lokal yang di-gitignore.\n- 🔍 **Sitasi Nyata + ICG:** Verifikasi referensi via modul/web; jika skill ICG tersedia (F4 vendor), sitasi `ICG:xxx` (kode) dan `ICG:ctx:xxx` (konteks) dikenali.\n- ⚡ **Auto-Generate `.tex`:** Langsung menulis berkas `.tex` fisik di folder kerja Anda pada tahap finalisasi.\n\n---\n\n## 📦 Cara Instalasi Plugin\n\n### Opsi A — GitHub Releases (paling mudah)\n1. Buka tab **[Releases](https://github.com/AcademyCity-RND/AC-MyLaprak/releases)**.\n2. Unduh bundle `MyLaprak-vX.X.X.zip` terbaru.\n3. Ekstrak ke direktori plugin: `~/.gemini/config/plugins/make-laprak` (Antigravity) atau folder skills Hermes Anda.\n\n### Opsi B — Git Clone\n```bash\n# Global\ngit clone https://github.com/AcademyCity-RND/AC-MyLaprak.git ~/.gemini/config/plugins/make-laprak\n\n# Per-workspace\nmkdir -p .agents/plugins/\ngit clone https://github.com/AcademyCity-RND/AC-MyLaprak.git .agents/plugins/make-laprak\n```\n\n> Clone bersih hanya berisi `template-general/` dan `matkul/.gitkeep` + README. Itu **disengaja**.\n\n### Opsi C — Hermes\n```bash\n# macOS/Linux\ncp -r skills/make-laprak skills/make-laprak-info skills/breakdown-matkul ~/.hermes/skills/productivity/\ncp -r skills/icg-renaming skills/icg-contextgenerate ~/.hermes/skills/software-development/\n\n# Windows (Git Bash)\ncp -r skills/make-laprak skills/make-laprak-info skills/breakdown-matkul \"$LOCALAPPDATA/hermes/skills/productivity/\"\ncp -r skills/icg-renaming skills/icg-contextgenerate \"$LOCALAPPDATA/hermes/skills/software-development/\"\n```\n\nLalu pasang dependensi ICG:\n```bash\npy -3.12 -m pip install -r skills/icg-renaming/scripts/requirements.txt\npy -3.12 -m pip install -r skills/icg-contextgenerate/scripts/requirements.txt\n```\n\n> 🧪 Mau minta orang lain menguji? Kirimkan **[Panduan Uji Coba Mandiri](docs/PANDUAN-UJI-COBA.md)** — berisi prasyarat, langkah per command, dan format laporan bug.\n\n---\n\n## 📂 Struktur Folder Plugin\n\n```text\nMyLaprak/\n├── .github/\n│   ├── release.yml                       # Auto-Changelog rilis\n│   └── workflows/release.yml             # Build bundle zip + release\n├── plugin.json                           # Manifest plugin\n├── README.md                             # Dokumentasi utama (ini)\n├── CONTRIBUTING.md                       # Panduan kontribusi\n├── CHANGELOG.md                          # Riwayat versi (v0.4.0)\n├── scripts/                              # Skrip utilitas pengembang\n└── skills/\n    ├── make-laprak/\n    │   ├── SKILL.md                      # Alur 5 tahap + parser enriched/legacy\n    │   ├── matkul/                       # LOKAL USER — di-gitignore\n    │   │   ├── .gitkeep                 # Penanda folder tetap ada di clone\n    │   │   ├── README.md                # Cara membuat gaya sendiri\n    │   │   └── <NAMA>/                  # Hasil /breakdown-matkul user\n    │   │       ├── <NAMA>.md            # Pedoman formatting\n    │   │       └── template-<NAMA>.tex  # Template placeholder\n    │   └── template-general/            # Fallback universal (selalu ada)\n    │       ├── general.md               # Pedoman + tabel type→width\n    │       ├── template-master.tex\n    │       ├── template-dependencies-dan-style.tex\n    │       ├── template-tujuanpraktikum.tex\n    │       ├── template-dasarteori.tex\n    │       ├── template-hasilpembahasan.tex\n    │       ├── template-kesimpulan.tex\n    │       └── template-daftarpustaka.tex\n    ├── breakdown-matkul/\n    │   └── SKILL.md                      # _contoh/*.tex → matkul/<NAMA>/ (lokal)\n    ├── make-laprak-info/\n    │   └── SKILL.md                      # Panduan verbatim (v0.4.0)\n    ├── icg-renaming/                     # BARU v0.4.0 (vendored dari ICG)\n    │   ├── SKILL.md\n    │   └── scripts/                      # Engine Python self-contained\n    │       ├── src/                      # 7 modul: renaming_engine, vision_engine, security, ...\n    │       ├── requirements.txt\n    │       └── VENDOR.md                 # Provenance + sync procedure\n    └── icg-contextgenerate/              # BARU v0.4.0 (vendored dari ICG)\n        ├── SKILL.md\n        └── scripts/                      # Engine Python self-contained\n            ├── src/                      # 7 modul: context_engine, vision_engine, security, ...\n            ├── requirements.txt\n            └── VENDOR.md                 # Provenance + sync procedure\n```\n\n---\n\n## 🔗 Alur Penuh 4 Skill (dengan ICG — **sudah di-vendor v0.4.0**)\n\n```text\nScreenshot mentah\n   │\n   ├─(1) /icg-renaming ──────────► gambar/ bernomor rapi (1.png, 2.png, T1.png, ...)\n   │\n   ├─(2) /icg-contextgenerate ───► inisiasi.txt ENRICHED\n   │                                ([@section] + type/group/Konteks/Arah)\n   │\n   ├─(3) /breakdown-matkul ──────► matkul/<NAMA>/ (LOKAL, dari _contoh/*.tex)\n   │\n   └─(4) /make-laprak ───────────► Laporan.tex siap kompilasi\n```\n\nSkill ICG kini **di-vendor (termasuk di repo ini)** sejak **F4 v0.4.0**. Engine Python self-contained di `skills/icg-renaming/scripts/` dan `skills/icg-contextgenerate/scripts/`. Sumber pengembangan (upstream) tetap di repo ICG: [github.com/AcademyCity-RND/AC-ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator) — lihat `VENDOR.md` di setiap skill untuk provenance & sync procedure.\n\nRepositori ICG: [github.com/AcademyCity-RND/AC-ImageContext-Generator](https://github.com/AcademyCity-RND/AC-ImageContext-Generator)\n\n---\n\n## 🚀 Cara Menggunakan\n\n> **PENTING:** Anda **TIDAK PERLU** menaruh file tugas di dalam folder plugin.\n\n### Langkah 1 — Siapkan Folder Kerja\nBuat folder kerja pertemuan di mana saja, mis. `D:\\Tugas\\PPD\\Pertemuan-5\\`.\n\n### Langkah 2 — Isi Folder Kerja\n- `inisiasi.txt` — enriched **atau** legacy (lihat §Format Inisiasi).\n- `gambar/` — screenshot bernomor (`1.png`, `2.png`, `T1.png`, `Na.png`, `TN-Na.png`, ...).\n- `_contoh/` — **minimal satu** `.tex` laporan yang sudah disetujui & dianonimkan (dipakai `/breakdown-matkul`).\n- (Opsional) modul praktikum (PDF/PPT).\n\n### Langkah 3 — Panggil AI\n```text\n/make-laprak buatkan laporan [NAMA_MATKUL], saya sudah siapkan inisiasi.txt, gambar/, dan _contoh/\n```\nJika `matkul/<NAMA>/` belum ada → Mode B, AI menanyakan identitas (Nama, NIM, Kelas, Dosen, Topik) di Tahap 1.\n\n### Langkah 4 — Alur 5 Tahap (ACC setiap tahap)\n1. **Inisiasi** — baca pedoman + parsing `inisiasi.txt`, validasi pair, rangkum.\n2. **Outline** — dari `[@section]` (enriched) atau disusun dari nol (legacy).\n3. **3a Hasil & Pembahasan** — `group=pair` → Gaya B; `single` → Gaya C; width dari `type`.\n4. **3b Dasar Teori** — dilewati jika matkul tanpa teori.\n5. **4 Finalisasi** — Kesimpulan + Daftar Pustaka, lalu **langsung generate `.tex`**.\n\n---\n\n## 📝 Format `inisiasi.txt`\n\n**Enriched (disarankan):**\n```text\n[@section] S1 | Pendahuluan\n1.png | S1 | type=code | group=single | Kode Utama | Konteks: ... | Arah: ...\n2.png | S1 | type=terminal | group=pair:3 | Output Program | Konteks: ... | Arah: ...\n3.png | S1 | type=gui | group=pair:2 | Grafik Hasil | Konteks: ... | Arah: ...\n# baris komentar diabaikan\n```\n\n**Legacy (kompatibel penuh):**\n```text\n1.png | Label Gambar | Konteks penjelasan | Arah analisis\n2.png | Output Program | Konteks ... | Arah ...\n```\n\n| Field | Arti |\n|-------|------|\n| `S<n>` | ID section dari header `[@section]` |\n| `type` | Dipetakan ke lebar gambar di tabel `general.md` — 6 nilai kanonik V7: `config`, `code`, `terminal`, `gui`, `diagram`, `log` |\n| `group=single` | Gaya C — 1 gambar per `figure` |\n| `group=pair:M` | Gaya B — 2 gambar + `\\vspace`; **simetri wajib** |\n| `Konteks` / `Arah` | Bahan narasi analitis, bukan sekadar caption |\n\n---\n\n## 🎨 Membuat Gaya Matkul Sendiri (Mode A)\n\n1. Taruh laporan contoh yang sudah dianonimkan di `_contoh/`.\n2. Jalankan `/breakdown-matkul` → hasil ditulis ke `skills/make-laprak/matkul/<NAMA>/` **di mesin Anda**.\n3. Panggil `/make-laprak` → gaya lokal dipakai otomatis.\n\nFolder `matkul/` diabaikan Git. Jangan pernah commit laporan riil. Ingin berbagi? Bagikan `_contoh/` yang dianonimkan lewat issue/PR, lalu orang lain menjalankan `/breakdown-matkul` sendiri.\n\n---\n\n## 👥 Kontributor (Co-Author) Otomatis\n\n- **Windows:** `scripts/setup-contributor.bat`\n- **Linux/Mac:** `bash scripts/setup-contributor.sh`\n\n## ℹ️ Bantuan Cepat\nKetik `/make-laprak-info` untuk panduan verbatim v0.4.0.\n\n---\n\n## 🗺️ Roadmap\n\n- [x] Sistem Template Universal (`template-general/`)\n- [x] Template monolitik aman privasi\n- [x] Otomatisasi GitHub Releases\n- [x] **v0.3.0 — `matkul/` lokal + `_contoh/` + parser enriched/legacy + `type`→width + docs**\n- [x] **F4 — vendor skill ICG (Renaming + ContextGenerate) ke repo ini** ✅\n- [ ] Cross-Platform Adapters (`.cursorrules`, `CLAUDE.md`, `.github/copilot-instructions.md`)\n- [ ] Fallback script pencari jurnal (`scripts/search_jurnal.py`)\n- [ ] Integrasi MCP pencarian pustaka akademik\n\nLihat [CHANGELOG.md](CHANGELOG.md) untuk rincian perubahan versi.",
+  "latestReleaseNotes": "# CHANGELOG — MyLaprak\n\nSemua perubahan signifikan didokumentasikan di sini. File ini di-generate otomatis\noleh [git-cliff](https://github.com/orhun/git-cliff) dari Conventional Commits.\nFormat mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.0.0/),\nversi mengikuti [SemVer](https://semver.org/lang/id/).\n\n---\n## [1.1.8] — 2026-11-24\n\n### 📝 Dokumentasi\n- **icg-contextgenerate:** Clarify pendekatan user tidak pakai folder gambar/, inisiai.txt dibuat F2- **icg-contextgenerate:** Judul section dari heading modul + validasi sebelum ACC\n## [1.1.7] — 2026-11-24\n\n### 📝 Dokumentasi\n- **icg-contextgenerate:** Add Agent Pre-flight rules (verify claim, map sections, ACC before pass1, dont block on gambar, preserve manual suffix)\n## [1.1.6] — 2026-11-24\n\n### 📝 Dokumentasi\n- Tambah panduan uji coba mandiri 4 command + perbaiki URL clone kanonik AC-MyLaprak\n## [1.1.5] — 2026-11-24\n\n### 📝 Dokumentasi\n- **skills:** Sync ICG vendor deps to google-genai, GOOGLE_API_KEY, portable paths; quote YAML descriptions (fix Hermes unsupported)\n## [1.1.4] — 2026-11-24\n\n### 📦 Internal\n- Remove .lycheeignore — ICG upstream is now public\n## [1.1.3] — 2026-11-24\n\n### 📝 Dokumentasi\n- Fix ICG repo URL prefix + add .lycheeignore for private upstream\n## [1.1.2] — 2026-11-24\n\n### 📦 Internal\n- **vendor:** Sync google-genai migration from ICG upstream\n## [1.1.1] — 2026-11-24\n\n### 📦 Internal\n- **skills:** Lowercase skill folders to match lint (name == folder)\n\n### 🔒 Lainnya\n- Reconcile release changelog with lowercase skill paths\n## [1.1.0] — 2026-11-24\n\n### ✨ Baru\n- **skills:** Vendor ICG renaming + context engines- **release:** Git-cliff auto versioning + release workflow\n\n### 📝 Dokumentasi\n- Sync skill docs with lowercase ICG names + ecosystem\n\n### 📦 Internal\n- **privacy:** Untrack course matkul, ignore local working dirs\n## [1.0.1] — 2026-11-23\n\n### ✨ Baru\n- Hermes-compatible skills + CI workflows (ci, health-check, pr-lint, release-please)\n\n### 🛠️ Diperbaiki\n- **ci:** Use valid semantic-PR inputs (requireScope)- **ci:** Valid job outputs for release-please; sync manifest to v1.0.0 (#28)- **ci:** Use proven tag-based release workflow with auto-changelog (#29)\n## [1.0.0] — 2026-11-04\n\n### ✨ Baru\n- Add /laprak command trigger- Add make-laprak-info skill- Enforce web search for 100% accurate external references- **make-laprak:** Extract KEPL guideline and clarify folder workflow- **make-laprak:** Force direct generation of .tex file in TAHAP 4- **make-laprak:** Enrich KEPL.md with KEPL2.tex styling insights- **v2:** Complete overhaul — portable path resolution, KEPL3 breakdown, anti-ngide rules, docs sync- Add breakdown-matkul skill for .tex to .md extraction- Split Tahap 3 into 3a (Hasil) and 3b (Dasar Teori) with separate ACC checkpoints- Add matkul PPG with 3 .tex references and breakdown .md- **release:** V1 release with universal template-general and course templates- **ci:** Add GitHub Releases Auto-Changelog workflow and update documentation\n\n### 📝 Dokumentasi\n- Make the prompt example complete and clear without trailing dots- Add roadmap and checklist for universal AI support- **make-laprak-info:** Sync generation logic- Add CONTRIBUTING.md with matkul template and contribution guide\n\n### 📦 Internal\n- Refine skill paths and add .gitignore- **privacy:** Remove real student reference reports in favor of placeholder templates\n\n### 🔒 Lainnya\n- Refine skill drafting logic and update README\n\n### 🛠️ Diperbaiki\n- Rename skill to make-laprak to match the desired slash command- **make-laprak:** Clarify plugin path for specific template reference- **make-laprak:** Instruct AI to dynamically find absolute plugin path- **make-laprak:** Hardcode windows absolute path to avoid view_file errors- **make-laprak-info:** Use exact output text instead of letting AI paraphrase\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/icg-contextgenerate/scripts/src/director.py",
+        "line": 73,
+        "snippet": "result = subprocess.run(cmd, capture_output=True, text=True, check=True)",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/director.py#L73"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/icg-renaming/scripts/src/director.py",
+        "line": 73,
+        "snippet": "result = subprocess.run(cmd, capture_output=True, text=True, check=True)",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/director.py#L73"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/context_engine.py",
+        "line": 461,
+        "snippet": "pending_path.write_text(pending_text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/context_engine.py#L461"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/context_engine.py",
+        "line": 474,
+        "snippet": "pending_path.write_text(pending_text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/context_engine.py#L474"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/knowledge_manager.py",
+        "line": 65,
+        "snippet": "with open(config_path, \"r\", encoding=\"utf-8\") as handle:",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/knowledge_manager.py#L65"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/renaming_engine.py",
+        "line": 108,
+        "snippet": "report_path.write_text(self.render_report(), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/renaming_engine.py#L108"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/vision_engine.py",
+        "line": 179,
+        "snippet": "temp_path.write_text(header + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/vision_engine.py#L179"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/vision_engine.py",
+        "line": 213,
+        "snippet": "temp_path.write_text( header + \"\\n\" + \"\\n\".join(sorted_lines) + \"\\n# ========================================================\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/vision_engine.py#L213"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/vision_engine.py",
+        "line": 267,
+        "snippet": "temp_path.write_text(header + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/vision_engine.py#L267"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-contextgenerate/scripts/src/vision_engine.py",
+        "line": 297,
+        "snippet": "temp_path.write_text( header + \"\\n\" + \"\\n\".join(sorted_lines) + \"\\n# ========================================================\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-contextgenerate/scripts/src/vision_engine.py#L297"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/context_engine.py",
+        "line": 461,
+        "snippet": "pending_path.write_text(pending_text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/context_engine.py#L461"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/context_engine.py",
+        "line": 474,
+        "snippet": "pending_path.write_text(pending_text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/context_engine.py#L474"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/knowledge_manager.py",
+        "line": 65,
+        "snippet": "with open(config_path, \"r\", encoding=\"utf-8\") as handle:",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/knowledge_manager.py#L65"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/renaming_engine.py",
+        "line": 108,
+        "snippet": "report_path.write_text(self.render_report(), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/renaming_engine.py#L108"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/vision_engine.py",
+        "line": 179,
+        "snippet": "temp_path.write_text(header + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/vision_engine.py#L179"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/vision_engine.py",
+        "line": 213,
+        "snippet": "temp_path.write_text( header + \"\\n\" + \"\\n\".join(sorted_lines) + \"\\n# ========================================================\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/vision_engine.py#L213"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/vision_engine.py",
+        "line": 267,
+        "snippet": "temp_path.write_text(header + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/vision_engine.py#L267"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/icg-renaming/scripts/src/vision_engine.py",
+        "line": 297,
+        "snippet": "temp_path.write_text( header + \"\\n\" + \"\\n\".join(sorted_lines) + \"\\n# ========================================================\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/AcademyCity-RND/AC-MyLaprak/blob/c08d2d1ad12e62325e545dab3ce87180c5886669/skills/icg-renaming/scripts/src/vision_engine.py#L297"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.4.0",
+      "sha": "c08d2d1ad12e62325e545dab3ce87180c5886669",
+      "scannedAt": "2026-11-27T18:19:54.612Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

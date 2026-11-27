@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "id": "datagentio/datagent-plugins",
+  "sha": "437c8b48726e8c7f609e9f7d9654fd7d6a59afb5",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:22:12.851Z",
+  "manifest": {
+    "manifestPath": ".antigravity-plugin/plugin.json",
+    "name": "datagent",
+    "displayName": "Datagent",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "datagent",
+        "runtimeName": "datagent_datagent",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.datagent.io/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "company-one-pager",
+        "slashCommand": "/company-one-pager",
+        "description": "Build a cited one-page brief on one company, ending with data gaps and locked fields. Use for a full cited one-page brief on one named company: identity, five-year financials, ownership, leadership, events and data gaps. Vietnamese: hồ sơ c",
+        "disableModelInvocation": false,
+        "file": "skills/company-one-pager/SKILL.md"
+      },
+      {
+        "name": "compare-companies",
+        "slashCommand": "/compare-companies",
+        "description": "Compare two to five resolved companies using the same metric definitions, explicit periods and consolidation. Use to compare two to five companies the user names side by side on the same metrics, fiscal years and consolidation basis. Vietna",
+        "disableModelInvocation": false,
+        "file": "skills/compare-companies/SKILL.md"
+      },
+      {
+        "name": "kyb-check",
+        "slashCommand": "/kyb-check",
+        "description": "Assemble a know-your-business file and state exactly what Datagent cannot verify. Use to verify a business for onboarding: registration and tax identifiers, legal identity, status, recorded ownership and key people in Vietnam, Malaysia, Sin",
+        "disableModelInvocation": false,
+        "file": "skills/kyb-check/SKILL.md"
+      },
+      {
+        "name": "market-landscape",
+        "slashCommand": "/market-landscape",
+        "description": "Build a reproducible market map by country and industry with stated coverage and sample limits. Use to map a market by country and industry across Southeast Asian private and listed companies: coverage counts, industry and listing facets, a",
+        "disableModelInvocation": false,
+        "file": "skills/market-landscape/SKILL.md"
+      },
+      {
+        "name": "ownership-structure",
+        "slashCommand": "/ownership-structure",
+        "description": "Show recorded shareholders and linked companies, following only evidenced company links. Use to map recorded shareholders and corporate links for one company: holders, percentages, basis and as-of dates, following evidenced subsidiaries up ",
+        "disableModelInvocation": false,
+        "file": "skills/ownership-structure/SKILL.md"
+      },
+      {
+        "name": "peer-benchmark",
+        "slashCommand": "/peer-benchmark",
+        "description": "Compare one company with n peers on the same metrics, years and consolidation basis. Use to benchmark one company against peers the user did not name: it selects comparable companies by country, industry and revenue band, then compares the ",
+        "disableModelInvocation": false,
+        "file": "skills/peer-benchmark/SKILL.md"
+      },
+      {
+        "name": "quick-company-lookup",
+        "slashCommand": "/quick-company-lookup",
+        "description": "Resolve one company and return a compact identity card with match evidence and coverage. Use for a fast identity check on one company: legal and local name, country, identifiers, industries, listings and match evidence, without financials, ",
+        "disableModelInvocation": false,
+        "file": "skills/quick-company-lookup/SKILL.md"
+      },
+      {
+        "name": "screen-targets",
+        "slashCommand": "/screen-targets",
+        "description": "Turn an investment thesis into a screened long-list with a cited metrics table. Use to turn an investment thesis into a criteria-filtered long-list of Southeast Asian companies by country, industry, revenue, headcount or incorporation year,",
+        "disableModelInvocation": false,
+        "file": "skills/screen-targets/SKILL.md"
+      },
+      {
+        "name": "watchlist-review",
+        "slashCommand": "/watchlist-review",
+        "description": "Review every company on a watchlist with a freshness-aware metrics table. Use to review a saved Datagent watchlist by name: every member with current financials, freshness timestamps and data gaps. Vietnamese: danh sách theo dõi, rà soát cô",
+        "disableModelInvocation": false,
+        "file": "skills/watchlist-review/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/company-one-pager",
+      "/compare-companies",
+      "/kyb-check",
+      "/market-landscape",
+      "/ownership-structure",
+      "/peer-benchmark",
+      "/quick-company-lookup",
+      "/screen-targets",
+      "/watchlist-review"
+    ],
+    "mcpServerNames": [
+      "datagent_datagent"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Datagent plugins\n\nDatagent brings Southeast Asian company data into AI assistants: company profiles, financials, ownership, directors and executives, listings and corporate events for Vietnam, Malaysia, Singapore and Thailand, plus workspace watchlists and private notes.\n\nMCP server (Streamable HTTP): `https://mcp.datagent.io/mcp` — OAuth on Business and Enterprise plans, or an Enterprise API key with the `mcp` scope. Connect it from https://app.datagent.io/ai-connections.\n\n## Install\n\n### Claude Code\n\n```bash\n/plugin marketplace add datagentio/datagent-plugins\n/plugin install datagent@datagent\n```\n\n### Antigravity\n\n```bash\nagy plugin install https://github.com/datagentio/datagent-plugins\n```\n\n### Gemini CLI\n\n```bash\ngemini extensions install https://github.com/datagentio/datagent-plugins\n```\n\n### Codex skills\n\n```text\n$skill-installer install the skills from https://github.com/datagentio/datagent-plugins/tree/main/skills\n```\n\n### ChatGPT\n\nConnect `https://mcp.datagent.io/mcp` as a custom connector.\n\n## Links\n\n- Documentation: https://app.datagent.io/docs#ai-connections\n- Support: contact@datagent.io\n- Privacy Policy: https://datagent.io/privacy-policy/\n- Terms of Service: https://datagent.io/terms-of-service/, effective 1 November 2026\n\nLicense: proprietary to DATAGENT PTE. LTD.; see the [`LICENSE`](./LICENSE) file for the terms.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "437c8b48726e8c7f609e9f7d9654fd7d6a59afb5",
+      "scannedAt": "2026-11-27T18:22:12.851Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

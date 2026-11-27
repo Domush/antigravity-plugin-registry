@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "id": "yoli-mi/antigravity-chronobranch",
+  "sha": "04dc2a4a11519cf3afcf248dc6857b7cd13e002e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:21:20.712Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "chronobranch",
+    "displayName": "ChronoBranch Timeline",
+    "version": "0.1.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "chronobranch",
+        "runtimeName": "chronobranch_chronobranch",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/dist/server.mjs",
+          "--data-dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "chronobranch_chronobranch"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<h1>ChronoBranch for Antigravity</h1>\n\n<p>\n  <strong>将 Antigravity 长对话与多分支探索，变成一条清晰直观的横向点线时间线画布</strong>\n</p>\n\n<p>\n  <a href=\"https://github.com/yoli-mi/antigravity-chronobranch/releases\"><img src=\"https://img.shields.io/github/v/release/yoli-mi/antigravity-chronobranch?style=flat-square&color=18181b\" alt=\"Release\" /></a>\n  <a href=\"https://github.com/yoli-mi/antigravity-chronobranch/actions\"><img src=\"https://img.shields.io/github/actions/workflow/status/yoli-mi/antigravity-chronobranch/ci.yml?style=flat-square\" alt=\"CI\" /></a>\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-blue?style=flat-square\" alt=\"MIT License\" /></a>\n  <img src=\"https://img.shields.io/badge/Antigravity-MCP%20App-2563eb?style=flat-square\" alt=\"Antigravity MCP App\" />\n  <img src=\"https://img.shields.io/badge/i18n-中文%20%7C%20English-059669?style=flat-square\" alt=\"Bilingual\" />\n</p>\n\n<p>\n  简体中文 · <a href=\"./README.en.md\">English</a> · <a href=\"https://github.com/yoli-mi/dsh-chronobranch\">DSH 桌面端版本</a>\n</p>\n\n</div>\n\n---\n\n## 这是什么？\n\n**ChronoBranch** 是一款面向 **Google Antigravity** 的原生 **MCP App UI 插件**。它将传统纵向无限滚动的 AI 对话记录，重组为**按时间从左向右延展的极简点线时间线画布**，让你一眼看清长对话脉络、Agent 子代理并发泳道与多分支探索结构。\n\n---\n\n## 核心功能\n\n- **极简点线时间线 & 三档缩放（L1 / L2 / L3）**\n  - 支持滚轮无级缩放与三档快捷切换：**鸟瞰（L1）**、**点线（L2）**、**展开（L3）**。\n  - 点击任意节点原地展开完整对话卡片，支持完整 Markdown 渲染、代码块一键复制与四周自由拖拽缩放尺寸。\n- **Agent 子代理泳道 & 执行微观小轴**\n  - 自动解析 `invoke_subagent` 派生的子代理会话，绘制为独立并发泳道。\n  - 每个轮次内置**微观执行小轴**，按序记录思考推理（`thinking`）、工具调用、命令输出、文件 Diff、Agent 提问选择卡片与上下文压缩检查点，点击任意小点即可在侧边抽屉查看完整详情。\n- **原生分支对话 & Cherry-Pick 结论回流**\n  - 从任意历史节点一键发起并行分支探索，在画布上以正交树状分支呈现。\n  - 支持将支线验证过的结论提炼并 **Cherry-Pick 回流** 到父线上下文，并在画布上绘制虚线回流连线。\n- **工作区多对话时间线关联**\n  - 自由勾选同一工作区下的任意对话进行关联，打开其中任一对话的时间线即可同屏纵览全部关联泳道与节点。\n- **悬浮磁贴 & 跨界拖出桌面独立置顶**\n  - 将任意关键轮次固定为悬浮磁贴，支持切换「完整 / 仅 AI」、多张磁贴磁吸并排与一键定位跳回原节点。\n  - **跨界拖出自动脱离**：将磁贴拖出侧边栏/对话面板边界，或点击弹出按钮，自动切换为 **Windows 原生无边框置顶桌面卡片**（不占任务栏，最小化主窗口仍保留，方便边看论文/代码边对照）。\n- **原生深浅色主题 & 中英双语同步**\n  - 自动跟随 Antigravity 的浅色 / 深色主题与界面语言（中文 / 标准英文）。\n\n---\n\n## 安装方式（无需构建，开箱即用）\n\n本仓库已包含预构建的自包含单文件产物（`dist/server.mjs` 与 `dist/app.html`），无需安装依赖或编译。\n\n### 方式一：一行命令克隆安装（推荐）\n\n**Windows (PowerShell)：**\n```powershell\ngit clone https://github.com/yoli-mi/antigravity-chronobranch.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\chronobranch\"\n```\n\n**macOS / Linux：**\n```bash\ngit clone https://github.com/yoli-mi/antigravity-chronobranch.git ~/.gemini/config/plugins/chronobranch\n```\n\nAntigravity 会自动发现 `~/.gemini/config/plugins/chronobranch/` 下的插件（无需手动编辑配置文件）：\n1. 在任意对话右上侧辅助栏点击 **`+` → Timeline**（侧边视图），或\n2. 在左侧导航栏点击 **ChronoBranch**（全屏画布视图），或\n3. 直接对 Agent 说「打开 ChronoBranch 时间线」。\n\n### 方式二：源码构建安装\n\n需要 Node.js >= 20 与 pnpm：\n\n```bash\ngit clone https://github.com/yoli-mi/antigravity-chronobranch.git\ncd antigravity-chronobranch\npnpm install\npnpm run install:antigravity\n```\n\n卸载：\n```bash\npnpm run uninstall:antigravity\n```\n\n---\n\n## 项目结构\n\n```text\nantigravity-chronobranch/\n├── plugin.json                 # Antigravity 插件清单\n├── mcp_config.json             # MCP App 服务配置（使用 ${PLUGIN_ROOT} / ${PLUGIN_DATA}）\n├── assets/logo.svg             # 插件图标\n├── dist/\n│   ├── server.mjs              # 预构建自包含 Node.js MCP 服务端\n│   └── app.html                # 预构建单文件严格 CSP 兼容 UI 应用\n├── src/\n│   ├── antigravity/\n│   │   ├── server.ts           # MCP App 服务端与工具定义\n│   │   ├── transcript-adapter.ts # Antigravity transcript.jsonl 解析与 UCGS 图谱构建\n│   │   ├── meta-store-file.ts  # 持久化元数据仓库（${PLUGIN_DATA}）\n│   │   └── app.tsx             # @modelcontextprotocol/ext-apps 前端入口\n│   ├── core/                   # 跨平台统一时间线画布、布局、样式、双语词典与 Markdown 渲染\n│   ├── client/                 # 悬浮磁贴状态与交互覆盖层（支持跨界拖出）\n│   └── host/wpf-tile-script.ts # Windows 原生无边框桌面置顶磁贴宿主\n└── scripts/                    # 打包与安装脚本\n```\n\n---\n\n## 开源协议\n\n基于 [MIT License](./LICENSE) 开源。如果这个项目帮到了你，欢迎点个 **Star ⭐** 支持一下！\n",
+  "latestReleaseNotes": "Initial public release of **ChronoBranch for Antigravity** (native MCP App UI plugin).\n\n### Highlights\n- Horizontal dot-and-line timeline canvas with 3-tier zoom (\\L1\\ Overview / \\L2\\ Dot-Line / \\L3\\ Expanded)\n- Live Antigravity transcript reader (\\\transcript.jsonl\\ + on-demand \\\transcript_full.jsonl\\ hydration)\n- Concurrent **Subagent Swimlanes** & **Execution Micro-Axis** (thinking, tool calls, outputs, file diffs, agent choices, compaction checkpoints)\n- Native parallel **Branching** & **Cherry-Pick Merge**\n- Workspace **Multi-Conversation Timeline Linking** persisted in \\\\\\\n- **Floating Magnetic Tiles** with seamless edge-drag breakout into frameless always-on-top Windows desktop sticky cards\n- Full bilingual (\\en\\ / \\zh\\) and live light/dark theme sync\n\n### Zero-Build Install\nClone directly into \\~/.gemini/config/plugins/chronobranch\\—prebuilt \\dist/server.mjs\\ and \\dist/app.html\\ are included!",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/antigravity/server.ts",
+        "line": 64,
+        "snippet": "const child = spawn( 'powershell.exe', ['-STA', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-WindowStyle', 'Hidden', '-File', script], { windowsHide: true, stdi",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/antigravity/server.ts#L64"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/markdown.tsx",
+        "line": 31,
+        "snippet": "while ((match = tokenRe.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/core/markdown.tsx#L31"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/markdown.tsx",
+        "line": 179,
+        "snippet": "const fenceMatch = /^```([^\\s`]*)\\s*$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/core/markdown.tsx#L179"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/markdown.tsx",
+        "line": 209,
+        "snippet": "const headingMatch = /^(#{1,6})\\s+(.+)$/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/core/markdown.tsx#L209"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/markdown.tsx",
+        "line": 278,
+        "snippet": "const taskMatch = /^\\[( |x|X)\\]\\s+(.*)$/.exec(body);",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/core/markdown.tsx#L278"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 25,
+        "snippet": "fs.rmSync(TMP_UI_DIR, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/build.mjs#L25"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 104,
+        "snippet": "fs.writeFileSync(htmlOut, html, 'utf8');",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/build.mjs#L104"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 105,
+        "snippet": "fs.rmSync(TMP_UI_DIR, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/build.mjs#L105"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 142,
+        "snippet": "fs.writeFileSync(path.join(ROOT, 'plugin.json'), `${JSON.stringify(pluginJson, null, 2)}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/build.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 143,
+        "snippet": "fs.writeFileSync(path.join(ROOT, 'mcp_config.json'), `${JSON.stringify(mcpConfig, null, 2)}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/build.mjs#L143"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 23,
+        "snippet": "fs.rmSync(TARGET_DIR, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/install.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/antigravity/meta-store-file.ts",
+        "line": 105,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/antigravity/meta-store-file.ts#L105"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/antigravity/server.ts",
+        "line": 53,
+        "snippet": "fs.writeFileSync(p, `\\uFEFF${WPF_TILE_HOST_PS}`, 'utf8');",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/antigravity/server.ts#L53"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/client/TileOverlay.tsx",
+        "line": 302,
+        "snippet": "const resp = await fetch('http://127.0.0.1:47392/api/desktop-tile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(desktopPayload), });",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/client/TileOverlay.tsx#L302"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/build.mjs",
+        "line": 3,
+        "snippet": "* straight into `~/.gemini/config/plugins/chronobranch/` works with ZERO build step!",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/build.mjs#L3"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 2,
+        "snippet": "* Install or uninstall ChronoBranch into `~/.gemini/config/plugins/chronobranch/`.",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/scripts/install.mjs#L2"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/antigravity/transcript-adapter.ts",
+        "line": 330,
+        "snippet": "/** List all valid conversation IDs under `~/.gemini/antigravity/brain`, newest first. */",
+        "githubBlobUrl": "https://github.com/yoli-mi/antigravity-chronobranch/blob/04dc2a4a11519cf3afcf248dc6857b7cd13e002e/src/antigravity/transcript-adapter.ts#L330"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "04dc2a4a11519cf3afcf248dc6857b7cd13e002e",
+      "scannedAt": "2026-11-27T18:21:20.712Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

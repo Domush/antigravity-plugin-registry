@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "linbo0518/antigravity-hud",
+  "sha": "8275f710598635c76a6ff242a77b3d14680d869b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:17:09.128Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "statusline-hud",
+    "displayName": "Statusline HUD",
+    "version": "0.5.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "hud",
+        "slashCommand": "/hud",
+        "description": "Initialize, configure, validate, preview, modify, migrate, extend, uninstall, and troubleshoot Statusline HUD (statusline-hud) for Antigravity CLI. Use when the user invokes /hud or asks in natural language to set up, check, customize, togg",
+        "disableModelInvocation": false,
+        "file": "skills/hud/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/hud"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"./assets/logo.svg\" alt=\"Statusline HUD logo\" width=\"84\" />\n</p>\n\n<h1 align=\"center\">Statusline HUD</h1>\n\n<p align=\"center\">\n  English | <a href=\"./README.zh-CN.md\">简体中文</a>\n</p>\n\n<p align=\"center\">\n  A multi-line terminal statusline and interactive <code>/hud</code> plugin for <a href=\"https://antigravity.google/docs/cli/statusline\">Antigravity CLI (<code>agy</code>)</a>.\n</p>\n\n> [!NOTE]\n> Targets **Antigravity CLI (`agy`)** on Linux, macOS, and WSL. Desktop app sessions and IDE extensions do not render custom TUI status lines.\n\n![Statusline HUD preview](./assets/example.png)\n\n## Quick Start\n\nRequires `agy`, `bash` 3.2+, `jq` 1.6+, and optional `git`.\n\n1. **Install the plugin**\n\n   ```bash\n   agy plugin install https://github.com/linbo0518/antigravity-hud\n   ```\n\n2. **Enable and customize**\n\n   Launch `agy` and run **`/hud`**—it checks your setup, previews the bar, and walks you through enabling and customizing. Or activate directly with:\n\n   ```text\n   /statusline ~/.gemini/config/plugins/statusline-hud/scripts/statusline.sh\n   ```\n\nRe-run `agy plugin install ...` anytime to upgrade; your preferences are preserved automatically.\n\n## Using `/hud`\n\nEverything is handled through `/hud` or plain natural language inside `agy`—no config files to memorize:\n\n- `/hud` — check setup, preview the layout, and toggle modules\n- `/hud setup` / `/hud uninstall` — guide enabling the statusline or safely uninstall\n- `/hud hide title` / `/hud show title` — hide or show any module (changes take effect immediately)\n- `/hud hide cost in split panes` — override modules only for narrow panes (`<100` cols)\n- `/hud check` — diagnose setup, config, or display issues\n- `/hud reset` — restore all defaults\n\n## Symbols\n\n- **Git**: `[...]` status flags (`=` conflicted, `+` staged, `!` modified, `✘` deleted, `»` renamed, `?` untracked, `$` stashed, `↑N`/`↓N` ahead/behind) and `(+N −M)` tracked diff lines; narrow panes show `*` when dirty.\n- **Quota**: used % (green `<60%`, yellow `60–89%`, red `>=90%`) + reset time; count-only buckets show `<N> left`.\n- **Tokens**: `tok <total> (<input>↑ <output>↓)` across the session (including subagents), followed by `<N> tok/s` for the main agent's current-turn output rate.\n- **Model**: in Orchestrator mode, shows `Orchestrator: <planner> → <executor>` read from agy's `settings.json` (the statusline payload omits them), i.e. the last saved selection.\n\n## Uninstall\n\nRevert the statusline **before** removing the plugin:\n\n1. In `agy`, run `/statusline delete`.\n2. In your shell, run:\n\n```bash\nagy plugin uninstall statusline-hud\nrm -rf \"${XDG_CONFIG_HOME:-$HOME/.config}/statusline-hud\" \"${XDG_CACHE_HOME:-$HOME/.cache}/statusline-hud\"  # optional\n```\n\n<details>\n<summary>Advanced: manual <code>config.json</code>, standalone install &amp; development</summary>\n\n### Manual `config.json`\n\nStored at `${XDG_CONFIG_HOME:-~/.config}/statusline-hud/config.json` (hot-reloads automatically):\n\n| Row | Switches (left to right) |\n| --- | --- |\n| 1 | `showMode`, `showModel`, `showContext`, `showPath`, `showGit` |\n| 2 | `showGeminiQuota`, `show3pQuota` |\n| 3 | `showArtifacts`, `showSubagents`, `showTasks`, `showSandbox`, `showTokens`, `showTokenSpeed`, `showCache`, `showDuration`, `showCost`, `showTitle` |\n\nCore status always starts row 1. All switches are booleans defaulting to `true`; enabled count and state items (`context`, `artifacts`, `subagents`, `tasks`, `sandbox`, `tokens`, `token speed`, `duration`) show `0`, `0.0%`, `0 tok/s`, `0m`, or `OFF` even when omitted by the CLI, while items with no value (such as an untitled session, non-Git path, or unreported quota/cache/cost) and empty rows are omitted. Below 100 columns, `narrow` overrides apply (missing keys inherit) and compact text forms are used; long rows may wrap.\n\n```json\n{\n  \"showTitle\": false,\n  \"showCost\": false,\n  \"narrow\": { \"showCost\": true }\n}\n```\n\n### Standalone single-script install (without `/hud`)\n\n```bash\ncp scripts/statusline.sh ~/.gemini/antigravity-cli/statusline.sh\nchmod +x ~/.gemini/antigravity-cli/statusline.sh\n```\n\nThen run `/statusline ~/.gemini/antigravity-cli/statusline.sh` inside `agy`.\n\n### Development & validation\n\n```bash\n./tests/test.sh\nagy plugin validate --strict .\n```\n\n</details>\n\n## Acknowledgments\n\n- **[claude-hud](https://github.com/jarrodwatts/claude-hud)** by Jarrod Watts (MIT License) — multi-line HUD hierarchy and `/hud` workflow inspiration.\n- **[Google Antigravity CLI `statusline` example](https://github.com/google-antigravity/antigravity-cli/tree/main/examples/statusline)** — 16-color palette and status payload reference.\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/hud/SKILL.md",
+        "line": 85,
+        "snippet": "- Run the script directly with a sample payload to inspect raw output and exit status: `printf '{\"agent_state\":\"working\",\"terminal_width\":120}' | <statusline-path>`.",
+        "githubBlobUrl": "https://github.com/linbo0518/antigravity-hud/blob/8275f710598635c76a6ff242a77b3d14680d869b/skills/hud/SKILL.md#L85"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.5.1",
+      "sha": "8275f710598635c76a6ff242a77b3d14680d869b",
+      "scannedAt": "2026-11-27T18:17:09.128Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

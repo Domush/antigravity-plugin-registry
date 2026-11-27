@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "id": "LEFTX1/antigravity-quota-matrix",
+  "sha": "d93205e07d11a7b00f471652e7969bb589fd3c60",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:13:11.327Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "quota-matrix",
+    "displayName": "额度矩阵",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "tracker",
+        "runtimeName": "quota-matrix_tracker",
+        "transport": "stdio",
+        "command": "python",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/mcp_server.py"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "quota-matrix",
+        "slashCommand": "/quota-matrix",
+        "description": "使用「额度矩阵 (Quota Matrix)」插件。当用户想查看当前或各个 Antigravity 账号的模型额度（Antigravity 额度 / quota matrix / multi-account quota）、额度何时刷新、刷新倒计时、切换账号后的额度对比、手动标注 5h 或周额度用完（距刷新 day/h），或开关额度刷新弹窗提醒时使用。",
+        "disableModelInvocation": false,
+        "file": "skills/quota-matrix/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/quota-matrix"
+    ],
+    "mcpServerNames": [
+      "quota-matrix_tracker"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity 额度矩阵 (Quota Matrix)\n\n> **Google Antigravity 多账号模型额度监控与刷新倒计时插件（MCP App 看板）**\n>\n> Multi-account quota monitor, 5-hour reset timeline, weekly quota exhausted countdown (`day` + `h`), and desktop reset notifications for **Google Antigravity**.\n\n---\n\n## 一键安装 / One-Line Install\n\n### Windows (PowerShell)\n\n```powershell\nirm https://raw.githubusercontent.com/LEFTX1/antigravity-quota-matrix/main/install.ps1 | iex\n```\n\n### macOS / Linux (Bash)\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/LEFTX1/antigravity-quota-matrix/main/install.sh | bash\n```\n\n### Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/LEFTX1/antigravity-quota-matrix\npython -m pip install mcp\n```\n\n> 安装脚本会自动将插件写入 `~/.gemini/config/plugins/quota-matrix`，检查并安装 `mcp` 依赖，且更新插件时会完整保留本地 `data/` 记录。安装完成后重启 Antigravity（或在 **Customizations > Installed** 重载插件）即可使用。\n\n---\n\n## 核心特性 / Key Features\n\n- **多账号自动识别与切换快照**：后台每 10 秒轮询本机 Language Server（`GetUserStatus`，只读），切换 Antigravity 账号后自动抓取并保存独立卡片。\n- **5h 额度环形图 + 按键数字时钟**：直观展示各账号 Gemini 额度剩余百分比与 `HH:MM:SS` 倒计时，顶部提供 5 小时全局时间轴总览。\n- **手动标记 5h 已用完**：支持在卡片上手动点击「用完 / 撤销」，本地锁定 0% 并推算 5h 刷新时间。\n- **每周额度用完标注（`day` + `h` 倒计时）**：\n  - 每张账号卡片底部提供 **「周用完」** 按钮，可内联填入距离下一次刷新的 **天数（`day`）与小时数（`h`）**，提供 `1d / 3d / 5d / 7d` 快捷预设与预计刷新时间预览。\n  - 实时显示 `X day Y h` 倒计时、支持修改与撤销，到达刷新时刻自动清除标记并发送提醒。\n- **到点桌面通知（Windows Toast）**：支持刷新提醒、切号提醒与提示音开关，并在到点时刻精确唤醒播报。\n- **macOS Sonoma 控制中心质感 UI**：支持跟随系统 / 浅色 / 夜间模式无缝切换。\n\n---\n\n## 可用 MCP 工具 / MCP Tools (`quota-matrix_tracker`)\n\n| 工具名 | 说明 |\n| :--- | :--- |\n| `open_quota_matrix` | 打开「账号 × 模型」额度矩阵看板（支持侧栏 / 全局入口） |\n| `refresh_quota_now` | 立即向本地 Language Server 同步当前登录账号额度 |\n| `mark_quota_exhausted` | 手动标记指定账号（或当前账号）Gemini 5h 额度已用完 |\n| `clear_quota_exhausted` | 取消 5h 手动用完标记，恢复接口真实额度 |\n| `mark_weekly_exhausted` | 手动标注一周额度已用完，设置距下次刷新的 `days` 与 `hours` |\n| `clear_weekly_exhausted` | 取消一周额度已用完标注 |\n| `set_quota_config` | 配置刷新弹窗、切号弹窗、提示音与轮询间隔（10–600s） |\n| `send_quota_test_notification` | 发送一条 Windows 测试弹窗验证通知通道 |\n\n---\n\n## 本地隐私与安全 / Privacy & Security\n\n- **100% 本地只读采集**：仅连接本机 Antigravity Language Server 的本地 `GetUserStatus` 接口。\n- **零云端上传**：所有账号快照与倒计时状态仅保存在本机 `~/.gemini/config/plugins/quota-matrix/data/state.json`，仓库中不包含任何个人账号或令牌信息。\n\n---\n\n## 卸载 / Uninstall\n\n在 Antigravity 的 **Customizations > Installed** 页面卸载 **额度矩阵 (`quota-matrix`)**，或直接删除目录：\n\n- Windows: `Remove-Item -Recurse -Force \"$env:USERPROFILE\\.gemini\\config\\plugins\\quota-matrix\"`\n- macOS / Linux: `rm -rf ~/.gemini/config/plugins/quota-matrix`\n\n---\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "## Antigravity 额度矩阵 (Quota Matrix) v1.1.0\n\n### 一键安装 / One-Line Install\n- **Windows (PowerShell)**: `irm https://raw.githubusercontent.com/LEFTX1/antigravity-quota-matrix/main/install.ps1 | iex`\n- **macOS / Linux**: `curl -fsSL https://raw.githubusercontent.com/LEFTX1/antigravity-quota-matrix/main/install.sh | bash`\n- **Antigravity CLI**: `agy plugin install https://github.com/LEFTX1/antigravity-quota-matrix`\n\n### 更新亮点 / Highlights\n- 新增卡片「周用完」按钮与内联 `day` + `h` 输入面板（含 `1d / 3d / 5d / 7d` 快捷预设与刷新时间预览）\n- 实时显示 `X day Y h` 倒计时、支持修改与撤销，到期自动清除标记并发送刷新提醒\n- 新增 MCP 工具：`mark_weekly_exhausted` 与 `clear_weekly_exhausted`",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/notify.py",
+        "line": 45,
+        "snippet": "subprocess.Popen( [\"powershell\", \"-NoProfile\", \"-WindowStyle\", \"Hidden\", \"-EncodedCommand\", encoded], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/notify.py#L45"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mcp_server.py",
+        "line": 52,
+        "snippet": "with open(UI_HTML_PATH, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/mcp_server.py#L52"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 48,
+        "snippet": "with open(os.path.join(get_data_dir(), \"quota.log\"), \"a\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L48"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 68,
+        "snippet": "os.remove(path)",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L68"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 82,
+        "snippet": "os.remove(path)",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L82"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 95,
+        "snippet": "with open(path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L95"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 119,
+        "snippet": "with open(tmp, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L119"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 337,
+        "snippet": "with open(fp, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L337"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 366,
+        "snippet": "with open(os.path.join(get_data_dir(), \"ls_endpoint.json\"), \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L366"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/quota_core.py",
+        "line": 388,
+        "snippet": "with open(os.path.join(get_data_dir(), \"ls_endpoint.json\"), \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L388"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/quota_core.py",
+        "line": 407,
+        "snippet": "with urllib.request.urlopen(req, timeout=timeout) as r:",
+        "githubBlobUrl": "https://github.com/LEFTX1/antigravity-quota-matrix/blob/d93205e07d11a7b00f471652e7969bb589fd3c60/scripts/quota_core.py#L407"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "d93205e07d11a7b00f471652e7969bb589fd3c60",
+      "scannedAt": "2026-11-27T18:13:11.327Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

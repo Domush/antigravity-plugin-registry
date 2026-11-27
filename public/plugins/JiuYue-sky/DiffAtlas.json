@@ -1,0 +1,691 @@
+{
+  "schemaVersion": 1,
+  "id": "JiuYue-sky/DiffAtlas",
+  "sha": "6bf30751554d2d78a9a3ba5bff75fe5353e2e678",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:14:34.609Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "diffatlas",
+    "displayName": "DiffAtlas",
+    "version": "0.1.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "diffatlas",
+        "runtimeName": "diffatlas_diffatlas",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/dist/server/index.mjs",
+          "--plugin-root=${PLUGIN_ROOT}",
+          "--data-dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "diffatlas-time-machine",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "node dist/hooks/lifecycle-hook.cjs",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "diffatlas-time-machine",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "node dist/hooks/lifecycle-hook.cjs",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "diffatlas",
+        "slashCommand": "/diffatlas",
+        "description": "Visual change review, deterministic file-level dependency impact analysis, and safe Agent checkpoint management with DiffAtlas. Activate when the user wants to inspect workspace changes, evaluate blast radius before or after edits, find aff",
+        "disableModelInvocation": false,
+        "file": "skills/diffatlas/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/diffatlas"
+    ],
+    "mcpServerNames": [
+      "diffatlas_diffatlas"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# DiffAtlas — Visual Diff Impact Graph & Agent Time Machine Plugin for Google Antigravity (`agy`)\n\n![Version](https://img.shields.io/badge/version-v0.1.0-blue)\n![Google Antigravity](https://img.shields.io/badge/Google_Antigravity_%28agy%29-Native_MCP_App_Plugin-4285F4)\n![MCP Apps](https://img.shields.io/badge/MCP_Apps-SEP--1865-6E40C9)\n![Platform](https://img.shields.io/badge/platform-Windows_%7C_macOS_%7C_Linux-0078D6)\n![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20_LTS-339933)\n![Zero Native Addons](https://img.shields.io/badge/native_addons-Zero_%28No_node--gyp%29-10B981)\n![License](https://img.shields.io/badge/license-MIT-green)\n\n**Built Natively for the Google Antigravity (`agy`) Ecosystem · Native MCP App + Lifecycle Hooks + Skill + Rules · Compatible with Any MCP Client**\n\n[简体中文](./README.zh-CN.md) | **English**\n\n> **DiffAtlas** is a cross-platform, zero-native-dependency **Google Antigravity (`agy`) plugin** and open-source **MCP App (`SEP-1865`)** engineering cockpit. It extends **Antigravity 2.0**, **Antigravity CLI (`agy`)**, and **Antigravity IDE** with a visual Git diff reviewer, a deterministic multi-language file-level dependency blast-radius graph (**TS/JS, Vue/Svelte/Astro, Python, Go, Rust, C/C++, Java/Kotlin, C#**), a workspace file tree with native `fileView` jump, and a millisecond `PreToolUse` / `PostToolUse` **Agent Time Machine** — while shipping a reusable, domain-agnostic **`src/kit/` Antigravity Plugin Kit** to accelerate community ecosystem extensions.\n>\n> **Scope & Boundaries**: Want to know exactly what DiffAtlas excels at — and its current boundaries (e.g., file-level vs compiler/LSP granularity, hook-only Time Machine scope, and large-monorepo caps)? Read **Scope, Strengths & Limitations** ([English](./docs/SCOPE_AND_LIMITATIONS.md) / [中文](./docs/SCOPE_AND_LIMITATIONS.zh-CN.md)) before adopting.\n>\n> **Platform Testing Disclaimer (Important)**: Apart from **Windows** (physically tested by the author), non-Windows operating systems (macOS, Linux, etc.) have **not been manually tested on real hardware** and rely solely on AI Agent-driven cross-platform code adaptations and automated tests. **Full compatibility on non-Windows hosts cannot be guaranteed — non-Windows users should download with caution.** Read **Platform Testing Status & Compatibility Disclaimer** ([English](./docs/PLATFORM_TESTING_DISCLAIMER.md) / [中文](./docs/PLATFORM_TESTING_DISCLAIMER.zh-CN.md)).\n\n---\n\n## Real-World Use Cases: What Can You Use DiffAtlas For?\n\nIn plain terms, **DiffAtlas** is a **blast-radius review cockpit and instant safety net for AI-assisted coding**, plus a reusable foundation for building new **Google Antigravity (`agy`)** plugins:\n\n| Everyday Workflow | The Real Problem | How DiffAtlas Solves It |\n| :--- | :--- | :--- |\n| **1. Post-Edit AI Change Review (Prevent Silent Breakage)** | An AI turn touches 5–20 files at once; reading linear red/green diffs alone makes it easy to miss untouched downstream modules and tests that quietly break | Renders a deterministic **Changed (Hop 0) → 1-Hop Direct → 2-Hop Indirect → Recommended Tests** graph with exact `file:line` evidence across 8 mainstream language families — offline and without language compilers |\n| **2. Pre-Refactor \"What-If\" Simulation & Context Injection** | Before asking an agent to refactor a shared utility, type, or core service, you want to know what depends on it so the agent does not break callers | Click **Simulate Impact** *before* editing to inspect downstream callers, then click **Attach Blast Radius + Tests** to inject those files straight into your next conversation turn via `updateModelContext()` |\n| **3. Millisecond Safety Net Between Git Commits** | An exploratory AI turn goes sideways before you ran `git commit`, and you also edited a file by hand — running `git checkout` risks wiping your manual work | Captures automatic sub-50ms pre-edit snapshots; roll back a **single file or an entire Agent turn** safely. Rollback is **human-exclusive** (invisible to LLMs), blocks overwrites on manual edits, and saves an Undo-of-Undo backup first |\n| **4. Starter Kit for Building New Antigravity (`agy`) Plugins** | Building a custom `agy` MCP App (e.g., 3D viewer, DB explorer, trace inspector) requires boilerplate for sandboxing, chunked streaming, theme sync, and cleanroom audits | Reuse the domain-agnostic [`src/kit/`](./docs/ARCHITECTURE_AND_ECOSYSTEM.md) plugin foundation and automated 14-check cleanroom verifier out of the box |\n\n> **Clear Boundaries**: DiffAtlas **complements — and does NOT replace — Git** (branching, history, and reverting shell `run_command` edits stay in Git) or **IDE compilers / LSPs** (compiler-exact type errors and symbol renames). See **Scope, Strengths & Limitations** ([English](./docs/SCOPE_AND_LIMITATIONS.md) / [中文](./docs/SCOPE_AND_LIMITATIONS.zh-CN.md)) for full details.\n\n---\n\n## Why DiffAtlas for the Google Antigravity (`agy`) Ecosystem?\n\nAI-first coding in **Google Antigravity (`agy`)** moves fast — agents can touch 5–20 files in a single turn. Reviewing only raw text diffs misses downstream breakage, affected tests, and safe single-file rollback.\n\nDiffAtlas extends **Google Antigravity** cleanly through **100% official public extension contracts** (zero monkey-patching, zero host DOM intrusion, zero private APIs):\n\n| Antigravity (`agy`) Ecosystem Pillar | How DiffAtlas Extends It | Standard / Contract |\n| :--- | :--- | :--- |\n| **1. Native MCP App UI (`ui://`)** | Always-available visual workbench in Antigravity 2.0's right-hand **`aux_pane`** and left-hand **`global`** sidebar, with native **`fileView`** jump, **`updateModelContext()`** context pills, resizable split diff preview, live light/dark theme sync, and an isolated plugin-only `EN / 中文` toggle | `@modelcontextprotocol/ext-apps` (SEP-1865) + `com.google.antigravity/ui` |\n| **2. Lifecycle Hooks (`hooks.json`)** | Sub-50ms fail-open **`PreToolUse`** + **`PostToolUse`** content-addressed SHA-256 single-file snapshots stored in `${PLUGIN_DATA}`, powering 3-way conflict-checked human rollback | Antigravity `hooks.json` (`PLUGIN_ROOT` / `PLUGIN_DATA`) |\n| **3. Agent Skill (`skills/diffatlas/SKILL.md`)** | Progressive-disclosure `/diffatlas` workflow teaching the agent when to open the visual cockpit, evaluate blast radius before refactoring, and inspect checkpoints | Antigravity Skills Spec |\n| **4. Always-On Safety Rules (`rules/AGENTS.md`)** | Enforces exact `file:line` import evidence citations, honest high/low confidence labeling, and human-exclusive rollback governance | Antigravity Rules Spec (`rules/AGENTS.md`) |\n| **5. Reusable `src/kit/` Plugin Kit** | Domain-agnostic TypeScript foundation (`PathGuard`, `ProcessGuard`, `PluginStateStore`, `ChunkChannel`, `McpPluginShell`, `UiShell`, `SelfAudit`) ready to fork for new **Antigravity (`agy`)** MCP App plugins (3D/CAD viewers, DB explorers, trace viewers, design previewers) | Zero-native-addon TypeScript + Vite single-file CSP bundle |\n\n---\n\n## Key Capabilities\n\n### 1. Deterministic 1–2 Hop Multi-Language Blast Radius Graph (8 Mainstream Language Families)\n- **Zero Native C++ Compilation (`node-gyp`-free)**: Pure TypeScript/JS + WASM parsers covering **TypeScript / JavaScript**, **Vue / Svelte / Astro SFCs**, **Python**, **Go**, **Rust**, **C / C++**, **Java / Kotlin**, and **C#** — installing identically on Windows, macOS (Apple Silicon & Intel), and Linux without language compilers, Docker, or `node-gyp`.\n- **Real-World Project Fidelity**: Honors root & nested `.gitignore` + `.git/info/exclude`, `tsconfig.json` / `jsconfig.json` JSONC `extends` + multi-`references` + `paths` / `baseUrl`, Vue 3.3+ `<script setup generic=\"...\">` & Astro frontmatter, `go.mod` + `replace` + same-package `_test.go`, Cargo workspaces (`Cargo.toml` crate names, `mod`, `use crate::/super::`, lifetimes), C/C++ `#include \"...\"` & workspace `include/` headers, JVM packages/same-package siblings/wildcard imports, and C# type-filtered namespace `using`.\n- **Interactive Layered SVG Graph + What-If Simulation**: Visualizes **Upstream Deps → Changed (Hop 0) → Direct Impact (1-hop) → Indirect Impact (2-hop)** plus **Recommended Test Files**. Click **Simulate Impact** on any supported code file to preview its blast radius *before* editing.\n- **Evidence-First & Honest Confidence**: Every edge cites exact `file:line` and sanitized source snippets. Dynamic loaders (`import(expr)`, `require(expr)`, `importlib.import_module`, `plugin.Open`, `dlopen`, `Class.forName`, `Assembly.Load`) and wildcard/ambiguous package imports are explicitly tagged **Low Confidence** so neither the reviewer nor the agent gets false certainty.\n- **Dual-Surface CLI & Headless Support**: In **Antigravity CLI (`agy`)** or non-UI MCP clients, `analyze_diff_impact` degrades seamlessly into concise, PR-ready, prompt-injection-sanitized Markdown evidence tables.\n\n### 2. Deep Native Antigravity (`agy`) Workbench Integration\n- **One-Click Native `fileView` with Graceful `-32601` Fallback**: Clicking any file or graph node invokes `com.google.antigravity/toggle-aux-pane` (`tabType: \"fileView\"`) in Antigravity's side pane. On `global` sidebar views or third-party MCP hosts (`-32601`), DiffAtlas automatically opens a **resizable split-pane inline diff / chunked read-only preview** (Pointer Capture drag handle + keyboard arrows + persisted split ratio).\n- **One-Click Context Pill Attachment**: Select files or the entire blast radius + recommended tests and attach them directly to your next conversation turn via `app.updateModelContext()` (with one-click Clear Pill).\n- **Adaptive Surface Capability Gating**: Automatically detects `app.getHostCapabilities()` so conversation-only controls hide cleanly in `global` sidebar views.\n- **Live Theme Sync + Isolated Bilingual Toggle**: Syncs real-time host theme tokens via `applyHostStyleVariables` (`system` / `dark` / `light`) and offers an independent **`EN / 中文`** UI switch scoped strictly inside the DiffAtlas sandbox iframe (zero conflict with host or other localization plugins).\n\n### 3. Millisecond Agent Time Machine (`PreToolUse` + `PostToolUse`)\n- **Sub-50ms Content-Addressed Snapshots**: Automatically captures deduplicated SHA-256 pre-edit blobs before `write_file` / `edit_file` / `replace_file_content` edits, with async stdin streaming (immune to macOS/Linux `EAGAIN` pipe hangs) and an active 3.5s fail-open watchdog so hooks never stall the agent loop.\n- **3-Way Human-Edit Conflict Detection**: Compares `currentDiskSha256` against `latestTrackedPostSha256` and `targetPreSha256` before restoring, blocking accidental overwrites of manual edits until explicitly confirmed.\n- **Mandatory Undo-of-Undo Safety Backup**: Every rollback saves the current workspace disk state to a `pre_rollback_backup` checkpoint before touching a single byte (and preserves POSIX executable permissions like `0755` on macOS/Linux).\n- **Human-Exclusive Rollback Boundary**: `app_preview_rollback` and `app_restore_checkpoint` declare `visibility: [\"app\"]`, making destructive restore capabilities completely invisible to LLMs.\n\n---\n\n## Architecture & Antigravity Ecosystem Blueprint\n\n```mermaid\nflowchart LR\n    Host[\"Google Antigravity (App · CLI agy · IDE) / Any MCP Host\"] <-->|\"Stdio MCP + SEP-1865 UI\"| Kit[\"src/kit/ Reusable AGY Plugin Kit (PathGuard · ProcessGuard · McpShell · ChunkChannel · UiShell · SelfAudit)\"]\n    Kit --> Core[\"src/core/ (8-Language Graph · Git Workspace · Nested .gitignore · SnapshotEngine)\"]\n    Hooks[\"hooks.json PreToolUse / PostToolUse (Async CJS, Fail-Open)\"] --> Core\n    Core <--> Data[\"${PLUGIN_DATA} (CAS SHA-256 Blobs · State · Rotating audit.jsonl)\"]\n```\n\nWant to build your own **Google Antigravity (`agy`) MCP App plugin**? Read **Architecture & Ecosystem Extension Guide** ([English](./docs/ARCHITECTURE_AND_ECOSYSTEM.md) / [中文](./docs/ARCHITECTURE_AND_ECOSYSTEM.zh-CN.md)) to see how `src/kit/` encapsulates security sandboxing, bounded chunk streaming (`<= 3` in-flight calls), `PLUGIN_DATA` state persistence, and zero-`node_modules` cleanroom auditing for reuse in companion plugins.\n\n---\n\n## Surface & Cross-Platform Compatibility\n\n| Surface / Host | Visual Workbench UI (`aux_pane` / `global`) | Native `fileView` & Context Pill | Time Machine Hooks (`hooks.json`) | CLI / Markdown Fallback |\n| :--- | :---: | :---: | :---: | :---: |\n| **Google Antigravity App (2.0)** | Full (`aux_pane` + `global`) | Full (`fileView` + `updateModelContext`) | Full (`PreToolUse` + `PostToolUse`) | Full |\n| **Google Antigravity CLI (`agy`)** | N/A (terminal) | N/A | Full (`PreToolUse` + `PostToolUse`) | Full (`analyze_diff_impact`, `list_checkpoints`) |\n| **Google Antigravity IDE / Extensions** | Surface-dependent | Surface-dependent | Full | Full |\n| **Other MCP Apps Hosts (SEP-1865)** | Full (inline UI + theme sync) | Auto-fallback (`-32601` inline preview) | Host-dependent | Full |\n| **Standard Stdio MCP Clients** | N/A | N/A | Host-dependent | Full Markdown reports |\n\n**Operating Systems**: Requires **Node.js `>= 20 LTS`** (`20.x`, `22.x`, `24.x`; **Git** optional). Physically tested by the author on **Windows 10/11**; adaptations for **macOS** and **Linux / WSL** were built and verified via **AI Agent automated tests only** without hands-on physical host testing, so full compatibility on non-Windows systems cannot be guaranteed — non-Windows hosts should download with caution (see **Platform Testing Status & Compatibility Disclaimer** ([English](./docs/PLATFORM_TESTING_DISCLAIMER.md) / [中文](./docs/PLATFORM_TESTING_DISCLAIMER.zh-CN.md))).\n\n---\n\n## Quick Start (Zero Native Compilation, Zero Build Step Required)\n\n**Prerequisite**: Only **Node.js >= 20 LTS** (`node -v`). No Python, Docker, Rust, or C++ compiler (`node-gyp`) required.\n\n### Option A: One-Command Install via Antigravity CLI (`agy`) — Recommended\nBecause prebuilt pure-JS/HTML runtime bundles (`dist/server/index.mjs`, `dist/hooks/lifecycle-hook.cjs`, `dist/ui/app.html`) ship cleanly with zero `node_modules` needed at runtime, installing from GitHub works immediately across Windows, macOS, and Linux:\n\n```bash\n# Install globally into Antigravity (~/.gemini/config/plugins/diffatlas/)\nagy plugin install https://github.com/JiuYue-sky/DiffAtlas\n\n# Verify installation & components\nagy plugin list\n```\n\n> **Tip (Global vs Workspace Install)**: Installing globally into `~/.gemini/config/plugins/diffatlas/` makes DiffAtlas available across **every** workspace and in Antigravity's left-hand `global` sidebar without copying files into each project. See **Installation & Compatibility Guide** ([English](./docs/INSTALLATION_AND_COMPATIBILITY.md) / [中文](./docs/INSTALLATION_AND_COMPATIBILITY.zh-CN.md)) for manual zip/tar.gz install and workspace-scoped `.agents/plugins/` details.\n\n### Option B: Manual Global Install from GitHub Releases\n1. Download `diffatlas-plugin-v<version>.zip` (Windows) or `diffatlas-plugin-v<version>.tar.gz` (macOS/Linux) from [GitHub Releases](https://github.com/JiuYue-sky/DiffAtlas/releases) and verify its `.sha256` checksum.\n2. Extract the `diffatlas/` directory directly into your Antigravity global plugins directory:\n   - **Windows**: `%USERPROFILE%\\.gemini\\config\\plugins\\diffatlas\\`\n   - **macOS / Linux**: `~/.gemini/config/plugins/diffatlas/`\n3. Open Antigravity → **Customizations > Installed** (no restart required for new plugins) or open **DiffAtlas** from the right-hand side pane `+` menu or left sidebar.\n\n### Option C: Build & Run Full Cleanroom Verification from Source\n```bash\ngit clone https://github.com/JiuYue-sky/DiffAtlas.git\ncd DiffAtlas\nnpm install\nnpm run verify\n```\n\n`npm run verify` executes all 4 engineering gates:\n1. Strict TypeScript check (`tsc --noEmit`)\n2. Single-file CSP-clean UI build (`dist/ui/app.html`) + zero-dependency ESM server & fast-boot CJS hook bundling + local `.agents/plugins/diffatlas/` dev staging\n3. Full Vitest suite (OWASP `PathGuard` security, 3-way Time Machine state machine, cross-OS parsers, `es-module-lexer` oracle, and 1,000-file benchmark)\n4. Built-in `self-audit` + isolated OS temp **zero-`node_modules` cleanroom** Stdio MCP handshake, hook latency benchmark, license allowlist, link integrity, and secret/path leak scan (`dist/build_verification.json`)\n\n---\n\n## Registered MCP Tools & Visibility Boundaries\n\n| Tool Name | Visibility | Entrypoints | Purpose |\n| :--- | :---: | :---: | :--- |\n| `open_workbench` | `model`, `app` | `aux_pane`, `global` | Launches or refreshes the interactive DiffAtlas MCP App workbench (accepts `{}`) |\n| `analyze_diff_impact` | `model`, `app` | Inline / CLI | Computes 1–2 hop multi-language blast radius with `file:line` evidence & recommended tests |\n| `list_checkpoints` | `model`, `app` | Inline / CLI | Lists local `PreToolUse` checkpoints stored in `${PLUGIN_DATA}` |\n| `app_get_workbench_state` | **`app` only** | UI internal | Hydrates full workspace tree, graph, checkpoints, and preferences |\n| `app_analyze_impact` | **`app` only** | UI internal | Interactive What-If single-file blast-radius simulation |\n| `app_get_file_diff` | **`app` only** | UI internal | `PathGuard`-protected unified diff or binary-safe read-only source preview |\n| `app_read_chunk` | **`app` only** | UI internal | Bounded byte-slice file streamer (`utf8` / `base64`, `<= 3` concurrent calls) |\n| `app_get_recent_targets` | **`app` only** | UI internal | Loads persisted recent workspaces & UI preferences from `${PLUGIN_DATA}` |\n| `app_save_preferences` | **`app` only** | UI internal | Persists isolated UI language, theme override, active tab, and split ratio |\n| `app_preview_rollback` | **`app` only** | UI internal | Runs 3-way disk/agent/baseline conflict check (full turn or single file) |\n| `app_restore_checkpoint` | **`app` only** | UI internal | **Human-exclusive** rollback with mandatory `pre_rollback_backup` (invisible to LLMs) |\n\n---\n\n## Project Directory Structure\n\n```text\nDiffAtlas/\n├── .github/\n│   ├── ISSUE_TEMPLATE/              # Bug report & ecosystem feature request templates\n│   ├── PULL_REQUEST_TEMPLATE.md     # Contributor PR verification checklist\n│   └── workflows/                   # 3-OS Cleanroom CI & Tag Release Packager workflows\n├── assets/logo.svg                  # High-contrast dual-theme 1:1 Antigravity plugin icon\n├── dist/                            # Prebuilt pure-JS/HTML runtime bundles (zero node_modules!)\n│   ├── hooks/lifecycle-hook.cjs     # Async fail-open PreToolUse / PostToolUse CJS bundle\n│   ├── server/index.mjs             # Bundled Stdio MCP App server (ESM)\n│   └── ui/app.html                  # Self-contained CSP-clean single-file React + SVG UI\n├── docs/\n│   ├── PLATFORM_TESTING_DISCLAIMER.md (.zh-CN.md)      # Non-Windows untested host caution & disclaimer (EN / 中文)\n│   ├── SCOPE_AND_LIMITATIONS.md (.zh-CN.md)            # Scope, core strengths, limitations & roadmap (EN / 中文)\n│   ├── ARCHITECTURE_AND_ECOSYSTEM.md (.zh-CN.md)       # AGY 5-pillar architecture & reusable src/kit guide (EN / 中文)\n│   ├── INSTALLATION_AND_COMPATIBILITY.md (.zh-CN.md)   # Win/Mac/Linux & AGY App/CLI/IDE setup & troubleshooting (EN / 中文)\n│   ├── RELEASE_AND_UPDATING_GUIDE.md (.zh-CN.md)       # User update guide, SemVer release & Marketplace playbook (EN / 中文)\n│   └── THIRD_PARTY_NOTICES.md (.zh-CN.md)              # Dependency licenses & upstream standards registry (EN / 中文)\n├── rules/AGENTS.md                  # Always-on Antigravity safety & evidence citation rules\n├── scripts/\n│   ├── build.mjs                    # Vite single-file + esbuild server/hook + local dev staging\n│   ├── self-audit.mjs               # Cleanroom self-audit & manifest verifier CLI\n│   └── package-release.mjs          # Cross-platform standalone .zip / .tar.gz + SHA-256 packager\n├── skills/diffatlas/SKILL.md        # Progressive-disclosure /diffatlas Agent Skill\n├── src/\n│   ├── kit/                         # Reusable domain-agnostic Antigravity MCP App Plugin Kit\n│   ├── core/                        # 8-language parsers, git workspace, gitignore, SnapshotEngine\n│   ├── hooks/                       # Lifecycle hook entrypoint\n│   ├── server/                      # DiffAtlas MCP server wiring\n│   ├── shared/                      # Plugin identity & version constant\n│   └── ui/                          # React workbench UI, inline SVG graph, file tree, EN/中文 i18n\n├── tests/                           # Security, parser oracle, 1,000-file SLA & state-machine tests\n├── CHANGELOG.md                     # Bilingual SemVer release changelog\n├── CONTRIBUTING.md                  # Contribution guidelines & local verification gate\n├── LICENSE                          # Canonical MIT License\n├── NOTICE.md                        # License scope & non-affiliation notice\n├── SECURITY.md                      # OWASP MCP threat model & private disclosure policy\n├── hooks.json                       # Antigravity root lifecycle hooks manifest\n├── mcp_config.json                  # Portable ${PLUGIN_ROOT} / ${PLUGIN_DATA} MCP server manifest\n├── package.json                     # Project scripts, engines & AGY ecosystem keywords\n└── plugin.json                      # Official Antigravity v1 plugin manifest ($schema validated)\n```\n\n---\n\n## Documentation & Resources\n\n- **Platform Testing Status & Compatibility Disclaimer (Must-Read for Non-Windows Hosts)**: [English](./docs/PLATFORM_TESTING_DISCLAIMER.md) / [中文](./docs/PLATFORM_TESTING_DISCLAIMER.zh-CN.md)\n- **Scope, Core Strengths & Current Limitations**: [English](./docs/SCOPE_AND_LIMITATIONS.md) / [中文](./docs/SCOPE_AND_LIMITATIONS.zh-CN.md)\n- **Architecture & Antigravity Ecosystem Kit (`src/kit/`)**: [English](./docs/ARCHITECTURE_AND_ECOSYSTEM.md) / [中文](./docs/ARCHITECTURE_AND_ECOSYSTEM.zh-CN.md)\n- **Cross-Platform Installation & Troubleshooting (Win/Mac/Linux)**: [English](./docs/INSTALLATION_AND_COMPATIBILITY.md) / [中文](./docs/INSTALLATION_AND_COMPATIBILITY.zh-CN.md)\n- **Updating, Release Automation & Marketplace Guide**: [English](./docs/RELEASE_AND_UPDATING_GUIDE.md) / [中文](./docs/RELEASE_AND_UPDATING_GUIDE.zh-CN.md)\n- **Third-Party Open-Source Notices**: [English](./docs/THIRD_PARTY_NOTICES.md) / [中文](./docs/THIRD_PARTY_NOTICES.zh-CN.md)\n- **Security Policy & Threat Model**: [SECURITY.md](./SECURITY.md) | **Contributing**: [CONTRIBUTING.md](./CONTRIBUTING.md) | **Notice**: [NOTICE.md](./NOTICE.md) | **Changelog**: [CHANGELOG.md](./CHANGELOG.md)\n\n---\n\n## Privacy, Security & Support\n\n- **100% Local & Offline, Zero Telemetry**: Zero external network requests, zero CDN assets (strictly compatible with `default-src 'none'` CSP), and zero browser storage (`localStorage` / `IndexedDB` unused; state persists strictly inside `${PLUGIN_DATA}`).\n- **OWASP MCP Defense-in-Depth**: Canonical `fs.realpathSync.native` workspace sandboxing, sensitive file denylists (`.git/**`, `.env*`, `*.pem`, `*.key`, `.ssh/*`, cloud credentials), secret/path redaction, and prompt-injection sanitization. See [SECURITY.md](./SECURITY.md).\n- **Feedback & Maintainer Contact**: Open an issue on [GitHub Issues](https://github.com/JiuYue-sky/DiffAtlas/issues) or email **`jiuyue200712@gmail.com`** for cross-platform compatibility reports, new language parser proposals, or Antigravity ecosystem collaborations.\n\n## License\n\nReleased under the [MIT License](./LICENSE). See [NOTICE.md](./NOTICE.md) for trademark non-affiliation and third-party license details.\n",
+  "latestReleaseNotes": "# DiffAtlas v0.1.0 — Visual Diff Impact Graph & Agent Time Machine for Google Antigravity (`agy`)\n\n> [!CAUTION]\n> **Cross-Platform Testing Notice / 跨平台实机测试说明**: Only **Windows 10/11** has been physically run and manually tested by the author. Non-Windows systems (**macOS, Linux, WSL**) rely solely on AI Agent-driven cross-platform code adaptations and automated tests — **full compatibility on non-Windows hosts cannot be guaranteed; please download and evaluate with caution**. See [Platform Testing Status & Compatibility Disclaimer](https://github.com/JiuYue-sky/DiffAtlas/blob/v0.1.0/docs/PLATFORM_TESTING_DISCLAIMER.md) ([中文](https://github.com/JiuYue-sky/DiffAtlas/blob/v0.1.0/docs/PLATFORM_TESTING_DISCLAIMER.zh-CN.md)).\n\n---\n\n## Highlights (English)\n\n- **Native 5-Pillar Google Antigravity (`agy`) Plugin & Zero-Build Install**:\n  - Full compliance with `https://antigravity.google/schemas/v1/plugin.json` (`plugin.json`, `mcp_config.json`, `hooks.json`, `skills/diffatlas/SKILL.md`, `rules/AGENTS.md`, `assets/logo.svg`).\n  - Zero native C++ addons (`node-gyp`-free), zero `node_modules` required at runtime (`dist/server/index.mjs`, `dist/hooks/lifecycle-hook.cjs`, `dist/ui/app.html`), and `0` npm vulnerabilities (`npm audit`).\n  - Install immediately via `agy plugin install https://github.com/JiuYue-sky/DiffAtlas` or extract the attached standalone `.zip` / `.tar.gz` archives below.\n- **Deterministic Multi-Language Blast-Radius Engine (8 Mainstream Language Families)**:\n  - **TypeScript / JavaScript**, **Vue / Svelte / Astro SFCs**, **Python**, **Go**, **Rust**, **C / C++**, **Java / Kotlin**, and **C#** — citing exact `file:line` import evidence, distinguishing High vs. Low confidence dynamic loaders, and recommending impacted test files.\n- **Interactive MCP App Workbench (`SEP-1865`) + Millisecond Agent Time Machine**:\n  - Strict `default-src 'none'` CSP single-file React + inline SVG graph, native `fileView` jump with `-32601` resizable split inline preview fallback, `updateModelContext()` context pills, live host theme sync, isolated `EN / 中文` toggle.\n  - Sub-50ms async fail-open `PreToolUse` / `PostToolUse` SHA-256 snapshots, 3-way manual-edit conflict gate, mandatory Undo-of-Undo backup, and strictly human-exclusive rollback (`visibility: [\"app\"]`).\n- **Reusable `src/kit/` Antigravity Plugin Kit**:\n  - Domain-agnostic `PathGuard`, `ProcessGuard`, `PluginStateStore`, `ChunkChannel`, `McpPluginShell`, `UiShell`, and 14-check zero-`node_modules` `SelfAudit` ready to fork for companion `agy` plugins.\n\n---\n\n## 核心亮点（简体中文）\n\n- **面向 Google Antigravity (`agy`) 生态原生构建 · 五支柱零编译直装**：\n  - 完整打通 `plugin.json`（官方 v1 Schema）、`mcp_config.json`、`hooks.json`、`skills/diffatlas/SKILL.md` 与 `rules/AGENTS.md`。\n  - 零原生 C++ 编译（无 `node-gyp`）、运行时零 `node_modules`、`npm audit` **0 漏洞**；支持 `agy plugin install https://github.com/JiuYue-sky/DiffAtlas` 一键直装或下载下方独立离线压缩包（附 `.sha256` 校验文件）。\n- **确定性 8 大主流语言文件级依赖影响图**：\n  - 覆盖 **TS/JS、Vue/Svelte/Astro、Python、Go、Rust、C/C++、Java/Kotlin、C#**，每条边提供精确 `file:line` 源码证据与关联测试推荐，对动态加载与通配导入诚实标注低置信度。\n- **交互式驾驶舱 + 毫秒级 Agent 时光机**：\n  - 严格 `default-src 'none'` 单文件面板、原生 `fileView` 跳转与 `-32601` 可拖动内联分屏预览、一键挂入上下文胶囊、独立 `EN / 中文` 切换；`PreToolUse` / `PostToolUse` 自动留底、三方人工修改冲突拦截、Undo-of-Undo 强制备份与人类独占回滚（`visibility: [\"app\"]`）。\n- **可复用 `src/kit/` 生态插件基础套件**：\n  - 领域解耦的安全沙箱、进程熔断、受控分片与 14 项洁净室自检门禁，助力社区快速构建更多 `agy` 插件。\n\n---\n\n## Attached Standalone Plugin Archives (Zero `node_modules`)\n\n- `diffatlas-plugin-v0.1.0.zip` + `.sha256` (Windows / cross-platform POSIX `/` ZIP entries)\n- `diffatlas-plugin-v0.1.0.tar.gz` + `.sha256` (macOS / Linux / cross-platform)\n- `build_verification.json` (14/14 cleanroom self-audit & SHA-256 build manifest)\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "contains_minified",
+      "credential_access",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/kit/path-guard.ts",
+        "line": 155,
+        "snippet": "* (entire `.git/**` internals, `.env*`, private keys, `.ssh/*`, cloud credentials, etc.).",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/path-guard.ts#L155"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "dist/server/index.mjs",
+        "line": 57,
+        "snippet": "\\u041D\\u0435\\u0440\\u0430\\u0441\\u043F\\u0430\\u0437\\u043D\\u0430\\u043D\\u044B",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/dist/server/index.mjs#L57"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"diffatlas-time-machine\" executes a shell command on PreToolUse (matcher: write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content).",
+        "file": "hooks.json",
+        "line": 10,
+        "snippet": "node dist/hooks/lifecycle-hook.cjs",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/hooks.json#L10"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/package-release.mjs",
+        "line": 94,
+        "snippet": "execFileSync('tar', ['-czf', tarGzPath, '-C', tmpStageRoot, 'diffatlas'], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L94"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/package-release.mjs",
+        "line": 100,
+        "snippet": "execFileSync('tar', ['-a', '-cf', zipPath, '-C', tmpStageRoot, 'diffatlas'], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L100"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/package-release.mjs",
+        "line": 102,
+        "snippet": "execFileSync( 'powershell.exe', [ '-NoProfile', '-Command', `Compress-Archive -Path '${pluginStageDir.replace(/'/g, \"''\")}' -DestinationPath '${zipPath.replace(/'/g, \"''\")}' -Force",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L102"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/package-release.mjs",
+        "line": 114,
+        "snippet": "execFileSync('zip', ['-rq', zipPath, 'diffatlas'], { cwd: tmpStageRoot, stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L114"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/package-release.mjs",
+        "line": 116,
+        "snippet": "execFileSync( 'python3', [ '-c', 'import os,sys,zipfile; root,out=sys.argv[1],sys.argv[2]; z=zipfile.ZipFile(out,\"w\",zipfile.ZIP_DEFLATED); [z.write(os.path.join(dp,f), os.path.rel",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L116"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/cpp-import-parser.ts",
+        "line": 90,
+        "snippet": "const charLit = /^'(?:\\\\.|[^'\\\\\\n])'/.exec(rest);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/cpp-import-parser.ts#L90"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/go-import-parser.ts",
+        "line": 32,
+        "snippet": "const m = /^(\\S+)(?:\\s+\\S+)?\\s*=>\\s*(\\S+)$/.exec(lineBody);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/go-import-parser.ts#L32"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/go-import-parser.ts",
+        "line": 62,
+        "snippet": "const modMatch = /^module\\s+(?:\"([^\"]+)\"|(\\S+))$/.exec(line);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/go-import-parser.ts#L62"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/go-import-parser.ts",
+        "line": 73,
+        "snippet": "const singleRep = /^replace\\s+(.+)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/go-import-parser.ts#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/go-import-parser.ts",
+        "line": 349,
+        "snippet": "const pkgMatch = /(?:^|\\n)[ \\t]*package[ \\t]+([A-Za-z_][A-Za-z0-9_]*)/.exec(masked);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/go-import-parser.ts#L349"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/jvm-import-parser.ts",
+        "line": 259,
+        "snippet": "const pkgMatch = /(?:^|\\n)[ \\t]*package[ \\t]+([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)[ \\t]*;?/.exec( declReady, );",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/jvm-import-parser.ts#L259"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/jvm-import-parser.ts",
+        "line": 402,
+        "snippet": "const pkgMatch = /(?:^|\\n)[ \\t]*package[ \\t]+([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)[ \\t]*;?/.exec( cleanMasked, );",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/jvm-import-parser.ts#L402"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/py-import-parser.ts",
+        "line": 417,
+        "snippet": "const fromMatch = /^from(?:\\s+|\\s*(?=\\.))(\\.+)?([A-Za-z_][A-Za-z0-9_.]*)?\\s+import\\s+(.+)$/.exec(text);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/py-import-parser.ts#L417"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/py-import-parser.ts",
+        "line": 614,
+        "snippet": "const importMatch = /^import\\s+(.+)$/.exec(text);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/py-import-parser.ts#L614"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/py-import-parser.ts",
+        "line": 646,
+        "snippet": "const dynMatch = /\\b(importlib\\.import_module|importlib\\.util\\.spec_from_file_location|spec_from_file_location|__import__)\\s*\\(/.exec( text, );",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/py-import-parser.ts#L646"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/rust-import-parser.ts",
+        "line": 48,
+        "snippet": "const kv = /^([A-Za-z0-9_-]+)\\s*=\\s*[\"']([^\"']+)[\"']$/.exec(line);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/rust-import-parser.ts#L48"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/rust-import-parser.ts",
+        "line": 263,
+        "snippet": "const charLit = /^'(?:\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]+\\}|.)|[^'\\\\\\n])'/.exec(rest);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/rust-import-parser.ts#L263"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/rust-import-parser.ts",
+        "line": 425,
+        "snippet": "const pathAttr = /#\\[path\\s*=\\s*\"([^\"]+)\"\\]/.exec(attrReal);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/rust-import-parser.ts#L425"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/sfc-import-parser.ts",
+        "line": 79,
+        "snippet": "const fmMatch = /^[ \\t]*---[ \\t]*\\r?\\n([\\s\\S]*?)\\r?\\n[ \\t]*---(?:[ \\t]*(?:\\r?\\n|$))/.exec(sourceText);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/sfc-import-parser.ts#L79"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/sfc-import-parser.ts",
+        "line": 102,
+        "snippet": "const typeAttr = /\\btype\\s*=\\s*(['\"])([^'\"]+)\\1/i.exec(attrs);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/sfc-import-parser.ts#L102"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/core/sfc-import-parser.ts",
+        "line": 116,
+        "snippet": "const srcAttr = /\\bsrc\\s*=\\s*(['\"])([^'\"]+)\\1/i.exec(attrs);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/sfc-import-parser.ts#L116"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/kit/process-guard.ts",
+        "line": 32,
+        "snippet": "const killer = spawn('taskkill', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore', windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/process-guard.ts#L32"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/kit/process-guard.ts",
+        "line": 90,
+        "snippet": "child = spawn(command, [...args], { cwd: options.cwd, env: options.env ?? process.env, shell: false, windowsHide: true, detached: process.platform !== 'win32', stdio: ['pipe', 'pip",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/process-guard.ts#L90"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/index.ts",
+        "line": 16,
+        "snippet": "const match = /^(.+)\\/(?:\\.agents?|_agents?)\\/plugins\\/[^/]+\\/?$/.exec(posix);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/server/index.ts#L16"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "dist/server/index.mjs",
+        "line": 2,
+        "snippet": "var Zk=Object.defineProperty;var pr=(e,t)=>{for(var n in t)Zk(e,n,{get:t[n],enumerable:!0})};import Un from\"node:fs\";import S_ from\"node:pat",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/dist/server/index.mjs#L2"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 73,
+        "snippet": "fs.rmSync(dstDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/build.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 83,
+        "snippet": "fs.rmSync(stageDist, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/build.mjs#L83"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 24,
+        "snippet": "fs.writeFileSync(`${archivePath}.sha256`, line, 'ascii');",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L24"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 90,
+        "snippet": "if (fs.existsSync(tarGzPath)) fs.unlinkSync(tarGzPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 91,
+        "snippet": "if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L91"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-release.mjs",
+        "line": 134,
+        "snippet": "fs.rmSync(tmpStageRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/package-release.mjs#L134"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/self-audit.mjs",
+        "line": 48,
+        "snippet": "fs.rmSync(tmpRunnerDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/scripts/self-audit.mjs#L48"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/core/snapshot-engine.ts",
+        "line": 260,
+        "snippet": "fs.unlinkSync(lockPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/snapshot-engine.ts#L260"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/core/snapshot-engine.ts",
+        "line": 281,
+        "snippet": "fs.unlinkSync(lockPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/snapshot-engine.ts#L281"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/core/snapshot-engine.ts",
+        "line": 395,
+        "snippet": "fs.unlinkSync(fullPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/snapshot-engine.ts#L395"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/core/snapshot-engine.ts",
+        "line": 1053,
+        "snippet": "fs.unlinkSync(resolved.absolutePath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/core/snapshot-engine.ts#L1053"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/runtime-paths.ts",
+        "line": 89,
+        "snippet": "fs.writeFileSync(tmpPath, content, mode !== undefined && process.platform !== 'win32' ? { mode } : undefined);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/runtime-paths.ts#L89"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/runtime-paths.ts",
+        "line": 116,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/runtime-paths.ts#L116"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/runtime-paths.ts",
+        "line": 132,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/runtime-paths.ts#L132"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/runtime-paths.ts",
+        "line": 164,
+        "snippet": "if (fs.existsSync(rotatedPath)) fs.unlinkSync(rotatedPath);",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/runtime-paths.ts#L164"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/runtime-paths.ts",
+        "line": 178,
+        "snippet": "fs.appendFileSync(auditLogPath, `${serialized}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/runtime-paths.ts#L178"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 471,
+        "snippet": "fs.writeFileSync( path.join(cleanWorkspaceDir, 'src', 'core.ts'), 'export const greeting = \"hello cleanroom\";\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L471"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 476,
+        "snippet": "fs.writeFileSync( path.join(cleanWorkspaceDir, 'src', 'hello.ts'), 'import { greeting } from \"./core.js\";\\nexport const say = () => greeting;\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L476"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 481,
+        "snippet": "fs.writeFileSync( path.join(cleanWorkspaceDir, 'tests', 'hello.test.ts'), 'import { say } from \"../src/hello.js\";\\nsay();\\n', 'utf8', );",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L481"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 486,
+        "snippet": "fs.writeFileSync( path.join(cleanWorkspaceDir, 'src', 'Widget.vue'), '<template><div/></template>\\n<script setup lang=\"ts\">\\nimport { say } from \"./hello\";\\nsay();\\n</script>\\n', '",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L486"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 600,
+        "snippet": "fs.writeFileSync(fPath, `export const idx = ${i};\\n`.repeat(40), 'utf8');",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L600"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 617,
+        "snippet": "fs.writeFileSync(noopCjsPath, 'const fs=require(\"node:fs\");fs.readFileSync(0);process.stdout.write(\"{}\\\\n\");\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L617"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 733,
+        "snippet": "fs.rmSync(cleanroomBase, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L733"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 739,
+        "snippet": "fs.writeFileSync( verificationOutPath, JSON.stringify( { ok: failures.length === 0, pluginId: options.pluginId, version, distDir: './dist', stagedPluginDir: `./.agents/plugins/${op",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L739"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/kit/self-audit/auditor.ts",
+        "line": 977,
+        "snippet": "fs.writeFileSync(verificationOutPath, JSON.stringify(cur, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/JiuYue-sky/DiffAtlas/blob/6bf30751554d2d78a9a3ba5bff75fe5353e2e678/src/kit/self-audit/auditor.ts#L977"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "6bf30751554d2d78a9a3ba5bff75fe5353e2e678",
+      "scannedAt": "2026-11-27T18:14:34.609Z",
+      "riskTier": "high",
+      "capabilities": [
+        "contains_minified",
+        "credential_access",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

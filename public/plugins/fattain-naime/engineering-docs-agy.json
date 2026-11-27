@@ -1,0 +1,613 @@
+{
+  "schemaVersion": 1,
+  "id": "fattain-naime/engineering-docs-agy",
+  "sha": "3368b6b61250cfeb2180055b720bc8c85fb9f9de",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:03.273Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "engineering-docs",
+    "displayName": "Engineering Docs",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "engineering-docs",
+        "runtimeName": "engineering-docs_engineering-docs",
+        "transport": "stdio",
+        "command": "sh",
+        "args": [
+          "-c",
+          "exec node \"${PLUGIN_ROOT}/scripts/validate.js\""
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "admin-access-control-specification",
+        "slashCommand": "/admin-access-control-specification",
+        "description": "Specify admin roles, permissions, and every admin-facing control in a system - a full role-permission matrix (RBAC), the principle of least privilege applied concretely, admin action audit logging, and emergency/break-glass access procedure",
+        "disableModelInvocation": false,
+        "file": "skills/admin-access-control-specification/SKILL.md"
+      },
+      {
+        "name": "api-design-document",
+        "slashCommand": "/api-design-document",
+        "description": "Design a production-ready API specification aligned with OpenAPI 3.1 standards. Covers resource modeling, endpoint design, request/response contracts, authentication, versioning strategy, error handling, rate limiting, and pagination. Use w",
+        "disableModelInvocation": false,
+        "file": "skills/api-design-document/SKILL.md"
+      },
+      {
+        "name": "architecture-decision-record",
+        "slashCommand": "/architecture-decision-record",
+        "description": "Create a standalone Architecture Decision Record (ADR) for a single significant architectural decision. Captures context, decision, alternatives considered, and consequences. ADRs are immutable - once accepted, they are never edited, only s",
+        "disableModelInvocation": false,
+        "file": "skills/architecture-decision-record/SKILL.md"
+      },
+      {
+        "name": "business-concept",
+        "slashCommand": "/business-concept",
+        "description": "Turn a raw business idea into a complete business concept document. Covers problem, target users, value proposition, monetization, scope, timeline, and constraints. Use as the first step before any technical documentation.",
+        "disableModelInvocation": false,
+        "file": "skills/business-concept/SKILL.md"
+      },
+      {
+        "name": "database-design-document",
+        "slashCommand": "/database-design-document",
+        "description": "Design a production database schema including ERD, table definitions, data dictionary, indexing strategy, normalization decisions, and migration plan. Use when designing a new database, adding major entities, or documenting an existing sche",
+        "disableModelInvocation": false,
+        "file": "skills/database-design-document/SKILL.md"
+      },
+      {
+        "name": "deployment-plan",
+        "slashCommand": "/deployment-plan",
+        "description": "Write a production deployment plan covering environment specs, deployment strategy (Blue-Green, Canary, Rolling, or Direct), step-by-step execution runsheet, go/no-go criteria, monitoring plan, and rollback procedure. Use before any non-tri",
+        "disableModelInvocation": false,
+        "file": "skills/deployment-plan/SKILL.md"
+      },
+      {
+        "name": "design-system-specification",
+        "slashCommand": "/design-system-specification",
+        "description": "Design a production-ready Design System and UI/UX visual style guide. Covers design tokens (colors, typography, spacing, shadows, radius), components (buttons, inputs, cards, tables, modals, navigation), layouts, interaction/hover states, i",
+        "disableModelInvocation": false,
+        "file": "skills/design-system-specification/SKILL.md"
+      },
+      {
+        "name": "disaster-recovery-plan",
+        "slashCommand": "/disaster-recovery-plan",
+        "description": "Write a disaster recovery and business continuity plan defining RTO/RPO targets, backup and failover procedures, DR tiers, and a recovery drill cadence for surviving major infrastructure loss, data corruption, ransomware, or regional outage",
+        "disableModelInvocation": false,
+        "file": "skills/disaster-recovery-plan/SKILL.md"
+      },
+      {
+        "name": "implementation-plan",
+        "slashCommand": "/implementation-plan",
+        "description": "Create a phased implementation roadmap that sequences the technical build of an entire project - build order, module dependencies, environment/tooling setup, per-phase Definition of Ready/Done, and integration checkpoints. Use after the pro",
+        "disableModelInvocation": false,
+        "file": "skills/implementation-plan/SKILL.md"
+      },
+      {
+        "name": "incident-postmortem",
+        "slashCommand": "/incident-postmortem",
+        "description": "Write a blameless post-incident review (post-mortem / RCA) that documents what happened, the timeline, root cause analysis, impact assessment, and concrete action items to prevent recurrence. Follows Google SRE blameless post-mortem culture",
+        "disableModelInvocation": false,
+        "file": "skills/incident-postmortem/SKILL.md"
+      },
+      {
+        "name": "project-plan",
+        "slashCommand": "/project-plan",
+        "description": "Create a project delivery plan covering scope, milestones, timeline, work breakdown, resourcing, stakeholder roles (RACI), dependencies, budget, quality gates, and a project-level risk register. Use at the start of any project to define who",
+        "disableModelInvocation": false,
+        "file": "skills/project-plan/SKILL.md"
+      },
+      {
+        "name": "security-threat-model",
+        "slashCommand": "/security-threat-model",
+        "description": "Produce a structured security threat model using the STRIDE framework, identify trust boundaries, enumerate attack vectors, assess risk, and define concrete mitigations. Use when reviewing security of a new feature, system, or integration.",
+        "disableModelInvocation": false,
+        "file": "skills/security-threat-model/SKILL.md"
+      },
+      {
+        "name": "slo-error-budget-document",
+        "slashCommand": "/slo-error-budget-document",
+        "description": "Define Service Level Indicators (SLIs), Service Level Objectives (SLOs), and error budgets for a service, including multi-window multi-burn-rate alerting and an error budget policy. Use when establishing reliability targets, negotiating an ",
+        "disableModelInvocation": false,
+        "file": "skills/slo-error-budget-document/SKILL.md"
+      },
+      {
+        "name": "system-architecture-document",
+        "slashCommand": "/system-architecture-document",
+        "description": "Create a System Architecture Document (SAD) with C4 model diagrams, 4+1 view decomposition, integration maps, NFR constraints, and an Architecture Decision Record log. Use when documenting how an entire system or major subsystem is structur",
+        "disableModelInvocation": false,
+        "file": "skills/system-architecture-document/SKILL.md"
+      },
+      {
+        "name": "technical-blueprint",
+        "slashCommand": "/technical-blueprint",
+        "description": "Write a Technical Design Document (TDD) / Software Design Document (SDD) that details how a specific feature or component will be built. Covers problem statement, proposed design, data model, API contracts, alternatives considered, security",
+        "disableModelInvocation": false,
+        "file": "skills/technical-blueprint/SKILL.md"
+      },
+      {
+        "name": "technical-feasibility-study",
+        "slashCommand": "/technical-feasibility-study",
+        "description": "Assess whether a proposed technical solution is viable given the current stack, team, timeline, and constraints. Produces a go/no-go recommendation with evidence. Use before committing engineering resources to design or implementation.",
+        "disableModelInvocation": false,
+        "file": "skills/technical-feasibility-study/SKILL.md"
+      },
+      {
+        "name": "technical-runbook",
+        "slashCommand": "/technical-runbook",
+        "description": "Write a production operations runbook that provides on-call engineers with step-by-step procedures for operating, monitoring, and recovering a system. Covers system overview, alert response procedures, common failure modes, diagnostic comma",
+        "disableModelInvocation": false,
+        "file": "skills/technical-runbook/SKILL.md"
+      },
+      {
+        "name": "technical-specification",
+        "slashCommand": "/technical-specification",
+        "description": "Write a technical specification (SRS/TSD) that captures stakeholder needs, system requirements, functional behavior, non-functional constraints, and acceptance criteria. Use when starting any significant engineering initiative.",
+        "disableModelInvocation": false,
+        "file": "skills/technical-specification/SKILL.md"
+      },
+      {
+        "name": "test-strategy-document",
+        "slashCommand": "/test-strategy-document",
+        "description": "Create a production-ready Testing Strategy and QA Execution Plan. Covers testing levels (unit, integration, E2E, performance), mocking boundaries, test environment matrix, code coverage thresholds, and automated CI pipeline runsheets. Use w",
+        "disableModelInvocation": false,
+        "file": "skills/test-strategy-document/SKILL.md"
+      },
+      {
+        "name": "user-personas-behavior",
+        "slashCommand": "/user-personas-behavior",
+        "description": "Define who a product is for, what they're trying to accomplish, how success is measured, and what to instrument to know if it's working. Covers user personas (goal- and behavior-based, not demographic), jobs-to-be-done, success metrics/KPIs",
+        "disableModelInvocation": false,
+        "file": "skills/user-personas-behavior/SKILL.md"
+      },
+      {
+        "name": "using-engineering-docs",
+        "slashCommand": "/using-engineering-docs",
+        "description": "The entry point for this plugin. Give it a raw project idea or concept and it takes over: runs a discovery conversation, decides which document skills apply and in what order, then generates that full document set one skill at a time. Use w",
+        "disableModelInvocation": false,
+        "file": "skills/using-engineering-docs/SKILL.md"
+      },
+      {
+        "name": "ux-flow-specification",
+        "slashCommand": "/ux-flow-specification",
+        "description": "Document the complete user experience of a product - information architecture, user journeys, screen-by-screen flows, and every UI state (loading, empty, error, success) - independent of visual styling. Use to define exactly how a user move",
+        "disableModelInvocation": false,
+        "file": "skills/ux-flow-specification/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "api-designer",
+        "description": "Design RESTful APIs following best practices.\n<example>User says: \"Design the REST API for our user management service\"</example>\n<example>User says: \"Create OpenAPI spec for our payment endpoints\"</example>\n<example>User says: \"Review our ",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/api-designer.md"
+      },
+      {
+        "name": "architecture-reviewer",
+        "description": "Review system architecture for scalability, security, and maintainability.\n<example>User says: \"Review our microservices architecture for potential issues\"</example>\n<example>User says: \"Is our database design scalable for 10x growth?\"</exa",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/architecture-reviewer.md"
+      },
+      {
+        "name": "documentation-generator",
+        "description": "Generate comprehensive documentation for software projects.\n<example>User says: \"Generate API documentation for our payment service\"</example>\n<example>User says: \"Create a runbook for our deployment process\"</example>\n<example>User says: \"",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/documentation-generator.md"
+      },
+      {
+        "name": "test-strategist",
+        "description": "Create comprehensive test strategies for software projects.\n<example>User says: \"Create a test strategy for our e-commerce platform\"</example>\n<example>User says: \"What tests should we write for the payment flow?\"</example>\n<example>User sa",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/test-strategist.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/admin-access-control-specification",
+      "/api-design-document",
+      "/architecture-decision-record",
+      "/business-concept",
+      "/database-design-document",
+      "/deployment-plan",
+      "/design-system-specification",
+      "/disaster-recovery-plan",
+      "/implementation-plan",
+      "/incident-postmortem",
+      "/project-plan",
+      "/security-threat-model",
+      "/slo-error-budget-document",
+      "/system-architecture-document",
+      "/technical-blueprint",
+      "/technical-feasibility-study",
+      "/technical-runbook",
+      "/technical-specification",
+      "/test-strategy-document",
+      "/user-personas-behavior",
+      "/using-engineering-docs",
+      "/ux-flow-specification"
+    ],
+    "mcpServerNames": [
+      "engineering-docs_engineering-docs"
+    ],
+    "agentNames": [
+      "api-designer",
+      "architecture-reviewer",
+      "documentation-generator",
+      "test-strategist"
+    ],
+    "hookEvents": [
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Engineering Docs for Google Antigravity (AGY)\n\n> **22 composable, auto-triggering skills** that turn Google Antigravity into a principal software engineer — from raw idea to production-ready documentation.\n\n[![Google Antigravity Plugin](https://img.shields.io/badge/Google%20Antigravity-Plugin-4285F4?logo=google&logoColor=white)](https://antigravity.google) [![npm version](https://img.shields.io/npm/v/engineering-docs-agy.svg)](https://www.npmjs.com/package/engineering-docs-agy) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub stars](https://img.shields.io/github/stars/fattain-naime/engineering-docs-agy.svg)](https://github.com/fattain-naime/engineering-docs-agy)\n\n---\n\n## Overview\n\nYour coding agent in Antigravity is powerful, but building complex systems requires deep upfront architectural clarity. **Engineering Docs for Antigravity** provides a complete suite of **22 engineering documentation skills**, **4 subagents**, an **MCP validation server**, **always-on auto-trigger rules**, and a **SessionStart lifecycle hook**:\n\n- **Idea to Production Blueprint** — business concept → technical spec → system architecture → API & database design → security threat model → test strategy → implementation roadmap → deployment runsheet\n- **Socratic Brainstorming** — Interactive clarifying phase asking 3–5 targeted questions before drafting\n- **Context-Aware Routing (`rules/AGENTS.md`)** — Detects intent automatically and routes to the right skill without requiring manual skill selection\n- **Antigravity Subagents (`agents/`)** — Specialized subagents (`api-designer`, `architecture-reviewer`, `documentation-generator`, `test-strategist`) with `MODEL_TIER_INHERIT`\n- **Native MCP Validation Server (`mcp_config.json`)** — Dynamic cross-document consistency checks and master index generation\n- **Progress Reminder Hook (`hooks.json`)** — Resumes in-progress drafts across sessions automatically\n\n---\n\n## Quickstart\n\n### 1. From the Antigravity App UI (Marketplace)\n1. Open the left sidebar and navigate to **Customizations > Marketplace**.\n2. Search for **Engineering Docs**.\n3. Click **Install**.\n\n### 2. From Antigravity CLI (`agy`)\n```bash\nagy plugin install git+https://github.com/fattain-naime/engineering-docs-agy.git\n```\n\n### 3. Via NPX Installer\nInstall globally across all your projects:\n```bash\nnpx engineering-docs-agy --global\n```\nOr install locally in your current workspace project (`.agents/plugins/`):\n```bash\nnpx engineering-docs-agy --local\n```\n\n---\n\n## Suggested Prompts\n\nOnce enabled, you can start with any of the following prompts in Antigravity chat:\n\n> \"Turn my project idea into complete engineering documentation\"\n\n> \"Create a system architecture document with C4 diagrams and tech stack\"\n\n> \"Validate our existing engineering docs and check cross-document consistency\"\n\n---\n\n## Antigravity Plugin Architecture\n\n```text\nengineering-docs-agy/\n├── plugin.json                 # Antigravity plugin manifest (https://antigravity.google/schemas/v1/plugin.json)\n├── mcp_config.json             # Model Context Protocol stdio validation server configuration\n├── hooks.json                  # SessionStart lifecycle progress hook\n├── rules/\n│   └── AGENTS.md               # Contextual agent routing rules and behavioral standards\n├── skills/                     # 22 engineering documentation skills\n│   ├── using-engineering-docs/ # Master orchestrator & router\n│   ├── business-concept/\n│   ├── system-architecture-document/\n│   ├── api-design-document/\n│   ├── database-design-document/\n│   ├── security-threat-model/\n│   └── ...\n├── agents/                     # 4 specialized Antigravity subagents\n│   ├── api-designer.md\n│   ├── architecture-reviewer.md\n│   ├── documentation-generator.md\n│   └── test-strategist.md\n└── assets/\n    ├── plugin-icon.png         # Plugin icon (512x512)\n    └── plugin-workflow.gif     # Workflow demonstration\n```\n\n---\n\n## Extensibility Components\n\n### 1. Auto-Trigger Rules (`rules/AGENTS.md`)\nAntigravity automatically discovers and activates `rules/AGENTS.md` whenever the plugin is enabled. When you say:\n- *\"I have an idea\"* or *\"help me plan this project\"* → triggers `using-engineering-docs`\n- *\"write an API spec\"* or *\"REST API contract\"* → triggers `api-design-document`\n- *\"document our architecture\"* or *\"C4 diagram\"* → triggers `system-architecture-document`\n- *\"database schema\"* or *\"ERD for\"* → triggers `database-design-document`\n- *\"threat model\"* or *\"STRIDE analysis\"* → triggers `security-threat-model`\n- *\"test plan\"* or *\"test strategy\"* → triggers `test-strategy-document`\n\n### 2. Dedicated Subagents (`agents/`)\nLaunch specialized subagents directly in Antigravity or let the parent agent delegate complex tasks:\n- **`api-designer`**: Designs RESTful APIs with OpenAPI 3.1, RFC 7807 problem details, and semantic versioning.\n- **`architecture-reviewer`**: Reviews system designs for horizontal scalability, single points of failure, and security risks.\n- **`documentation-generator`**: Generates production-ready technical specifications, runbooks, and developer documentation.\n- **`test-strategist`**: Designs testing pyramids, coverage thresholds, and automated CI test execution strategies.\n\n### 3. Model Context Protocol Tools (`mcp_config.json`)\nThe bundled MCP server connects via stdio and provides 3 tools:\n- `validate_document_set`: Validates that all required documents in `.engineering-docs/` exist with valid frontmatter.\n- `check_consistency`: Verifies cross-document consistency, dependency references, and entity naming.\n- `generate_index`: Automatically builds a master project index table (`index.md`) summarizing the document set.\n\n### 4. Lifecycle Hooks (`hooks.json`)\nRegisters a `SessionStart` command hook that executes `hooks/check-progress.js`. It checks if `.engineering-docs/` exists in your workspace and injects a helpful system notification if draft documents remain unfinished.\n\n---\n\n## Skills Catalog (22 Skills)\n\n### Discovery & Planning\n| Skill | Output Document | Description |\n|:---|:---|:---|\n| `using-engineering-docs` | Master Orchestrator | Interactive router that guides your idea into the right sequence of documents |\n| `business-concept` | `business-concept.md` | Problem definition, target users, value proposition, and monetization model |\n| `project-plan` | `project-plan.md` | Scope, delivery milestones, RACI matrix, WBS, and risk register |\n| `user-personas-behavior` | `user-personas.md` | Goal- and behavior-driven user personas, jobs-to-be-done, and analytics plan |\n\n### Specification & Feasibility\n| Skill | Output Document | Description |\n|:---|:---|:---|\n| `technical-specification` | `technical-specification.md` | ISO/IEC/IEEE 29148 requirements, EARS syntax, and traceability matrix |\n| `technical-feasibility-study` | `technical-feasibility-study.md` | Stack assessment, technical risks, and go/no-go recommendation |\n\n### Architecture & System Design\n| Skill | Output Document | Description |\n|:---|:---|:---|\n| `system-architecture-document` | `system-architecture.md` | C4 model diagrams (Context, Container, Component), 4+1 views, and NFRs |\n| `architecture-decision-record` | `adr/ADR-XXX.md` | Immutable architectural decisions following MADR standard |\n| `database-design-document` | `database-design.md` | Entity-Relationship Diagrams (ERD), schema definitions, and migration plans |\n| `api-design-document` | `api-design.md` | OpenAPI 3.1 RESTful contracts, error schemas, pagination, and rate limits |\n| `admin-access-control-specification` | `admin-access-control.md` | Role-Based Access Control (RBAC) matrix, audit logging, and break-glass procedures |\n| `technical-blueprint` | `technical-blueprint.md` | Feature-level Technical Design Documents (TDD) before implementation |\n| `ux-flow-specification` | `ux-flow-specification.md` | Information architecture, user journey maps, screen flows, and UI states |\n| `design-system-specification` | `design-system.md` | Design tokens, component contracts, accessibility (WCAG 2.2), and theme specs |\n\n### Security & Quality\n| Skill | Output Document | Description |\n|:---|:---|:---|\n| `security-threat-model` | `security-threat-model.md` | STRIDE analysis, trust boundaries, attack vectors, and concrete mitigations |\n| `test-strategy-document` | `test-strategy.md` | Test pyramid distribution, coverage thresholds, and automated CI quality gates |\n\n### Implementation & Operations\n| Skill | Output Document | Description |\n|:---|:---|:---|\n| `implementation-plan` | `implementation-plan.md` | Phased build sequence, dependency-driven milestones, and phase gates |\n| `deployment-plan` | `deployment-plan.md` | Release runsheets, blue-green / canary rollouts, and rollback procedures |\n| `slo-error-budget-document` | `slo-error-budget.md` | SLIs, SLOs, error budgets, and multi-window multi-burn-rate alerting policies |\n| `technical-runbook` | `technical-runbook.md` | On-call incident response, diagnostic commands, and recovery procedures |\n| `disaster-recovery-plan` | `disaster-recovery-plan.md` | RTO/RPO commitments, backup strategies, and failover disaster recovery plans |\n| `incident-postmortem` | `postmortem-XXX.md` | Blameless root cause analysis (RCA), timeline, and preventive action items |\n\n---\n\n## Publishing to the Google Antigravity Plugin Store / Marketplace\n\nTo list **Engineering Docs** on the official Antigravity Marketplace:\n\n1. **Local Test Suite:**\n   Ensure all skills, manifest fields, and MCP server endpoints pass validation:\n   ```bash\n   npm test\n   ```\n\n2. **Publish Repository:**\n   Push this repository to GitHub under `https://github.com/fattain-naime/engineering-docs-agy`.\n\n3. **Create Release Tag:**\n   ```bash\n   git tag v1.0.0\n   git push origin v1.0.0\n   ```\n\n4. **Submit Marketplace Listing:**\n   Submit the repository URL to the **Google Antigravity Marketplace Registry** via [antigravity.google/docs/plugins](https://antigravity.google/docs/plugins).\n   - **Catalog ID:** `fattain-naime/engineering-docs-agy` (or `engineering-docs`)\n   - **Display Name:** `Engineering Docs`\n   - **Category:** `Developer Tools` / `Productivity`\n   - **Logo:** `assets/plugin-icon.png`\n\nOnce verified by Google, users can discover and install your plugin with a single click:\n```html\n<plugin-card catalog-id=\"engineering-docs\"></plugin-card>\n```\n\n---\n\n## License\n\nMIT © [Fattain Naime](https://github.com/fattain-naime)\n",
+  "latestReleaseNotes": "### Engineering Docs for Google Antigravity (AGY) v1.0.0\n\nA dedicated, production-ready plugin for **Google Antigravity (AGY)** providing:\n- **22 Specialist Skills:** Full SDLC documentation from business concept to production runbooks and post-mortems.\n- **4 Subagents:** `api-designer`, `architecture-reviewer`, `documentation-generator`, `test-strategist`.\n- **Always-on Rule:** `rules/AGENTS.md` with automatic intent matching and Socratic brainstorming.\n- **Native MCP Validation Server:** `mcp_config.json` cross-document consistency and indexing tools.\n- **SessionStart Lifecycle Hook:** Resumes in-progress documentation work across sessions.\n- **Antigravity Strict Validation:** 100% compliant with `agy plugin validate --strict` (0 errors, 0 warnings).\n\n### Installation\n```bash\nagy plugin install git+https://github.com/fattain-naime/engineering-docs-agy.git\n```",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/calculate-error-budget.js",
+        "line": 84,
+        "snippet": "while ((match = tableRowRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/calculate-error-budget.js#L84"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/calculate-error-budget.js",
+        "line": 106,
+        "snippet": "while ((match = simpleRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/calculate-error-budget.js#L106"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/calculate-error-budget.js",
+        "line": 125,
+        "snippet": "while ((match = burnRateRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/calculate-error-budget.js#L125"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 123,
+        "snippet": "while ((match = createTableRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L123"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 129,
+        "snippet": "while ((match = erEntityRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L129"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 139,
+        "snippet": "while ((match = tableHeaderRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 145,
+        "snippet": "while ((match = dictHeaderRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L145"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 162,
+        "snippet": "while ((match = erEntityRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L162"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 171,
+        "snippet": "while ((match = resourceRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L171"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 194,
+        "snippet": "while ((match = endpointRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L194"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 213,
+        "snippet": "while ((match = threatRowRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L213"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 222,
+        "snippet": "while ((match = trustRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L222"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 232,
+        "snippet": "while ((match = dfdNodeRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L232"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 248,
+        "snippet": "while ((match = scenarioRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L248"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 257,
+        "snippet": "while ((match = featureHeaderRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L257"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 273,
+        "snippet": "while ((match = phaseRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L273"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-consistency.js",
+        "line": 285,
+        "snippet": "while ((match = phaseBlockRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/check-consistency.js#L285"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/generate-ddl.js",
+        "line": 159,
+        "snippet": "while ((match = createTableRegex.exec(content)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/generate-ddl.js#L159"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/generate-ddl.js",
+        "line": 241,
+        "snippet": "while ((idxMatch = indexRegex.exec(body)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/generate-ddl.js#L241"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/generate-ddl.js",
+        "line": 253,
+        "snippet": "while ((fkMatch = fkRegex.exec(body)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/generate-ddl.js#L253"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/generate-test-cases.js",
+        "line": 115,
+        "snippet": "while ((critMatch = criteriaRegex.exec(block)) !== null) {",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/generate-test-cases.js#L115"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/test-skills.js",
+        "line": 35,
+        "snippet": "const indent = /^[ \\t]*/.exec(reader.lines[index])[0];",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/test-skills.js#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/test-skills.js",
+        "line": 44,
+        "snippet": "const match = /^([^:\\t]+):(?:[ \\t]|$)/.exec(line);",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/test-skills.js#L44"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/test-skills.js",
+        "line": 143,
+        "snippet": "const header = /^([|>])(?:[+-]\\d*|\\d+[+-]?)?(?:[ \\t]+#.*)?$/.exec(raw);",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/test-skills.js#L143"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/test-skills.js",
+        "line": 145,
+        "snippet": "const declared = /\\d/.exec(header[0]);",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/test-skills.js#L145"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/test-skills.js",
+        "line": 211,
+        "snippet": "const lead = /^[ \\t]*/.exec(rest)[0];",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/test-skills.js#L211"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync-version.js",
+        "line": 54,
+        "snippet": "fs.writeFileSync(filePath, JSON.stringify(json, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/sync-version.js#L54"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync-version.js",
+        "line": 79,
+        "snippet": "fs.writeFileSync(filePath, updated, 'utf8');",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/sync-version.js#L79"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.js",
+        "line": 35,
+        "snippet": "name: 'Google Antigravity - Global (~/.gemini/config/plugins/engineering-docs)',",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/install.js#L35"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.js",
+        "line": 165,
+        "snippet": "--global, -g Install globally (~/.gemini/config/plugins/engineering-docs)",
+        "githubBlobUrl": "https://github.com/fattain-naime/engineering-docs-agy/blob/3368b6b61250cfeb2180055b720bc8c85fb9f9de/scripts/install.js#L165"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "3368b6b61250cfeb2180055b720bc8c85fb9f9de",
+      "scannedAt": "2026-11-27T18:24:03.273Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

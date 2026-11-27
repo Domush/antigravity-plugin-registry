@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "id": "QuagKhai003/agy-website-artifacts",
+  "sha": "9840c854fece53ccc948815249e1669b439ce4df",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:22:09.415Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-website-artifacts",
+    "displayName": "Website & Artifacts Publisher",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "agy-website-artifacts",
+        "runtimeName": "agy-website-artifacts_agy-website-artifacts",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server/mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "website-artifacts",
+        "slashCommand": "/website-artifacts",
+        "description": "Versatile remote website and artifact publisher for Google Antigravity (`agy-website-artifacts`): publish live local websites (Next.js/Vite/React/Flask), static sites, task-adaptive layouts (photo triage, video/audio timestamp review, synce",
+        "disableModelInvocation": false,
+        "file": "skills/website-artifacts/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/website-artifacts"
+    ],
+    "mcpServerNames": [
+      "agy-website-artifacts_agy-website-artifacts"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-website-artifacts\n\nA standalone, zero-dependency plugin for **Google Antigravity** that publishes live local web apps, static builds, task-adaptive review workspaces, and interactive HTML/React artifacts across **PC, iPad/Tablet, and Mobile Phone (Wi-Fi & 4G)** — without modifying any core Antigravity files or installing anything on your phone.\n\n## Features\n\n- **Live Websites & Static Builds:** Reverse-proxy running local dev servers (`Next.js`, `Vite`, `React`, `Flask`, `Gradio` with automatic root-asset fallback for `/_next/*`, `/assets/*`, `/@vite/*`, `/api/*`) or serve built static directories (`dist/`, `build/`).\n- **5 Task-Adaptive Layouts:** Automatically adapts across Mobile (`<640px`), Tablet (`640–1024px`), and Desktop (`>1024px`):\n  - `photo-triage` — Photo culling with Focus Mode, 4G Preview / Full Res toggle, filters, and per-photo synced notes.\n  - `media-review` — Video & Audio review with HTTP Range streaming and 1-tap `mm:ss` timestamped feedback.\n  - `notes-pad` — Two-way synced note editor and interactive checklist.\n  - `compare-view` — Side-by-side A/B comparison on Desktop/iPad, segmented tab switcher on Mobile.\n  - `viewer-dashboard` — Clean KPI strip, report reader, and synced feedback input.\n- **Real-Time PC <-> Mobile Sync (`window.agySync`):** Server-Sent Events (SSE) keep form inputs, checklists, review verdicts, and custom state synchronized in real time and persisted across reloads.\n- **1-Link Smart Auto-Routing:** Returns one clean URL that routes host PC traffic to `localhost` (`<180ms`) and remote devices over HTTPS.\n- **Private Security Gateway:** 6-digit PIN + 256-bit access token, signed `HttpOnly` session cookie (7 days), brute-force rate limiting (5 failures -> 5-minute lockout), and 1-click **Rotate PIN & Sign Out All**.\n- **Apple HIG Monochrome Glassmorphism:** Ships with [design-guidelines.md](skills/website-artifacts/references/design-guidelines.md) enforcing a calm neutral graphite palette, inset grouped surfaces with `1px` hairlines, aligned inputs/placeholders, and zero decorative clutter.\n\n---\n\n## Requirements\n\n- **Node.js 18+** (uses built-in Node.js modules only — no `npm install` needed).\n- **Google Antigravity CLI (`agy`)** or Antigravity IDE.\n- **Git** (for Git-based installation and updates).\n- **Optional (Recommended for multi-hour 4G tunnels):** [`cloudflared`](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) on your system `PATH` (or inside `server/bin/`). Falls back automatically to OpenSSH (`localhost.run`) if not installed.\n\n---\n\n## Installation\n\n### 1. Direct Git Clone (Global — Available in All Workspaces)\n\n**macOS / Linux:**\n```bash\ngit clone https://github.com/QuagKhai003/agy-website-artifacts.git ~/.gemini/config/plugins/agy-website-artifacts\nagy plugin validate ~/.gemini/config/plugins/agy-website-artifacts --strict\n```\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/QuagKhai003/agy-website-artifacts.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\agy-website-artifacts\"\nagy plugin validate \"$env:USERPROFILE\\.gemini\\config\\plugins\\agy-website-artifacts\" --strict\n```\n\nUpdate anytime with:\n```bash\ngit -C ~/.gemini/config/plugins/agy-website-artifacts pull --ff-only\n```\n\n### 2. Git Clone + Antigravity CLI\n\n```bash\ngit clone https://github.com/QuagKhai003/agy-website-artifacts.git\nagy plugin install ./agy-website-artifacts\n```\n\n### 3. Git Submodule (Per-Project / Team Repository)\n\nAdd the plugin to any repository so teammates receive it automatically when cloning:\n\n```bash\ngit submodule add https://github.com/QuagKhai003/agy-website-artifacts.git .agents/plugins/agy-website-artifacts\n```\n\n### 4. Built-In Cross-Platform Installer (`install.mjs`)\n\n```bash\n# Install or update globally directly from GitHub\nnode install.mjs --git https://github.com/QuagKhai003/agy-website-artifacts.git\n\n# Install into a specific project workspace\nnode install.mjs --git https://github.com/QuagKhai003/agy-website-artifacts.git --project /path/to/your-repo\n\n# Install from an already cloned local directory\nnode install.mjs\n\n# Uninstall\nnode install.mjs --uninstall\n```\n\n### 5. Validate Directly from GitHub Before Installing\n\n```bash\nagy plugin validate https://github.com/QuagKhai003/agy-website-artifacts --strict\n```\n\n---\n\n## Optional Setup\n\n### Stable Multi-Hour 4G HTTPS Tunnels (`cloudflared`)\n\n- **Windows:** `winget install --id Cloudflare.cloudflared`\n- **macOS:** `brew install cloudflared`\n- **Linux:** [Cloudflare Downloads](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)\n\nThe gateway automatically detects `cloudflared` on your `PATH` (or inside `server/bin/`). Without it, the plugin falls back to OpenSSH (`localhost.run`).\n\n### Optional Desktop Browser Extension (Inline Chat Iframe)\n\nIf you use Google Antigravity in Chrome or Edge on Desktop and want `#agy-iframe` links to expand inline inside the chat tab:\n\n1. Open `chrome://extensions` (or `edge://extensions`).\n2. Enable **Developer mode**.\n3. Click **Load unpacked** and select the `browser-extension/` directory.\n\n*(No app or extension is required on Mobile Phones or Tablets — simply open the Smart Link in Safari or Chrome.)*\n\n---\n\n## MCP Tools Reference\n\n| Tool | Description |\n| :--- | :--- |\n| `publish_web_app` | Reverse-proxy a running local web app (`http://localhost:3000`, Vite, Next.js, Flask, Gradio) with root-asset fallback. |\n| `publish_static_site` | Serve a built static website folder (`dist/`, `build/`, `index.html`). |\n| `publish_task_layout` | Launch an adaptive workspace (`photo-triage`, `media-review`, `notes-pad`, `compare-view`, `viewer-dashboard`). |\n| `publish_html_artifact` | Publish a custom HTML/CSS/JS or React/JSX + Tailwind artifact with `window.agySync`. |\n| `publish_media_gallery` | Publish local images, video, or audio for remote review and approval. |\n| `get_review_decisions` | Read back remote approvals, priorities, rejections, timestamps, and notes. |\n| `rotate_security_credentials` | Generate a new 6-digit PIN & token and immediately sign out all active devices. |\n| `list_published_previews` | List active workspaces, routes, and Smart Links. |\n\n---\n\n## Environment Variables\n\nConfigure under `mcp_config.json` -> `env` or export in your shell:\n\n| Variable | Default | Description |\n| :--- | :--- | :--- |\n| `AGY_IFRAME_PORT` | `4580` | Local HTTP gateway port (auto-increments if busy). |\n| `AGY_DATA_DIR` | `${PLUGIN_DATA}` | Persistent storage for `.security.json`, `.runtime-state.json`, and `.media-cache/`. |\n| `AGY_GATEWAY_PIN` | Random 6-digit | Optional fixed initial PIN on first run. |\n\n---\n\n## Security\n\n- Every protected route requires a signed `HttpOnly` session cookie (unlocked via 6-digit PIN) or `x-agy-token` header.\n- Login attempts are rate-limited (5 failures -> 5-minute IP lockout).\n- Use **Rotate PIN & Sign Out All** in the Portal (or call `rotate_security_credentials`) to invalidate all active sessions and force-reload connected devices to the lock screen.\n- Runtime credentials and state live in `${PLUGIN_DATA}` and are excluded from Git via `.gitignore`.\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "install.mjs",
+        "line": 85,
+        "snippet": "const res = spawnSync(cmd, args, { cwd, stdio: \"inherit\", shell: false });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/install.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "install.mjs",
+        "line": 132,
+        "snippet": "const check = spawnSync(agyCmd, [\"plugin\", \"validate\", targetDir, \"--strict\"], { stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/install.mjs#L132"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/mcp-server.mjs",
+        "line": 441,
+        "snippet": "const child = spawn(\"powershell.exe\", [\"-NoProfile\", \"-Command\", ps], { windowsHide: true });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/mcp-server.mjs#L441"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/mcp-server.mjs",
+        "line": 1521,
+        "snippet": "const res = spawnSync(cmd, [\"cloudflared\"], { encoding: \"utf8\", windowsHide: true });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/mcp-server.mjs#L1521"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/mcp-server.mjs",
+        "line": 1556,
+        "snippet": "tunnelProcess = spawn( cloudflaredBin, [\"tunnel\", \"--no-autoupdate\", \"--url\", `http://127.0.0.1:${gatewayPort}`], { stdio: [\"ignore\", \"pipe\", \"pipe\"], windowsHide: true } );",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/mcp-server.mjs#L1556"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/mcp-server.mjs",
+        "line": 1577,
+        "snippet": "tunnelProcess = spawn(\"ssh\", sshArgs, { stdio: [\"ignore\", \"pipe\", \"pipe\"], windowsHide: true });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/mcp-server.mjs#L1577"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/standalone-cli.mjs",
+        "line": 76,
+        "snippet": "const child = spawn(process.execPath, [MCP_SERVER_PATH, \"--daemon\"], { detached: true, stdio: \"ignore\", windowsHide: true });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/standalone-cli.mjs#L76"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "install.mjs",
+        "line": 95,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/install.mjs#L95"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "install.mjs",
+        "line": 112,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/install.mjs#L112"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/iframe-sync.js",
+        "line": 105,
+        "snippet": "fetch(`/__agy_sync__/${encodeURIComponent(roomId)}`, { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ clientId, patch }) }).catch(() => {})",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/iframe-sync.js#L105"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/iframe-sync.js",
+        "line": 214,
+        "snippet": "fetch(`/__agy_sync__/${encodeURIComponent(roomId)}`)",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/iframe-sync.js#L214"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/mcp-server.mjs",
+        "line": 67,
+        "snippet": "fs.writeFileSync(SECURITY_FILE, JSON.stringify(securityConfig, null, 2), { encoding: \"utf8\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/mcp-server.mjs#L67"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/mcp-server.mjs",
+        "line": 507,
+        "snippet": "fs.writeFileSync(STATE_FILE, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/mcp-server.mjs#L507"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/standalone-cli.mjs",
+        "line": 53,
+        "snippet": "fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/standalone-cli.mjs#L53"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/standalone-cli.mjs",
+        "line": 58,
+        "snippet": "const req = http.get(`http://127.0.0.1:${port}/__agy_status__`, (res) => { resolve(res.statusCode === 200); });",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/server/standalone-cli.mjs#L58"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "install.mjs",
+        "line": 7,
+        "snippet": "* node install.mjs # Install globally into ~/.gemini/config/plugins/agy-website-artifacts",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/install.mjs#L7"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "install.mjs",
+        "line": 44,
+        "snippet": "\" node install.mjs Install globally (~/.gemini/config/plugins/)\",",
+        "githubBlobUrl": "https://github.com/QuagKhai003/agy-website-artifacts/blob/9840c854fece53ccc948815249e1669b439ce4df/install.mjs#L44"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "9840c854fece53ccc948815249e1669b439ce4df",
+      "scannedAt": "2026-11-27T18:22:09.415Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

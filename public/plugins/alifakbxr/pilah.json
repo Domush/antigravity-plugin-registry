@@ -1,0 +1,590 @@
+{
+  "schemaVersion": 1,
+  "id": "alifakbxr/pilah",
+  "sha": "4de2b380dab51a6f454410efd6da0869187d8304",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:05.916Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "pilah",
+    "displayName": "PILAH",
+    "version": "1.1.1",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "pilah",
+        "runtimeName": "pilah_pilah",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/src/mcp.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "pilah-session-telemetry",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "node ./scripts/hook.mjs",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "pilah-session-telemetry",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "node ./scripts/hook.mjs",
+        "prompt": null,
+        "timeout": 5
+      },
+      {
+        "group": "pilah-session-telemetry",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "node ./scripts/hook.mjs",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "pilah",
+        "slashCommand": "/pilah",
+        "description": "Native-first code intelligence for cross-file dependencies, change impact, and evidence-scoped verification. Not for routine single-file edits.",
+        "disableModelInvocation": false,
+        "file": "skills/pilah/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/pilah"
+    ],
+    "mcpServerNames": [
+      "pilah_pilah"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreToolUse",
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# PILAH\n\n**Project Intelligence, Logic, Analysis & Handoffs** — native-first code intelligence for Google Antigravity.\n\nPILAH helps an agent understand a codebase, scope change impact and plan verification without replacing the host's native tools. It does not edit your project, execute tests or switch models on its own.\n\n**Version 1.1.1 — stable source baseline.** The last verified main CI baseline passed **3/3** OS jobs (Ubuntu, macOS, Windows; Node 24). Version-specific CI is checked on the release candidate. Independent installed-host and F01–F18 acceptance remain **unverified**, so stable source is not a claim of registry publication, measured token savings or independently authorized release. See [status](BUILD_STATUS.md).\n\n[Getting started](#quick-start) · [Documentation](docs/README.md) · [Changelog](CHANGELOG.md) · [License](LICENSE)\n\n## Quick start\n\n**Requirements:** Node.js >=22.13.0, Antigravity or its CLI for plugin integration.\n\nInstall the npm CLI:\n\n```sh\nnpm install -g @aliip/pilah\npilah doctor\n```\n\nOr work directly from the source:\n\n```sh\ngit clone https://github.com/alifakbxr/pilah.git\ncd pilah\nnode scripts/pilah.mjs doctor\nnpm run check\nnode scripts/check-release.mjs\n```\n\nFor Antigravity, install a source checkout using `agy plugin install .` or follow the host's supported plugin UI/CLI flow. Verify on your actual machine using:\n\n```sh\nagy plugin validate --strict .\nagy plugin list --json\nnode scripts/pilah.mjs host-check\n```\n\nAn installed plugin or successful CLI preflight is not proof the IDE has loaded and selected its MCP tools; use the [host validation runbook](docs/HOST_VALIDATION.md).\n\n## Four MCP tools\n\n| Tool | Use only when | Output |\n| --- | --- | --- |\n| `pilah_context` | Project ownership or symbols are unclear | Bounded local source and dependency context |\n| `pilah_impact` | A proposed edit may affect other files | Static impact candidates and relevant test suggestions |\n| `pilah_verify` | Acceptance needs to be structured | Given/When/Then plans, not automatically executed tests |\n| `pilah_evidence` | A result or checkpoint needs recording | Revision-scoped evidence and recovery notes |\n\n`pilah_context` is the eager discovery entry point; the other three use lazy discovery. **Native-first:** simple, well-scoped work should not require a PILAH tool call. See the [MCP contracts](docs/CONTRACTS.md) and [native-first workflow](docs/NATIVE_FIRST_WORKFLOW.md).\n\nExample scoped verification request:\n\n```json\n{\n  \"workspace\": \"/path/to/project\",\n  \"operation\": \"plan\",\n  \"criteria\": [\n    {\n      \"id\": \"prevent-duplicate-order\",\n      \"given\": \"An order is finalized\",\n      \"when\": \"A duplicate payment request arrives\",\n      \"then\": \"Reject the request with HTTP 409\",\n      \"evidence_type\": \"integration\",\n      \"negative\": true\n    }\n  ]\n}\n```\n\nEvidence remains `not_tested` until an actual native test provides valid provenance. Static impact results are not runtime guarantees.\n\n## CLI reference\n\nRun commands as `node scripts/pilah.mjs <command>` in a checkout, or use `pilah <command>` after global installation.\n\n```sh\nnode scripts/pilah.mjs help\nnode scripts/pilah.mjs doctor\nnode scripts/pilah.mjs mode on-demand\nnode scripts/pilah.mjs mode always-on\nnode scripts/pilah.mjs toggle\nnode scripts/pilah.mjs compact on\nnode scripts/pilah.mjs autotrust active-only\nnode scripts/pilah.mjs allow /path/to/project\nnode scripts/pilah.mjs revoke /path/to/project\nnode scripts/pilah.mjs inspect /path/to/project\nnode scripts/pilah.mjs impact /path/to/project src/index.js\nnode scripts/pilah.mjs tokens --limit 5 --json\n```\n\nGrant workspace access explicitly. Token diagnostics are not provider billing and cannot independently establish savings; use the [headless audit guide](docs/HEADLESS_CAPTURE_AUDIT.md) for captured A/B runs.\n\n## Documentation\n\n- [Documentation index](docs/README.md) and [architecture](docs/ARCHITECTURE.md)\n- [Compatibility](docs/COMPATIBILITY.md) and [security model](docs/SECURITY.md)\n- [Contribution guide](CONTRIBUTING.md), [Code of Conduct](CODE_OF_CONDUCT.md), [Security Policy](SECURITY.md), and [Support](SUPPORT.md)\n- [Source CI status](BUILD_STATUS.md), [release process](docs/RELEASE.md), and [release authorization](docs/RELEASE_AUTHORIZATION.md)\n- [External validation backlog](docs/MAIN_VALIDATION_BACKLOG.md) and [changelog](CHANGELOG.md)\n\nPILAH is MIT licensed. © 2026 Alif Akbar and contributors.\n",
+  "latestReleaseNotes": "### PILAH v1.1.1\n\n- Clarified registry publication status following manual npmjs release of `@aliip/pilah@1.1.0` with `latest` and `stable` distribution tags.\n- Maintained strict evaluation boundaries: independent external release gate (F01–F18) and full multi-OS compatibility verification remain independent prerequisites.\n- Synchronized documentation, package manifests, and release references across the repository.",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"pilah-session-telemetry\" executes a shell command on PostToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 6,
+        "snippet": "node ./scripts/hook.mjs",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/hooks.json#L6"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-syntax.mjs",
+        "line": 21,
+        "snippet": "const run=spawnSync(process.execPath,['--check',path.join(root,relative)],{stdio:'inherit'});",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/check-syntax.mjs#L21"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/context-guardian.mjs",
+        "line": 31,
+        "snippet": "const match=/^\"([^\"]+)\" \"([^\"]+)\" hook$/.exec(cmd);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/context-guardian.mjs#L31"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/release-authorization.mjs",
+        "line": 118,
+        "snippet": "const checkoutSha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',timeout:5000}).trim();",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/release-authorization.mjs#L118"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/release-authorization.mjs",
+        "line": 119,
+        "snippet": "const mainSha=execFileSync('git',['rev-parse','origin/main'],{encoding:'utf8',timeout:5000}).trim();",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/release-authorization.mjs#L119"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/engine.mjs",
+        "line": 226,
+        "snippet": "? /^([at]):([a-f0-9]{32,64}):([a-f0-9]{8}):([0-9]{1,3})$/.exec(cursor)",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/engine.mjs#L226"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 29,
+        "snippet": "export function gitHead(root){const p=spawnSync('git',['rev-parse','HEAD'],{cwd:root,timeout:1500,encoding:'utf8',windowsHide:true});return p.status===0?p.stdout.trim():null}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L29"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 33,
+        "snippet": "const p=spawnSync('git',['-c','core.fsmonitor=false','status','--porcelain=v1','-z','--untracked-files=normal'],{cwd:root,timeout:4000,encoding:'utf8',windowsHide:true});",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 121,
+        "snippet": "while((m=re.exec(cleaned))!==null && count<60){",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L121"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 139,
+        "snippet": "for(const re of patterns){let m;re.lastIndex=0;while((m=re.exec(cleaned))!==null && matches.length<120)matches.push(m[1]);}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 141,
+        "snippet": "const re=/^\\s*from\\s+(\\.*[A-Za-z_][\\w.]*)\\s+import\\s+/gm;let m;while((m=re.exec(cleaned))!==null)matches.push(m[1]);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L141"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 142,
+        "snippet": "const direct=/^\\s*import\\s+([A-Za-z_][\\w.]*)/gm;while((m=direct.exec(cleaned))!==null)matches.push(m[1]);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 148,
+        "snippet": "let m;while((m=re.exec(cleaned))!==null && matches.length<120)matches.push(m[1]);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L148"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/scanner.mjs",
+        "line": 155,
+        "snippet": "while((group=grouped.exec(cleaned))!==null && matches.length<120){",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/scanner.mjs#L155"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/security.mjs",
+        "line": 789,
+        "snippet": "const match=/^(127\\.0\\.0\\.1|localhost|\\[::1\\]):([0-9]{1,5})$/i.exec(address);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L789"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/storage.mjs",
+        "line": 43,
+        "snippet": "this.db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=4000; PRAGMA trusted_schema=OFF;');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/storage.mjs",
+        "line": 59,
+        "snippet": "this.db.exec(DDL);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/storage.mjs",
+        "line": 73,
+        "snippet": "if(!cols.some(c=>c.name===col)) this.db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${type}`);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/storage.mjs",
+        "line": 81,
+        "snippet": "this.db.exec('BEGIN IMMEDIATE');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L81"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/storage.mjs",
+        "line": 85,
+        "snippet": "this.db.exec('COMMIT');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/storage.mjs",
+        "line": 89,
+        "snippet": "if(active){try{this.db.exec('ROLLBACK')}catch{}}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L89"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/verification.mjs",
+        "line": 18,
+        "snippet": "while((match=tags.exec(source))!==null){",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/verification.mjs#L18"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "benchmarks/bench.mjs",
+        "line": 13,
+        "snippet": "fs.writeFileSync(path.join(work,'package.json'),'{\"scripts\":{\"test\":\"node --test\"}}');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/benchmarks/bench.mjs#L13"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "benchmarks/bench.mjs",
+        "line": 16,
+        "snippet": "for(let i=0;i<count;i++){const from=i>0?`import {m${i-1}} from './m${i-1}.js';\\n`:'';fs.writeFileSync(path.join(work,'src',`m${i}.js`),from+`export function m${i}(){return ${i}}\\n`",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/benchmarks/bench.mjs#L16"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "benchmarks/bench.mjs",
+        "line": 22,
+        "snippet": "fs.rmSync(base,{recursive:true,force:true});",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/benchmarks/bench.mjs#L22"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/a2a.mjs",
+        "line": 151,
+        "snippet": "const res=await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json','x-codeium-csrf-token':csrf}, body:JSON.stringify({serverName}), signal:AbortSignal.timeout(50",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/a2a.mjs#L151"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/audit-mcp-adoption.mjs",
+        "line": 225,
+        "snippet": "fs.writeFileSync(argv[2],text,{flag:'wx',mode:0o600});",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/audit-mcp-adoption.mjs#L225"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/context-guardian.mjs",
+        "line": 85,
+        "snippet": "fs.writeFileSync(fd,payload);fs.closeSync(fd);fd=null;",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/context-guardian.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/context-guardian.mjs",
+        "line": 87,
+        "snippet": "}finally{if(fd!==null)fs.closeSync(fd);try{fs.unlinkSync(tmp)}catch{}}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/context-guardian.mjs#L87"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/generate-contracts.mjs",
+        "line": 5,
+        "snippet": "fs.writeFileSync(target,JSON.stringify({schema_version:'1.0.0',tools:TOOLS},null,2)+'\\n');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/generate-contracts.mjs#L5"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/hook.mjs",
+        "line": 22,
+        "snippet": "fs.writeFileSync(fd,JSON.stringify(obj,null,2)+'\\n');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/hook.mjs#L22"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/hook.mjs",
+        "line": 27,
+        "snippet": "try{fs.unlinkSync(temp)}catch{}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/hook.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/hook.mjs",
+        "line": 282,
+        "snippet": "try{fs.unlinkSync(file)}catch{}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/hook.mjs#L282"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/inspect-mcp-result-shapes.mjs",
+        "line": 121,
+        "snippet": "fs.writeFileSync(args[2],JSON.stringify(report,null,2)+'\\n',{mode:0o600,flag:'wx'});",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/inspect-mcp-result-shapes.mjs#L121"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/security.mjs",
+        "line": 140,
+        "snippet": "fs.writeFileSync(fd,JSON.stringify(data,null,2)+'\\n');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L140"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/security.mjs",
+        "line": 145,
+        "snippet": "try{fs.unlinkSync(temp)}catch{}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L145"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/security.mjs",
+        "line": 649,
+        "snippet": "fs.writeFileSync(fd,JSON.stringify({version:1,allowed,revoked},null,2)+'\\n');",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L649"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/security.mjs",
+        "line": 654,
+        "snippet": "try{fs.unlinkSync(temp)}catch{}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L654"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/storage.mjs",
+        "line": 324,
+        "snippet": "try{fs.writeFileSync(shadowPath,rawContent,{encoding:'utf8',mode:0o600,flag:'wx'})}catch{}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L324"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/storage.mjs",
+        "line": 327,
+        "snippet": "try{fs.unlinkSync(oldShadow)}catch{}",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/storage.mjs#L327"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/a2a.mjs",
+        "line": 342,
+        "snippet": "const targetPath=path.isAbsolute(artifactName)?artifactName:path.join(getHomeDir(),'.gemini/antigravity/brain',convId,artifactName);",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/scripts/a2a.mjs#L342"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/security.mjs",
+        "line": 481,
+        "snippet": "// 4. ~/.gemini/config/projects/*.json (historical projects — require project marker)",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L481"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/security.mjs",
+        "line": 503,
+        "snippet": "// 4. ~/.gemini/projects.json (historical projects — require project marker)",
+        "githubBlobUrl": "https://github.com/alifakbxr/pilah/blob/4de2b380dab51a6f454410efd6da0869187d8304/src/security.mjs#L503"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.1",
+      "sha": "4de2b380dab51a6f454410efd6da0869187d8304",
+      "scannedAt": "2026-11-27T18:15:05.916Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

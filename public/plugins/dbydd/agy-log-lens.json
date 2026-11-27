@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 1,
+  "id": "dbydd/agy-log-lens",
+  "sha": "b70ae7dd0c993fea14b8ec6111a588793d9268a7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:56.195Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "log-lens",
+    "displayName": "Log Lens",
+    "version": "0.1.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "log-lens",
+        "runtimeName": "log-lens_log-lens",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/dist/server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "log-lens",
+        "slashCommand": "/log-lens",
+        "description": "Interactive training log, Colab telemetry, and experiment metrics visualization via the Log Lens MCP App. Use when inspecting training progress, monitoring Google Colab jobs, comparing multi-run baselines, checking verification gates, or em",
+        "disableModelInvocation": false,
+        "file": "skills/log-lens/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/log-lens"
+    ],
+    "mcpServerNames": [
+      "log-lens_log-lens"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Log Lens (`agy-log-lens`)\n\nEnglish | [简体中文](README.zh-CN.md)\n\nInteractive training log, Google Colab telemetry, and scientific experiment dashboard plugin (MCP App) for [Google Antigravity](https://antigravity.google).\n\nLog Lens turns plain training logs, multi-stage `.live.json` / `*_results.json` snapshots, verification gate suites, and structured `@@` telemetry streams into faceted charts, pass/fail gate matrices, comparison tables, image previews, and searchable live tails inside Antigravity.\n\n![Log Lens Dashboard Preview](assets/preview.jpg)\n\n## Features\n\n- **Tier 0 Zero-Intrusion Parsing**:\n  - **Training Logs (`*.log`)**: Extracts `ep X/Y` / `Epoch X/Y`, `[StageN X/Y]` progress offsets, inline `key=value` metrics (with scientific notation), throughput telemetry (`ms/step`, `tok/s`, `samples/s`), embedded JSON blocks (`[Init Val]`), `best=<val>@<step>`, and `[PASS]`/`[FAIL]`/`WARN`/`ERROR` events while filtering out dataset-count prose and checkpoint-resume noise.\n  - **Live & Multi-Stage JSON Snapshots (`*.live.json`, `*_results.json`)**: Automatically parses single-stage (`history`, `metrics`, `records`) and multi-stage (`stage2_history`, `stage3_history`) arrays, plus hierarchical verification suites (`checks`, `gates`, `all_passed`).\n  - **Google Colab Telemetry Pairing**: Pairs `cache/colab_tasks/<session>/job_<session>.log` with sibling `colab_job_status.json` to display GPU utilization, VRAM, power draw, `epoch_hint`, Drive sync status, and credential purge state.\n  - **Smart Auto-Faceting**: Separates `lr` onto its own log-scale facet, splits series whose magnitude differs by `>20x`, bounds correlation curves (`*_corr`, `*_r2`) to `[-1, 1]`, and highlights statistical spike anomalies in red.\n- **Tier 1 `@@` Structured Telemetry Protocol**:\n  - Emit single-line `@@meta`, `@@metric`, `@@gate`, `@@table`, and `@@artifact` JSON records to `stdout` or `.exp.jsonl` / `.agvlog` files via the bundled zero-dependency Python helper [`helpers/python/agy_viz.py`](helpers/python/agy_viz.py).\n  - Unlocks target threshold bands, `bestStep` vertical markers, physical units, live upserted verification gates, highlighted baseline comparison tables, and inline diagnostic plots.\n- **Four Antigravity UI Surfaces**:\n  - **Side Pane (`aux_pane`) & Full Page (`global`)** via `open_log_lens`: Multi-run overlay comparison (`comparePaths`), EMA smoothing slider, `Auto` / `Log-Y` / `Linear` scale toggle, drag-to-zoom, searchable log tail, and one-click **Send to Chat** (`updateModelContext`).\n  - **Inline Chat Card (`inline`)** via `preview_log_card`: Compact `<= 450px` summary card with sparklines, target badges, and gate counts.\n  - **Experiment File Viewer (`file`)** via `view_log_file`: Opens `*.agvlog` and `*.exp.jsonl` directly as interactive dashboards.\n- **0-Token Incremental Live Polling**:\n  - Active/recent runs automatically start `2s` byte-cursor tailing via app-only `app_poll_source`, refreshing charts and Colab GPU telemetry without consuming LLM context tokens.\n\n## Install\n\nPrebuilt `dist/server.mjs` and self-contained `dist/app.html` are committed in the repository, so no Node build toolchain is required to install and use the plugin.\n\n### Option 1: Install Globally\n\n```bash\ngit clone https://github.com/dbydd/agy-log-lens.git ~/.gemini/config/plugins/log-lens\n```\n\n### Option 2: Sync into a Workspace\n\n```bash\ngit clone https://github.com/dbydd/agy-log-lens.git\nnode agy-log-lens/scripts/sync-plugin.mjs --no-build /path/to/your/workspace\n```\n\nAfter installing, open **Customizations → Plugins** in Antigravity (or run `agy plugin list`) to verify `log-lens` is enabled.\n\n## Usage\n\nAsk Antigravity naturally, or let an agent invoke the MCP App tools directly:\n\n| Tool | UI Surface | When to Use |\n| :--- | :--- | :--- |\n| `open_log_lens` | Side Pane / Full Page | Inspect the latest auto-discovered run (`{}`), watch a live Colab or local training log, or compare multiple runs (`comparePaths`). |\n| `preview_log_card` | Inline Chat Card | Render a compact checkpoint summary with sparklines, min/max bounds, and gate statuses directly in chat. |\n| `view_log_file` | File Viewer | Open `.agvlog` or `.exp.jsonl` files straight into the dashboard viewer. |\n\nBy default, Log Lens scans the active workspace under:\n- `cache/colab_tasks/` & `cache/`\n- `runs/`, `measured/`\n- `artifacts/*/{measured,runs,cache,cache/colab_tasks}`\n\n## Tier 1 `@@` Protocol & `agy_viz.py`\n\nDrop [`helpers/python/agy_viz.py`](helpers/python/agy_viz.py) anywhere on your `PYTHONPATH` (or copy the single file into a Colab script — standard library only, Python 3.10+, duck-types PyTorch/NumPy scalars via `.item()`, and converts `NaN`/`Inf` to JSON `null`):\n\n```python\nfrom agy_viz import VizLogger\n\nwith VizLogger(\n    path=\"measured/run.exp.jsonl\",  # optional file output (also tees to stdout)\n    run=\"multiscale_v1\",\n    stage=\"stage1\",\n    x_key=\"epoch\",\n    x_label=\"Epoch\",\n    targets={\n        \"val_rmse\": {\"lt\": 0.15, \"label\": \"Target < 0.15m\"},\n        \"ke_ratio\": {\"range\": [0.85, 1.15], \"label\": \"KE [0.85, 1.15]\"},\n    },\n    units={\"val_rmse\": \"m\", \"lr\": \"1\"},\n    groups={\"train_loss\": \"Loss\", \"val_rmse\": \"Validation\"},\n    total_steps=60,\n) as viz:\n    for ep in range(1, 61):\n        print(f\"[Train] ep {ep}/60 loss={loss:.4f} val_rmse={rmse:.4f}\", flush=True)\n        viz.metric(ep, train_loss=loss, val_rmse=rmse, lr=current_lr)\n\n    viz.gate(\"G1 Invariant Parity\", passed=True, suite=\"Physics\", value=\"1.9e-15\", target=\"< 1e-12\", step=60)\n    viz.table(\n        \"Ablation Summary\",\n        columns=[\"model\", \"val_rmse\"],\n        rows=[{\"model\": \"Baseline\", \"val_rmse\": 0.24}, {\"model\": \"Ours\", \"val_rmse\": 0.11}],\n        highlight_best={\"val_rmse\": \"min\"},\n    )\n    viz.artifact(\"Rollout Error Field\", \"measured/rollout_ep60.png\", step=60)\n```\n\nOr print raw `@@` protocol lines from any language:\n\n```text\n@@meta {\"run\":\"exp1\",\"xKey\":\"epoch\",\"targets\":{\"val_rmse\":{\"lt\":0.15}},\"bestStep\":40,\"totalSteps\":60}\n@@metric {\"step\":1,\"train_loss\":0.245,\"val_rmse\":0.184,\"lr\":0.0003}\n@@gate {\"name\":\"Energy Conservation\",\"status\":\"pass\",\"pass\":true,\"suite\":\"G2\",\"value\":-0.03,\"target\":\"< 0\",\"step\":1}\n@@table {\"title\":\"Baseline Comparison\",\"columns\":[\"model\",\"val_rmse\"],\"rows\":[{\"model\":\"Baseline\",\"val_rmse\":0.24},{\"model\":\"Ours\",\"val_rmse\":0.11}],\"highlightBest\":{\"val_rmse\":\"min\"}}\n@@artifact {\"label\":\"Rollout Error Map\",\"path\":\"measured/rollout.png\",\"step\":40}\n```\n\n## Configuration\n\n| Environment Variable | Description |\n| :--- | :--- |\n| `LOG_LENS_WORKSPACE` | Explicit workspace root used for automatic source discovery and relative path resolution (falls back to `AGY_WORKSPACE`, `AGY_WORKSPACE_ROOT`, `WORKSPACE_ROOT`, or `cwd`). |\n| `LOG_LENS_EXTRA_ROOTS` | Optional delimiter-separated list (`:` on macOS/Linux, `;` on Windows) of external project/Drive roots scanned alongside the active workspace. |\n| `COLAB_TASK_CACHE_DIR` | Optional extra directory scanned for `job_*.log` and `colab_job_status.json` Colab task sessions. |\n\n## Development & Validation\n\nRequires Node.js >= 20 and Python >= 3.10:\n\n```bash\nnpm install\nnpm run typecheck\nnpm run build\nnpm test\nnpm run test:py\nnpm run validate\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "dist/server.mjs",
+        "line": 16656,
+        "snippet": "\\u041D\\u0435\\u0440\\u0430\\u0441\\u043F\\u0430\\u0437\\u043D\\u0430\\u043D\\u044B",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/dist/server.mjs#L16656"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync-plugin.mjs",
+        "line": 67,
+        "snippet": "execFileSync(process.execPath, [buildScript], { cwd: REPO_ROOT, stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/scripts/sync-plugin.mjs#L67"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/discovery.ts",
+        "line": 253,
+        "snippet": "const m = /^job_(.+)\\.log$/.exec(log.name);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/discovery.ts#L253"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/discovery.ts",
+        "line": 284,
+        "snippet": "const m = /^job_(.+)\\.log$/.exec(f.name);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/discovery.ts#L284"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/facet.ts",
+        "line": 43,
+        "snippet": "const m = /^([A-Za-z0-9]+)/.exec(bare);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/facet.ts#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 357,
+        "snippet": "while ((m = KV_RE.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L357"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 365,
+        "snippet": "const m2 = re.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L365"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 399,
+        "snippet": "const kv = /\\S+=/.exec(rest);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L399"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 557,
+        "snippet": "const tm = TS_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L557"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 562,
+        "snippet": "const tb = TIME_BRACKET_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L562"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 573,
+        "snippet": "const gb = GATE_BRACKET_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L573"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 581,
+        "snippet": "const gp = GATE_PLAIN_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L581"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 597,
+        "snippet": "const pm = PROGRESS_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L597"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 622,
+        "snippet": "const bm = BRACKET_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L622"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 635,
+        "snippet": "const sm = STEP_TEXT_RE.exec(tag ? rest : text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L635"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 645,
+        "snippet": "const w = /^(\\w+)/.exec(sm[0]);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L645"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 653,
+        "snippet": "const bmBest = BEST_AT_RE.exec(kvText);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L653"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 687,
+        "snippet": "const am = ARTIFACT_ARROW_RE.exec(rest);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L687"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/heuristic.ts",
+        "line": 698,
+        "snippet": "const im = IMAGE_PATH_RE.exec(rest || text);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/heuristic.ts#L698"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/protocol.ts",
+        "line": 75,
+        "snippet": "const m = /\\.([A-Za-z0-9]+)$/.exec(path.split(/[?#]/)[0] ?? path);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/protocol.ts#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/parser/protocol.ts",
+        "line": 294,
+        "snippet": "const m = TAG_RE.exec(line);",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/parser/protocol.ts#L294"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/tailer.ts",
+        "line": 147,
+        "snippet": "const m = /^job_(.+)\\.log$/.exec(path.basename(this.sourcePath));",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/src/tailer.ts#L147"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "build.mjs",
+        "line": 95,
+        "snippet": "await writeFile(path.join(DIST, \"app.html\"), html, \"utf8\");",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/build.mjs#L95"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "helpers/python/agy_viz.py",
+        "line": 121,
+        "snippet": "self._file_handle = open(self.path, file_mode, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/helpers/python/agy_viz.py#L121"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync-plugin.mjs",
+        "line": 77,
+        "snippet": "fs.rmSync(destDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/scripts/sync-plugin.mjs#L77"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 6,
+        "snippet": "- 训练主循环继续使用 `python3 -u`（或 `flush=True`）输出包含 `ep X/Y`（或 `Epoch X/Y`）的常规进度行，确保 `colab_task_manager.py` 的 `epoch_hint` 嗅探与终端直读正常工作。",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/rules/AGENTS.md#L6"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/sync-plugin.mjs",
+        "line": 4,
+        "snippet": "* `<workspace>/.agents/plugins/log-lens/` (or `--global` into `~/.gemini/config/plugins/log-lens/`).",
+        "githubBlobUrl": "https://github.com/dbydd/agy-log-lens/blob/b70ae7dd0c993fea14b8ec6111a588793d9268a7/scripts/sync-plugin.mjs#L4"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "b70ae7dd0c993fea14b8ec6111a588793d9268a7",
+      "scannedAt": "2026-11-27T18:20:56.195Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

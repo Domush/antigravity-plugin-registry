@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "id": "KeS1Ke/Antigravity-Background",
+  "sha": "04766d6c547745a0db10de3ac50875970a97687a",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:30.730Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-ui",
+    "displayName": "antigravity-ui",
+    "version": "0.3.9",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.png\" alt=\"Antigravity Background Logo\" width=\"84\" height=\"84\" />\n\n# Antigravity Background\n\n**Windows 版 Antigravity 全窗壁纸与磨砂表面定制插件**\n\n[![Version](https://img.shields.io/badge/version-0.3.9-5b8def?style=flat-square)](plugin.json)\n[![Platform](https://img.shields.io/badge/platform-Windows-0078d4?style=flat-square)](#安装与入口)\n[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A5%2022-3c873a?style=flat-square)](#安装与入口)\n[![Runtime](https://img.shields.io/badge/runtime-Sidecar%20%2B%20CDP-7b61ff?style=flat-square)](docs/adr/0001-live-preview.md)\n[![License](https://img.shields.io/badge/license-MIT-2ea44f?style=flat-square)](LICENSE)\n\n**简体中文** · [English](README.en.md)\n\n[效果展示](#效果展示) · [核心功能](#核心功能) · [安装与入口](#安装与入口) · [持久化机制](#跨重启持久化与自修复) · [交互兼容](#原生交互与兼容修复) · [仓库结构](#仓库结构)\n\n</div>\n\n---\n\n**Antigravity Background**（插件名 `antigravity-ui`）通过 Antigravity 官方 Sidecar 扩展机制在右侧辅助面板提供实时可视化设置界面，支持自定义整窗壁纸、多种裁剪/平铺布局、交互式拖拽预览、**左侧边栏 / 右侧面板 / Overview 面板**透明与毛玻璃定制、**输入框 / 对话框 / 左侧栏选中会话**独立或同步的原版双层立体分层级感与镂空外圈配色，以及深浅主题自适应与双保险跨重启持久化。\n\n## 效果展示\n\n### 主窗口全窗壁纸与磨砂界面效果\n\n> 壁纸固定铺满整个窗口并覆盖顶部栏与左侧栏，同时保持左侧圆点进度条、分栏拖拽手柄、Overview 面板与右侧扩展设置页完整清晰可交互。\n\n![主窗口全窗壁纸与右侧实时设置面板](docs/images/workspace-showcase.png)\n\n### 设置面板（深色 / 浅色主题）与弹窗拖拽调整\n\n<table>\n  <tr>\n    <td width=\"50%\" align=\"center\">\n      <img src=\"docs/images/settings-panel-dark.png\" alt=\"深色主题设置面板\" />\n      <br />\n      <sub><b>深色主题设置页</b> · 全页 10 组折叠卡，支持「左侧栏选中会话」「输入框」「对话框」一键同步三项设置与镂空薄环外圈</sub>\n    </td>\n    <td width=\"50%\" align=\"center\">\n      <img src=\"docs/images/settings-panel-light.png\" alt=\"浅色主题设置面板\" />\n      <br />\n      <sub><b>浅色主题设置页</b> · 关闭同步后三表面与「Overview 面板」各自独立配色，镂空薄环仅染最外层不穿透内部卡片</sub>\n    </td>\n  </tr>\n  <tr>\n    <td colspan=\"2\" align=\"center\">\n      <img src=\"docs/images/drag-preview-modal.png\" alt=\"背景拖拽调整弹窗\" width=\"88%\" />\n      <br />\n      <sub><b>「壁纸调整 → 打开预览」弹窗</b> · 1:1 同步宿主窗口比例与分栏宽度，支持拖拽定位、滚轮缩放与界面遮罩切换</sub>\n    </td>\n  </tr>\n</table>\n\n---\n\n## 核心功能\n\n| 模块 | 功能说明 | 可调范围 / 默认行为 |\n| --- | --- | --- |\n| **壁纸与布局** | 支持本地 **PNG / JPG / WebP**，最长边自动压缩至 `2560px` 并保留透明通道；支持 **填充 / 拉伸 / 适应 / 平铺** 四种模式 | 填充 · 拉伸 · 适应（默认） · 平铺 |\n| **精细参数调节** | 水平位置（`0–100%`）、垂直位置（`0–100%`）、缩放（`20–220%`）、模糊（`0–30 px`）、不透明度（`0–100%`）、亮度（`30–140%`）、左侧渐隐（`0–95%`） | 全模式基于容器查询（`cqw` / `cqh`）按窗口等比自适应，切屏、变分辨率/DPI 及全屏↔窗口化均保持位置与比例一致；修改即刻实时预览 |\n| **弹窗拖拽预览** | 顶部「图片预览」按真实 Antigravity 窗口宽高比与分栏比例等比渲染（只读防误触）；点击「壁纸调整 → 打开预览」弹出交互画布，支持自由拖拽与滚轮缩放 | 非平铺模式缩放实效下限 `100%`，位移按可移动余量贴边限位，防止露出未覆盖留白 |\n| **左侧边栏表面** | 独立控制「显示底色」、底色不透明度（`0–100%`）与背景模糊（`0–30 px`） | 单层平滑覆盖左侧栏，透明化内部吸顶 `.bg-sidebar` 色块与悬停渐变，消除顶部内阴影接缝 |\n| **右侧面板表面** | 独立控制「显示底色」、底色不透明度（`0–100%`）与背景模糊（`0–30 px`） | 单层覆盖标签栏下方 `[data-side-panel-body]`（兼容 `[data-has-browser-hole]`），并通过底层跨源 OOPIF 适配同步支持右侧栏内的第三方 Sidecar UI 与 MCP App 插件面板 |\n| **输入框 / 对话框 / 左侧栏选中会话** | 拆分为三张独立折叠卡，各自控制「原版分层级感」「显示底色」、外圈/内部 hex 颜色、不透明度与模糊，并提供「同步三项设置」可选开关（默认开启） | 分层模式下外圈颜色通过镂空环带仅着色最外层 `3–4px` 薄边与 `1px` 描边（不穿透内部卡片），可独立微调或一键三项同步 |\n| **Overview 面板** | 独立扁平控制卡：支持「显示底色」、外圈/内部 hex 颜色、底色不透明度与背景模糊 | 独立覆盖 4 类 Overview 面板宿主，从不与输入框/对话框同步，保持轻量扁平与高交互层级 |\n| **主题与多窗口同步** | 设置页支持「跟随应用 / 深色 / 浅色」并随配置保存；多窗口实时发现、同源多标签页 `BroadcastChannel` 联动、磁盘 `settings.json` 外部变更重载 | 实时预览保留于内存草稿；点击「保存设置」落盘，点击「还原」放弃未保存草稿 |\n| **冷启动与轻量运行** | 零 `undici` 纯 `node:http` 环回 CDP 客户端、消除顶层 `await`、按需懒加载 SDK 回退器、并发启动与隐藏预加载面板入口短路 | 严格仅优化本插件自身，零宿主侵入、不干扰其他插件加载；冷启动预加载 `0×0` 面板零滑块构建与零网络请求 |\n| **在线检查与一键更新** | 顶部标题栏显示当前版本号、GitHub 仓库图标与 **「检查更新」** 按钮；仅按 GitHub Release 语义化版本号推送更新（优先 ZIP + SHA-256 校验，无 ZIP 时回退 Release Tag 源码包，API 限流自动走 Release 公开页面降级），不推送同版本 `main` 分支普通 git 提交 | 安装失败时尝试回滚，回滚失败时保留备份和事务日志以便启动时恢复。更新完成后可一键热重载插件，打开面板时不主动发起联网请求 |\n\n新版更新器可回收已退出进程留下的目录锁。若面板提示旧版更新锁仍存在，请先退出持有该锁的 Antigravity 客户端。若确认旧进程均已退出且锁文件仍在，可移除 `.gemini/config/plugins/.antigravity-ui-update.lock` 这个旧版锁文件，再启动插件恢复。\n\n---\n\n## 安装与入口\n\n### 环境要求\n\n- **系统**：Windows\n- **运行时**：[Node.js](https://nodejs.org/) **22.2** 或更高版本\n- **宿主**：已安装桌面版 Antigravity\n\n### 一键安装 / 卸载 / 状态检查\n\n1. 完全退出 Antigravity（确认系统托盘图标已退出）。\n2. 双击运行根目录下的 [`Antigravity-UI.cmd`](Antigravity-UI.cmd)，按提示选择：\n   - `1`：安装 / 更新插件（含双保险持久化配置）\n   - `2`：卸载插件（自动还原 `app.asar` 与快捷方式参数，保留图片设置与恢复备份）\n   - `3`：查看安装与持久化状态\n\n使用自定义 Antigravity 安装目录或需要命令行自动化时，可直接调用 [`manage.cjs`](manage.cjs)：\n\n```powershell\n# 安装或更新（可选指定安装目录）\nnode manage.cjs install\nnode manage.cjs install \"D:\\Antigravity\"\n\n# 查看插件、app.asar 自启开关、快捷方式与当前调试端口状态\nnode manage.cjs status\n\n# 卸载并无损恢复宿主原始状态\nnode manage.cjs uninstall\n```\n\n### 在 Antigravity 中打开\n\n- 安装位置：`~/.gemini/config/plugins/antigravity-ui`\n- 安装器会在 `~/.gemini/config/config.json` 中自动启用 `plugins.antigravity-ui` 与 `sidecars[\"antigravity-ui/panel\"]`，同时保留其他已有配置并自动备份原配置。\n- 重启 Antigravity 后：\n  - 可在 **「Customizations → Installed」** 查看 **Antigravity Background**。\n  - 在会话右侧打开辅助侧边栏，通过 **「Extensions → Antigravity Background」** 进入背景设置页。\n\n---\n\n## 跨重启持久化与自修复\n\nAntigravity 桌面端仅在开启本地环回调试端口（`--remote-debugging-port=0 --remote-debugging-address=127.0.0.1`）时才会生成 `DevToolsActivePort` 供 Sidecar 自动连接注入背景；若通过无参数快捷方式、协议链接或应用自重启打开，宿主会主动清理该文件导致背景无法自动附加。\n\n为此插件内置了可逆的双保险持久化机制（[`plugin/persistence.cjs`](plugin/persistence.cjs)）：\n\n1. **快捷方式参数托管**：安装时自动扫描桌面、OneDrive 桌面、开始菜单及任务栏固定栏中的 Antigravity 快捷方式（含透传参数的 `AntigravityLauncher.exe` 快捷方式），幂等补齐 `--remote-debugging-port=0 --remote-debugging-address=127.0.0.1`，并在 `~/.gemini/config/antigravity-ui.shortcuts.bak.json` 备份原始参数。\n2. **`app.asar` 极简自启开关**：在退出 Antigravity 执行安装时，向 `resources/app.asar` 的 `dist/main.js` 模块入口注入仅限本机 `127.0.0.1` 的 `app.commandLine.appendSwitch` 启动开关及 `dist/antigravity-ui/persist.json` 标记，同时生成带 SHA-256 校验的 `app.asar.antigravity-ui.persist.<sha256>.bak` 备份；即使从裸程序或 `antigravity://` 协议拉起也可持久生效。卸载时按哈希校验无损还原原版 `app.asar` 与所有快捷方式。\n3. **缺口期友好提示与一键修复**：当检测到宿主未开启调试端口（`MISSING_DEVTOOLS_PORT`）或客户端版本更新覆盖了 `app.asar` 时，侧栏底栏会自动显示中文引导提示与 **「修复快捷方式」** 按钮（`POST /api/repair-shortcuts`）；更新客户端后再次执行 `Antigravity-UI.cmd` 选 `1` 即可恢复全路径持久化。\n4. **旧版补丁自动迁移**：安装器自动识别早期版本（`dist/antigravity-ui/original.json`）补丁，校验原始资源备份并清理迁移，首次运行自动读取旧版 `antigravity-ui-wallpaper.json` 配置。\n\n---\n\n## 原生交互与兼容修复\n\n针对全窗壁纸层（`z-index: 1000`）与半透明内容区抬升后可能带来的原生界面兼容问题，渲染器（`version = 18 / revision = 36`）持续做了系统性适配：\n\n- **浏览器孔洞壁纸挖空与 Shadow DOM 顶层浮层兼容**：当内置浏览器（`[data-browser-hole=\"true\"]`）处于激活态时，自动以 `clip-path: path(evenodd, ...)` 从 `#antigravity-ui-background` 挖空可见浏览器孔洞（防止浏览器降层至 `zOrder = 0` 时壁纸覆盖网页），同时将第三方插件开放 Shadow DOM 内的打开态 Top-Layer 弹窗/浮层（如 Antigrative Dashboard 的 `#usage-dashboard`、`#plugin-update-dialog` 与 `.card`）映射为不可见、点击穿透的 Light-DOM 代理节点，触发宿主原生浏览器自动降层，避免内置浏览器切掉弹窗内容。\n\n- **左侧栏会话标题与悬停快捷按钮防重叠**：透明化 `.agy-row-actions::before` 后，在左侧栏会话行悬停、键盘聚焦或菜单展开（`aria-expanded=\"true\"`）且存在快捷按钮时，将 `.agy-row-actions` 切为流内定位并隐藏被取代的 `.agy-row-status`，使左侧 `truncate` 标题按按钮实际宽度自动省略截断（零重叠、零行高抖动且保持全透明壁纸透出）。\n\n- **右侧栏第三方插件面板底层兼容**：通过 CDP 自动发现并校验宿主右侧栏内挂载的跨源插件 OOPIF（涵盖 `plugin://` Sidecar UI 插件与 `mcp-app-frame-slot` MCP App 面板，自动排除插件自身、显式声明 `data-ag-ui-panel-native=\"true\"` 的自适配插件、全页视图与对话流内联 iframe），透明化宿主插槽与插件画布、自动分级柔化吸顶工具条（清除超大 `100vmax` 不透明遮罩阴影）与中性卡片容器、保护按钮/弹窗/饱和高亮元素并自动对齐宿主与插件的 `color-scheme` 防止不透明画布回退；随右侧栏开关、不透明度与模糊实时联动，并在 `100%` 不透明或停用插件时无损还原。\n\n- **镂空外圈薄环与三表面独立/可选同步**：将左侧栏选中会话（`.agy-sidebar-row[data-selected=\"true\"]`）、输入框（`.surface-composer`）与用户对话框气泡（`.agy-user-bubble-frame`）拆分为独立配置（`selectedRow*` / `composer*` / `bubble*`）并由 `syncDialogSurfaces`（默认 `true`）控制可选联动；开启「原版分层级感」时，通过 `mask-composite: exclude` 镂空伪元素仅着色最外层 `3–4px` 薄环带与 `1px` 描边（中心完全镂空不铺在内部卡片下方，消除半透明双重叠加与整框透色问题），并保持选中会话虚拟列表宿主 `[data-sidebar-row-id]` `z-index: 2`（低于 `z-index: 10` 吸顶分组头）且不改变行高与点击命中。\n\n- **顶栏菜单、会话头、右侧标签条与新会话欢迎区层级还原**：将左上角菜单项（`[data-testid=\"title-menu-bar\"] [data-testid=\"title-menu-bar-item\"]`）、主区会话头内容（`[data-main-content-header]:not([data-has-browser-hole=\"true\"]) > *`）、右侧栏标签条内容（`[data-side-panel-strip]:not([data-has-browser-hole=\"true\"]) > *`）与新会话首页容器（`.agy-sheet .agy-home`）抬升至 `z-index: 1001`，同时保持顶栏、标签条与项包装外层 `z-index: auto`（既不遮挡顶栏壁纸与浏览器孔洞画布，也不截断 `z-[8000]` 下拉菜单），避免高不透明度或低渐隐壁纸遮盖左上角文字、右侧标签与新会话居中欢迎文字。\n\n- **对话区与原生控件层级还原**：恢复左侧对话圆点进度条（`conversation-navigator`）点击跳转、主滚动条与回到底部按钮、`Ctrl+F` 查找栏、选中浮窗/批注弹框、底部终端上边缘拖拽调整高度、分栏拖拽手柄（`[data-split-sash]` / `[data-testid=\"tiling-splitter\"]`）及侧栏收起 Peek 热区/窄窗抽屉交互。\n- **工作状态框浮动滚动条视口裁剪**：为宿主全局挂载到 `document.body` 的浮动滚动条（`body > [data-overlay-scrollbar-track]`）建立几何反查与祖先裁剪链，通过 `clip-path: inset(...)` 限制其严格在 `[data-testid=\"autoscroll-viewport\"]` 等容器视口内渲染与响应点击，杜绝长工作流状态框滚出会话区域时遮挡顶部标题栏、会话头或底部输入框。\n- **标题栏与原生浏览器视图隔离**：通过 `MutationObserver` 与主题签名过滤保护透明 `titleBarOverlay`，同步标准化 `color(srgb ...)` 色彩格式；在侧栏切换至原生 `[data-browser-hole]` 标签页时解除主区 `clip-path` 陷阱、恢复停靠左侧栏底层 `--shell-canvas` 画布色（消除顶栏下方暗色断层），并保持浏览器孔洞全透明无模糊遮挡。\n- **跨屏不同分辨率与全屏/窗口化一致渲染**：为 `#antigravity-ui-background` 与预览 `.sample-window` 启用 `container-type: size`，所有布局模式（其中 `tile` 自由缩放采用宽高面积均衡 `(50cqw + 50cqh × r) × scale`，在全屏切 1:1/半屏窗口化时不骤缩）与壁纸模糊半径统一基于容器单位（`cqw`/`cqh`）和真实自然宽高比 `--ag-ui-image-aspect` 纯 CSS 实时计算，移除 `transform: scale()` 以避免放大时偏移左侧渐隐遮罩或倍增模糊，并在宿主 `resize` / DPI 变化时即时刷新窗口布局比例。\n\n---\n\n## 常见问题\n\n<details>\n<summary><b>1. 重启 Antigravity 后提示“未检测到本地调试端口”怎么办？</b></summary>\n\n1. 先在设置页底栏点击 **「修复快捷方式」**，随后完全退出 Antigravity 并通过桌面或开始菜单快捷方式重新打开。\n2. 如希望无论任何启动方式（包括协议拉起或裸程序启动）都能自动生效，请在退出 Antigravity 后运行一次 `Antigravity-UI.cmd` 选择 `1` 重新写入 `app.asar` 自启开关（客户端版本更新覆盖 `app.asar` 后需重跑一次）。\n\n</details>\n\n<details>\n<summary><b>2. 没有立即看到“实时预览”或修改没保存到下次打开？</b></summary>\n\n- 拖动滑块、切换开关和颜色属于**实时预览**（保存在 Sidecar 运行时内存中，刷新侧栏不会丢失）。\n- 只有点击右下角 **「保存设置」** 后才会写入本地配置文件长期保留；点击 **「还原」** 可放弃未保存调整并恢复上次保存的配置。\n\n</details>\n\n<details>\n<summary><b>3. 为什么非“平铺”模式下缩放最小只能到 100%？</b></summary>\n\n为避免壁纸缩小后四周露出原生深/浅纯色边界，非 `tile` 模式启用了全铺边界保护（缩放下限 `100%` 并在「打开预览」弹窗拖拽时按实际余量贴边钳制）；若希望缩小壁纸并按壁纸背景边界颜色向四周拓展，可切换布局为 **「平铺」**（支持 `20%–220%`，且不再拼接重复原图）。\n\n</details>\n\n<details>\n<summary><b>4. 如何运行内置回归测试？</b></summary>\n\n项目提供无头 Chrome + 隔离 Sidecar 的完整端到端回归测试套件（覆盖表面渲染、拖拽边界保护、多窗/多面板同步、原生控件点击命中、浮动滚动条视口裁剪、`app.asar`/快捷方式持久化、GitHub 在线更新安全归档与回滚校验，以及文档与源码同步校验）：\n\n```powershell\nnode tests/background-rendering.mjs\nnode tests/updater.mjs\nnode tests/docs-sync.mjs\n```\n\n</details>\n\n---\n\n## 仓库结构\n\n```text\nantigravity-UI/\n├── Antigravity-UI.cmd              # Windows 交互式安装 / 卸载 / 状态入口\n├── manage.cjs                      # CLI 安装管理与旧版补丁迁移\n├── plugin.json                     # Antigravity 插件清单\n├── LICENSE                         # MIT 开源协议\n├── README.md                       # 简体中文说明\n├── README.en.md                    # English documentation\n├── AGENTS.md                       # 维护者与 Agent 路由指南\n├── ARCHITECTURE.md                 # 当前态架构、状态机与接口索引\n├── GLOSSARY.md                     # 核心术语说明\n├── assets/\n│   └── logo.png                    # 插件图标\n├── plugin/\n│   ├── appearance.cjs              # 配置归一化、表面默认参数与壁纸样式生成\n│   └── persistence.cjs             # app.asar 自启开关与快捷方式备份/修复共享模块\n├── sidecars/panel/\n│   ├── sidecar.json                # Sidecar 注册配置（右侧扩展面板）\n│   ├── main.mjs                    # Sidecar HTTP 服务与设置/更新/快捷方式修复 API\n│   ├── runtime.mjs                 # CDP 窗口发现、连接复用与健康状态检测\n│   ├── renderer.mjs                # 宿主窗口壁纸注入、层级适配与浮动滚动条裁剪\n│   ├── store.mjs                   # 原子写入与 mtime 外部变更重载存储\n│   ├── updater.mjs                 # GitHub Release 版本号更新检查、SHA-256 校验与热重载\n│   ├── archive.mjs                 # 安全的 ZIP / TAR.GZ 解压与运行时清单校验\n│   ├── sdk.mjs                     # Sidecar SDK 加载器\n│   ├── index.html                  # 设置页、拖拽预览弹窗与插件更新弹窗 DOM\n│   ├── styles.css                  # 设置页深浅主题与嵌入式样式\n│   └── app.js                      # 实时预览、BroadcastChannel 同步与更新/交互控制\n├── docs/\n│   ├── adr/0001-live-preview.md    # 架构决策与演进记录（§1 – §29）\n│   └── images/                     # README 展示截图\n└── tests/\n    ├── background-rendering.mjs    # 隔离环境渲染、交互与持久化回归测试\n    ├── updater.mjs                 # 更新器归档安全、代理与端到端回归测试\n    └── docs-sync.mjs               # 文档与源码清单/接口/链接双向同步校验\n```\n\n---\n\n## 设计文档\n\n- 当前架构、状态机与接口索引：[ARCHITECTURE.md](ARCHITECTURE.md)\n- 维护约定与验证回路：[AGENTS.md](AGENTS.md)\n- 架构演进与技术细节记录：[docs/adr/0001-live-preview.md](docs/adr/0001-live-preview.md)\n- 术语定义：[GLOSSARY.md](GLOSSARY.md)\n\n---\n\n## 开源协议\n\n本项目基于 [MIT License](LICENSE) 开源。\n",
+  "latestReleaseNotes": "## Antigravity Background v0.3.9\n\nWindows 版 Antigravity 全窗壁纸与磨砂表面定制插件维护更新（渲染器 `v18 / revision 36`），重点修复原生内置浏览器与第三方插件 Shadow DOM 顶层弹窗的层级裁切问题，并在严格不侵入宿主、不干扰其他插件的前提下优化本插件冷启动速度。\n\n### 本版本更新 / What's New\n\n- **原生浏览器孔洞壁纸挖空与 Shadow DOM 顶层浮层兼容 / Browser-Hole Cutout & Shadow DOM Overlay Bridge (`revision 36`)**\n  - 当内置浏览器（`[data-browser-hole=\"true\"]`）激活时，使用 `clip-path: path(evenodd, ...)` 从全窗 `#antigravity-ui-background` 精准挖空可见浏览器区域，避免浏览器降层时壁纸覆盖网页内容。\n  - 将第三方插件开放 Shadow DOM 内的打开态 Top-Layer 弹窗/浮层（如 Antigrative Dashboard 的 `#usage-dashboard` 用量统计弹窗、`#plugin-update-dialog` 及 `.card`）映射为不可见、点击穿透的 Light-DOM 代理节点，触发宿主将原生 `wcvBrowser` 降层，彻底解决右侧内置浏览器裁切弹窗的问题；退出浏览器孔洞模式或停用插件时 100% 无损清理。\n- **纯插件内冷启动提速 / Strictly Plugin-Local Cold-Start Optimization**\n  - **零 `undici` 环回 CDP 客户端**：将 `/json/list` 与环回 `ws://127.0.0.1` CDP 连接统一改由 Node 原生 `node:http`（`request` + `upgrade`）与轻量 RFC 6455 帧编解码实现，冷启动阶段跳过 `undici` 懒加载（实测环回发现+握手提速 58%，插件侧首帧上屏链路耗时降低约 18%）。\n  - **消除模块顶层 `await` 与并发启动**：`renderer.mjs` 同步导出内部辅助函数、`main.mjs` 优先直连 `sidecar_sdk`（按需懒加载回退提取器 `sdk.mjs`）并在确认无待恢复更新事务后并发启动 `WallpaperRuntime` 与 HTTP 服务；主窗口壁纸上屏后立即发布健康状态与窗口布局。\n  - **隐藏设置页入口级短路与首屏减半**：`/preload.js` 启用 `defer`；冷启动预加载的 `0×0` 隐藏嵌入式面板 iframe 在入口直接短路，跳过 19 组滑块 DOM 构建、`CSSStyleSheet`、`BroadcastChannel`、`getComputedStyle` 样式探测与网络请求直至真正打开；`GET /api/settings` 移除未使用的重复 `saved` 字段，首屏负载体积减半。\n- **测试基线自维护 / Version-Agnostic Updater Suite**\n  - `tests/updater.mjs` 改为从 `plugin.json` 动态推导测试版本号，全量通过 `docs-sync`、`background-rendering` 与 `updater` 三套回归套件。\n\n### 升级与安装 / Upgrade & Installation\n\n- **已安装 `v0.3.8` 用户（推荐）**：在 Antigravity 右侧栏打开 **Extensions → Antigravity Background**，点击右上角 **「检查更新」** 即可自动拉取 `v0.3.9` ZIP 与 SHA-256 强校验并一键热重载升级。\n- **全新或手动安装**：\n  1. 下载下方 `antigravity-background-0.3.9.zip` 并解压，完全退出 Antigravity（含系统托盘）。\n  2. 双击运行 `Antigravity-UI.cmd` 选择 `1` 完成安装（或运行 `node manage.cjs install`）。\n  3. 重启 Antigravity 后在右侧栏 **Extensions → Antigravity Background** 打开设置面板。\n\n### 校验信息 / Checksum\n\n- `antigravity-background-0.3.9.zip` SHA-256: `72afd091cdb0e8efabf79babb6574d51c66a7d91d4eb674560c48136cf75b4fe`\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "manage.cjs",
+        "line": 38,
+        "snippet": "const output = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', '[Console]::OutputEncoding = [Text.Encoding]::UTF8; ' + 'foreach ($item in @(Get-Process",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L38"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "manage.cjs",
+        "line": 128,
+        "snippet": "const head = execFileSync('git', ['-C', __dirname, 'rev-parse', 'HEAD'], { encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'], }).trim();",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L128"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "manage.cjs",
+        "line": 181,
+        "snippet": "const pid = Number(LOCK_OWNER_RE.exec(owner || '')?.[1]);",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L181"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "plugin/persistence.cjs",
+        "line": 337,
+        "snippet": "const raw = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { input: JSON.stringify(payload), encoding: 'utf8', windowsHide: true, }).trim();",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/plugin/persistence.cjs#L337"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1278,
+        "snippet": "const pid = Number(LOCK_OWNER_RE.exec(owner || '')?.[1]);",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1278"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 137,
+        "snippet": "fs.writeFileSync(join(staged, '.install-source.json'), JSON.stringify({ repo: 'KeS1Ke/Antigravity-Background', channel: 'main', version: manifest.version, commit, updatedAt: new Da",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L137"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 168,
+        "snippet": "try { fs.rmSync(join(lockPath, owner), { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L168"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 192,
+        "snippet": "fs.writeFileSync(join(stagedLock, owner), '', { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L192"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 307,
+        "snippet": "if (before) fs.writeFileSync(configuration + '.antigravity-ui.' + randomUUID() + '.bak', before, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L307"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 312,
+        "snippet": "fs.rmSync(installMetaPath, { force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L312"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 328,
+        "snippet": "try { fs.rmSync(destination, { recursive: true, force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L328"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 338,
+        "snippet": "fs.rmSync(lock, { force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L338"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 339,
+        "snippet": "fs.rmSync(staged, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L339"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "manage.cjs",
+        "line": 342,
+        "snippet": "try { fs.rmSync(previous, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }); }",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/manage.cjs#L342"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "plugin/persistence.cjs",
+        "line": 35,
+        "snippet": "fs.writeFileSync(temporary, bytes, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/plugin/persistence.cjs#L35"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "plugin/persistence.cjs",
+        "line": 38,
+        "snippet": "fs.rmSync(temporary, { force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/plugin/persistence.cjs#L38"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "plugin/persistence.cjs",
+        "line": 232,
+        "snippet": "try { fs.rmSync(join(resourceDir, file), { force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/plugin/persistence.cjs#L232"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "plugin/persistence.cjs",
+        "line": 255,
+        "snippet": "fs.rmSync(backupPath, { force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/plugin/persistence.cjs#L255"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "plugin/persistence.cjs",
+        "line": 452,
+        "snippet": "fs.rmSync(backupPath, { force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/plugin/persistence.cjs#L452"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/archive.mjs",
+        "line": 314,
+        "snippet": "await writeFile(target, entry.data, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/archive.mjs#L314"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/main.mjs",
+        "line": 208,
+        "snippet": "await unlink(lockPath);",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/main.mjs#L208"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/sdk.mjs",
+        "line": 37,
+        "snippet": "await writeFile(temporary, content, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/sdk.mjs#L37"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/sdk.mjs",
+        "line": 40,
+        "snippet": "await rm(temporary, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/sdk.mjs#L40"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/store.mjs",
+        "line": 111,
+        "snippet": "await writeFile(temporary, JSON.stringify(settings), { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/store.mjs#L111"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/store.mjs",
+        "line": 124,
+        "snippet": "await rm(temporary, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/store.mjs#L124"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 580,
+        "snippet": "await retryFileOperation(() => unlink(join(lockPath, owner))).catch(error => {",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L580"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 673,
+        "snippet": "await retryFileOperation(() => rm(current, { force: true }));",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L673"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 699,
+        "snippet": "if (info && !info.isDirectory()) await retryFileOperation(() => unlink(path));",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L699"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 709,
+        "snippet": "await writeFile(tempPath, content, { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L709"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 713,
+        "snippet": "await rm(tempPath, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L713"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 725,
+        "snippet": "await rm(tempPath, { force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L725"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1309,
+        "snippet": "await writeFile(join(stagedLock, owner), '', { flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1460,
+        "snippet": "await rm(txDir, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1460"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1477,
+        "snippet": "await rm(txDir, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1477"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1518,
+        "snippet": "await rm(sourceMetaPath, { force: true });",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1518"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1547,
+        "snippet": "await rm(txDir, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1547"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1553,
+        "snippet": "await rm(txDir, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1553"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/updater.mjs",
+        "line": 1562,
+        "snippet": "await rm(txDir, { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/KeS1Ke/Antigravity-Background/blob/04766d6c547745a0db10de3ac50875970a97687a/sidecars/panel/updater.mjs#L1562"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.3.9",
+      "sha": "04766d6c547745a0db10de3ac50875970a97687a",
+      "scannedAt": "2026-11-27T18:18:30.730Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

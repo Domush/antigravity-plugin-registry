@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 1,
+  "id": "jzPPP3333/agy-GitHub-Connect",
+  "sha": "136815cdf303c71530746591a7bb9482366eb142",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:25.800Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "github-connect",
+    "displayName": "agyConnect · GitHub 连接与双模工作台",
+    "version": "2.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "github_connect",
+        "runtimeName": "github-connect_github_connect",
+        "transport": "stdio",
+        "command": "sh",
+        "args": [
+          "${PLUGIN_ROOT}/bin/run-node.sh",
+          "${PLUGIN_ROOT}/server/mcp-server.mjs",
+          "--data-dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "github",
+        "slashCommand": "/github",
+        "description": "呼出 GitHub 连接与仓库/分支选择卡片及右侧「GitHub 工作台」（支持一键复用本机 gh CLI、OAuth 设备流、PAT 登录，支持输入框左下角常驻按钮与原生仓库小胶囊），并通过 github_api / github_repo_overview 操作目标 GitHub 仓库的 PR、Issue、代码与 Actions。当用户输入 /github、要求连接/切换 GitHub 仓库或操作远程 GitHub 仓库时使用。",
+        "disableModelInvocation": false,
+        "file": "skills/github/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/github"
+    ],
+    "mcpServerNames": [
+      "github-connect_github_connect"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"82\" height=\"82\" alt=\"agy-GitHub-Connect Logo\" />\n  <h1>agy-GitHub-Connect</h1>\n  <p><strong>Google Antigravity 便携式 GitHub 双模连接器与会话级工作台</strong></p>\n  <p><strong>📌 注：本项目移植并增强自 <a href=\"https://github.com/Moon-shiyue/dsh-github-connect\"><code>Moon-shiyue/dsh-github-connect</code></a>（MIT）</strong></p>\n  <p>\n    <a href=\"https://github.com/jzPPP3333/agy-GitHub-Connect/actions/workflows/ci.yml\"><img src=\"https://github.com/jzPPP3333/agy-GitHub-Connect/actions/workflows/ci.yml/badge.svg\" alt=\"CI\" /></a>\n    <a href=\"https://github.com/Moon-shiyue/dsh-github-connect\"><img src=\"https://img.shields.io/badge/Ported%20From-Moon--shiyue%2Fdsh--github--connect-6e40c9\" alt=\"Ported from dsh-github-connect\" /></a>\n    <img src=\"https://img.shields.io/badge/Zero%20Deps-Pure%20Node%20ESM-14b8a6\" alt=\"Zero Dependencies\" />\n    <img src=\"https://img.shields.io/badge/Node.js-%3E%3D20-339933\" alt=\"Node >= 20\" />\n    <img src=\"https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-475569\" alt=\"Cross Platform\" />\n    <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-3b82f6\" alt=\"MIT License\" /></a>\n  </p>\n</div>\n\n> **移植归属说明**：本项目完整移植自 [`Moon-shiyue/dsh-github-connect`](https://github.com/Moon-shiyue/dsh-github-connect)，保留了原版「输入框左下角常驻 GitHub 按钮 + 上浮授权面板 + OAuth 设备流 / PAT 便携鉴权 + 打开即向 GitHub 在线真实验证（离线不误登出） + 系统代理与根证书自动信任 + `github_api` 工具」的全部核心体验，并针对 **Google Antigravity 2.0** 架构重构为**零外部依赖纯内置实现**，新增**按会话（Conversation）独立连接开关**、**本机 `gh CLI` 一键免密复用**、**右侧常驻「GitHub 工作台」（Sidecar）**、**对话内联卡片（MCP App）**以及与 **Antigravity 原生 GitHub（`git` / `gh`）能力的协同联动**。\n\n<p align=\"center\">\n  <img src=\"assets/preview-banner.svg\" width=\"100%\" alt=\"agy-GitHub-Connect 三态按会话独立开关预览\" />\n</p>\n\n---\n\n## 核心特性\n\n### 1. 本机一次授权 + 按会话（Conversation）独立三态控制（多对话零串台）\n不再因为一个窗口连了 GitHub 就把所有无关聊天全部刷绿，每个对话拥有各自独立的连接状态：\n\n| 会话状态 | 左下角 `+` 号旁显示 | 行为与说明 |\n| :--- | :--- | :--- |\n| **① 默认未启用** | `🐙 GitHub ⚫`（灰点） | 新建或其他无关会话默认保持未连接，AI 调 `github_api` 会被安全拦截；**免输 `/github`**，直接点击按钮即可原地弹出面板 |\n| **② 仅连接账号 · 不绑仓库**<br>*(原版 1:1 默认态)* | **`🐙 <login> 🟢`** | 本机已存凭据时**一键在当前会话开启**，不限定单一仓库，AI 可通过 `github_api` 访问你账号下的全部授权仓库、Issues、PR 与 Gist |\n| **③ 连接并绑定本会话默认仓**<br>*(可选增强)* | **`🐙 <login> · <repo> 🟢`** | 按需为当前会话锁定目标仓库与分支（若工作区含 GitHub 远端会自动提示一键绑定），激活 `/repos/{repo}/...` 占位符、顶部原生仓库胶囊及 PR/Issue/Actions 速览；随时可一键切回「仅连接账号」 |\n\n- **两级断开互不误伤**：\n  - **「断开本会话」**：仅关闭当前对话的绿点连接，不影响其他已开启会话，且保留本机凭据供下次一键复用；\n  - **「注销账号」**（二次点击确认）：彻底清空本机 `auth.json` 凭据并关闭所有会话连接。\n\n### 2. 三重交互入口 + 联合 Antigravity 原生 GitHub 能力\n- **输入框左下角 `+` 号旁常驻按钮 + 上浮面板（可选 CDP 增强）**：独立 Shadow DOM 沙箱挂载在输入框底部工具行，切换左侧会话时实时读取 `/c/<conversationId>` 自动切换三态，与富文本输入、`agyFrok` 等扩展零冲突共存；\n- **右侧辅助栏「GitHub 工作台」（100% 官方 Sidecar，免 CDP 即开即用）**：常驻右侧 `+` 面板或左侧栏，支持在线校验、代理/系统 CA 状态灯、仓库搜索过滤、**本地分支领先一键发起提 PR 对话**及 **Open PRs / Open Issues / Actions 实时速览**；\n- **对话内联卡片 + 原生仓库胶囊（MCP App）**：输入 `/github` 呼出内联卡片，绑仓后通过官方 `ui/update-model-context` 在当前对话输入框顶部挂出 `🐙 owner/repo · branch` 原生胶囊；\n- **与 Antigravity 原生 GitHub 双剑合璧**：远端 REST 查询、PR/Issue 代码审查、Actions 检查走本插件 `github_api` / `github_repo_overview`；本地 `git clone` / `fetch` / `push` 与受控 CLI 命令无缝配合宿主内置 `git` + `gh -R owner/repo`（`permissioned-github`）权限体系。\n\n### 3. 三通道便携鉴权 & 打开即在线真实验证\n- **⚡ 一键免密复用本机 `gh` CLI**：自动检测本机已登录的 `gh` 账号，零复制粘贴 Token，密钥留在系统钥匙串；\n- **OAuth 设备流（推荐，无需自建回调服务器）**：支持新版 `Ov23…`、经典 20 位十六进制与 GitHub App `Iv1.xxx` Client ID，自定义 `scopes`（默认 `repo gist read:org workflow`），自动自适应轮询（含 `slow_down` 退避与瞬时网络闪断续传），注销后保留记忆的 `clientId`；\n- **Personal Access Token (PAT)**：推荐最小权限 Fine-grained PAT；自动剥离复制首尾引号、网络抖动/5xx 自动重试，精准区分 `401` 失效 / `403` 限流 / `404` Fine-grained 缺 Metadata 读权限 / `0` 网络代理异常；\n- **打开即校验（`verifyAuth`）**：首次挂载与打开面板时向 GitHub 实时校验并刷新 `lastVerifiedAt`、展示授权 `scopes` 标签；明确 `401` 自动摘除失效令牌，**断网或代理瞬时异常保留令牌绝不误登出**。\n\n### 4. 零外部依赖跨平台受信网络层（`lib/net.mjs`）\n彻底移除外部 `undici` / `npm install` / `pnpm install` 依赖，基于纯 Node.js 内置 `http` / `https` / `tls` 实现，整个目录拷到任意机器即可直接运行：\n- **代理解析顺序**：插件设置 `proxy`（`auto` | `direct` | `http://host:port`）→ 环境变量 `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY` / `NO_PROXY` → **Windows WinINET 注册表系统代理** / **macOS `scutil --proxy` 系统代理** → 直连（本地代理未启动或 `CONNECT` 超时时 4 秒内优雅回退直连）；\n- **安全重定向跟随**：自动跟随 `301 / 302 / 303 / 307 / 308` 重定向（最多 3 跳，兼容仓库改名与归档下载），跨域跳转至外部存储时自动剥离 `Authorization` 请求头防泄露；\n- **系统根证书信任**：Windows 自动从系统证书库导出根证书（缓存 30 天自动刷新），macOS / Linux 自动加载标准系统 CA 证书包，解决本地 TLS 拦截代理引发的 `UNABLE_TO_VERIFY_LEAF_SIGNATURE`。\n\n---\n\n## 快速安装（零 `npm install`）\n\n### 方式一：发给 Antigravity 一句话自动安装（推荐）\n\n直接把下面这句话发给 Antigravity：\n\n```text\n请帮我安装插件 https://github.com/jzPPP3333/agy-GitHub-Connect 到 ~/.gemini/config/plugins/github-connect（Windows 为 %USERPROFILE%\\.gemini\\config\\plugins\\github-connect），运行 npm test 与 agy plugin validate --strict . 确认无误后告诉我。\n```\n\n### 方式二：命令行一键安装 / 升级（幂等保留凭据）\n\n- **macOS / Linux**：\n  ```bash\n  curl -fsSL https://raw.githubusercontent.com/jzPPP3333/agy-GitHub-Connect/main/install.sh | bash\n  ```\n- **Windows (PowerShell)**：\n  ```powershell\n  powershell -ExecutionPolicy Bypass -c \"irm https://raw.githubusercontent.com/jzPPP3333/agy-GitHub-Connect/main/install.ps1 | iex\"\n  ```\n\n### 方式三：克隆源码安装\n\n```bash\ngit clone https://github.com/jzPPP3333/agy-GitHub-Connect.git\ncd agy-GitHub-Connect\nbash install.sh        # Windows 执行: powershell -ExecutionPolicy Bypass -File .\\install.ps1\n```\n\n安装后在 Antigravity 的 **Customizations → Plugins** 确认启用 `agyConnect · GitHub 连接与双模工作台` 即可。\n\n---\n\n## 开启输入框左下角常驻 GitHub 按钮（免敲命令 · 三重常驻与更新自愈）\n\n本插件**绝不修改 `Antigravity.app` 应用本体与签名**。未开启本地调试端口时，右侧「**GitHub 工作台**」与对话内 **`/github` 卡片**仍 100% 可用；同时内置三道免敲命令机制让左下角 `🐙` 按钮常驻在线：\n\n1. **日常零重启直开（专属启动器）**：安装时自动生成复用官方图标的轻量启动器（macOS：`~/Applications/Antigravity (CDP).app`，Windows：`开始菜单 / Antigravity (CDP).lnk`，Linux：`~/.local/share/applications/antigravity-cdp.desktop`），拖入程序坞（Dock）或桌面后，日常点击即天然自带 `:9222` 左下角按钮（0 次额外重启）。\n2. **版本更新后自动弹窗一键自愈**：当客户端完成版本升级自动重启导致未带 `:9222` 端口时，后台 Sidecar 会弹出一次原生确认框（同一主进程 PID 内仅询问 1 次，20s 超时自动收起），点击 **「立即恢复」** 2 秒优雅重启满血恢复（可在工作台 `⚙` 设置中随时开关）。\n3. **工作台内嵌「⚡ 一键重启挂载」按钮**：随时可在右侧「GitHub 工作台」点击 **「⚡ 一键重启挂载左下角按钮」** 或一键生成/定位专属启动器，彻底告别手动打开终端。\n\n<details>\n<summary>命令行手动重启方式（可选备用）</summary>\n\n- **macOS / Linux**：\n  ```sh\n  sh ~/.gemini/config/plugins/github-connect/scripts/launch-with-cdp.sh --restart\n  ```\n- **Windows (PowerShell)**：\n  ```powershell\n  powershell -ExecutionPolicy Bypass -File \"$env:USERPROFILE\\.gemini\\config\\plugins\\github-connect\\scripts\\launch-with-cdp.ps1\" -Restart\n  ```\n</details>\n\n---\n\n## AI 工具箱（MCP 服务：`github_connect`）\n\n| 工具名 | 说明 |\n| :--- | :--- |\n| `github_connect_card` | 在对话流内弹出交互式 GitHub 连接与会话选库卡片（支持 `conversation_id` 会话隔离与原生胶囊挂载） |\n| `github_api` | 使用当前会话已授权账号调用 `https://api.github.com` REST 接口（`GET` / `POST` / `PATCH` / `PUT` / `DELETE`），支持 `?` 查询参数与 `/repos/{repo}/...` 会话默认仓占位符 |\n| `github_status` | 只读查询当前会话是否已启用连接、登录账号、最近在线验证时间及绑定的 `selectedRepo` / `selectedBranch` |\n| `github_repo_overview` | 一次性聚合拉取目标仓库未关闭的 Pull Requests、Issues 与最近 5 次 GitHub Actions 状态 |\n\n---\n\n## 安全与隐私说明\n\n- **凭据本机隔离**：令牌以 `0600` 权限原子保存在 `~/.gemini/antigravity/plugin_data/github-connect/auth.json`（位于插件代码目录之外，升级或重装插件不会丢失连接；若本机已有 `$DSH_HOME/.dsh-github-connect/auth.json` 支持免配置只读继承）。\n- **零第三方中转**：OAuth 设备流使用你自己创建的 GitHub OAuth App Client ID，Token 除直接作为 `Bearer` 头发送至 `api.github.com` 外绝不经过任何第三方服务器。\n- **防跨站与路径白名单**：本地工作台写接口强制校验同源 `Origin` 与 Sidecar `X-Sidecar-Token`；`github_api` 严格锁定 `https://api.github.com` 域名并拦截 `..` 路径穿越与非法字符。\n\n---\n\n## 目录结构\n\n```text\nagy-GitHub-Connect/\n├── plugin.json                  # Antigravity 插件清单\n├── mcp_config.json              # MCP 服务注册配置\n├── install.sh / install.ps1     # 跨平台一键安装与热重载脚本（支持远程管道执行）\n├── bin/run-node.sh              # Node.js (>=20) 自动探测启动器（兼容 nvm/fnm/volta/brew）\n├── scripts/\n│   └── launch-with-cdp.sh/.ps1  # 可选本地 CDP 端口启动辅助脚本\n├── lib/\n│   ├── github-core.mjs          # 核心鉴权、在线校验、会话级三态隔离、本地分支领先检测与 github_api\n│   ├── net.mjs                  # 零依赖跨平台受信网络层（CONNECT 隧道 / 3xx 跟随 / 系统代理与 CA）\n│   ├── cdp-bridge.mjs           # 可选本地 CDP WebSocket 桥接与多窗口会话同步\n│   └── composer-overlay.js      # 输入框左下角常驻三态按钮与 Shadow DOM 上浮连接面板\n├── server/\n│   ├── mcp-server.mjs           # MCP JSON-RPC 服务与动态资源\n│   └── card.html                # 对话内联 MCP App 选库卡片与原生胶囊挂载\n├── sidecars/workbench/          # 右侧辅助栏「GitHub 工作台」官方 Sidecar 应用\n├── skills/github/SKILL.md       # /github 技能定义与原生 git/gh 联合工作流\n├── rules/AGENTS.md              # 全局零打扰与会话级调用规范\n└── test/agy-connect.test.mjs    # 无损单元与集成自动化测试套件（临时目录隔离）\n```\n\n---\n\n## 开发与校验\n\n```bash\n# 运行全部无损单元与集成测试（临时目录隔离，绝不触碰本机真实凭据）\nnpm test\n\n# 官方 Antigravity CLI 严格插件结构校验\nnpm run validate\n\n# 独立启动工作台本地预览（默认 http://127.0.0.1:4178）\nnpm run dev:workbench\n```\n\n---\n\n## 致谢与许可\n\n- 本项目**移植并增强自 [Moon-shiyue/dsh-github-connect](https://github.com/Moon-shiyue/dsh-github-connect)**（MIT License），谨向原作者致谢；本地分支 PR 提醒灵感参考 `kaziii/dsh-github-connector`。\n- 基于 [MIT License](./LICENSE) 开源发布。\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/cdp-bridge.mjs",
+        "line": 71,
+        "snippet": "execFile('open', [href], () => {});",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-bridge.mjs#L71"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/cdp-bridge.mjs",
+        "line": 73,
+        "snippet": "execFile('cmd', ['/c', 'start', '', href], { windowsHide: true }, () => {});",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-bridge.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/cdp-bridge.mjs",
+        "line": 75,
+        "snippet": "execFile('xdg-open', [href], () => {});",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-bridge.mjs#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/github-core.mjs",
+        "line": 93,
+        "snippet": "/Logged in to github\\.com account ([^\\s(]+)/i.exec(combined) ||",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L93"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/github-core.mjs",
+        "line": 94,
+        "snippet": "/Logged in to github\\.com as ([^\\s(]+)/i.exec(combined);",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L94"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/github-core.mjs",
+        "line": 112,
+        "snippet": "const match = /\\r\\n\\r\\n|\\n\\r\\n|\\n\\n/.exec(remaining);",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L112"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/github-core.mjs",
+        "line": 124,
+        "snippet": "const statusMatch = /^HTTP\\/[\\d.]+\\s+(\\d+)/i.exec(firstLine);",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L124"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/github-core.mjs",
+        "line": 155,
+        "snippet": "const child = execFile( 'gh', args, { timeout: 30000, windowsHide: true, maxBuffer: 10 * 1024 * 1024, env: enrichedEnv() }, (err, stdout, stderr) => { const out = String(stdout || ",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L155"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/github-core.mjs",
+        "line": 204,
+        "snippet": "const m = /github\\.com[:/]([A-Za-z0-9_.-]+\\/[A-Za-z0-9_.-]+?)(?:\\.git)?\\s*$/i.exec(String(remoteOut || ''));",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L204"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/net.mjs",
+        "line": 121,
+        "snippet": "const m = /^(?:https|http|all)=([^:]+:\\d+)$/i.exec(part.trim());",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L121"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/net.mjs",
+        "line": 138,
+        "snippet": "const httpsHost = /HTTPSProxy\\s*:\\s*([^\\s]+)/.exec(text)?.[1];",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L138"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/net.mjs",
+        "line": 139,
+        "snippet": "const httpsPort = /HTTPSPort\\s*:\\s*(\\d+)/.exec(text)?.[1];",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L139"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/net.mjs",
+        "line": 142,
+        "snippet": "const httpHost = /HTTPProxy\\s*:\\s*([^\\s]+)/.exec(text)?.[1];",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/net.mjs",
+        "line": 143,
+        "snippet": "const httpPort = /HTTPPort\\s*:\\s*(\\d+)/.exec(text)?.[1];",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L143"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/workbench/main.mjs",
+        "line": 59,
+        "snippet": "const m = /github\\.com[:/]([A-Za-z0-9_.-]+\\/[A-Za-z0-9_.-]+?)(?:\\.git)?\\s*$/i.exec(String(remoteUrl || ''));",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/sidecars/workbench/main.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/cdp-bridge.mjs",
+        "line": 320,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${p}/json/list`, { signal: AbortSignal.timeout(1400), });",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-bridge.mjs#L320"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/cdp-keepalive.mjs",
+        "line": 165,
+        "snippet": "fs.writeFileSync(execPath, buildMacLauncherScript(port), { mode: 0o755 });",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-keepalive.mjs#L165"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/cdp-keepalive.mjs",
+        "line": 167,
+        "snippet": "fs.writeFileSync(path.join(contentsDir, 'Info.plist'), buildMacInfoPlist(), 'utf8');",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-keepalive.mjs#L167"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/cdp-keepalive.mjs",
+        "line": 221,
+        "snippet": "fs.writeFileSync(cmdFallback, `@echo off\\r\\nstart \"\" \"${exePath}\" --remote-debugging-port=${Number(port) || 9222}\\r\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-keepalive.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/cdp-keepalive.mjs",
+        "line": 238,
+        "snippet": "fs.writeFileSync(target.path, desktopEntry, { mode: 0o755 });",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-keepalive.mjs#L238"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/github-core.mjs",
+        "line": 75,
+        "snippet": "fs.writeFileSync(tmp, `${JSON.stringify(data, null, 2)}\\n`, { mode });",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/github-core.mjs#L75"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/net.mjs",
+        "line": 250,
+        "snippet": "fs.writeFileSync(cacheFile, pem, 'utf8');",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L250"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/net.mjs",
+        "line": 399,
+        "snippet": "const req = https.request( { protocol: target.protocol, hostname: target.hostname, port: target.port || 443, path: target.pathname + target.search, method, headers: reqHeaders, ...",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L399"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/net.mjs",
+        "line": 462,
+        "snippet": "const connectReq = http.request({ host: proxyUrl.hostname, port: Number(proxyUrl.port) || 8080, method: 'CONNECT', path: `${target.hostname}:${target.port || 443}`, headers: connec",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/net.mjs#L462"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/cdp-bridge.mjs",
+        "line": 420,
+        "snippet": ": 'sh ~/.gemini/config/plugins/github-connect/scripts/launch-with-cdp.sh --restart',",
+        "githubBlobUrl": "https://github.com/jzPPP3333/agy-GitHub-Connect/blob/136815cdf303c71530746591a7bb9482366eb142/lib/cdp-bridge.mjs#L420"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.1.0",
+      "sha": "136815cdf303c71530746591a7bb9482366eb142",
+      "scannedAt": "2026-11-27T18:16:25.800Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

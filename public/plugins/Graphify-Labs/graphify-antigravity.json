@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "Graphify-Labs/graphify-antigravity",
+  "sha": "e773a80e727c3a939dead5d260b85335bdd426f3",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:40.137Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "graphify",
+    "displayName": "Graphify",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "graphify",
+        "runtimeName": "graphify_graphify",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://api.graphify.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "graphify_graphify"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Graphify for Antigravity\n\nOfficial Graphify plugin source for Google Antigravity. It gives your agent\nshared context about the repositories you index in [Graphify](https://graphify.com):\nsearch indexed code, trace callers and dependencies, check change impact, and\nrecall team Memory through Graphify's hosted MCP server.\n\nThe open-source Graphify CLI is a separate local tool:\n[Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) (PyPI:\n`graphifyy`, Apache 2.0).\n\n[Graphify](https://graphify.com) · [Docs](https://docs.graphify.com) ·\n[Cursor](https://github.com/Graphify-Labs/graphify-cursor-plugin) ·\n[Codex](https://github.com/Graphify-Labs/graphify-codex-plugin) ·\n[Claude](https://github.com/Graphify-Labs/graphify-claude-plugin)\n\nThe plugin adds a remote MCP connection to `https://api.graphify.com/mcp`\n(Streamable HTTP) and a rule that tells the agent when and how to use it. It has\nno local executable, install script, hook, bundled credential, or runtime\ndependency.\n\n## Setup\n\n1. Sign in to [Graphify](https://app.graphify.com), connect a repository you are\n   authorized to use, and wait for indexing to finish.\n2. Install the plugin from the CLI with\n   `agy plugin install https://github.com/Graphify-Labs/graphify-antigravity`.\n   Once the Antigravity Marketplace listing is live, you can also install it\n   from Customizations in the Antigravity app.\n3. When the Graphify MCP server first connects, Antigravity opens the Graphify\n   sign-in in your browser. Approve access and return to Antigravity. No API key\n   or client secret is included in this plugin.\n4. Ask the agent to list your Graphify workspaces and repositories, then name\n   the repository to investigate. If it needs to change workspace, confirm the\n   choice: `set_workspace` also changes your account's default workspace.\n\nFor example: \"Using Graphify, find where authentication is implemented in\n`my-repository` and cite the relevant files.\" Other useful requests are \"Trace\nthe callers of this symbol\" and \"Which linked tests should I check before\nchanging this function?\"\n\n## Main tools\n\nThe connected server supplies the authoritative schemas, descriptions, and\napproval annotations. Availability can vary with server configuration and access.\n\n| Tools | Purpose |\n| --- | --- |\n| `list_workspaces`, `list_repositories` | Discover accessible scope and repository IDs. |\n| `set_workspace` | Select the active workspace and update the account's default workspace. |\n| `query_graph`, `graphify_find`, `graphify_node` | Search indexed code and inspect symbols. |\n| `graphify_callers`, `graphify_trace` | Investigate callers and directed call paths. |\n| `graphify_file_neighbors`, `graphify_imports_exports` | Map a file's dependencies and dependents. |\n| `graphify_rank_files` | Rank the files most relevant to a question. |\n| `graphify_impact`, `graphify_tests_for` | Explore potential change impact and linked tests. These do not run tests. |\n| `recall` | Retrieve saved repository context. |\n| `remember` | Save durable repository memory; the result may need review. |\n\n## Data handling and limitations\n\nTool arguments are sent to Graphify's hosted service under your authenticated\nworkspace permissions, and returned code context becomes available to the\nAntigravity agent. Do not put secrets or unrelated private information in queries.\n\nThe MCP tools do not edit source files, but they are not all read only:\n`remember` saves memory and `set_workspace` changes account scope. When trail\ncapture is enabled for a workspace, some search tools may save query context as\nrepository memory. Follow the live tool annotations and Antigravity's approval\nprompts.\n\nResults describe an indexed snapshot, not necessarily the current branch or\nuncommitted edits. Static graph analysis does not prove runtime behavior or\ncomplete test coverage. If `graphify_node` cannot resolve an exact match it may\nreturn a different symbol marked `resolved: semantic`; verify it before relying\non it.\n\nSee Graphify's [privacy policy](https://graphify.com/privacy) and\n[terms](https://graphify.com/terms).\n\n## Troubleshooting\n\n- **Needs sign in or unauthorized:** reconnect the Graphify MCP server from the\n  plugin's MCP tab and complete the browser sign-in again.\n- **No repository or empty results:** check the selected workspace, repository\n  permissions, and finished indexing in Graphify. Use `list_repositories` to get\n  the current ID instead of guessing one.\n- **Duplicate servers:** keep one Graphify connection. A plugin install and a\n  manual entry in `mcp_config.json` can otherwise overlap.\n\n## Support\n\n- [Graphify](https://graphify.com) · [Documentation](https://docs.graphify.com)\n- [Plugin issues](https://github.com/Graphify-Labs/graphify-antigravity/issues)\n- [founders@graphify.com](mailto:founders@graphify.com)\n\n## Validate\n\nInstall the [Antigravity CLI](https://antigravity.google/docs/getting-started/)\nand run from the repository root:\n\n```bash\nagy plugin validate --strict .\n```\n\nCI runs the same check on pull requests and pushes to `main`.\n\n## License\n\nThe plugin source is licensed under [Apache 2.0](./LICENSE). Use of the hosted\nGraphify service is governed by its [terms](https://graphify.com/terms) and\n[privacy policy](https://graphify.com/privacy).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "e773a80e727c3a939dead5d260b85335bdd426f3",
+      "scannedAt": "2026-11-27T18:18:40.137Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,646 @@
+{
+  "schemaVersion": 1,
+  "id": "cayleb-james2008/fleet",
+  "sha": "02c0011161e5881d98c661a97bd05addd13deee9",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:58.918Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "fleet",
+    "displayName": "Fleet",
+    "version": "1.31.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "fleet",
+        "slashCommand": "/fleet",
+        "description": "Coordinate an Antigravity-native multi-agent swarm with structured plan tracking, isolated worktrees, cold verification gates, and live telemetry in the Fleet sidecar pane. Trigger with /fleet or when splitting multi-lane coding, audit, or ",
+        "disableModelInvocation": false,
+        "file": "skills/fleet/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/fleet"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n# Fleet\n\nAn Antigravity sidecar plugin for multi-agent swarms. It reads native swarm boards, worker transcripts, `plan.json` milestones, and workspace git worktrees into a compact sidebar inside Antigravity.\n\n[![CI](https://img.shields.io/github/actions/workflow/status/cayleb-james2008/fleet/release.yml?branch=main&label=CI&style=flat-square)](https://github.com/cayleb-james2008/fleet/actions/workflows/release.yml)\n[![Release](https://img.shields.io/github/v/release/cayleb-james2008/fleet?style=flat-square&color=blue)](https://github.com/cayleb-james2008/fleet/releases/latest)\n[![Platform](https://img.shields.io/badge/Antigravity-Sidecar%20Plugin-111318?style=flat-square)](https://cayleb-james2008.github.io/projects/fleet.html)\n[![Stack](https://img.shields.io/badge/Node%20ESM-React%2019%20%2B%20TS-3178c6?style=flat-square)](https://github.com/cayleb-james2008/fleet)\n[![License](https://img.shields.io/github/license/cayleb-james2008/fleet?style=flat-square)](LICENSE)\n\n<br />\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/triage-dark.png\" />\n  <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/triage-light.png\" />\n  <img alt=\"Fleet sidebar showing Triage inbox, gate readiness, and swarm plan\" src=\"docs/screenshots/triage-light.png\" width=\"380\" />\n</picture>\n\n</div>\n\n---\n\n## Sidebar gallery\n\nFleet lays out cleanly from a `340px` to `380px` auxiliary sidebar up to `1440px` desktop views. It listens for Antigravity `theme-change` luminance updates and keeps the manual Light and Dark switch inside Settings.\n\n<table>\n  <tr>\n    <td align=\"center\" width=\"25%\">\n      <strong>Triage and plan</strong><br />\n      <picture>\n        <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/triage-dark.png\" />\n        <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/triage-light.png\" />\n        <img alt=\"Triage view\" src=\"docs/screenshots/triage-light.png\" width=\"220\" />\n      </picture>\n    </td>\n    <td align=\"center\" width=\"25%\">\n      <strong>Board and pins</strong><br />\n      <picture>\n        <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/board-dark.png\" />\n        <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/board-light.png\" />\n        <img alt=\"Board feed view\" src=\"docs/screenshots/board-light.png\" width=\"220\" />\n      </picture>\n    </td>\n    <td align=\"center\" width=\"25%\">\n      <strong>Roster and telemetry</strong><br />\n      <picture>\n        <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/roster-dark.png\" />\n        <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/roster-light.png\" />\n        <img alt=\"Roster telemetry view\" src=\"docs/screenshots/roster-light.png\" width=\"220\" />\n      </picture>\n    </td>\n    <td align=\"center\" width=\"25%\">\n      <strong>Git worktrees</strong><br />\n      <picture>\n        <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/worktrees-dark.png\" />\n        <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/worktrees-light.png\" />\n        <img alt=\"Git worktrees view\" src=\"docs/screenshots/worktrees-light.png\" width=\"220\" />\n      </picture>\n    </td>\n  </tr>\n</table>\n\n<p align=\"center\">\n  <strong>Board channels, Roster controls, and conflict hardening</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/hardening-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/hardening-light.png\" />\n    <img alt=\"Fleet Triage 409 Reload and merge plan editor alongside Git worktree dry-run conflict alerts\" src=\"docs/screenshots/hardening-light.png\" width=\"520\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Forensic transcript inspector</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/forensic-trace-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/forensic-trace-light.png\" />\n    <img alt=\"Fleet Forensic Transcript Inspector showing correlated tool arguments, stderr tracebacks, and backward pagination\" src=\"docs/screenshots/forensic-trace-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Model-aware spend, cache-hit economics, and 1M context ceilings</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/cost-economics-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/cost-economics-light.png\" />\n    <img alt=\"Fleet Roster and Token Burn Strip showing USD spend, cache-hit savings, and 1M versus 200k context ceilings\" src=\"docs/screenshots/cost-economics-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Cycle 3 E1 to E3 delta, transcript, and cost boundary hardening</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/hardening-c3-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/hardening-c3-light.png\" />\n    <img alt=\"Fleet v1.27.0 Roster showing live delta sync, token burn strip, 1M and 200k ceilings, and zero-token guard\" src=\"docs/screenshots/hardening-c3-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Closed-loop operator command queue and Switch Model guard</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/ops-control-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/ops-control-light.png\" />\n    <img alt=\"Fleet v1.28.0 Roster showing the Operator Command Queue with timed-out retry controls and the working-worker Switch Model guard\" src=\"docs/screenshots/ops-control-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Multi-swarm portfolio command drawer, triage ack/snooze, and swarm checkpoints</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/portfolio-checkpoints-c4e2-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/portfolio-checkpoints-c4e2-light.png\" />\n    <img alt=\"Fleet v1.29.0 sidebar showing the Portfolio Command Drawer, Triage Ack/Snooze, and Swarm Checkpoints with live diff comparison\" src=\"docs/screenshots/portfolio-checkpoints-c4e2-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Swarm worktree discovery, conflict hunk inspection, and non-FF landing</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/worktree-conflicts-c4e3-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/worktree-conflicts-c4e3-light.png\" />\n    <img alt=\"Fleet v1.30.0 sidebar showing swarmOwner worktree badges, mode=conflict hunks with 32 KiB pagination, Squash Merge, Merge Commit, and Send conflict to @owner\" src=\"docs/screenshots/worktree-conflicts-c4e3-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <strong>Cycle 4 H1 hardening across borders, RPC timeouts, and error recovery</strong><br />\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/screenshots/hardening-c4h1-dark.png\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/screenshots/hardening-c4h1-light.png\" />\n    <img alt=\"Fleet v1.31.0 sidebar showing crisp action button borders, Retry Rebase recovery, and Retry next 32 KiB conflict pagination\" src=\"docs/screenshots/hardening-c4h1-light.png\" width=\"380\" />\n  </picture>\n</p>\n\n---\n\n## What it does\n\nIn Triage, Fleet collects unanswered questions, blocked posts, quota pauses, stalled worker alerts, narrator `view.json` status, and normalized native or custom `plan.json` threads, tasks, and workstreams in one inbox, with persistent `Ack`, `Snooze` (until `#untilSeq`), `Unack`, and `Show acked` controls backed by `fleet_state.json`. A compact header Portfolio status pill opens the Portfolio Command Drawer (`GET /api/portfolio`), aggregating USD spend and token counts across active swarms, surfacing the cross-swarm urgent triage queue with `Jump to swarm`, gate state badges, and `Archive` / `Unarchive` toggles (`POST /api/swarm/archive`). A Checkpoints section (`GET/POST /api/checkpoints` and `POST /api/checkpoints/restore`) captures board heads, plans, members, and git worktree HEADs so operators can compare against live state, restore `plan.json` with CAS ETag protection, or copy and dispatch a continuation prompt. Operators edit goals, gates, tasks, and workstream statuses inline through atomic CAS `POST /api/plan` updates (using content-hash ETags and 3-way `Reload & merge` recovery on `409 Conflict`, plus optional coordinator notifications). Three header actions handle exports and handoffs: Copy Handoff Digest writes a sanitized Markdown summary (active goal, gate readiness, total USD spend, cache-hit rate, worker context and cost state, verified commits, blockers, and worktree readiness), while Archive .md and Archive .json download a sanitized Full Swarm Archive (`fleet.swarm-archive.v1` JSON or full Markdown transcript) without `/home/` path leaks. A worker attention strip surfaces idle, unread, and stalled workers with recovery prompts, filtered board jumps, and a 1-line `activityPeek` showing transcript tail status, tool summary, and age. When a live stream stalls or polling is paused, an inline SSE banner offers a 1-click Resync. A gate readiness card tracks `[done]`, `[verified]`, `[scale-verified]`, and `[blocked]` tags with a wave velocity pill, next-gate action button, gate verdict control (`verified`, `blocked`, or `ship`), and direct target jump. A bottleneck bar summarizes working, waiting, and blocked counts, and a model-aware token burn strip ranks workers by USD spend, reports cache-hit percentage and dollar savings, and plots each worker's share.\n\nTriage supports keyboard navigation (`j` and `k` to move, `o` or `Enter` to open chat, `p` to pin `#seq`, `r` to reply, `1` to `5` to switch tabs, `?` for help), inline activity peeks showing recent tool calls, unstick presets, `~/`-masked blocker copy buttons, and file openers through `window.sidecar.ui.toggleAuxPane`. Pressing `Ctrl+K` or `Cmd+K` opens the Command Palette across tabs, `@worker` board filters, worker chats, triage items, recent board posts, worktrees, active swarms, the Portfolio Command Drawer, checkpoints, Ack/Snooze actions, the New Swarm launcher, Spawn Worker, and Board Post actions. A New Swarm launcher button also sits in the header when a swarm is active.\n\nIn Board and Roster, an Operator Command Queue strip (`OperatorOpsStrip`) tracks every dispatched control operation and nudge from `fleet_ops.json` (a confined 64-entry ring buffer reconciled against `board.jsonl` `[opId=...]` citations, `members.json` state changes, `plan.json` updates, coordinator `ERROR_MESSAGE` logs, and 45s timeouts) with `Retry`, `Mark Verified`, `Dismiss`, and clickable `#seq` jump buttons. In Board, Fleet reads `board.jsonl` with channel filter tabs (`snap.channels`), an empty-channel fallback with quick reset controls, a Channel Manager drawer (`create`, `archive`, `subscribe`, `unsubscribe`), quick filters (`All`, `Needs reply`, `[done]`, `[blocked]`, cycled with `f`), server-persisted pinned posts (`POST /api/pins`), `#seq` quote replies, clickable `replyRefs` backlink chips (with filter recovery when jumping to hidden posts), a sticky confirmation-gated Board/Channel Composer (`channel` and `replyToSeq`), Markdown wave digests, and `.md` or `.json` board exports stripped of local `/home/` paths. In Roster, each worker card pairs duration badges, token breakdowns, model-aware USD spend (`Unpriced` for custom local models), cache-hit percentages, dynamic context saturation (`1M` for Gemini and 1M Claude variants, `400k` for GPT-5, `200k` for standard Claude and OpenAI o-series, and `128k` for GPT-4o), and an mtime-cached transcript tail `activityPeek` with worker recovery, filtered board jumps, an `Inspect trace` drawer (`ForensicTranscriptDrawer`), a Spawn Worker drawer, a Switch Model drawer (protecting active `working` workers with a `409 worker_not_waiting` guard and an explicit `Allow switch while working` override), a confirmation-gated Kill Worker flow (surfacing `409` unmerged worktree `dirtyFiles` and `ahead` warnings before Force kill), and a broadcast composer for `@all`, `working`, `waiting`, or custom worker subsets. Opening `Inspect trace` from Roster or Triage loads bounded pages from `GET /api/transcript` backwards (`All`, `Errors`, and `Tools` filters, paired `PLANNER_RESPONSE` tool arguments and `GENERIC` stderr tracebacks, `Load older steps` pagination, and scrubbed home paths and secrets). Board posts, channel operations, worker spawning, model switching, worker killing, and gate verdicts return immediately via non-blocking async RPC dispatch (`POST /api/control` and `POST /api/nudge` return `200` with `opId`, `status: \"dispatched\"`, and `coordinatorState`), surfacing coordinator health warnings when the coordinator is unavailable or paused. In Graph, a replayable `@mention` graph traces message flow across the swarm. In Git, Fleet auto-discovers workspace and active swarm member worktrees via `GET /api/worktrees?roots=...&conversationId=...` (`swarmOwner` badges with member status and workspace mode), flags overlapping `collisions` across active worktrees, shows recent commits and paginated (`<= 32 KiB` `nextOffset`/`hasMore`/`totalBytes`) `Working Changes`, `Branch Diff`, and `Conflict diff` hunks (`GET /api/worktrees/diff?mode=working|branch|conflict`), routes predicted or dry-run merge conflicts directly to the worktree owner with `Send conflict to @owner` (`POST /api/control`), and runs confirmation-gated `Dry-Run Merge`, `FF Merge`, `Rebase`, `Squash Merge`, `Merge Commit` (with optional `commitMessage` and automatic `409` abort on conflict), and clean `Remove` actions (`POST /api/worktrees/action`) with inline recovery hints.\n\nLive updates stream over `GET /api/swarm/stream` (`text/event-stream`) with ping heartbeats in standalone mode and pull incremental updates through `GET /api/swarm/delta` (`fs.watch` coalesced wakeup with a `125ms` fallback and `waitMs=20000` long-polling inside Antigravity's `SidecarApp` gateway, plus byte-offset `board.jsonl` tail caching and an `LRU=64` lightweight summary index in `swarm_store.mjs`). On startup, `main.mjs` binds the HTTP listener and answers `/api/health` immediately before lazily loading `server_core.mjs` (`swarm_store.mjs`, `git_probe.mjs`, and gzip caches) and `--jitless` V8 tuning flags after socket bind. When zero SSE clients are connected, `server_core.mjs` enters `idleSleep` and clears background polling timers until the next request or stream connection, serves cached `/api/worktrees` responses synchronously on cache hit, reads only the trailing 8 KB of each `transcript.jsonl` into a shared buffer for `activityPeek`, accumulates per-model `byModel` token and USD spend incrementally across model switches, scans transcript pages backwards in bounded `<= 512 KiB` slices on `GET /api/transcript`, and tails full history incrementally in 32 KB chunks without retaining parsed board graphs in memory.\n\n---\n\n## Architecture\n\n```mermaid\nflowchart LR\n    Host[\"Antigravity Host<br/>(Aux Side Pane + /preload.js)\"] <-->|\"SidecarApp RPC + theme-change<br/>toggleConversation / toggleAuxPane\"| Backend[\"Fleet Sidecar Bootstrap<br/>(sidecars/fleet_pane/main.mjs)\"]\n    UI[\"Embedded Sidebar SPA<br/>(435.8 KiB raw / 128.0 KiB gz)\"] <-->|\"GET /api/swarm/stream (SSE)<br/>+ /api/swarm/delta + /api/portfolio + /api/checkpoints\"| Backend\n    Backend -->|\"Lazy Route + Store Load\"| Core[\"server_core.mjs + swarm_store.mjs\"]\n    Core -->|\"Collision, Merge-Tree & Worktree Actions\"| Git[\"git_probe.mjs\"]\n    Core -.->|\"Read-Only 8 KB Tail + Scan\"| Brain[\"~/.gemini/antigravity/brain/&lt;conv&gt;<br/>.system_generated/{swarm,logs}\"]\n    Git -.->|\"git status + rev-list + bounded diff\"| WT[\"Workspace Git Worktrees\"]\n```\n\n---\n\n## Verified benchmarks\n\nMeasured under `#154` CPU isolation (`taskset -c 24-31`, 16 concurrent polling clients) on a 2,000-board-post and 50,000-transcript-line stress fixture:\n\n| Metric | v1.29.0 | v1.30.0 | **v1.31.0** |\n| --- | --- | --- | --- |\n| Embedded sidecar UI (`/`) | `429,110 B` raw (`419.1 KiB`) / `127,122 B` gz (`124.1 KiB`) | `435,483 B` raw (`425.3 KiB`) / `128,851 B` gz (`125.8 KiB`) | **`446,260 B` raw (`435.8 KiB`) / `131,034 B` gz (`128.0 KiB`)** |\n| Cold boot & RSS (`16w` audit) | `52.36 ms` / `109.61 MB` (`ETag 304`) | `49.11 ms` / `115.29 MB` (`ETag 304`) | **`37.64 ms` / `118.38 MB` (`ETag 304`)** |\n| Cold audit HTTP (`16w` close) | `1,584.9 req/s` / `14.81 ms` p95 (`0/3,975` errors) | `1,776.7 req/s` / `12.95 ms` p95 (`0/4,449` errors) | **`1,765.1 req/s` / `17.3 ms` p95 (`0/4,423` errors)** |\n| Simultaneous SSE (`x5` streams) | `5/5` (`0` drops) | `5/5` (`0` drops) | **`5/5` (`0` drops)** |\n| Raw-TCP fuzz & backend tests | `30/30` fuzz + `47/47` unit | `30/30` fuzz + `49/49` unit | **`30/30` fuzz + `52/52` unit** |\n| E2E gate, replay, and Sloplint | `72/72` + `8/8` + `30/30` live-web + `0 FAIL / 0 WARN` | `72/72` + `8/8` + `30/30` live-web + `0 FAIL / 0 WARN` | **`74/74` + `8/8` + `30/30` live-web + `0 FAIL / 0 WARN`** |\n\n---\n\n## Quick start\n\nInstall the plugin into `~/.gemini/config/plugins/fleet/`:\n\n```bash\n./install.sh\n```\n\nOpen Antigravity Customizations (`customization://fleet`) to enable `fleet`, then open the side pane (`sidecar://fleet/fleet_pane/`) or run `/fleet` in chat to start a tracked swarm.\n\n> Note: Fleet became an Antigravity sidecar plugin in `v1.0.0`. The older standalone Rust binary remains at git tag `v0.12.0`.\n\n---\n\n## Security model\n\nThe sidecar binds strictly to `127.0.0.1`, validates loopback `Host` headers (`403` otherwise), and checks `Origin` headers on mutating `POST` requests (`403`). Oversized request bodies fail early with `413 Payload Too Large` (`16 KiB` on worktree actions, `64 KiB` on plan writes and `/api/control`). `GET /api/frame` resolves paths with `realpath` inside `<appData>/brain/` and checks that each image appears on the board or `view.json`. `GET /api/transcript` resolves the member's `conversation_id` solely through `members.json` and `realpathSync` confinement under `<appData>/brain/<memberConv>/.system_generated/logs/transcript.jsonl` (`400`/`404` on traversal, symlink escape, or missing member), scrubs `/home/` paths and secret tokens across text and tool payloads, and caps returned text and output previews. `git_probe.mjs` executes git via `execFile` without shell interpolation, confines diffs and `POST /api/worktrees/action` to resolved worktrees inside the repository, refuses dirty or unmerged removals, and clears `uri` for escaping symlinks. `POST /api/control` requires `confirm: true`, resolves the swarm coordinator conversation (`404` if missing, `501` outside live SidecarApp runtime), blocks unconfirmed kills of protected roles (`coordinator`, `narrator`, `monitor`), and returns `409 Conflict` with `dirtyFiles` and `ahead` counts before killing a worker with an unmerged worktree unless `forceUnmerged: true` is set. All nudges, broadcasts, control directives, and destructive worktree actions require user confirmation, external network requests are blocked by CSP, and every response carries `X-Content-Type-Options: nosniff` and `Referrer-Policy: no-referrer`.\n\n---\n\n## Development and verification\n\n```bash\ncd sidecars/fleet_pane && npm test\ncd ../../frontend && npm ci && npm run build:live-web\nnpm run check:ui -- --lints\nnode e2e/test-live-web.mjs\n```\n",
+  "latestReleaseNotes": "Fleet v1.31.0 hardens JSON recovery, portfolio caching, git worktree probing, HTTP confinement, and sidebar error recovery across the Node sidecar and React UI inside Antigravity's auxiliary side pane.\n\n### What changed\n\nOn the sidecar backend, `sidecars/fleet_pane/{swarm_store,git_probe,server_core,main}.mjs` strip UTF-8 BOMs from `fleet_ops.json` and `fleet_state.json`, bound file descriptor reads with `O_NOFOLLOW` and `fstatSync` size caps, keep valid sibling ops and checkpoints when skipping corrupt entries, and serialize writes with unique temporary files and 64-entry retention caps. `scanSwarmIds` and `streamLinesIncremental` exclude symlinks with `lstatSync`, and `portfolioCache` validates swarm signatures before reusing cached summaries. Concurrent git probes are capped at 4 (`GIT_CONCURRENCY = 4`), `SIGKILL` git timeouts return `504`, symlinked `.git` directories are rejected, unborn repositories, detached HEADs, missing branches, and Unicode paths (`core.quotepath=false`, `GIT_OPTIONAL_LOCKS=0`) resolve cleanly, and loopback `Host`, `Origin`, and path-traversal checks enforce `400` and `403` guards.\n\nOn the React sidebar frontend, `frontend/src/{index.css,ui.tsx,sidecar.ts,App.tsx}`, `frontend/src/components/{WorktreesView,TriageView}.tsx`, `frontend/vite.config.ts`, and `frontend/e2e/gate.mjs` move base component rules into `@layer components` with explicit variant borders so `Rebase` and worktree action buttons keep 1px borders in Light and Dark themes. All sidecar RPCs use `fetchWithTimeout` and `AbortSignal`, stalled or failed worktree actions and `Retry next 32 KiB` diff pagination provide `Abort` and `Retry` controls, worktree, portfolio, and checkpoint errors offer inline `Retry` recovery, triage ack and checkpoint actions use same-tick locks, and pending `OperatorOpsStrip` entries show elapsed wait times.\n\n### Verified release metrics\n\nAll checks ran against `02c0011` under CPU isolation: `52/52` backend unit tests (`3,156.8 ms`), `74/74` Playwright gate checks, `8/8` replay checks, `30/30` `test-live-web.mjs` checks, `0 FAIL / 0 REFLEX / 0 WARN` Sloplint (`frontend/src` across 13 files and built `dist`, render tier ran), `446,260 B` raw / `131,034 B` gz sidecar HTML, `37.64 ms` cold boot, `118.38 MB` peak RSS, `1,765.1 req/s` (`17.3 ms` p95, `0/4,423` errors), `5/5` SSE streams (`0` drops), and `30/30` raw-TCP security fuzz checks.\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/check.mjs",
+        "line": 26,
+        "snippet": "execFileSync(\"bash\", [`${E2E}/lints.sh`, url, `${OUT}/lints`], { stdio: \"inherit\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/check.mjs#L26"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 52,
+        "snippet": "execFileSync(\"npm\", [\"run\", \"build\"], { cwd: path.join(ROOT, \"frontend\"), stdio: \"inherit\", });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L52"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 197,
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\", REPO_DIR], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L197"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 198,
+        "snippet": "execFileSync(\"git\", [\"-C\", REPO_DIR, \"config\", \"user.email\", \"test@fleet.local\"], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L198"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 199,
+        "snippet": "execFileSync(\"git\", [\"-C\", REPO_DIR, \"config\", \"user.name\", \"Fleet Test\"], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L199"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 201,
+        "snippet": "execFileSync(\"git\", [\"-C\", REPO_DIR, \"add\", \".\"], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L201"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 202,
+        "snippet": "execFileSync(\"git\", [\"-C\", REPO_DIR, \"commit\", \"-m\", \"Initial fixture commit\"], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L202"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 203,
+        "snippet": "execFileSync(\"git\", [\"-C\", REPO_DIR, \"worktree\", \"add\", \"-b\", \"lane/verify\", wtDir], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L203"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 211,
+        "snippet": "serverProc = spawn( \"node\", [path.join(ROOT, \"sidecars/fleet_pane/main.mjs\"), \"--port\", String(port), \"--app-data-dir\", appDataDir], { cwd: path.join(ROOT, \"sidecars/fleet_pane\"), ",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L211"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/scripts/web-engine.js",
+        "line": 1187,
+        "snippet": "while ((refMatch = reRef.exec(m.text)) !== null) {",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/scripts/web-engine.js#L1187"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "frontend/vite.config.ts",
+        "line": 165,
+        "snippet": "gz = execFileSync(\"gzip\", [\"-9\", \"-n\", \"-c\", outHtml]);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/vite.config.ts#L165"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/git_probe.mjs",
+        "line": 73,
+        "snippet": "execFile( 'git', ['-c', 'core.quotepath=false', '-C', cwd, ...args], { encoding: 'utf-8', timeout: effectiveTimeout, killSignal: 'SIGKILL', maxBuffer: 2 * 1024 * 1024, env: gitExec",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/git_probe.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/git_probe.mjs",
+        "line": 102,
+        "snippet": "const child = spawn('git', ['-c', 'core.quotepath=false', '-C', cwd, ...args], { stdio: ['ignore', 'pipe', 'pipe'], env: gitExecEnv(), });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/git_probe.mjs#L102"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/main.mjs",
+        "line": 21,
+        "snippet": "const m = /^(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::(\\d{1,5}))?$/.exec(host.trim().toLowerCase());",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/main.mjs#L21"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/server_core.mjs",
+        "line": 206,
+        "snippet": "const m = /^(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::(\\d{1,5}))?$/.exec(host.trim().toLowerCase());",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/server_core.mjs#L206"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 520,
+        "snippet": "const match = /^(narrator|monitor)(?:-\\d+)?$/.exec(String(name ?? ''));",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L520"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 531,
+        "snippet": "const match = NARRATOR_RE.exec(name) || /-(\\d+)$/.exec(name);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L531"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 3491,
+        "snippet": "const br = /Branch:\\s*`?([^\\s|`]+)`?/i.exec(text)?.[1];",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L3491"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 3492,
+        "snippet": "const cm = /Commit:\\s*`?([0-9a-f]{7,40})`?/i.exec(text)?.[1]?.slice(0, 8);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L3492"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 3909,
+        "snippet": "while ((match = REF_SEQ_RE.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L3909"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 4816,
+        "snippet": "while ((match = REF_SEQ_RE.exec(m.text)) !== null) {",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L4816"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 5251,
+        "snippet": "const m = /^Created At:\\s*([^\\r\\n]+)/m.exec(content);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L5251"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 5257,
+        "snippet": "const m = /^Completed At:\\s*([^\\r\\n]+)/m.exec(content);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L5257"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/check.mjs",
+        "line": 13,
+        "snippet": "fs.rmSync(OUT, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/check.mjs#L13"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 68,
+        "snippet": "if (fresh) fs.rmSync(scratch, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L68"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 88,
+        "snippet": "fs.writeFileSync(shotPath, makePngBytes());",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L88"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 90,
+        "snippet": "fs.writeFileSync( path.join(swDirA, \"members.json\"), JSON.stringify({ title: \"Release 1.0 Sidebar\", members: { coordinator: { conversation_id: coordA, role: \"coordinator\", model: \"",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 103,
+        "snippet": "fs.writeFileSync( path.join(swDirA, \"plan.json\"), JSON.stringify({ title: \"Fleet v1.0\", goal: \"Verify Antigravity-native sidebar UX at 380px and 1440px\", gate: \"node --test && npm ",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L103"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 120,
+        "snippet": "fs.writeFileSync( path.join(swDirA, \"board.jsonl\"), [ JSON.stringify({ seq: 1, agent: \"coordinator\", text: \"@all Ship Fleet v1.0 sidecar plugin cleanly.\", time: \"2026-11-25 13:10:0",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L120"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 135,
+        "snippet": "fs.writeFileSync( path.join(appDataDir, \"brain\", builderA, \".system_generated\", \"logs\", \"transcript.jsonl\"), [ JSON.stringify({ step_index: 0, type: \"PLANNER_RESPONSE\", model: \"gem",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L135"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 163,
+        "snippet": "fs.writeFileSync( path.join(appDataDir, \"brain\", verifierA, \".system_generated\", \"logs\", \"transcript.jsonl\"), JSON.stringify({ step_index: 0, type: \"PLANNER_RESPONSE\", model: \"gemi",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L163"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 179,
+        "snippet": "fs.writeFileSync( path.join(swDirB, \"members.json\"), JSON.stringify({ title: \"Docs & Changelog Polish\", members: { coordinator: { conversation_id: coordB, role: \"coordinator\", wake",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L179"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 188,
+        "snippet": "fs.writeFileSync( path.join(swDirB, \"board.jsonl\"), JSON.stringify({ seq: 1, agent: \"coordinator\", text: \"Updated README for v1.0.0 plugin.\", time: \"2026-11-25 12:00:00\" }) + \"\\n\",",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L188"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 200,
+        "snippet": "fs.writeFileSync(path.join(REPO_DIR, \"README.md\"), \"# Fleet Repo\\n\");",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L200"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 204,
+        "snippet": "fs.writeFileSync(path.join(wtDir, \"untracked.txt\"), \"dirty\\n\");",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L204"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/fixture.mjs",
+        "line": 222,
+        "snippet": "const r = await fetch(`${BASE}/api/health`);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/fixture.mjs#L222"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/gate.mjs",
+        "line": 537,
+        "snippet": "const r = await fetch(\"/api/swarm/delta?conversationId=11111111-1111-1111-1111-111111111111&since=0\");",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/gate.mjs#L537"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 330,
+        "snippet": "await fetch(\"/api/plan\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ confirm: true, conversationId: \"demo-native-0011\", ifMatch: \"plan",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L330"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 555,
+        "snippet": "const fullRes = await fetch(\"/api/swarm/delta?conversationId=demo-coord-0001&since=0\");",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L555"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 557,
+        "snippet": "const unchRes = await fetch(`/api/swarm/delta?conversationId=demo-coord-0001&since=${fullJson.head}&etag=${encodeURIComponent(fullJson.etag)}&waitMs=0`);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L557"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 561,
+        "snippet": "const parkedPromise = fetch(`/api/swarm/delta?conversationId=demo-coord-0001&since=${fullJson.head}&etag=${encodeURIComponent(fullJson.etag)}&waitMs=5000`).then((r) => r.json());",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L561"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 563,
+        "snippet": "await fetch(\"/api/control\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ confirm: true, op: \"board_post\", conversationId: \"demo-coord-0",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L563"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 678,
+        "snippet": "await fetch(\"/api/control\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ confirm: true, op: \"spawn_worker\", conversationId: \"demo-audit",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L678"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 742,
+        "snippet": "const r = await fetch(\"/api/ops?conversationId=demo-audit-0009\");",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L742"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 768,
+        "snippet": "const r = await fetch(\"/api/control\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ confirm: true, op: \"switch_model\", conversationId: \"",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L768"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 825,
+        "snippet": "await fetch(\"/api/control\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ confirm: true, op: \"board_post\", conversationId: \"demo-audit-0",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L825"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/e2e/test-live-web.mjs",
+        "line": 898,
+        "snippet": "const res = await fetch(\"/api/pins\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({ confirm: true, conversationId: \"demo-coord-0001\", seq",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/e2e/test-live-web.mjs#L898"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/scripts/build-live-web.mjs",
+        "line": 37,
+        "snippet": "fs.writeFileSync(outFile, html);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/scripts/build-live-web.mjs#L37"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "frontend/src/sidecar.ts",
+        "line": 77,
+        "snippet": "sc()?.fetch?.(url, init) ?? fetch(url, init);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/src/sidecar.ts#L77"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/vite.config.ts",
+        "line": 162,
+        "snippet": "fs.writeFileSync(outHtml, html);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/vite.config.ts#L162"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "frontend/vite.config.ts",
+        "line": 169,
+        "snippet": "fs.writeFileSync(`${outHtml}.gz`, gz);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/frontend/vite.config.ts#L169"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 185,
+        "snippet": "writeFileSync(tmpPath, content, 'utf-8');",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L185"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/fleet_pane/swarm_store.mjs",
+        "line": 191,
+        "snippet": "unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/cayleb-james2008/fleet/blob/02c0011161e5881d98c661a97bd05addd13deee9/sidecars/fleet_pane/swarm_store.mjs#L191"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.31.0",
+      "sha": "02c0011161e5881d98c661a97bd05addd13deee9",
+      "scannedAt": "2026-11-27T18:15:58.918Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

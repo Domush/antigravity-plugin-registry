@@ -1,0 +1,399 @@
+{
+  "schemaVersion": 1,
+  "id": "Aludel/antigravity-pdf-reader",
+  "sha": "911ee25f3619723944b94741f3bc8abf82923092",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:07.495Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "pdf-reader",
+    "displayName": "PDF Reader",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "pdf_reader_mcp",
+        "runtimeName": "pdf-reader_pdf_reader_mcp",
+        "transport": "stdio",
+        "command": "bash",
+        "args": [
+          "${PLUGIN_ROOT}/bin/run-mcp-server.sh"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "pdf-reader",
+        "slashCommand": "/pdf-reader",
+        "description": "Read, search, explain, and take structured notes on local PDFs with `pdf-reader` across Antigravity, Claude Desktop, and DeepSeek Harness (`dsh`). Activate whenever the user asks about a PDF, paper, textbook, or slide deck (\"this page / thi",
+        "disableModelInvocation": false,
+        "file": "skills/pdf-reader/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/pdf-reader"
+    ],
+    "mcpServerNames": [
+      "pdf-reader_pdf_reader_mcp"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"92\" alt=\"PDF Reader logo\">\n</p>\n\n<h1 align=\"center\">PDF Reader — Universal Agent Plugin</h1>\n\n<p align=\"center\">\n  <strong>Read local PDFs side-by-side with <em>Antigravity</em>, <em>Claude Desktop</em>, and <em>DeepSeek Harness</em> — highlight, switch to Night Mode, crop equations to ask your agent, and sync live to Typora / Markdown.</strong>\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/Aludel/antigravity-pdf-reader/releases/latest\"><img src=\"https://img.shields.io/github/v/release/Aludel/antigravity-pdf-reader?style=flat-square&color=2563eb\" alt=\"Release\"></a>\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-0ea5e9?style=flat-square\" alt=\"License: MIT\"></a>\n  <img src=\"https://img.shields.io/badge/Google-Antigravity-4285F4?style=flat-square\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Claude_Desktop-.mcpb-D97757?style=flat-square\" alt=\"Claude Desktop\">\n  <img src=\"https://img.shields.io/badge/DeepSeek_Harness-dsh%20%2F%20Cordis-4F46E5?style=flat-square\" alt=\"DeepSeek Harness\">\n  <img src=\"https://img.shields.io/badge/Typora-Live%20Sync-10b981?style=flat-square\" alt=\"Typora Live Sync\">\n</p>\n\n<p align=\"center\">\n  <strong>English</strong> · <a href=\"README.zh-CN.md\">简体中文</a>\n</p>\n\n<p align=\"center\">\n  <img src=\"assets/demo.svg\" width=\"100%\" alt=\"PDF Reader interactive workflow demo: Highlight, Night Mode, Crop & Ask, and Typora Live Sync\">\n</p>\n\n---\n\n## 🌐 Works Natively Across Three Agent Ecosystems\n\n| Host | Visual Reader Experience | MCP & Skill Integration | One-Step Install |\n| :--- | :--- | :--- | :--- |\n| **Google Antigravity** | Docked right-hand sidecar pane (`sidecar://pdf-reader/reader/`) | `plugin.json` + `mcp_config.json` + `SKILL.md` + `AGENTS.md` | `agy plugin install ...` or unzip `pdf-reader-v1.1.0.zip` |\n| **Claude Desktop** *(+ Claude Code)* | Local standalone `pdf.js` web reader (`http://127.0.0.1:18765`, auto-launched on `pdf_open`) | One-click `.mcpb` bundle (`manifest.json`) + `claude_desktop_config.json` + `~/.claude/skills` | Double-click `pdf-reader-v1.1.0.mcpb` or `bash bin/install.sh --target claude-desktop` |\n| **DeepSeek Harness (`dsh`)** | Local standalone `pdf.js` web reader (`http://127.0.0.1:18765`, auto-launched on `pdf_open`) | Cordis plugin (`package.json`) + `@deepseek-ai/dsh-mcp-client` (`cordis.patch.yml`) + `.agents/skills` | `bash bin/install.sh --target deepseek-harness` |\n\n---\n\n## ✨ Key Features\n\n- **Immersive `pdf.js` 5.4 Reader + Night Mode (`Dark Pages`)**: Smooth continuous reading with an auto-hiding frosted top bar, byte-range streaming for multi-hundred-MB textbooks, one-click **Dark Pages (Night Mode)** (`🌙`), per-book zoom memory, and automatic resume at your last-read page.\n- **4-Color Semantic Highlighter & Page Notes**: Mark passages as 🟨 **Key Point**, 🟥 **Hard**, 🟩 **Concept**, or 🟦 **Question**, attach inline comments, or press `H` for **Highlighter Pen Mode** (drag-select to highlight immediately, with full `⌘Z` / `⌘⇧Z` undo & redo).\n- **One-Click Ask, Explain, Translate & Formula Crop**:\n  - Select text or drag a **Crop** box around dense equations, figures, or tables.\n  - **In Antigravity**: Sends directly into the active chat pane and auto-syncs the agent's reply from the session transcript.\n  - **In Claude Desktop & DeepSeek Harness**: Queues the question + cropped PNG in `pdf_current().pending_qa` and copies the structured prompt to your clipboard (`⌘V`) — when the agent calls `pdf_save_answer`, its reply appears live in the Reader's **Q&A** tab and Markdown notes!\n- **Live Markdown & Typora Sync**: Every highlight, comment, page note, and Q&A pair syncs atomically into `~/Documents/PDF Notes/<Title>.md`, grouped by page while preserving your own handwritten summary block (`<!-- My Notes:start ... -->`). Click **Open in Typora** (`☰` or `⋯`) anytime.\n- **11-Tool MCP Server (`pdf_reader_mcp`)**: Gives any MCP-capable agent live awareness of your open PDF, current page, active text selection, high-DPI page renders (`pdf_page_image`), full-text search, and direct PDF highlighting.\n\n---\n\n## 🚀 Installation\n\n### Prerequisites (All Hosts)\n\n- **Node.js** >= 18 (zero `npm install` needed — uses built-in Node APIs only)\n- **Python 3** with `mcp` and `pymupdf` (or `uv` installed — the launcher auto-detects conda, Homebrew, system Python, or `uv run`):\n  ```bash\n  pip install -r requirements.txt\n  ```\n\n---\n\n### Quick Install (Any or All Hosts)\n\nClone the repository anywhere and run the unified installer (automatically backs up existing configs before merging):\n\n```bash\ngit clone https://github.com/Aludel/antigravity-pdf-reader\ncd antigravity-pdf-reader\npip install -r requirements.txt\n\n# Install for all three hosts at once:\nbash bin/install.sh --target all\n\n# Or target a single host:\nbash bin/install.sh --target antigravity\nbash bin/install.sh --target claude-desktop\nbash bin/install.sh --target deepseek-harness\n```\n\n---\n\n### Host-Specific Setup Details\n\n#### 1. Claude Desktop (One-Click `.mcpb` Extension)\n\n1. Download **`pdf-reader-v1.1.0.mcpb`** from [Releases](https://github.com/Aludel/antigravity-pdf-reader/releases/latest).\n2. Double-click `pdf-reader-v1.1.0.mcpb` — or open **Claude Desktop → Settings → Extensions → Advanced settings → Install Extension…** and select the `.mcpb` file.\n3. Ask Claude: *\"Open `~/Downloads/paper.pdf` on page 4 with PDF Reader\"* — your browser opens the interactive reader side-by-side with Claude Desktop!\n\n*(Manual `claude_desktop_config.json` template is also provided in [`integrations/claude-desktop/claude_desktop_config.example.json`](integrations/claude-desktop/claude_desktop_config.example.json).)*\n\n#### 2. DeepSeek Harness (`dsh`)\n\n`bash bin/install.sh --target deepseek-harness` sets up everything automatically:\n- Copies `SKILL.md` into `~/.dsh/skills/pdf-reader/SKILL.md` and `~/.agents/skills/pdf-reader/SKILL.md` (and `.agents/skills/pdf-reader/SKILL.md` is bundled in-repo for workspace auto-discovery).\n- Registers `pdf_reader_mcp` via `@deepseek-ai/dsh-mcp-client` in `~/.dsh/cordis.patch.yml` ( exposing `mcp__pdf_reader_mcp__pdf_open`, `mcp__pdf_reader_mcp__pdf_current`, etc.) and writes `~/.dsh/mcp.json`.\n- Also exports a native Cordis plugin entry (`integrations/deepseek-harness/index.mjs` via root `package.json`). See [`integrations/deepseek-harness/cordis.patch.yml`](integrations/deepseek-harness/cordis.patch.yml) for manual profile patching (`~/.dsh/profiles/web/cordis.patch.yml`).\n\n#### 3. Google Antigravity\n\n```bash\n# Option A: agy CLI\nagy plugin install https://github.com/Aludel/antigravity-pdf-reader\n\n# Option B: Release zip\nmkdir -p ~/.gemini/config/plugins\nunzip pdf-reader-v1.1.0.zip -d ~/.gemini/config/plugins/\n```\n\n---\n\n## ⌨️ Controls & Shortcuts\n\n| Action | Shortcut / Gesture |\n| :--- | :--- |\n| Previous / Next page, Jump to page | Scroll, `←` / `→`, or type a page number in the top bar and press `Enter` |\n| Zoom & Fit mode | `⌘+` / `⌘-`, trackpad pinch, `⌘0` or click **Width / Page** (saved per document) |\n| Night Mode (`Dark Pages`) | Top-right `⋯` → **Dark Pages** |\n| Highlight selected text | Select text → click 🟨 **Key Point**, 🟥 **Hard**, 🟩 **Concept**, or 🟦 **Question** |\n| Highlighter Pen Mode | Click the pen icon or press `H` (drag-select highlights immediately; `Esc` or `⌘E` exits) |\n| Edit / Recolor / Delete / Follow up | Click any existing highlight on the page to open its popover |\n| Add a page note | Press `N`, or click **＋ Page Note** inside the `☰` Notes drawer |\n| Undo / Redo annotations | `⌘Z` / `⌘⇧Z` |\n| Ask / Explain / Translate selection | Select text → **Ask**, **Explain**, or **Translate** |\n| Crop equation / figure & ask | Press `/` (or click `?`) → **Capture** → **Crop** → drag box → `Enter` |\n| Open synced notes in Typora | `☰` drawer → **Open Notes in Typora** (or `⋯` → **Open Notes in Typora**) |\n\n---\n\n## 🛠️ MCP Tools (`pdf_reader_mcp`)\n\n| Tool | Description |\n| :--- | :--- |\n| `pdf_current` | Returns active PDF, current/visible pages, text selection, `host_mode`, and any queued `pending_qa` |\n| `pdf_open` | Opens a local PDF in Antigravity's sidecar pane or launches the standalone `pdf.js` web reader |\n| `pdf_read` | Extracts text for a page spec (`\"3\"`, `\"3-5\"`, `\"1,4,7-9\"`, `\"current\"`, `\"all\"`) |\n| `pdf_search` | Whitespace- and hyphen-tolerant full-text search with context snippets |\n| `pdf_outline` | Reads PDF metadata and built-in bookmark hierarchy |\n| `pdf_page_image` | Renders any page to PNG (returned as an MCP `Image`) for equations, figures, tables, or scans |\n| `pdf_notes` | Lists highlights, comments, page notes, and Q&A items |\n| `pdf_add_note` | Adds a page note or draws a colored highlight directly onto the PDF |\n| `pdf_edit_note` | Updates a note's comment/color or deletes it |\n| `pdf_save_answer` | Archives the agent's answer into the PDF's Q&A tab and synced Markdown file |\n| `pdf_export_notes` | Syncs the Markdown note file (`~/Documents/PDF Notes/<Title>.md`) and opens it in Typora or Finder |\n\n---\n\n## 📂 Repository Layout\n\n```text\nplugin.json                     Antigravity plugin manifest\nmanifest.json                   Claude Desktop .mcpb extension manifest\npackage.json                    DeepSeek Harness (dsh) / Cordis package manifest\n.claude-plugin/plugin.json      Claude Code plugin manifest\n.agents/skills/pdf-reader/      DeepSeek Harness workspace auto-discovered skill\nmcp_config.json                 Antigravity MCP server config\nbin/mcp-launcher.mjs            Cross-platform Python/uv auto-discovery stdio launcher\nbin/run-mcp-server.sh           POSIX shell launcher & CLI tool runner\nbin/install.sh                  Safe multi-host installer (--target antigravity|claude-desktop|deepseek-harness|all)\nserver/mcp_server.py            FastMCP server + standalone reader supervisor + Markdown store\nsidecars/reader/                Dual-mode pdf.js reader (Antigravity sidecar + standalone HTTP server)\nintegrations/                   Ready-to-use configs for Claude Desktop & DeepSeek Harness (cordis.patch.yml)\nskills/pdf-reader/SKILL.md      Cross-host agent skill instructions\nrules/AGENTS.md                 Always-on rule for <PDF_READER_REQUEST> prompts\nassets/                         Logo (logo.svg, icon.png) & 5-act camera-tracked showcase (demo.svg)\n```\n\n---\n\n## 📄 License\n\nPlugin source code is licensed under the [MIT License](LICENSE). Vendored `pdf.js` (`5.4.624`) remains under its original Apache-2.0 license — see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [CHANGELOG.md](CHANGELOG.md).\n",
+  "latestReleaseNotes": "Universal **v1.1.0** release of **PDF Reader** (`pdf-reader`) — now working natively across **Google Antigravity**, **Claude Desktop**, and **DeepSeek Harness (`dsh`)**!\n\n> 📖 Documentation: **[English](https://github.com/Aludel/antigravity-pdf-reader/blob/main/README.md)** · **[简体中文](https://github.com/Aludel/antigravity-pdf-reader/blob/main/README.zh-CN.md)**\n\n![PDF Reader Demo](https://raw.githubusercontent.com/Aludel/antigravity-pdf-reader/main/assets/demo.svg)\n\n## What's New in v1.1.0\n\n- **3-Host Native Support (`Antigravity` + `Claude Desktop` + `DeepSeek Harness`)**:\n  - **Claude Desktop**: One-click `.mcpb` Desktop Extension bundle (`pdf-reader-v1.1.0.mcpb`) + `.claude-plugin/plugin.json` + `~/.claude/skills`.\n  - **DeepSeek Harness (`dsh`)**: Cordis plugin (`package.json` + `integrations/deepseek-harness/index.mjs`), `@deepseek-ai/dsh-mcp-client` profile patch (`cordis.patch.yml`), and auto-discovered `.agents/skills/pdf-reader/SKILL.md`.\n  - **Google Antigravity**: Native docked right-hand sidecar pane + `pdf_reader_mcp`.\n- **Dual-Mode `pdf.js` Reader**: Automatically launches as a local standalone web reader (`http://127.0.0.1:18765`) when `pdf_open` is called from Claude Desktop or DeepSeek Harness — complete with 4-color highlights, **Night Mode (`Dark Pages`)**, formula crop capture, and **Typora Live Sync**.\n- **Cross-Host Q&A Archiving (`pdf_save_answer`)**: Questions asked in the standalone reader queue into `pdf_current().pending_qa` and copy to clipboard; `pdf_save_answer` writes the agent's Markdown explanation straight back to the Reader's **Q&A** tab and `~/Documents/PDF Notes/<Title>.md`.\n- **Unified Safe Installer (`bin/install.sh`)**: `bash bin/install.sh --target all` (backs up existing configs automatically).\n\n## Quick Install\n\n| Target | Asset / Command |\n| :--- | :--- |\n| **All Three Hosts** | `git clone https://github.com/Aludel/antigravity-pdf-reader && cd antigravity-pdf-reader && bash bin/install.sh --target all` |\n| **Claude Desktop** | Download **`pdf-reader-v1.1.0.mcpb`** below and double-click (or *Settings → Extensions → Install Extension…*) |\n| **DeepSeek Harness (`dsh`)** | `bash bin/install.sh --target deepseek-harness` |\n| **Google Antigravity** | `agy plugin install https://github.com/Aludel/antigravity-pdf-reader` or extract **`pdf-reader-v1.1.0.zip`** into `~/.gemini/config/plugins/` |\n\n## Checksums (SHA-256)\n\n- `pdf-reader-v1.1.0.mcpb`: `dd9325b0c9574e304fd27cb4ac8c7287bde0769c2793fb1fcbe9f4ac8555a38c`\n- `pdf-reader-v1.1.0.zip`: `ac6a12eb4bdfb43403c74d0bac2e7a8c1fe0c0980af360d65391c40cedb25148`\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/mcp-launcher.mjs",
+        "line": 35,
+        "snippet": "const r = spawnSync(py, ['-c', `import ${mod}`], { stdio: 'ignore', timeout: 5000 });",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/bin/mcp-launcher.mjs#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/mcp-launcher.mjs",
+        "line": 41,
+        "snippet": "const r = spawnSync(cmd, [bin], { encoding: 'utf-8', timeout: 3000 });",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/bin/mcp-launcher.mjs#L41"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/mcp-launcher.mjs",
+        "line": 78,
+        "snippet": "const child = spawn(cmd, args, { stdio: 'inherit', env: { ...env, PDF_READER_NODE: process.execPath }, });",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/bin/mcp-launcher.mjs#L78"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/mcp_server.py",
+        "line": 246,
+        "snippet": "subprocess.Popen( [node, str(READER_ENTRY), \"--standalone\"], stdin=subprocess.DEVNULL, stdout=lf, stderr=lf, env=env, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L246"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/mcp_server.py",
+        "line": 276,
+        "snippet": "return subprocess.run(cmd, capture_output=True, timeout=15).returncode == 0",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L276"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/mcp_server.py",
+        "line": 279,
+        "snippet": "return subprocess.run([\"explorer.exe\", \"/select,\", target], capture_output=True, timeout=15).returncode == 0",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L279"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "server/mcp_server.py",
+        "line": 283,
+        "snippet": "return subprocess.run([\"xdg-open\", dest], capture_output=True, timeout=15).returncode == 0",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L283"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/reader/app.js",
+        "line": 166,
+        "snippet": "const m = /^(.+?)\\s*\\(([^()]*[A-Za-z][^()]*)\\)\\s*$/.exec(t);",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/app.js#L166"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/reader/app.js",
+        "line": 1747,
+        "snippet": "const indentOf = (l) => /^\\s*/.exec(l)[0].replace(/\\t/g, ' ').length;",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/app.js#L1747"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/reader/app.js",
+        "line": 1763,
+        "snippet": "const m = LIST_RE.exec(line);",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/app.js#L1763"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/reader/app.js",
+        "line": 1808,
+        "snippet": "const h = /^(#{1,6})\\s+(.*)$/.exec(line);",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/app.js#L1808"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/reader/main.mjs",
+        "line": 129,
+        "snippet": "execFile(file, args, { timeout }, (err, stdout, stderr) => { resolve({ ok: !err, stdout: String(stdout || ''), stderr: String(stderr || ''), error: err }); });",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/main.mjs#L129"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/mcp_server.py",
+        "line": 118,
+        "snippet": "tmp.write_text(text, \"utf-8\")",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L118"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "server/mcp_server.py",
+        "line": 219,
+        "snippet": "with urllib.request.urlopen(req, timeout=0.6) as resp:",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L219"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/mcp_server.py",
+        "line": 245,
+        "snippet": "with open(log_file, \"ab\") as lf:",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L245"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/mcp_server.py",
+        "line": 307,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L307"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/mcp_server.py",
+        "line": 312,
+        "snippet": "with open(path, \"rb\") as f:",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L312"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "server/mcp_server.py",
+        "line": 1193,
+        "snippet": "out.write_bytes(png)",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/server/mcp_server.py#L1193"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/reader/app.js",
+        "line": 201,
+        "snippet": "return fetch(path, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' } });",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/app.js#L201"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/reader/lib/store.mjs",
+        "line": 75,
+        "snippet": "writeFileSync(tmp, text, 'utf-8');",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/lib/store.mjs#L75"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/reader/lib/store.mjs",
+        "line": 351,
+        "snippet": "writeFileSync(tmp, buf);",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/lib/store.mjs#L351"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/reader/lib/store.mjs",
+        "line": 644,
+        "snippet": "try { unlinkSync(mdPath); } catch {}",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/lib/store.mjs#L644"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/reader/main.mjs",
+        "line": 375,
+        "snippet": "if (!existsSync(target)) writeFileSync(target, buf);",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/main.mjs#L375"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/reader/main.mjs",
+        "line": 664,
+        "snippet": "try { unlinkSync(STANDALONE_FILE); } catch {}",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/main.mjs#L664"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/reader/main.mjs",
+        "line": 674,
+        "snippet": "if (cur && cur.pid === process.pid) unlinkSync(STANDALONE_FILE);",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/main.mjs#L674"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/reader/vendor/pdfjs/build/pdf.min.mjs",
+        "line": 25,
+        "snippet": "*/const t=!(\"object\"!=typeof process||process+\"\"!=\"[object process]\"||process.versions.nw||process.versions.electron&&process.type&&\"browser",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/vendor/pdfjs/build/pdf.min.mjs#L25"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/reader/vendor/pdfjs/build/pdf.worker.min.mjs",
+        "line": 25,
+        "snippet": "*/const e=!(\"object\"!=typeof process||process+\"\"!=\"[object process]\"||process.versions.nw||process.versions.electron&&process.type&&\"browser",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/vendor/pdfjs/build/pdf.worker.min.mjs#L25"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/reader/vendor/pdfjs/wasm/openjpeg_nowasm_fallback.js",
+        "line": 4,
+        "snippet": "function instantiate(Aa){var a;var b=new Uint8Array(123);for(var c=25;c>=0;--c){b[48+c]=52+c;b[65+c]=c;b[97+c]=26+c}b[43]=62;b[47]=63;functi",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/vendor/pdfjs/wasm/openjpeg_nowasm_fallback.js#L4"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "sidecars/reader/vendor/pdfjs/web/pdf_viewer.mjs",
+        "line": 3744,
+        "snippet": "const text = \"pdfjs-previous-button =\\n .title = Previous Page\\npdfjs-previous-button-label = Previous\\npdfjs-next-button =\\n .title = Next ",
+        "githubBlobUrl": "https://github.com/Aludel/antigravity-pdf-reader/blob/911ee25f3619723944b94741f3bc8abf82923092/sidecars/reader/vendor/pdfjs/web/pdf_viewer.mjs#L3744"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "911ee25f3619723944b94741f3bc8abf82923092",
+      "scannedAt": "2026-11-27T18:16:07.495Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

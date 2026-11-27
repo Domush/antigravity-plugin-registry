@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "id": "toniette/egm-conductor",
+  "sha": "be831365b08df306c8032decf1bb053d20580301",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:20:58.284Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "egm-conductor",
+    "displayName": "EGM Conductor",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "egm-orchestrator",
+        "slashCommand": "/egm-orchestrator",
+        "description": "Operational playbook for EGM Conductor covering automatic intent routing, workspace parameter inference, adaptive review presets, and chaining across the 7 skills and 10 Goldfish personas of the Elephant-Goldfish Model (EGM) plugin.",
+        "disableModelInvocation": false,
+        "file": "skills/egm-orchestrator/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/egm-orchestrator"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# EGM Conductor\n\nAn Antigravity orchestrator plugin for the [Elephant-Goldfish Model (EGM)](https://github.com/google/elephant-goldfish-model). It turns natural-language prompts into the right EGM skills, adaptive presets, and isolated Goldfish reviews while eliminating repetitive manual intake.\n\n## Prerequisites\n\nInstall the official **Elephant-Goldfish Model (`egm`)** plugin first:\n\n```sh\nagy plugin install https://github.com/google/elephant-goldfish-model\n```\n\n## Install\n\n```sh\nagy plugin install https://github.com/toniette/egm-conductor\n```\n\n## What It Includes\n\n- **Always-on orchestration rule (`rules/AGENTS.md`)**: Gives the primary agent the **EGM Conductor** persona, strict spec-first triage, discreet 1-line routing status (`[EGM → ...]`), and strict preservation of the *Elephant* vs. *Goldfish* memory boundary.\n- **Operational playbook (`skills/egm-orchestrator/SKILL.md`)**: Progressively loaded routing table covering all 7 EGM skills (`egm-brainstorm`, `egm-draft`, `egm-review`, `egm-review-loop`, `egm-resolve`, `egm-bootstrap`, `egm-drift-report`), silent workspace probing, adaptive `egm-review` presets, and automatic post-review chaining into `egm-resolve`.\n\n## Behavior Summary\n\n- **Language-adaptive**: Responds in the user's prompt language; writes design artifacts in the repository's predominant language (defaulting to English for new projects).\n- **Strict spec-first triage**: Routes logic changes and multi-file work through EGM; bypasses EGM only for direct questions and trivial few-line edits.\n- **Maximum fluidity**: Auto-infers `TargetFile`, `GoldfishContext`, `Step`, and `Reviewers` from the workspace and pauses only at mandatory EGM gates (brainstorm readiness, architectural trade-offs, and `>15` subdirectories in `egm-bootstrap`).\n- **Adaptive review + auto-triage**: Uses `Step=uninterrupted` for complete design docs and `Step=feature_spec` when no implementation plan exists yet, then automatically runs `egm-resolve` so findings arrive categorized (`PROPOSE FIX`, `CONTEST`, `ESCALATE`, `DECLINE`).\n\n## License\n\n[Apache 2.0](LICENSE)\n",
+  "latestReleaseNotes": "Initial public release of **EGM Conductor**, an autonomous orchestrator plugin for the Elephant-Goldfish Model (EGM) in Google Antigravity.\n\n### Included\n- Always-on orchestration rule (`rules/AGENTS.md`) with strict spec-first triage, discreet routing status, and language-adaptive responses.\n- Operational playbook skill (`skills/egm-orchestrator/SKILL.md`) covering all 7 EGM skills, silent workspace probing, adaptive `egm-review` presets, and automatic post-review chaining into `egm-resolve`.\n- Validated with `agy plugin validate`.\n\n### Install\n```sh\nagy plugin install https://github.com/toniette/egm-conductor\n```",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/egm-orchestrator/SKILL.md",
+        "line": 45,
+        "snippet": "1. `./concepts_brief.md` (default output of `egm-brainstorm`).",
+        "githubBlobUrl": "https://github.com/toniette/egm-conductor/blob/be831365b08df306c8032decf1bb053d20580301/skills/egm-orchestrator/SKILL.md#L45"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/egm-orchestrator/SKILL.md",
+        "line": 46,
+        "snippet": "2. `./design_draft.md` (default output of `egm-draft`).",
+        "githubBlobUrl": "https://github.com/toniette/egm-conductor/blob/be831365b08df306c8032decf1bb053d20580301/skills/egm-orchestrator/SKILL.md#L46"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/egm-orchestrator/SKILL.md",
+        "line": 47,
+        "snippet": "3. `./docs/designs/` (versioned design specs and `SITEMAP.md`).",
+        "githubBlobUrl": "https://github.com/toniette/egm-conductor/blob/be831365b08df306c8032decf1bb053d20580301/skills/egm-orchestrator/SKILL.md#L47"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/egm-orchestrator/SKILL.md",
+        "line": 58,
+        "snippet": "| Turn a brief or notes into a design doc | `egm-draft` | `Context File`: `./concepts_brief.md` (if present) or conversation notes. Pause section-by-section only at architectural d",
+        "githubBlobUrl": "https://github.com/toniette/egm-conductor/blob/be831365b08df306c8032decf1bb053d20580301/skills/egm-orchestrator/SKILL.md#L58"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/egm-orchestrator/SKILL.md",
+        "line": 59,
+        "snippet": "| Review a design doc (general request) | `egm-review` | `TargetFile`: `./design_draft.md` or referenced doc. **Adaptive mode**: if a `## Detailed Implementation Plan` (or synonym)",
+        "githubBlobUrl": "https://github.com/toniette/egm-conductor/blob/be831365b08df306c8032decf1bb053d20580301/skills/egm-orchestrator/SKILL.md#L59"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "be831365b08df306c8032decf1bb053d20580301",
+      "scannedAt": "2026-11-27T18:20:58.284Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

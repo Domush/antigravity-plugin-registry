@@ -1,0 +1,907 @@
+{
+  "schemaVersion": 1,
+  "id": "Souma-Sumire/antigravity-zh-cn",
+  "sha": "11a29c03c6838e33a68c90069c21a21326f2f51e",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:48.622Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "zh-cn-ui",
+    "displayName": "简体中文 UI 语言包",
+    "version": "1.2.3",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "zh-cn-ui-manager",
+        "slashCommand": "/zh-cn-ui-manager",
+        "description": "管理 Google Antigravity（反重力）2.0+ 简体中文 UI 语言包插件（zh-CN Chinese localization）。零依赖支持 Windows、macOS 与 Linux 跨平台部署，覆盖安装、更新、完整无痕卸载、实时热注入与中英文切换、自定义词条扩展及客户端更新后的启动 Hook 自愈修复。当用户要求安装、汉化界面、更新、卸载、切换中英文或排查汉化状态时调用。",
+        "disableModelInvocation": false,
+        "file": "skills/zh-cn-ui-manager/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/zh-cn-ui-manager"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity 汉化补丁\n\n## 快速安装\n\n向 Agent 发送以下提示词即可：\n\n- `安装 Antigravity 汉化补丁：https://github.com/Souma-Sumire/antigravity-zh-cn`\n\n> Agent 执行规范详见 [AGENTS.md](AGENTS.md)。\n",
+  "latestReleaseNotes": "## 特性概览\r\n\r\n- 遵循 Antigravity 官方插件规范（`plugin.json` / `hooks.json` / `skills` / `sidecars`），零第三方依赖支持 Windows、macOS 与 Linux\r\n- 支持实时热注入与中英文切换（CDP 端口可用时无需退出客户端）\r\n- 多插件共存 `app.asar` 启动钩子与完整无痕卸载还原\r\n- 严格跳过代码编辑器、终端、输入框与 Markdown 输出区域，默认不修改历史会话数据库\r\n\r\n## 快速使用\r\n\r\n克隆仓库后执行 `node install.js`，或直接向 Antigravity Agent 发送仓库链接并按 `AGENTS.md` 执行安装与卸载。",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "dynamic_code_exec",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 126,
+        "snippet": "while ((m = propRegex.exec(code)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L126"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 132,
+        "snippet": "while ((m = attrRegex.exec(code)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L132"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 138,
+        "snippet": "while ((m = jsxRegex.exec(code)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L138"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 144,
+        "snippet": "while ((m = menuActionRegex.exec(code)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L144"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 150,
+        "snippet": "while ((m = resolveRegex.exec(code)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L150"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 154,
+        "snippet": "while ((sm = strRegex.exec(body)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L154"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 161,
+        "snippet": "while ((m = ternaryRegex.exec(code)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L161"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 165,
+        "snippet": "while ((sm = innerStrRegex.exec(expr)) !== null) {",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L165"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "scripts/extract_untranslated.js",
+        "line": 185,
+        "snippet": "const exactMap = vm.runInNewContext('(' + mapCode + ')', Object.create(null), { timeout: 3000 });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L185"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install_all.js",
+        "line": 123,
+        "snippet": "execFileSync(process.execPath, [path.join(targetPluginDir, 'scripts', 'install_boot_hook.js'), '--force'], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_all.js#L123"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install_all.js",
+        "line": 149,
+        "snippet": "execFileSync(process.execPath, [path.join(targetPluginDir, 'scripts', 'inject_live.js'), 'zh'], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_all.js#L149"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 160,
+        "snippet": "const plistRaw = execFileSync('/usr/bin/plutil', ['-convert', 'json', '-o', '-', infoPlistPath], { encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L160"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 165,
+        "snippet": "execFileSync( '/usr/bin/plutil', ['-replace', 'ElectronAsarIntegrity.Resources/app\\\\.asar.hash', '-string', headerHash, infoPlistPath], { stdio: 'ignore' } );",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L165"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 177,
+        "snippet": "execFileSync('/usr/bin/codesign', ['--force', '--deep', '--sign', '-', appBundleDir], { stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L177"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/main_boot_hook.js",
+        "line": 844,
+        "snippet": "const child = spawn(sysNode, ['-e', oneShotCode], { cwd: os.tmpdir(), detached: true, stdio: 'ignore', windowsHide: true });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/main_boot_hook.js#L844"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/plugin_updater.js",
+        "line": 60,
+        "snippet": "const regOut = execSync( 'reg query \"HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\"', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 2000",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/plugin_updater.js#L60"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/plugin_updater.js",
+        "line": 250,
+        "snippet": "execFile(cmd, args, { windowsHide: true, ...options }, (err, stdout, stderr) => { if (err) { const detail = (stderr || stdout || err.message || '').trim(); reject(new Error(detail ",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/plugin_updater.js#L250"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/session_hook.js",
+        "line": 68,
+        "snippet": "const child = spawn( process.execPath, ['-e', runnerCode], { cwd: os.tmpdir(), detached: true, stdio: 'ignore', windowsHide: true, env: Object.assign({}, process.env, { ELECTRON_RU",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/session_hook.js#L68"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 310,
+        "snippet": "db.exec('BEGIN TRANSACTION');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L310"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 339,
+        "snippet": "db.exec('COMMIT');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L339"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 343,
+        "snippet": "try { db.exec('ROLLBACK'); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L343"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 613,
+        "snippet": "db.exec('BEGIN TRANSACTION');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L613"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 633,
+        "snippet": "db.exec('COMMIT');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L633"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 637,
+        "snippet": "try { db.exec('ROLLBACK'); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L637"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "uninstall.js",
+        "line": 29,
+        "snippet": "execFileSync(process.execPath, [injectScript, 'en'], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/uninstall.js#L29"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "uninstall.js",
+        "line": 41,
+        "snippet": "execFileSync(process.execPath, [bootHookScript, '--uninstall'], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/uninstall.js#L41"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "uninstall.js",
+        "line": 144,
+        "snippet": "const child = spawn(process.execPath, ['-e', cleanupCode], { cwd: os.tmpdir(), detached: true, stdio: 'ignore', windowsHide: true });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/uninstall.js#L144"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/api_translator.js",
+        "line": 36,
+        "snippet": "fs.writeFileSync(CACHE_FILE, JSON.stringify(memoryCache, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L36"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/api_translator.js",
+        "line": 48,
+        "snippet": "fs.writeFileSync(CACHE_FILE, JSON.stringify(memoryCache, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L48"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 137,
+        "snippet": "const connectReq = http.request({ host: proxyConfig.host, port: proxyConfig.port, method: 'CONNECT', path: `${targetHost}:443`, timeout: 4000 });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L137"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 157,
+        "snippet": "const req = https.request( { host: targetHost, path: apiPath, method: 'POST', createConnection: () => tlsSocket, headers: { Host: targetHost, 'Content-Type': 'application/json', 'C",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L157"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 195,
+        "snippet": "const req = https.request( { host: targetHost, path: apiPath, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData), 'User-Ag",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L195"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 247,
+        "snippet": "const connectReq = http.request({ host: proxyConfig.host, port: proxyConfig.port, method: 'CONNECT', path: `${targetHost}:443`, timeout: 4000 });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L247"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 267,
+        "snippet": "const req = https.request( { host: targetHost, path: apiPath, createConnection: () => tlsSocket, headers: { Host: targetHost, 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x6",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L267"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 300,
+        "snippet": "const req = https.request( { host: targetHost, path: apiPath, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }, timeout: 5000 }, handleResp",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L300"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 353,
+        "snippet": "const connectReq = http.request({ host: proxyConfig.host, port: proxyConfig.port, method: 'CONNECT', path: `${targetHost}:443`, timeout: 4000 });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L353"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 373,
+        "snippet": "const req = https.request( { host: targetHost, path: apiPath, createConnection: () => tlsSocket, headers: { Host: targetHost, 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x6",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L373"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/api_translator.js",
+        "line": 406,
+        "snippet": "const req = https.request( { host: targetHost, path: apiPath, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }, timeout: 5000 }, handleResp",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/api_translator.js#L406"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 268,
+        "snippet": "fs.writeFileSync(outReportPath, JSON.stringify(untranslated, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L268"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 269,
+        "snippet": "fs.writeFileSync(outTemplatePath, JSON.stringify(templateDict, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L269"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/extract_untranslated.js",
+        "line": 302,
+        "snippet": "fs.writeFileSync(RUNTIME_PATH, newCode, 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/extract_untranslated.js#L302"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/inject_live.js",
+        "line": 29,
+        "snippet": "const req = http.get({ host: '127.0.0.1', port, path: urlPath, timeout: 2500, agent: false }, (res) => { let body = ''; res.on('data', (chunk) => (body += chunk)); res.on('end', ()",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/inject_live.js#L29"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/inject_live.js",
+        "line": 54,
+        "snippet": "const ws = new WebSocket(wsUrl);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/inject_live.js#L54"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/install_all.js",
+        "line": 71,
+        "snippet": "const req = http.request( { host: host || '127.0.0.1', port, path: '/exa.language_server_pb.LanguageServerService/JetboxWriteState', method: 'POST', headers: { 'Content-Type': 'app",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_all.js#L71"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 236,
+        "snippet": "fs.writeFileSync(tmpPath, finalBuf);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L236"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 244,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L244"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 273,
+        "snippet": "fs.writeFileSync(targetPath, finalBuf);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L273"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 293,
+        "snippet": "fs.rmSync(appDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L293"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 308,
+        "snippet": "try { fs.unlinkSync(f); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L308"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 387,
+        "snippet": "try { fs.unlinkSync(f); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L387"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 402,
+        "snippet": "fs.rmSync(appDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L402"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 434,
+        "snippet": "fs.writeFileSync(asarBakPath, currentBuf);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L434"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install_boot_hook.js",
+        "line": 436,
+        "snippet": "fs.writeFileSync( asarBakMetaPath, JSON.stringify( { version: cleanVersion, cleanSha256: computeSha256(currentBuf), backedUpAt: new Date().toISOString() }, null, 2 ), 'utf8' );",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/install_boot_hook.js#L436"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/main_boot_hook.js",
+        "line": 45,
+        "snippet": "fs.writeFileSync(configPath, JSON.stringify(current, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/main_boot_hook.js#L45"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/main_boot_hook.js",
+        "line": 65,
+        "snippet": "fs.writeFileSync(configPath, JSON.stringify(current, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/main_boot_hook.js#L65"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/plugin_updater.js",
+        "line": 206,
+        "snippet": "const connectReq = http.request({ host: proxyConfig.host, port: proxyConfig.port, method: 'CONNECT', path: `${parsed.hostname}:${port}` });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/plugin_updater.js#L206"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/plugin_updater.js",
+        "line": 361,
+        "snippet": "fs.writeFileSync(tempZip, zipBuf);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/plugin_updater.js#L361"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/plugin_updater.js",
+        "line": 378,
+        "snippet": "try { fs.rmSync(tempZip, { force: true }); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/plugin_updater.js#L378"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/plugin_updater.js",
+        "line": 379,
+        "snippet": "try { fs.rmSync(extractDir, { recursive: true, force: true }); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/plugin_updater.js#L379"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/session_hook.js",
+        "line": 25,
+        "snippet": "fs.writeFileSync(throttleFile, String(now), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/session_hook.js#L25"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 371,
+        "snippet": "fs.writeFileSync(fullPath, newContent, 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L371"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 394,
+        "snippet": "fs.writeFileSync(manifestPath, JSON.stringify(cleanedManifest, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L394"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 418,
+        "snippet": "fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L418"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 590,
+        "snippet": "try { fs.unlinkSync(manifestPath); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L590"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 656,
+        "snippet": "fs.writeFileSync(fullPath, reverted, 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L656"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync_historical_titles.js",
+        "line": 664,
+        "snippet": "try { fs.unlinkSync(manifestPath); } catch (_) {}",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/sync_historical_titles.js#L664"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/zh_cn_runtime.js",
+        "line": 7718,
+        "snippet": "const res = await fetch('https://edge.microsoft.com/translate/translatetext?to=zh-Hans', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify([s]",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/zh_cn_runtime.js#L7718"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/boot/main.mjs",
+        "line": 31,
+        "snippet": "fs.writeFileSync(pidFile, String(process.pid), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/sidecars/boot/main.mjs#L31"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/boot/main.mjs",
+        "line": 39,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/sidecars/boot/main.mjs#L39"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/boot/main.mjs",
+        "line": 90,
+        "snippet": "const req = http.get({ host: '127.0.0.1', port, path: '/json/list', agent: false }, (res) => { let raw = ''; res.on('data', (chunk) => (raw += chunk)); res.on('end', () => { try { ",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/sidecars/boot/main.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/boot/main.mjs",
+        "line": 142,
+        "snippet": "fs.writeFileSync(configPath, JSON.stringify(current, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/sidecars/boot/main.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/boot/main.mjs",
+        "line": 258,
+        "snippet": "fs.writeFileSync(configPath, JSON.stringify(cur, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/sidecars/boot/main.mjs#L258"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/boot/main.mjs",
+        "line": 395,
+        "snippet": "const ws = new WebSocket(target.webSocketDebuggerUrl);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/sidecars/boot/main.mjs#L395"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "uninstall.js",
+        "line": 126,
+        "snippet": "fs.unlinkSync(f);",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/uninstall.js#L126"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "uninstall.js",
+        "line": 154,
+        "snippet": "fs.rmSync(targetPluginDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/uninstall.js#L154"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/zh_cn_runtime.js",
+        "line": 1556,
+        "snippet": "\"Custom path for the browser user profile directory. Leave empty for default (~/.gemini/antigravity-browser-profile).\": \"浏览器用户配置目录的自定义路径。留空则使用默认路径 (~/.gemini/antigravity-browser-pr",
+        "githubBlobUrl": "https://github.com/Souma-Sumire/antigravity-zh-cn/blob/11a29c03c6838e33a68c90069c21a21326f2f51e/scripts/zh_cn_runtime.js#L1556"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.2.3",
+      "sha": "11a29c03c6838e33a68c90069c21a21326f2f51e",
+      "scannedAt": "2026-11-27T18:15:48.622Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

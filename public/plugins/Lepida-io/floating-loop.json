@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "id": "Lepida-io/floating-loop",
+  "sha": "0e7420abff503684261f41e0a4d949492cb7a225",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:16:09.694Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "floating-loop",
+    "displayName": "Floating Loop",
+    "version": "0.1.1",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "floating-loop-guard",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "python3 ./scripts/guard-hook.py",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "floating-loop",
+        "slashCommand": "/floating-loop",
+        "description": "Start, monitor, cancel, or recover an autonomous Floating Loop (Antigravity's next-gen Ralph Loop fork) across in-session Stop-hook loops, external fresh-context agy CLI loops (PRD and Autoresearch keep-or-revert), parallel worktree DAG wor",
+        "disableModelInvocation": false,
+        "file": "skills/floating-loop/SKILL.md"
+      },
+      {
+        "name": "floating-swarm",
+        "slashCommand": "/floating-swarm",
+        "description": "Orchestrate parallel multi-agent Floating Loop swarms using Antigravity's native `run_workflow` Python DAG engine (isolated `workspace=\"share\"` worktrees + Adversarial Verifier dual-gate) or live `/swarm` Coordinator-Worker-Verifier teams. ",
+        "disableModelInvocation": false,
+        "file": "skills/floating-swarm/SKILL.md"
+      },
+      {
+        "name": "prd-to-loop",
+        "slashCommand": "/prd-to-loop",
+        "description": "Convert a Markdown PRD into a schema-validated, dependency-ordered prd.json task list for Floating Loop and Floating Swarm autonomous execution. Use when the user asks to convert a PRD into loop format, create prd.json, split stories into w",
+        "disableModelInvocation": false,
+        "file": "skills/prd-to-loop/SKILL.md"
+      },
+      {
+        "name": "prd",
+        "slashCommand": "/prd",
+        "description": "Generate a structured Product Requirements Document (PRD) with small, dependency-tagged, objectively verifiable user stories sized for autonomous Floating Loop and Floating Swarm execution. Use when planning a feature, starting a new projec",
+        "disableModelInvocation": false,
+        "file": "skills/prd/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/floating-loop",
+      "/floating-swarm",
+      "/prd",
+      "/prd-to-loop"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreToolUse",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"96\" height=\"96\" alt=\"floating-loop logo\" />\n</p>\n\n<h1 align=\"center\">floating-loop</h1>\n\n<p align=\"center\">\n  <strong>Autonomous Ralph-inspired iterative loops, keep-or-revert autoresearch, and parallel multi-agent worktree swarms built natively for Google Antigravity (<code>agy</code>)</strong><br />\n  <em>Because in Antigravity, loops float.</em>\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/Lepida-io/floating-loop/actions/workflows/ci.yml\"><img src=\"https://github.com/Lepida-io/floating-loop/actions/workflows/ci.yml/badge.svg\" alt=\"CI\" /></a>\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-blue.svg\" alt=\"MIT License\" /></a>\n  <img src=\"https://img.shields.io/badge/Antigravity-Native%20Plugin-38BDF8.svg\" alt=\"Google Antigravity Native Plugin\" />\n  <img src=\"https://img.shields.io/badge/dependencies-zero%20(Python%203.8%2B%20stdlib)-818CF8.svg\" alt=\"Zero External Dependencies\" />\n</p>\n\n---\n\n## What Is Floating Loop?\n\n`floating-loop` evolves the classic [Ralph Wiggum autonomous loop](https://ghuntley.com/ralph/) (`snarktank/ralph` + `claude-ralph-loop`) for Google Antigravity's native customization and orchestration primitives — adding mechanical verification, circuit breakers, context-rot telemetry, keep-or-revert metric optimization, and parallel Git worktree DAG swarms with **zero external dependencies**.\n\n### Why Floating Loop vs. Classic Ralph Loops?\n\n| Capability | Classic Ralph Loop | `floating-loop` |\n| --- | --- | --- |\n| **Completion Integrity** | Trusts `<promise>` text alone | **Dual-Gate Verification**: independently runs `verifyCommand` and rejects premature promises or fake `passes: true` |\n| **Stall & Error Protection** | Loops until max iterations | **3-State Circuit Breaker** (`CLOSED -> HALF_OPEN -> OPEN`) on zero-diff stalls or repeated identical errors |\n| **Context-Rot Defense** | None (in-session degrades silently) | Reads `input_tokens + cache_read_tokens` from Antigravity `transcript.jsonl` and pauses cleanly at ceiling |\n| **Parallel Execution** | Sequential single-agent only | **Parallel Worktree DAG Swarm** (`dependsOn` waves in `workspace=\"share\"` worktrees + `pro`-tier Adversarial Verifier) |\n| **Optimization Loops** | Feature tasks only | **Autoresearch Keep-or-Revert Mode** (`results.tsv` + automatic `git reset --hard` on metric regression) |\n| **Retry Intelligence** | Same model every attempt | **Role Hats & Model/Effort Cascade**: steps up model/effort automatically when verification fails |\n| **Active-Loop Safety** | Relies on prompt instructions | **`PreToolUse` Guardrail**: blocks `rm -rf /`, `git push --force`, unauthorized `git reset --hard`, and state tampering |\n| **Upstream Migration** | Start from scratch | **Mid-Run Takeover**: resume active `claude-ralph-loop` or `snarktank/ralph` runs without losing progress |\n\n---\n\n## Which Mode Should I Use?\n\n| Mode | Best For | Context | Entrypoint |\n| --- | --- | --- | --- |\n| **Mode A — In-Session `Stop` Hook** | Fast interactive bug-fixing & test polishing | Shared session (with token ceiling) | `hooks.json` + `scripts/loop-ctl.py start` |\n| **Mode B — Fresh-Context CLI (`prd` / `prompt`)** | Multi-story overnight feature builds | Fresh `agy -p` per iteration (zero rot) | `./scripts/floating-loop.sh --mode prd` |\n| **Mode B — Autoresearch** | Optimizing latency, bundle size, score, or benchmarks | Fresh `agy -p` + keep-or-revert | `./scripts/floating-loop.sh --mode autoresearch` |\n| **Mode C — Worktree DAG Swarm** | Large PRDs with independent parallelizable stories | Isolated `workspace=\"share\"` worktrees | `floating-swarm` skill -> `floating_swarm.py` |\n| **Mode D — Live `/swarm` Playbook** | Exploratory, cross-cutting epics needing coordination | Shared Antigravity `/swarm` board | `floating-swarm` skill |\n| **Takeover** | Migrating an in-progress `claude-ralph-loop` or `snarktank/ralph` run | Preserves state, branch & `progress.txt` | `scripts/loop-ctl.py takeover` |\n\n---\n\n## Installation\n\n### Prerequisites\n- [Google Antigravity CLI (`agy`)](https://antigravity.google/docs/getting-started/) installed and authenticated ([download Antigravity](https://antigravity.google/download))\n- Python `3.8+` (stdlib only — no `pip install`, `jq`, or Node required)\n- `bash` 3.2+ and `git`\n\n### Install from the Antigravity Plugin Marketplace\n\nPartner install id: `floating-loop@antigravity-plugins-partners`\n\n```bash\nagy plugin install floating-loop@antigravity-plugins-partners\n```\n\nOr open [Floating Loop in the Antigravity Marketplace](antigravity://customizations/marketplaces/antigravity-plugins-partners/plugins/floating-loop) (**Customizations → Marketplace**). The catalog card is on the [Marketplace plugins page](https://antigravity.google/docs/marketplace/?plugin=floating-loop#browse-marketplace-plugins).\n\n### Install from GitHub\n\n```bash\nagy plugin install https://github.com/Lepida-io/floating-loop\n```\n\n### Local Development / Clone\n\n```bash\ngit clone https://github.com/Lepida-io/floating-loop.git\ncd floating-loop\nagy plugin validate . --strict\nagy plugin install .\n```\n\nVerify the plugin is installed and enabled:\n\n```bash\nagy plugin list\n```\n\n---\n\n## Quickstart\n\n### 1. Author a PRD & Convert to `prd.json`\nInside `agy`, ask Antigravity to use the `prd` skill to plan your feature (`tasks/prd-<feature>.md`), then run `prd-to-loop` to produce a validated, dependency-tagged `prd.json`.\n\n### 2. In-Session `Stop` Hook Loop (Mode A)\n```bash\npython3 scripts/loop-ctl.py start \\\n  --cwd \"$(pwd)\" \\\n  --conversation-id \"<your-conversation-id>\" \\\n  --max-iterations 15 \\\n  --completion-promise \"DONE\" \\\n  --verify-cmd \"pytest -q\" \\\n  --prompt \"Fix all failing tests in tests/auth/ without skipping any assertions.\"\n```\nMonitor, reset, or stop at any time:\n```bash\npython3 scripts/loop-ctl.py status --cwd \"$(pwd)\"\npython3 scripts/loop-ctl.py cancel --cwd \"$(pwd)\"\npython3 scripts/loop-ctl.py reset-cb --cwd \"$(pwd)\"\n```\n\n### 3. External Fresh-Context CLI Loop (Mode B — Zero Context Rot)\n```bash\n# Preview assembled prompt & command without side effects\n./scripts/floating-loop.sh --mode prd --prd examples/prd.json.example --dry-run\n\n# Run overnight PRD loop (auto-escalates model/effort on verification failure)\n./scripts/floating-loop.sh \\\n  --mode prd \\\n  --prd prd.json \\\n  --max-iterations 20 \\\n  --cb-threshold 3\n```\n\n### 4. Autoresearch Keep-or-Revert Loop (Metric Optimization)\n```bash\n./scripts/floating-loop.sh \\\n  --mode autoresearch \\\n  --goal \"Minimize JSON parser p95 latency\" \\\n  --metric-cmd \"python3 bench/p95.py\" \\\n  --direction minimize \\\n  --verify-cmd \"pytest -q\" \\\n  --max-iterations 15\n```\nImprovements are kept and logged to `results.tsv`; regressions or broken tests are automatically reverted via `git reset --hard`.\n\n### 5. Mid-Run Takeover from Upstream Ralph Loops\nResume an in-progress `claude-ralph-loop` (`.claude/ralph-loop.local.md`) or `snarktank/ralph` (`prd.json` + `progress.txt`) run directly in Antigravity:\n```bash\npython3 scripts/loop-ctl.py takeover \\\n  --cwd \"$(pwd)\" \\\n  --verify-cmd \"npm run typecheck && npm test\"\n```\n- Imports exact `iteration`, `max_iterations`, `completion_promise`, and prompt from `.claude/ralph-loop.local.md` (archiving the old file so hooks never collide).\n- Preserves existing `progress.txt`, `ralph/<feature>` branch, and `passes: true` stories from `snarktank/ralph`, surfaces interrupted uncommitted edits and `CLAUDE.md` notes, and auto-serializes legacy `dependsOn`-less PRDs inside `floating_swarm.py`.\n\n### 6. Parallel Worktree DAG Swarm (Mode C — `run_workflow`)\nAsk Antigravity to activate the `floating-swarm` skill, which validates your `prd.json` waves and invokes `run_workflow` on `scripts/workflows/floating_swarm.py` — fanning out independent stories in `workspace=\"share\"` worktrees and gating merges behind an independent `pro`-tier Adversarial Verifier.\n\n---\n\n## Architecture\n\n```text\nfloating-loop/                          # Native Antigravity plugin root\n├── plugin.json                         # Plugin manifest (Marketplace + `agy plugin install`)\n├── assets/\n│   └── logo.svg                        # 128×128 transparent Marketplace icon\n├── hooks.json                          # Antigravity Stop + PreToolUse lifecycle hooks\n├── rules/\n│   └── AGENTS.md                       # Loop discipline, promise integrity, backpressure rules\n├── skills/\n│   ├── floating-loop/SKILL.md          # Core controller (Modes A, B, Autoresearch, status/cancel)\n│   ├── floating-swarm/SKILL.md         # Multi-agent orchestration (run_workflow DAG + /swarm)\n│   ├── prd/SKILL.md                    # Dependency-aware PRD authoring skill\n│   └── prd-to-loop/SKILL.md            # PRD -> validated prd.json DAG converter skill\n├── scripts/\n│   ├── loop_core.py                    # Shared stdlib-only Python 3 core (zero external deps)\n│   ├── stop-hook.py                    # Antigravity Stop hook (Dual-Gate + CB + context ceiling)\n│   ├── guard-hook.py                   # Active-loop PreToolUse safety guard\n│   ├── loop-ctl.py                     # CLI: start, status, cancel, reset-cb, takeover, waves\n│   ├── floating-loop.sh                # External fresh-context agy -p runner (prd/prompt/autoresearch)\n│   ├── prompts/                        # Iteration, autoresearch, and role-hat prompt templates\n│   └── workflows/\n│       └── floating_swarm.py           # Native `run_workflow` parallel worktree DAG + verifier\n├── schemas/prd.schema.json             # JSON Schema for enhanced prd.json\n├── examples/prd.json.example           # Multi-wave example PRD\n├── tests/                              # Automated unit, hook, swarm, and CLI integration tests\n└── .agents/skills.json                 # Local workspace pointer to root `skills/` (zero duplication)\n```\n\n---\n\n## Safety & Security\n\n- **Active-Loop `PreToolUse` Guardrail**: Zero-overhead passthrough outside active loops; during an active loop, blocks catastrophic `rm -rf`, `git push --force`, unauthorized `git reset --hard`, and direct `.floating-loop/sessions/` edits.\n- **PRD Anti-Tampering**: Snapshots `prd.json` before every iteration and restores it if story IDs are removed, corrupted, or non-target stories are marked complete.\n- **Bounded Execution**: Always configure `--max-iterations` and `--cb-threshold`. Run unattended `--dangerously-skip-permissions` loops (Mode B) only on dedicated feature branches or isolated sandboxes.\n\nSee [SECURITY.md](SECURITY.md) for full details and vulnerability reporting.\n\n---\n\n## Running Tests\n\nOffline strict plugin validation, syntax checks, Python unit/hook/swarm tests, and mocked CLI integration tests:\n\n```bash\nbash tests/run_all.sh\n```\n\nLive end-to-end tests against the real `agy` CLI (Stop hook + Dual-Gate, external PRD loop, and Autoresearch keep-or-revert):\n\n```bash\nbash tests/test_e2e_live.sh --model gemini-3.8-flash-low\n```\n\n---\n\n## Contributing & Changelog\n\n- Contributions are welcome! Read [CONTRIBUTING.md](CONTRIBUTING.md) for architecture invariants and verification commands.\n- See [CHANGELOG.md](CHANGELOG.md) for release history.\n\n## Acknowledgments\n\nInspired by [Geoff Huntley's Ralph Wiggum technique](https://ghuntley.com/ralph/), `snarktank/ralph`, `claude-ralph-loop`, and Andrej Karpathy's autoresearch keep-or-revert workflow.\n\n## License\n\nReleased under the [MIT License](LICENSE).\n",
+  "latestReleaseNotes": "## [0.1.1] - 2026-11-26\n\n### Fixed\n- CI Python syntax check now compiles `scripts/workflows/floating_swarm.py` with `ast.PyCF_ALLOW_TOP_LEVEL_AWAIT`. The intentional top-level `await` (Antigravity `run_workflow` injects an async runtime) no longer fails `python3 -m py_compile` on `ubuntu-latest` and `macos-latest`. The await itself is unchanged.\n\n### Changed\n- Replaced `assets/logo.svg` with a transparent 128×128 woven infinity ribbon (cyan `#38BDF8` to purple `#C084FC`). `plugin.json` `logo` stays `assets/logo.svg`.\n- README install instructions now include the partner Marketplace id `floating-loop@antigravity-plugins-partners`, the App deep link, and the Antigravity CLI download docs. License remains MIT.\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"floating-loop-guard\" executes a shell command on PreToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 18,
+        "snippet": "python3 ./scripts/guard-hook.py",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/hooks.json#L18"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/loop_core.py",
+        "line": 308,
+        "snippet": "proc = subprocess.run( cmd, shell=True, cwd=str(cwd), capture_output=True, text=True, timeout=timeout, )",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/loop_core.py#L308"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/loop_core.py",
+        "line": 338,
+        "snippet": "proc = subprocess.run( [\"git\", \"-C\", str(cwd), *args], capture_output=True, text=True, timeout=15, )",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/loop_core.py#L338"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/workflows/floating_swarm.py",
+        "line": 64,
+        "snippet": "return subprocess.run( [\"git\", \"-C\", str(cwd), *git_args], capture_output=True, text=True, check=check, )",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/workflows/floating_swarm.py#L64"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/workflows/floating_swarm.py",
+        "line": 421,
+        "snippet": "vproc = subprocess.run(story_verify, shell=True, cwd=str(cwd), capture_output=True, text=True)",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/workflows/floating_swarm.py#L421"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/loop_core.py",
+        "line": 91,
+        "snippet": "os.unlink(tmp_name)",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/loop_core.py#L91"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/loop_core.py",
+        "line": 728,
+        "snippet": "progress_path.write_text( f\"# Floating Loop Progress Log\\nBranch: {current_branch}\\nStarted: {utc_now_iso()}\\n\\n## Codebase Patterns\\n\\n---\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/loop_core.py#L728"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/loop_core.py",
+        "line": 734,
+        "snippet": "last_branch_file.write_text(current_branch + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/loop_core.py#L734"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/loop_core.py",
+        "line": 938,
+        "snippet": "lb.write_text(branch_name + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/loop_core.py#L938"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/workflows/floating_swarm.py",
+        "line": 121,
+        "snippet": "progress_path.write_text( \"# Floating Loop Progress Log\\n\\n## Codebase Patterns\\n\\n---\\n\", encoding=\"utf-8\", )",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/workflows/floating_swarm.py#L121"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/workflows/floating_swarm.py",
+        "line": 440,
+        "snippet": "prd_path.write_text(json.dumps(prd_latest, indent=2) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/scripts/workflows/floating_swarm.py#L440"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/floating-loop/SKILL.md",
+        "line": 29,
+        "snippet": "> **Script location**: Resolve `LOOP_ROOT` as the directory containing this plugin (two levels up from this `SKILL.md`: `../../scripts/`).",
+        "githubBlobUrl": "https://github.com/Lepida-io/floating-loop/blob/0e7420abff503684261f41e0a4d949492cb7a225/skills/floating-loop/SKILL.md#L29"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.1",
+      "sha": "0e7420abff503684261f41e0a4d949492cb7a225",
+      "scannedAt": "2026-11-27T18:16:09.694Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

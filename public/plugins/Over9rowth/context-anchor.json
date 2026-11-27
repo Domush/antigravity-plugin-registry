@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "id": "Over9rowth/context-anchor",
+  "sha": "64296d0a7622b42325ce9ad5ae59dde32e501df0",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:22:54.505Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-anchor",
+    "displayName": "Context Anchor",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "anchors",
+        "runtimeName": "context-anchor_anchors",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/mcp-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "context-anchor",
+        "slashCommand": "/context-anchor",
+        "description": "Let the running agent actively inspect, select, consolidate, and prune critical context anchors so key decisions, constraints, file pointers, and task state survive Antigravity context compression. Use when the user invokes /context-anchor ",
+        "disableModelInvocation": false,
+        "file": "skills/context-anchor/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/context-anchor"
+    ],
+    "mcpServerNames": [
+      "context-anchor_anchors"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"./assets/logo.svg\" alt=\"Context Anchor Logo\" width=\"96\" height=\"96\" />\n</p>\n\n<h1 align=\"center\">Context Anchor</h1>\n\n<p align=\"center\">\n  <strong>Let the running Antigravity agent actively choose, curate, and preserve critical context across context compression.</strong>\n</p>\n\n<p align=\"center\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-blue.svg\" alt=\"License: MIT\" /></a>\n  <a href=\"./package.json\"><img src=\"https://img.shields.io/badge/Zero%20Dependencies-Node.js%20Stdlib-yellow.svg\" alt=\"Zero Dependencies\" /></a>\n  <a href=\"https://github.com/Over9rowth\"><img src=\"https://img.shields.io/badge/Author-Over9rowth-purple.svg\" alt=\"Author: Over9rowth\" /></a>\n  <a href=\"https://github.com/Over9rowth\"><img src=\"https://img.shields.io/badge/%E7%87%A7%E4%BA%BA%E8%AE%A1%E5%88%92-Suiren%20Plan-f59e0b.svg\" alt=\"燧人计划\" /></a>\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/Over9rowth\">\n    <img src=\"./assets/suiren-badge.svg\" alt=\"OVER9ROWTH · 燧人计划\" width=\"420\" />\n  </a>\n</p>\n\n<p align=\"center\">\n  English | <a href=\"./README.zh-CN.md\">简体中文</a>\n</p>\n\n---\n\n## Why Context Anchor?\n\nWhen long coding or research sessions hit token limits, automatic context compression summarizes raw history—often discarding exact file paths, subtle constraints, rejected approaches, and active task state.\n\nAntigravity does not currently expose a `PreCompact` lifecycle hook or allow plugins to rewrite its internal compaction prompt. **Context Anchor** solves this within Antigravity's native plugin architecture by pairing:\n\n1. **Agent-Selected Context Anchoring (MCP Tools)** — Gives the running agent first-class tools (`pin_context`, `unpin_context`, `list_pinned_context`, `get_pinned_context`, `replace_session_anchors`) so *the agent itself* decides what must survive compression.\n2. **Proactive Token & Compaction Watcher (Lifecycle Hooks)** — Tails `transcript.jsonl` on `PreInvocation` to warn the agent before auto-compaction hits, and automatically re-injects pinned anchors when a context drop is detected.\n3. **Always-On Curation Rule & `/context-anchor` Skill** — Guides the agent to pin concise conclusions and exact pointers (never bloated raw logs), and lets you trigger manual curation at any time via `/context-anchor`.\n4. **Zero Dependencies** — Pure Node.js (`>= 18`) standard library; works across Windows, macOS, and Linux without `npm install`.\n\n---\n\n## How It Works\n\n```mermaid\nflowchart LR\n    A[SessionStart / PreInvocation Hook] -->|Register session_id & tail transcript.jsonl| B{Token Check}\n    B -->|Tokens >= 80k| C[Inject Pre-Compression Nudge]\n    C -->|Agent curates important context| D[MCP: pin_context / replace_session_anchors]\n    D -->|Atomic JSON write| E[(Session & Workspace Anchors)]\n    B -->|Token drop >= 35% or step reset| F[Compaction Detected]\n    E -->|Priority sort: critical > high > normal| F\n    F -->|Inject systemMessage| G[Agent Continues Without Amnesia]\n```\n\n---\n\n## Features & Components\n\n### 1. MCP Server (`anchors` -> `context-anchor_anchors`)\n\n| Tool | Purpose |\n| :--- | :--- |\n| `pin_context` | Pin or update a context anchor (`critical` / `high` / `normal`) in `session` or `workspace` scope. |\n| `unpin_context` | Remove completed or obsolete anchors by `anchor_id`, `title`, or `clear_all`. |\n| `list_pinned_context` | Inspect all active anchors with priorities, categories, and estimated token usage. |\n| `get_pinned_context` | Retrieve the formatted survival bundle on demand. |\n| `replace_session_anchors` | Atomically deduplicate, merge, and replace all session anchors in one call. |\n\n**Supported categories:** `decision`, `constraint`, `state`, `file_map`, `pitfall`, `task`.  \n**Supported scopes:**\n- `session` (default): Isolated to the current `conversationId`.\n- `workspace`: Persists across conversations in the same workspace directory.\n\n### 2. Lifecycle Hooks (`hooks.json`)\n\n- **`SessionStart`**: Registers the active `conversationId`, injects `session_id`, and restores any `workspace`-scoped anchors.\n- **`PreInvocation`**: Reads only the last 128 KB of `transcript.jsonl`:\n  - Sends a non-spammy reminder when prompt tokens cross `80k` (and every `+40k` thereafter).\n  - Detects compaction when a compaction/checkpoint step appears, step count resets, or prompt tokens drop by `>= 35%` (and `>= 10k` tokens)—ignoring stale pre-compaction `PLANNER_RESPONSE` token telemetry so a `CHECKPOINT` never double-triggers recovery—and injects preserved anchors ordered by priority along with a post-compaction core context recap instruction.\n- **`Stop`**: Updates session metadata cleanly without blocking turn completion.\n\n### 3. CLI Fallback (`scripts/cli.mjs`)\n\nFor manual inspection or pre-existing sessions where MCP tools have not yet attached:\n\n```bash\nnode ./scripts/cli.mjs pin --title \"API Contract\" --content \"Keep v1 response shape.\" --priority critical --category constraint\nnode ./scripts/cli.mjs list\nnode ./scripts/cli.mjs get\nnode ./scripts/cli.mjs unpin --title \"API Contract\"\n```\n\n---\n\n## Installation\n\n### Option 1: Install via Antigravity CLI (`agy`)\n\n```bash\n# Install directly from a local clone or GitHub repository URL\nagy plugin install https://github.com/Over9rowth/context-anchor\n```\n\n### Option 2: Manual Local Installation (Antigravity App / IDE / CLI)\n\nCopy or clone this repository into your global Antigravity plugins folder:\n\n- **macOS / Linux:**\n  ```bash\n  git clone https://github.com/Over9rowth/context-anchor.git ~/.gemini/config/plugins/context-anchor\n  ```\n- **Windows (PowerShell):**\n  ```powershell\n  git clone https://github.com/Over9rowth/context-anchor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\context-anchor\"\n  ```\n\n> **Note:** After installing, **open a new conversation** (or reload) so the MCP server `context-anchor_anchors` attaches its tool declarations to the session.\n\n---\n\n## Usage\n\n- **Automatic mode:** Just work normally. The always-on rule (`rules/AGENTS.md`) and `PreInvocation` hook nudge the agent to curate critical context as sessions grow, restore it once after compression, and automatically recap the restored core context at the start of the post-compaction reply.\n- **Recommended `/context-anchor` -> `/compact` flow:**\n  1. Type `/context-anchor` to have the agent audit, deduplicate, and save key context anchors, then prompt you with a `/compact` handoff.\n  2. Type `/compact` in chat to compact the conversation window *(Antigravity restricts slash commands to direct user input, so plugins/agents cannot run `/compact` automatically)*.\n  3. Send any short follow-up (e.g., `继续` / `continue`)—`context-anchor` injects your curated anchors and instructs the agent to briefly recap the restored core context before resuming work.\n- **Natural language:** Ask the agent directly, e.g., *\"Pin our current architecture decisions and modified files with `pin_context`.\"*\n\n---\n\n## Configuration (Optional Environment Variables)\n\n| Variable | Default | Description |\n| :--- | :--- | :--- |\n| `CONTEXT_ANCHOR_NUDGE_START_TOKENS` | `80000` | Token count at which the first pre-compression curation nudge fires. |\n| `CONTEXT_ANCHOR_NUDGE_INTERVAL_TOKENS` | `40000` | Additional token growth required before another nudge fires. |\n| `CONTEXT_ANCHOR_DROP_RATIO` | `0.65` | Ratio threshold (`current <= previous * ratio`) used to detect token drop compaction. |\n| `CONTEXT_ANCHOR_MAX_INJECT_CHARS` | `14000` | Maximum character budget for auto-injected anchor recovery blocks. |\n| `CONTEXT_ANCHOR_POST_COMPACT_RECAP` | `true` | Instructs the agent to briefly recap restored core anchors in its first reply after compaction recovery (`false`/`0` disables). |\n| `CONTEXT_ANCHOR_DATA_DIR` | `$PLUGIN_DATA` or `~/.gemini/antigravity/plugin-data/context-anchor` | Override where session and workspace anchor JSON files are stored. |\n\n---\n\n## Development & Testing\n\nRequires Node.js `>= 18.0.0`. No dependencies to install:\n\n```bash\nnpm test\n# or\nnode --test ./scripts/test.mjs\n```\n\n---\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/test.mjs",
+        "line": 18,
+        "snippet": "const child = spawn(process.execPath, [scriptPath, ...args], { cwd: PLUGIN_ROOT, env: { ...process.env, ...envOverrides }, stdio: ['pipe', 'pipe', 'pipe'], });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L18"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/store.mjs",
+        "line": 69,
+        "snippet": "fs.writeFileSync(tmpPath, payload, 'utf8');",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/store.mjs#L69"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/store.mjs",
+        "line": 87,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/store.mjs#L87"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/store.mjs",
+        "line": 90,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/store.mjs#L90"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 194,
+        "snippet": "fs.rmSync(dataDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L194"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 195,
+        "snippet": "fs.rmSync(wsDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L195"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 250,
+        "snippet": "fs.writeFileSync( transcriptFile, JSON.stringify({ step_index: 1, type: 'PLANNER_RESPONSE', input_tokens: 10000, cache_read_tokens: 20000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L250"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 272,
+        "snippet": "fs.appendFileSync( transcriptFile, JSON.stringify({ step_index: 2, type: 'PLANNER_RESPONSE', input_tokens: 15000, cache_read_tokens: 70000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L272"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 296,
+        "snippet": "fs.appendFileSync( transcriptFile, JSON.stringify({ step_index: 3, type: 'PLANNER_RESPONSE', input_tokens: 15000, cache_read_tokens: 80000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L296"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 318,
+        "snippet": "fs.appendFileSync( transcriptFile, JSON.stringify({ step_index: 4, type: 'PLANNER_RESPONSE', input_tokens: 12000, cache_read_tokens: 10000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L318"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 352,
+        "snippet": "fs.rmSync(dataDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L352"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 353,
+        "snippet": "fs.rmSync(wsDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L353"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 412,
+        "snippet": "fs.rmSync(dataDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L412"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 480,
+        "snippet": "fs.writeFileSync( transcriptFile, JSON.stringify({ step_index: 10, type: 'PLANNER_RESPONSE', input_tokens: 3000, cache_read_tokens: 240000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L480"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 504,
+        "snippet": "fs.appendFileSync( transcriptFile, JSON.stringify({ step_index: 12, type: 'CHECKPOINT', input_tokens: 2000, cache_read_tokens: 243000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L504"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 547,
+        "snippet": "fs.appendFileSync( transcriptFile, JSON.stringify({ step_index: 15, type: 'PLANNER_RESPONSE', input_tokens: 8000, cache_read_tokens: 15000, }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L547"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 572,
+        "snippet": "fs.appendFileSync( transcriptFile, JSON.stringify({ step_index: 18, type: 'CHECKPOINT', }) + '\\n' );",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L572"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 596,
+        "snippet": "fs.rmSync(dataDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L596"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/test.mjs",
+        "line": 597,
+        "snippet": "fs.rmSync(wsDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Over9rowth/context-anchor/blob/64296d0a7622b42325ce9ad5ae59dde32e501df0/scripts/test.mjs#L597"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "64296d0a7622b42325ce9ad5ae59dde32e501df0",
+      "scannedAt": "2026-11-27T18:22:54.505Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

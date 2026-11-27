@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "id": "cxtsnd6/agy-steer",
+  "sha": "be0a5af3a35988ee31ed60467ded5ed94f0b64e9",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:01.341Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-steer",
+    "displayName": "agy-steer · Codex 式打断转向 (Steering)",
+    "version": "0.2.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agy-steer",
+        "slashCommand": "/agy-steer",
+        "description": "Control and inspect the local agy-steer Codex-style mid-turn steering queue, launch the floating input box, or verify PreInvocation hook delivery. Use when the user asks to open agy-steer, inspect/queue/clear steering messages, or test whet",
+        "disableModelInvocation": false,
+        "file": "skills/agy-steer/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-steer"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" width=\"72\" alt=\"agy-steer logo\" />\n\n# agy-steer\n\n**Codex-style mid-turn steering for the Google Antigravity desktop app.**\nType while the agent works — your message is injected into the *running* turn before the next model call. No Stop button, no lost tool work.\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)]()\n[![Node](https://img.shields.io/badge/node-%E2%89%A518-339933)]()\n[![Zero deps](https://img.shields.io/badge/dependencies-0-success)]()\n\n[English](#english) · [简体中文](#简体中文)\n\n</div>\n\n> ⚠️ **Unofficial community project.** Not affiliated with, endorsed by, or sponsored by Google. \"Antigravity\" and \"Gemini\" are trademarks of Google LLC, used here only to indicate compatibility.\n\n---\n\n<a id=\"english\"></a>\n\n## English\n\n### The problem\n\nIn the Antigravity desktop app, when the agent goes down the wrong path you have to **Stop the turn, retype, and restart** — in-flight tool work is discarded and the agent loses momentum. Codex CLI solved this with *steering*: messages you type mid-turn are queued and injected after the next tool call, without cancelling anything. The Antigravity CLI got a native `Queued Messages → Send Immediately` option (v1.2.14+), but the **desktop app still has no smooth steering UX**.\n\n`agy-steer` adds it as a plugin:\n\n- 🪟 **Floating input box** — a small always-on-top-capable window (`Auto` / `Light` / `Dark` themes, `中文` / `EN`) that lives beside Antigravity. Type and press Enter.\n- ⚡ **Mid-turn injection** — a `PreInvocation` hook fires before *every model call*; pending messages are returned as `injectSteps` (`userMessage` or `systemMessage`) and appended to the current turn.\n- 🎯 **Global or per-conversation scoping** — broadcast to whichever active turn runs next, or pin messages to a specific conversation ID when juggling multiple chats.\n- 📋 **Codex-like queue** — preview, reorder (`↑`/`↓`), edit (with `↑` quick-edit), hold/resume, delete, clear, or reuse previously injected prompts.\n- 🧩 **Native Antigravity Skill** — ask the agent directly in chat to open the floating box, inspect the queue, or verify hook delivery.\n- 🔒 **100% local & CSRF-hardened** — daemon binds `127.0.0.1` only, validates `Host` / `Origin` / `Sec-Fetch-Site` / `Content-Type` to prevent cross-origin prompt injection from browser tabs, zero external dependencies, zero telemetry.\n\n### How it works\n\n```mermaid\nflowchart LR\n  UI[\"Floating input box<br/>(ui/index.html)\"] -->|\"POST /enqueue\"| D[\"Local daemon<br/>127.0.0.1:47833\"]\n  AG[\"Antigravity agent\"] -->|\"PreInvocation hook<br/>(before each model call)\"| R[\"hook-relay.mjs\"]\n  R -->|\"POST /relay/take\"| D\n  R -->|\"stdout: injectSteps\"| AG\n  AG -->|\"injected step appended<br/>to the RUNNING turn\"| AG\n```\n\nThe injection mechanism (`PreInvocation` → `{\"injectSteps\":[{\"userMessage\":\"...\"}]}`) is the same one used by the [Multica project](https://github.com/multica-ai/multica/pull/11200) to steer `agy` turns, and follows Antigravity's documented [hooks system](https://codelabs.developers.google.com/harness-engineering-antigravity).\n\n### ⚠️ Status & honest limitations\n\n| Item | Status |\n|---|---|\n| Queue daemon + relay + UI + security guards | ✅ implemented, covered by `tests/simulate.mjs` |\n| `injectSteps` accepted by **agy CLI** (`-p` mode) | ✅ verified by Multica (external project) |\n| `injectSteps` accepted by the **desktop app** | 🔶 **needs a 2-minute check on your machine — see [docs/VERIFY.md](docs/VERIFY.md). Do this first.** |\n\n- **Injection granularity is the model-call boundary.** A long-running shell command finishes first; your message lands right after. This matches Codex semantics (\"after next tool call\"). A true instant kill is still the native **Stop** button — this plugin deliberately does *not* cancel turns.\n- **Turn-start race is handled by design**: messages stay in the daemon queue (persisted atomically to disk) until an eligible hook actually takes them, so nothing is lost during turn startup or daemon restarts.\n- **Hooks never break the agent**: every relay error path prints `{}` and exits `0`, staying comfortably under the 3s hook timeout even on cold daemon auto-spawn.\n\n### Install\n\nRequirements: Antigravity desktop app (installed & launched once), and Node.js ≥ 18 on `PATH` — on Windows, Antigravity's bundled `agy-node.cmd` / `Antigravity.exe` is detected automatically with zero extra Node install (or set `AGY_STEER_NODE`).\n\n**Windows**\n\n```powershell\ngit clone https://github.com/cxtsnd6/agy-steer.git\ncd agy-steer\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1\n```\n\n**macOS / Linux**\n\n```bash\ngit clone https://github.com/cxtsnd6/agy-steer.git\ncd agy-steer\nsh ./install.sh\n```\n\nThe installer copies the plugin to `~/.gemini/config/plugins/agy-steer/`, generates a space-safe node shim if `node` is not on `PATH`, restarts any older daemon cleanly, and opens the floating box. **Restart Antigravity** so it loads `hooks.json`, then run [docs/VERIFY.md](docs/VERIFY.md).\n\n### Usage\n\n1. Start a task in Antigravity.\n2. While the agent works, type into the floating box and press **Enter** (`Shift+Enter` for newline, `↑` when empty to edit the last queued message).\n3. Choose **Any active turn (global)** or pin to a specific conversation; pick `userMessage` (default) or `systemMessage`.\n4. The message sits in **Pending** until the next model call, then moves to **Injected** with timestamp & conversation info.\n5. Change your mind? **reorder / hold / edit / delete** any pending message before it is taken, or **reuse** any injected message later.\n\nRe-open the box anytime:\n\n```powershell\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\launch-ui.ps1 -Pin   # Windows, -Pin = always-on-top (best effort)\n```\n```bash\nsh ./scripts/launch-ui.sh                                                        # macOS / Linux\n```\n\n### Uninstall\n\n```powershell\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\uninstall.ps1          # add -Purge to also delete queue data\n```\n```bash\nsh ./uninstall.sh                                                            # add --purge likewise\n```\n\n### Repository layout\n\n```text\nagy-steer/\n├── plugin.json                  # Antigravity plugin manifest\n├── hooks.json                   # SessionStart / PreInvocation / Stop bindings\n├── package.json                 # Zero-dependency Node metadata & npm test script\n├── skills/agy-steer/SKILL.md    # Native Antigravity skill for suggestedPrompts & queue control\n├── scripts/\n│   ├── daemon.mjs               # Local queue + CSRF-guarded HTTP API + UI host\n│   ├── hook-relay.mjs           # Hook entry: take eligible messages → print injectSteps\n│   └── launch-ui.ps1/.sh        # Open the floating box (app-mode window)\n├── ui/index.html                # Bilingual (zh/en) & themed floating steer box\n├── tests/simulate.mjs           # End-to-end simulation & security test suite\n├── docs/\n│   ├── VERIFY.md                # 2-minute desktop-app acceptance check\n│   └── PUBLISHING.md            # Release & publishing checklist\n├── install.ps1/.sh              # Cross-platform installers\n└── uninstall.ps1/.sh            # Cross-platform uninstallers\n```\n\n### Roadmap\n\n- [x] Per-conversation message scoping\n- [x] Light / Dark / Auto theme adaptation & CSRF protection\n- [ ] Global hotkey to summon the box (native helper)\n- [ ] \"Stop & resend\" hard-interrupt fallback (explicit opt-in)\n- [ ] Desktop-pet companion skin (queue bubbles on your waifu)\n- [ ] Plugin Marketplace listing\n\n### Contributing & License\n\nSee [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under [MIT](LICENSE) © 2026 agy-steer contributors.\n\n---\n\n<a id=\"简体中文\"></a>\n\n## 简体中文\n\n### 解决什么问题\n\nAntigravity 桌面版里，Agent 跑偏时你只能**点 Stop、重新打字、重开回合**——在途的工具执行被丢弃，节奏全断。Codex CLI 早就用 *steering（转向）* 解决了这件事：运行中直接打字，消息排队并在下一次工具调用后注入当前回合，不取消任何东西。Antigravity CLI 在 1.2.14 后也原生支持了（`Queued Messages → Send Immediately`），但**桌面 App 一直没有顺手的转向入口**。\n\n`agy-steer` 用插件把它补上：\n\n- 🪟 **悬浮输入框**：挂在 Antigravity 旁边的小窗（支持自动/浅色/深色主题、中英文切换），随时打字、回车即排队；\n- ⚡ **回合内注入**：`PreInvocation` hook 在每次模型调用前触发，把待注入消息以 `injectSteps`（支持 `userMessage` / `systemMessage`）追加进正在运行的回合；\n- 🎯 **全局或按会话定向**：既可默认注入下一个活跃回合，也可在多窗口并行时锁定指定会话 ID；\n- 📋 **Codex 同款队列**：支持预览、调整顺序（`↑`/`↓`）、行内编辑（空框按 `↑` 快编末条）、暂停/恢复、删除、清空与历史消息一键复用；\n- 🧩 **内置 Antigravity Skill**：可在聊天里直接让 Agent 帮你打开悬浮窗、查看待注入队列或辅助验证 Hook；\n- 🔒 **纯本地 + 防跨站注入**：仅监听 `127.0.0.1`，校验 `Host` / `Origin` / `Sec-Fetch-Site` / `Content-Type` 防止网页 CSRF 注入恶意指令；零外部依赖、零遥测。\n\n### ⚠️ 现状与诚实的边界\n\n- 队列守护进程 + hook 中继 + UI + 安全校验已实现，并有 `tests/simulate.mjs` 自动化测试覆盖；\n- `injectSteps` 机制在 **agy CLI（`-p` 模式）** 上已被 [Multica 项目](https://github.com/multica-ai/multica/pull/11200) 验证；**桌面 App 是否同样接受，请先花 2 分钟按 [docs/VERIFY.md](docs/VERIFY.md) 在你的机器上确认**——这是使用前的第一步；\n- **注入粒度是模型调用边界**：正在跑的长命令会先跑完，消息随后落地（与 Codex 语义一致）。真正的“立刻掐断”仍是原生 Stop，本插件刻意不取消回合；\n- 回合启动空窗期或守护进程重启都不会丢消息：消息通过原子写持久化在本地队列，直到符合条件的 hook 真正取走；\n- hook 永不拖累 Agent：中继任何异常都输出 `{}` 并以 0 退出，冷启动也能控制在 3 秒超时以内。\n\n### 安装\n\n前提：已安装并启动过一次 Antigravity 桌面版；PATH 里有 Node.js ≥ 18（Windows 下即使未单独装 Node，安装器也会自动探测 Antigravity 自带的 `agy-node.cmd` / `Antigravity.exe`，或通过 `AGY_STEER_NODE` 指定）。\n\n**Windows**\n\n```powershell\ngit clone https://github.com/cxtsnd6/agy-steer.git\ncd agy-steer\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1\n```\n\n**macOS / Linux**\n\n```bash\ngit clone https://github.com/cxtsnd6/agy-steer.git\ncd agy-steer\nsh ./install.sh\n```\n\n安装器会把插件复制到 `~/.gemini/config/plugins/agy-steer/`，若 `node` 不在默认 `PATH` 会自动生成免空格跳板脚本，平滑重启旧版守护进程并打开悬浮框。**重启 Antigravity** 让 `hooks.json` 生效，然后跑一遍 [docs/VERIFY.md](docs/VERIFY.md)。\n\n### 使用\n\n1. 在 Antigravity 里发起任务；\n2. Agent 干活时直接在悬浮框打字，**Enter** 发送（`Shift+Enter` 换行；输入框为空时按 `↑` 快速编辑最后一条待注入消息）；\n3. 可选择「任意活跃回合（全局）」或定向到某个会话，以及选择 `userMessage`（默认）或 `systemMessage`；\n4. 消息先进入「待注入」，下一次模型调用前被取走，移入「已注入」并记录时间戳、工作区与会话 ID；\n5. 反悔了？注入前随时**调序 / 暂停 / 编辑 / 删除**，也可从历史里一键**复用**。\n\n随时重新打开悬浮框：\n\n```powershell\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\launch-ui.ps1 -Pin   # Windows，-Pin 尝试置顶\n```\n```bash\nsh ./scripts/launch-ui.sh                                                        # macOS / Linux\n```\n\n### 卸载\n\n```powershell\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\uninstall.ps1          # 加 -Purge 连队列数据一起删\n```\n```bash\nsh ./uninstall.sh                                                            # 加 --purge 同理\n```\n\n### 路线图\n\n- [x] 按会话定向注入\n- [x] 浅色 / 深色 / 自动主题适配 & 本地 CSRF 防护\n- [ ] 全局热键唤出输入框（原生小助手）\n- [ ] “Stop 并带新指令重发”的硬打断兜底（显式开启）\n- [ ] 桌宠联动皮肤（待注入消息变成她头顶的气泡）\n- [ ] 上架官方插件市场\n\n### 免责声明\n\n本项目为**非官方社区同人项目**，与 Google 无隶属、背书或赞助关系。“Antigravity”、“Gemini” 为 Google LLC 的商标，此处仅用于指明适配对象。项目不含任何官方素材，请勿用于商标侵权行为。\n\n### 开源协议\n\n[MIT](LICENSE) © 2026 agy-steer contributors\n",
+  "latestReleaseNotes": "# Changelog\n\n## 0.2.0 (2026-11-24)\n\nMajor reliability, security, and UX upgrade ahead of open-source launch:\n\n- **Windows zero-config runtime resolution**: `install.ps1` and `scripts/launch-ui.ps1` now detect Antigravity's `%APPDATA%\\Antigravity\\bin\\agy-node.cmd` and `Antigravity.exe` (`ELECTRON_RUN_AS_NODE=1`), generating a space-safe `scripts\\run-node.cmd` shim when `node` is not on `PATH` and ensuring hidden background spawning with `windowsHide`.\n- **CSRF & local security hardening**: `daemon.mjs` now validates `Host`, `Origin`, `Sec-Fetch-Site`, and `Content-Type: application/json` on mutating endpoints to block cross-origin prompt-injection attempts from browser tabs, fixes static path traversal boundary checks, and writes `state.json` atomically.\n- **Per-conversation scoping & step modes**: route messages to any active turn (global) or pin them to a specific `conversationId`, and choose between `userMessage` and `systemMessage` `injectSteps`.\n- **Floating UI improvements**: fixed the 1-second poll overwriting active inline edits, added revision-based DOM updates, light/dark/auto theme switching, queue reordering (`↑`/`↓`), clear queue/history controls, one-click history reuse, `ArrowUp` quick-edit, and live invocation/hook-age diagnostics.\n- **Native Antigravity Skill**: added `skills/agy-steer/SKILL.md` and updated `plugin.json` `suggestedPrompts` so the agent can directly open the box, inspect the queue, and assist with verification.\n- **Expanded tests & contributor docs**: added `package.json`, `CONTRIBUTING.md`, `.gitattributes`, issue templates, and expanded `tests/simulate.mjs` coverage (14 checks).",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/hook-relay.mjs",
+        "line": 61,
+        "snippet": "const child = spawn(process.execPath, [DAEMON], { detached: true, stdio: 'ignore', windowsHide: true, env: childEnvForDaemon(), });",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-steer/blob/be0a5af3a35988ee31ed60467ded5ed94f0b64e9/scripts/hook-relay.mjs#L61"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/daemon.mjs",
+        "line": 100,
+        "snippet": "fs.writeFileSync( tmp, JSON.stringify({ queue: state.queue, history: state.history }, null, 2), 'utf8' );",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-steer/blob/be0a5af3a35988ee31ed60467ded5ed94f0b64e9/scripts/daemon.mjs#L100"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/hook-relay.mjs",
+        "line": 45,
+        "snippet": "const r = await fetch(`${BASE}/health`, { signal: AbortSignal.timeout(ms) });",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-steer/blob/be0a5af3a35988ee31ed60467ded5ed94f0b64e9/scripts/hook-relay.mjs#L45"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/hook-relay.mjs",
+        "line": 111,
+        "snippet": "const r = await fetch(`${BASE}/relay/take`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ event, conversationId, workspace, modelName, i",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-steer/blob/be0a5af3a35988ee31ed60467ded5ed94f0b64e9/scripts/hook-relay.mjs#L111"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/daemon.mjs",
+        "line": 14,
+        "snippet": "* AGY_STEER_DATA_DIR persistence dir (default ~/.gemini/antigravity/plugin_data/agy-steer)",
+        "githubBlobUrl": "https://github.com/cxtsnd6/agy-steer/blob/be0a5af3a35988ee31ed60467ded5ed94f0b64e9/scripts/daemon.mjs#L14"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.0",
+      "sha": "be0a5af3a35988ee31ed60467ded5ed94f0b64e9",
+      "scannedAt": "2026-11-27T18:19:01.341Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "id": "sawarame/idd-skills",
+  "sha": "3b021f0ff7239d44c1186a38a418a202a597057b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:13.581Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "idd-skills",
+    "displayName": "@sawarame's IDD Skills",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "idd-clarify",
+        "slashCommand": "/idd-clarify",
+        "description": "Interactively inspects an existing GitHub Issue (including its comments and codebase context) by Issue number, identifies missing or ambiguous specifications, clarifies open questions with the user through dialogue, previews the finalized s",
+        "disableModelInvocation": false,
+        "file": "skills/idd-clarify/SKILL.md"
+      },
+      {
+        "name": "idd-implement",
+        "slashCommand": "/idd-implement",
+        "description": "Autonomously inspects a GitHub Issue or Pull Request by number: for Issues, posts a clarification comment with a `question` label and exits if anything is ambiguous, or posts specifications and technical requirements, removes `question`, se",
+        "disableModelInvocation": false,
+        "file": "skills/idd-implement/SKILL.md"
+      },
+      {
+        "name": "idd-issue",
+        "slashCommand": "/idd-issue",
+        "description": "Interactively brainstorms ideas or tasks with the user against the repository context, refines concrete specifications and acceptance criteria ready for `idd-implement`, previews the drafted Issue for explicit user confirmation, and creates",
+        "disableModelInvocation": false,
+        "file": "skills/idd-issue/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/idd-clarify",
+      "/idd-implement",
+      "/idd-issue"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# idd-skills\n\n[English](./README.md) | [日本語](./README.ja.md)\n\nAn issue-driven development (IDD) plugin compatible with **Google Antigravity**.\n\nIt provides three complementary skills:\n- **`idd-issue`**: Interactively brainstorms ideas with AI against your repository context and posts a structured GitHub Issue **as your locally authenticated `gh` user**.\n- **`idd-clarify`**: Inspects an existing GitHub Issue (including comments and codebase context) by Issue number, identifies missing or ambiguous specifications, clarifies them interactively with you, and posts the finalized specifications as an Issue comment **as your locally authenticated `gh` user**.\n- **`idd-implement`**: Starts from an existing GitHub Issue or Pull Request number and autonomously inspects requirements/reviews, implements and verifies changes in an isolated `git worktree`, and opens or updates Pull Requests.\n\n## `idd-issue` Skill Documentation\n\nAn interactive skill ([Usage & Prompt Examples](./skills/idd-issue/README.md) | [`SKILL.md`](./skills/idd-issue/SKILL.md)) for turning rough ideas or tasks into well-structured GitHub Issues ready for `idd-implement`:\n\n- **End-to-End Flow**: Initial idea or task input → read-only repository & existing Issue inspection → interactive brainstorming to resolve ambiguities → structured Issue drafting → mandatory full preview & explicit user confirmation → creating the Issue via `gh issue create` → suggesting `/idd-implement <issue-number>`.\n- **Read-Only Repository Exploration**: Inspects project conventions (`CONTRIBUTING.md`, `AGENTS.md`, `README*`, etc.), `.github/ISSUE_TEMPLATE/`, relevant codebase files, existing open Issues (to avoid duplicates), and repository labels without modifying any files or branches.\n- **Interactive Brainstorming**: Refines purpose, functional specifications, out-of-scope boundaries, technical considerations, and acceptance criteria through focused dialogue so downstream implementation does not stall on ambiguities.\n- **Mandatory Preview & Confirmation**: Presents the complete draft (target repository, local `gh` account, title, optional labels/assignees, and Markdown body) and waits for your explicit approval before posting.\n- **Posted as Your Local `gh` User**: Creates the Issue directly via `gh issue create` under your locally logged-in `gh` CLI account (never via `gh-as-bot.mjs` or the GitHub App Bot, and **without** appending an AI post marker such as `(🤖 Posted by AI)`). GitHub Projects (Projects v2) registration and status transitions are out of scope for `idd-issue`.\n- **Smooth Handoff to `idd-implement`**: After creating the Issue, reports the Issue number and URL and guides you to run `/idd-implement <issue-number>` when ready to implement.\n\n---\n\n## `idd-clarify` Skill Documentation\n\nAn interactive skill ([Usage & Prompt Examples](./skills/idd-clarify/README.md) | [`SKILL.md`](./skills/idd-clarify/SKILL.md)) for reading an existing GitHub Issue by number, uncovering specification gaps against the codebase, and finalizing specifications through dialogue before posting them as an Issue comment:\n\n- **End-to-End Flow**: Target Issue number/URL input → read-only Issue, existing comments, & repository inspection → specification gap analysis → interactive clarification dialogue → mandatory full preview & explicit user confirmation → posting the finalized specifications via `gh issue comment` (and optionally removing the `question` label if attached and approved) → suggesting `/idd-implement <issue-number>`.\n- **Read-Only Issue & Codebase Exploration**: Fetches the Issue and all existing comments (`gh issue view <issue-number> --comments`), including any unanswered questions from reviewers or prior `/idd-implement` (Goal A) runs, and checks relevant source files and project conventions without modifying any files or branches.\n- **Interactive Specification Clarification**: Summarizes what is already clear, lists missing or ambiguous points (scope/non-goals, functional behavior, edge cases/error handling, technical decisions, acceptance criteria), and resolves them with codebase-grounded options and recommendations.\n- **Mandatory Preview & Confirmation**: Presents the complete draft (target repository, Issue, local `gh` account, optional `question` label removal, and full Markdown comment body) and waits for your explicit approval before posting.\n- **Posted as Your Local `gh` User (Comment-Only)**: Records finalized specifications directly via `gh issue comment` under your locally logged-in `gh` CLI account without overwriting the original Issue description (never via `gh-as-bot.mjs` or the GitHub App Bot, and **without** appending an AI post marker such as `(🤖 Posted by AI)`). GitHub Projects (Projects v2) registration and status transitions are out of scope for `idd-clarify`.\n- **Smooth Handoff to `idd-implement`**: After posting the comment, reports the comment/Issue URL and guides you to run `/idd-implement <issue-number>` when ready to implement.\n\n---\n\n## `idd-implement` Skill Documentation\n\nAn autonomous, non-interactive skill ([Usage & Prompt Examples](./skills/idd-implement/README.md) | [`SKILL.md`](./skills/idd-implement/SKILL.md)) that starts from a GitHub Issue number or Pull Request number and executes the full workflow end-to-end:\n\n- **New Issue Implementation Flow**: Reviewing requirements and open questions → posting a specification/technical requirements comment (or adding the `question` label and exiting after posting a clarification comment) → removing `question` if present & updating GitHub Project `Status` to `In Progress` immediately before implementation → implementing and verifying in a `git worktree` → creating a Pull Request → updating GitHub Project `Status` to `In Review` if available → returning to the original branch.\n- **PR Review Response Flow**: When invoked with a PR number (or an Issue number that already has an open PR with review feedback), inspects PR reviews, conversation comments, unresolved inline diff review threads, and linked Issues → posts clarification questions on the PR and exits if feedback is ambiguous → updates the linked Issue's Project `Status` to `In Progress` → checks out the existing PR branch in a `git worktree`, implements and verifies fixes → commits & pushes updates → replies to addressed inline review comments, posts a PR summary comment, and requests re-review → updates Project `Status` to `In Review` if available → cleans up the worktree and returns to the original branch.\n\nUsing the bundled wrapper scripts [`scripts/gh-as-bot.mjs`](./skills/idd-implement/scripts/gh-as-bot.mjs) and [`scripts/git-as-bot.mjs`](./skills/idd-implement/scripts/git-as-bot.mjs), the skill posts Issue/PR comments, inline review replies, label updates, Pull Requests, **and `git commit` / `git push` operations** **as a dedicated GitHub App (`<app-name>[bot]`) when `~/.config/github-app/.env` is configured and Bot authentication succeeds**, or falls back to **the locally authenticated GitHub / Git user** when GitHub App configuration is absent, authentication fails, or `Contents: Read and write` permission is missing for `git push` (when posting comments or review replies via `gh-as-bot.mjs` as the local user, a language-appropriate AI post marker—such as `(🤖 Posted by AI)` for English or `（🤖AIによる投稿）` for Japanese—is automatically appended after the first heading, or prepended when no heading is present, to clearly indicate an AI-authored comment). For GitHub Projects (Projects v2) `Status` updates, [`scripts/update-project-status.mjs`](./skills/idd-implement/scripts/update-project-status.mjs) uses the Bot token for Organization repositories (falling back to local `gh` authentication if unconfigured or Bot auth fails) and uses the locally authenticated `gh` user for personal (`User`) repositories (since GitHub App Installation Tokens cannot access user-owned Projects v2).\n\n---\n\n## Behavior (Authentication Switching Rules)\n\n> [!NOTE]\n> The Bot/local authentication switching below applies to **`idd-implement`**. **`idd-issue`** (`gh issue create`) and **`idd-clarify`** (`gh issue comment` / optional `gh issue edit`) always invoke the local `gh` CLI directly as your locally authenticated user (and never append an AI post marker such as `(🤖 Posted by AI)`).\n\n| Condition | Authentication Identity Used | Comment Body & Git Commit/Push Behavior |\n| :--- | :--- | :--- |\n| `~/.config/github-app/.env` **exists and Bot authentication succeeds** | Installation Access Token of the GitHub App (`<app-name>[bot]`) specified in `.env` | Comments/PRs are posted as-is (GitHub displays the `[bot]` badge); `git commit` uses `<app-slug>[bot]` author/committer (`<bot-user-id>+<app-slug>[bot]@users.noreply.github.com`); `git push` authenticates via Bot token over HTTPS |\n| GitHub App configuration is missing, or **authentication/permission fails** | Falls back with a warning to the user currently logged into the local `gh` CLI (`gh auth status`) / local `git` config & credentials | Comments automatically append a language-appropriate AI post marker after the first heading (e.g., `(🤖 Posted by AI)` for English, `（🤖AIによる投稿）` for Japanese); `git commit` / `git push` fall back to your local `git` author configuration and credentials |\n\n> [!NOTE]\n> **Fallback to Local User and AI Post Attribution**\n> If `~/.config/github-app/.env` does not exist—or if GitHub App authentication fails due to missing configuration values, a missing `.pem` file, the App not being installed on the target repository, or an API authentication error—`gh-as-bot.mjs` outputs a warning and falls back to the locally authenticated `gh` user. In that case, `gh-as-bot.mjs` automatically detects the comment language and appends a localized AI post marker right after the first heading in `issue comment` / `pr comment` / `pr review` bodies and comment/reply API calls (e.g., `### Specifications & Functional Requirements (🤖 Posted by AI)` for English, or `### 仕様・機能要件（🤖AIによる投稿）` for Japanese) so readers can tell the comment was posted by AI. If the body has no headings, it prepends the marker; if an AI post marker is already present, it is not duplicated.\n\n---\n\n## Prerequisites\n\n- **Node.js** (v18 or later recommended; uses built-in modules only, so `npm install` is not required)\n- **GitHub CLI (`gh`)**\n  - Must be authenticated via `gh auth login` if not using a GitHub App\n  - If you use **GitHub Projects (Projects v2)** on a **personal (`User`)** repository, ensure your local `gh` CLI includes the `project` scope (`gh auth refresh -s project`), even when using a GitHub App Bot for comments and PRs.\n- **Git** (with `git worktree` support)\n- **GitHub Projects (Projects v2)** *(Required if you want automatic status transitions)*\n  - Legacy Projects (classic) are not supported; use **Projects v2**.\n  - If the repository/Issue does not use open Projects v2, the skill automatically skips Project status updates and continues the workflow.\n\n---\n\n## GitHub Projects (Projects v2) & Label Configuration\n\nTo enable automatic status tracking during `idd-implement`, set up an open **GitHub Projects (Projects v2)** board linked to your repository (or add your target Issues to an open Project v2) with a single-select **`Status`** field containing the following options:\n\n| Status Option | Required | Timing of Update | Behavior When Missing |\n| :--- | :---: | :--- | :--- |\n| **`In Progress`** | Recommended | Immediately before implementation begins (after posting the spec comment, before creating the `git worktree` and editing code) | Outputs a warning and continues implementation |\n| **`In Review`** | Optional | Immediately after the Pull Request is created | Skips cleanly without warning |\n\n- Other standard statuses (such as `Todo` / `Backlog` before starting, or `Done` via GitHub's built-in workflow when the PR is merged and closes the Issue) can be configured freely as usual.\n- **`question` Label**: When clarification is needed (Goal A), the skill automatically adds the `question` label to the Issue (creating it if it does not exist yet). Once clarifications are resolved and implementation starts (Goal B), the `question` label is automatically removed.\n\n---\n\n## Installation\n\n### Google Antigravity (Global Plugin)\n\nBy cloning this repository into the `~/.gemini/config/plugins` directory, it is automatically recognized and enabled as a global **Antigravity** plugin.\n\n```bash\n# Create the plugins directory if it does not exist\nmkdir -p ~/.gemini/config/plugins\n\n# Navigate to the directory and clone the repository\ncd ~/.gemini/config/plugins\ngit clone https://github.com/sawarame/idd-skills.git\n```\n\nIf you prefer to clone via SSH, run the following commands:\n\n```bash\ncd ~/.gemini/config/plugins\ngit clone git@github.com:sawarame/idd-skills.git\n```\n\n### Other AI Agents / Project-Local Setup (`git subtree`)\n\nDedicated `idd-issue`, `idd-clarify`, and `idd-implement` branches (split from `skills/idd-issue`, `skills/idd-clarify`, and `skills/idd-implement` via `git subtree split`) are available so that AI coding agents other than Google Antigravity can also use any combination of skills directly from a target repository's `.agents/skills` directory.\n\nRun the following command(s) at the root of your target repository (requires a clean working tree):\n\n```bash\n# idd-issue: Interactive brainstorming & GitHub Issue creation\ngit subtree add \\\n  --prefix=.agents/skills/idd-issue \\\n  https://github.com/sawarame/idd-skills.git \\\n  idd-issue \\\n  --squash\n\n# idd-clarify: Interactive specification gap analysis & clarification comment posting\ngit subtree add \\\n  --prefix=.agents/skills/idd-clarify \\\n  https://github.com/sawarame/idd-skills.git \\\n  idd-clarify \\\n  --squash\n\n# idd-implement: Autonomous Issue implementation & PR review response\ngit subtree add \\\n  --prefix=.agents/skills/idd-implement \\\n  https://github.com/sawarame/idd-skills.git \\\n  idd-implement \\\n  --squash\n```\n\nIf you prefer SSH, replace the repository URL with `git@github.com:sawarame/idd-skills.git`.\n\n> [!NOTE]\n> - **Adjusting `--prefix` for your AI agent**: Many agents read project-local skills from `.agents/skills/`, while some tools use `.agent/skills/` or `.claude/skills/`. Adjust `--prefix` (for example, `--prefix=.agent/skills/idd-issue`, `--prefix=.agent/skills/idd-clarify`, or `--prefix=.agent/skills/idd-implement`) to match your AI agent's skill directory.\n> - **Script paths (`idd-implement`)**: `idd-implement`'s bundled helper scripts are located under the installed skill's `scripts/` directory (e.g., `.agents/skills/idd-implement/scripts/`). When running the commands in [Verification](#verification) manually, replace `~/.gemini/config/plugins/idd-skills/skills/idd-implement/scripts/...` with your installed path. (`idd-issue` and `idd-clarify` use your local `gh` CLI directly and have no bundled scripts.)\n> - **GitHub App configuration**: `~/.config/github-app/.env` is stored in your home directory, so `idd-implement` Bot authentication works the same way across repositories. (Without it, `idd-implement` falls back to your local `gh` / `git` credentials.)\n\nTo pull future updates for any skill into your repository:\n\n```bash\n# Update idd-issue\ngit subtree pull \\\n  --prefix=.agents/skills/idd-issue \\\n  https://github.com/sawarame/idd-skills.git \\\n  idd-issue \\\n  --squash\n\n# Update idd-clarify\ngit subtree pull \\\n  --prefix=.agents/skills/idd-clarify \\\n  https://github.com/sawarame/idd-skills.git \\\n  idd-clarify \\\n  --squash\n\n# Update idd-implement\ngit subtree pull \\\n  --prefix=.agents/skills/idd-implement \\\n  https://github.com/sawarame/idd-skills.git \\\n  idd-implement \\\n  --squash\n```\n\n---\n\n## Creating a GitHub App (Bot)\n\nIf you want AI-generated Issue comments and Pull Requests to be separated from your personal account and posted with a `[bot]` badge, create a dedicated GitHub App by following these steps:\n\n1. Log in to GitHub, click your profile icon in the top-right corner, and navigate to **Settings** → **Developer settings** (at the bottom of the left sidebar) → **GitHub Apps** → **New GitHub App**.\n2. Fill in the basic information:\n   - **GitHub App name**: Enter any unique name (this name will be displayed as `<app-name>[bot]`, e.g., `yourname-ai-agent`).\n   - **Homepage URL** (required): Enter a valid `https://...` URL (no running web server is required; your GitHub profile `https://github.com/<username>` or a repository URL is sufficient).\n   - **Identifying and authorizing users (Callback URL, etc.)**: Leave all fields **blank**.\n3. Under the **Webhook** section, **uncheck Active** (since the script runs locally and does not use a webhook receiver server).\n4. Under **Permissions** → **Repository permissions**, configure the following permissions:\n   - **Issues**: `Read and write` (required to view Issues, post comments, and manage labels such as `question`)\n   - **Pull requests**: `Read and write` (required to create and update PRs)\n   - **Contents**: `Read and write` (required so `git-as-bot.mjs` can perform `git push` using the Bot token; if set to `Read-only`, `git-as-bot.mjs` logs a warning and falls back to your local `git` credentials for `git push`)\n   - **Metadata**: Automatically set to `Read-only`.\n   - *(If using an **Organization** with GitHub Projects v2)* Under **Permissions** → **Organization permissions**, also set **Projects** to `Read and write` (do not confuse this with Repository-level Projects, which applies only to Projects classic). After installing or updating permissions on the Organization, approve them via **Accept new permissions**.\n5. Under **Where can this GitHub App be installed?**, select **Only on this account**, then click **Create GitHub App**.\n6. On the created app's settings page, note the **App ID** (numeric) shown in the **About** section.\n7. Scroll down to the **Private keys** section on the same page, click **Generate a private key**, and download the `.pem` file.\n8. Open **Install App** in the left sidebar, click **Install** for your account, and install it on the target repositories (or **All repositories**).\n\n---\n\n## Setting Up the `.pem` File and `.env`\n\n### 1. Move the `.pem` File to a Secure Location\n\nDo not store the private key (`.pem`) inside a Git repository or a cloud-synced folder (such as iCloud). Place it under `~/.config/github-app/` with restricted permissions.\n\n```bash\nmkdir -p ~/.config/github-app\nchmod 700 ~/.config/github-app\n\n# Move the downloaded .pem file and restrict read/write access to the owner only\nmv ~/Downloads/<downloaded-filename>.pem ~/.config/github-app/<app-name>.pem\nchmod 600 ~/.config/github-app/<app-name>.pem\n```\n\n### 2. Create `~/.config/github-app/.env`\n\nCreate `~/.config/github-app/.env` with the following contents and also set its permissions to `600`.\n\n```dotenv\nGITHUB_APP_ID=123456\nGITHUB_APP_PRIVATE_KEY_PATH=~/.config/github-app/<app-name>.pem\n```\n\n```bash\nchmod 600 ~/.config/github-app/.env\n```\n\n#### Configurable Variables\n\n| Variable Name | Required | Description |\n| :--- | :---: | :--- |\n| `GITHUB_APP_ID` | Required | The **App ID** (numeric) from your GitHub App settings page |\n| `GITHUB_APP_PRIVATE_KEY_PATH` | Required | Path to the `.pem` file. Supports `~`, `$HOME`, `${HOME}`, or a path relative to `.env` |\n| `GITHUB_APP_INSTALLATION_ID` | Optional | Specify only if you want to pin a specific Installation ID (auto-detected from the target repository when omitted) |\n| `GITHUB_APP_ENV_FILE` | Optional | When set as an environment variable, specifies an alternative `.env` file path instead of the default `~/.config/github-app/.env` |\n\n---\n\n## Verification\n\nYou can verify the setup by running the following read-only commands inside a repository directory where the GitHub App is installed (these commands do not modify Issues or PRs).\n\n### Verify Bot Authentication\n\n```bash\n# Succeeds if a number representing accessible repositories is returned\nnode ~/.gemini/config/plugins/idd-skills/skills/idd-implement/scripts/gh-as-bot.mjs api /installation/repositories --jq '.repositories | length'\n\n# Test fetching a specific Issue\nnode ~/.gemini/config/plugins/idd-skills/skills/idd-implement/scripts/gh-as-bot.mjs issue view <issue-number> --json number,title\n```\n\n> [!NOTE]\n> Calling `api /user` with a Bot's Installation Access Token returns `HTTP 403: Resource not accessible by integration`. This is expected behavior confirming authentication as a GitHub App (Installation Token) rather than a personal user.\n\n### Verify Fallback When `.env` Is Absent\n\n```bash\n# Temporarily pointing to a non-existent path displays the locally logged-in gh username\nGITHUB_APP_ENV_FILE=/tmp/nonexistent-gh-bot.env \\\n  node ~/.gemini/config/plugins/idd-skills/skills/idd-implement/scripts/gh-as-bot.mjs api /user --jq .login\n\n# Verify git-as-bot.mjs passes through local git commands cleanly\nnode ~/.gemini/config/plugins/idd-skills/skills/idd-implement/scripts/git-as-bot.mjs status --short\n```\n\n---\n\n## Security Design and Operational Notes\n\n- **Keeping Private Keys and Tokens Out of AI Context**\n  `gh-as-bot.mjs` and `git-as-bot.mjs` read `.env` and `.pem` internally and pass the acquired Installation Access Token strictly in memory—via the `GH_TOKEN` environment variable for `gh` and an in-memory `IDD_GIT_BOT_TOKEN` environment variable paired with a temporary `GIT_ASKPASS` script (without embedding tokens into CLI arguments, remote URLs, or `.git/config`) for `git`. They never cache tokens to disk or print keys/tokens to stdout. [SKILL.md](./skills/idd-implement/SKILL.md) also prohibits AI agents from directly reading `.env` or `.pem` files.\n- **Bot Identity and Authentication During `git commit` / `git push`**\n  When GitHub App configuration is present and valid, `git-as-bot.mjs` commits using the Bot's GitHub identity (`<app-slug>[bot]` / `<bot-user-id>+<app-slug>[bot]@users.noreply.github.com`) and pushes over HTTPS using the Bot's Installation Access Token (even if your local `origin` remote uses SSH, via temporary `-c` config overrides that leave `.git/config` untouched). If Bot configuration is missing, Bot authentication fails, or `git push` fails due to missing `Contents: Read and write` permission, `git-as-bot.mjs` logs a warning and falls back to your local `git` author settings and credentials.\n  *Note: Having the Bot create commits and the PR also lets you cleanly separate AI commits and review/approve the PR using your personal GitHub account.*\n\n---\n\n## Troubleshooting\n\n- **`Failed to retrieve GitHub App installation information for repository owner/repo` (`HTTP 404`)**\n  - The GitHub App is not installed on the target repository. Add the repository from **Install App** in your GitHub App settings.\n- **`Resource not accessible by integration` (`HTTP 403`) or `git push` falling back to local credentials**\n  - The GitHub App may be missing `Issues: Read and write`, `Pull requests: Read and write`, or `Contents: Read and write` (needed for Bot `git push`) under **Repository permissions**. After updating permissions, you may need to approve the updated permissions on the installation page in GitHub (**Accept new permissions**).\n- **Comments, commits, or PRs are still created under your personal account**\n  - Check that `~/.config/github-app/.env` has the exact path and filename, and check stderr for `[gh-as-bot] Warning:` or `[git-as-bot] Warning:` messages indicating Bot authentication fell back to the local user.\n  - Check whether the agent called `gh` or `git` directly, or used GitHub MCP tools instead of `gh-as-bot.mjs` / `git-as-bot.mjs` ([SKILL.md](./skills/idd-implement/SKILL.md) specifies prioritizing both wrappers).\n- **GitHub Project `Status` is not updated to `In Progress` or `In Review`**\n  - **Personal (`User`) repository**: GitHub App Installation Tokens cannot access user-owned Projects v2, so `update-project-status.mjs` uses your local `gh` CLI. Run `gh auth refresh -s project` if the `project` scope is missing.\n  - **Organization repository**: Ensure the GitHub App has **Organization permissions → Projects: `Read and write`** enabled and approved (**Accept new permissions**) on the Organization installation.\n  - **Non-blocking behavior**: If the repository does not use Projects v2, the Issue is not registered in an open Project, or `In Progress` is missing from `Status`, `update-project-status.mjs` outputs a notice/warning and exits `0` so implementation continues. If `In Review` does not exist in `Status`, the post-PR update is skipped cleanly without warning.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "credential_access",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "prompt_injection_suspect",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/idd-implement/SKILL.md",
+        "line": 33,
+        "snippet": "- **Security Prohibition**: Never directly read the contents of `~/.config/github-app/.env` or `.pem` private key files as an agent (all authentication handling must remain encapsu",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/SKILL.md#L33"
+      },
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "skills/idd-implement/SKILL.md",
+        "line": 34,
+        "snippet": "- **GitHub MCP Tools**: GitHub MCP tools do not read `~/.config/github-app/.env` and would post under the personal account; therefore, avoid them by default and use `gh-as-bot.mjs`",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/SKILL.md#L34"
+      },
+      {
+        "id": "PROMPT_OVERRIDE_GUARDRAILS",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_injection_suspect",
+        "message": "Prompt instructs the agent to override safety rules or hide actions from the user.",
+        "file": "skills/idd-implement/SKILL.md",
+        "line": 175,
+        "snippet": "- When specifications or implementation direction cannot be finalized, **stop without proceeding to implementation** as soon as the comment is posted and the `question` label is ha",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/SKILL.md#L175"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 156,
+        "snippet": "const remoteOrigin = spawnSync('git', ['remote', 'get-url', 'origin'], { encoding: 'utf8', cwd });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L156"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 166,
+        "snippet": "const remotes = spawnSync('git', ['remote'], { encoding: 'utf8', cwd });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L166"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 173,
+        "snippet": "const remoteUrl = spawnSync('git', ['remote', 'get-url', firstRemote], { encoding: 'utf8', cwd });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L173"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 392,
+        "snippet": "const result = spawnSync('gh', args, { stdio: 'inherit', env: childEnv });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L392"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 154,
+        "snippet": "const remoteCheck = spawnSync('git', ['remote', 'get-url', candidate], { encoding: 'utf8', cwd });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L154"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 167,
+        "snippet": "const originCheck = spawnSync('git', ['remote', 'get-url', 'origin'], { encoding: 'utf8', cwd });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L167"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 317,
+        "snippet": "const child = spawn('git', gitArgs, { stdio: ['inherit', 'pipe', 'pipe'], env });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L317"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 356,
+        "snippet": "const result = spawnSync('git', args, { stdio: 'inherit', env: process.env });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L356"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/idd-implement/scripts/update-project-status.mjs",
+        "line": 164,
+        "snippet": "const result = spawnSync('gh', ghArgs, { encoding: 'utf8', env: buildGhEnv(botToken) });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/update-project-status.mjs#L164"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 204,
+        "snippet": "const response = await fetch(url, { method, headers });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L204"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 654,
+        "snippet": "fs.writeFileSync(tempFile, annotated, 'utf8');",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L654"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/idd-implement/scripts/gh-as-bot.mjs",
+        "line": 775,
+        "snippet": "fs.rmSync(dir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/gh-as-bot.mjs#L775"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 281,
+        "snippet": "fs.writeFileSync(scriptPath, cmdContent, { encoding: 'utf8', mode: 0o700 });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L281"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 296,
+        "snippet": "fs.writeFileSync(scriptPath, shContent, { encoding: 'utf8', mode: 0o700 });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L296"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/idd-implement/scripts/git-as-bot.mjs",
+        "line": 304,
+        "snippet": "fs.rmSync(tempDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/scripts/git-as-bot.mjs#L304"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/idd-implement/SKILL.md",
+        "line": 106,
+        "snippet": "4. Create an isolated `git worktree` at `../.worktrees/<repo>-pr-<pr-number>` (or `.worktrees/` if `.gitignore`d) checked out on the PR's existing branch:",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/SKILL.md#L106"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/idd-implement/SKILL.md",
+        "line": 209,
+        "snippet": "3. Create the worktree at a path that does not pollute the original repository's working tree or `git status` (e.g., `../.worktrees/<repo>-issue-<issue-number>` under the repositor",
+        "githubBlobUrl": "https://github.com/sawarame/idd-skills/blob/3b021f0ff7239d44c1186a38a418a202a597057b/skills/idd-implement/SKILL.md#L209"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "3b021f0ff7239d44c1186a38a418a202a597057b",
+      "scannedAt": "2026-11-27T18:18:13.581Z",
+      "riskTier": "high",
+      "capabilities": [
+        "credential_access",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_injection_suspect",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

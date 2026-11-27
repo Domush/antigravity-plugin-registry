@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "id": "wuying1991/antigravity-open-default",
+  "sha": "7032513a42912714024f173a0a31327cc1edcaec",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:45.544Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-open-default",
+    "displayName": "Open in Default App",
+    "version": "1.0.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "launcher",
+        "runtimeName": "antigravity-open-default_launcher",
+        "transport": "stdio",
+        "command": "agy-node",
+        "args": [
+          "${PLUGIN_ROOT}/src/server.mjs",
+          "--data-dir",
+          "${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "track-deliverable-outputs",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "write_file|write_to_file|edit_file|replace_file_content|multi_replace_file_content",
+        "type": "command",
+        "command": "agy-node ./hooks/track-output.mjs || node ./hooks/track-output.mjs",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "antigravity-open-default_launcher"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Open in Default App (`antigravity-open-default`)\n\n> **跨平台 Antigravity 原生插件（macOS / Windows / Linux）**  \n> 让 Antigravity 生成的 **HTML**、PDF、Office 文档、图片等结果文件，点一下直接用系统默认软件（Chrome / Edge / Safari / Preview 等）打开，或通过下拉菜单选择「打开方式」，不再跳进代码源码页。\n\nA cross-platform **Google Antigravity** plugin (MCP App + Rule + PostToolUse Hook) that displays interactive launcher cards in chat and a side-pane file list so you can open generated `.html` pages and deliverables directly in your **OS default application** — or pick another installed app via **Open With** — instead of landing in the built-in code viewer.\n\n---\n\n## Features / 核心特性\n\n* **One-Click Default App Launch（一键默认软件打开）**\n  * Click the **filename** or **浏览器打开 / 默认软件打开** button to launch via native OS handlers:\n    * **macOS**: `/usr/bin/open`\n    * **Windows**: PowerShell `Start-Process` (with env-var path passing — safe for spaces, CJK characters, and special symbols)\n    * **Linux**: `xdg-open`\n* **Native \"Open With\" Dropdown（选择打开方式）**\n  * Click the **`▾`** split-button arrow to open a vertical dropdown showing the **top 5** compatible apps installed on your machine (browsers prioritized for `.html`), with a **\"选择更多应用…\"** toggle for the rest:\n    * **macOS**: Queries `NSWorkspace` / LaunchServices dynamically (auto-filters nested helpers and updater duplicates)\n    * **Windows**: Queries Windows Registry (`UserChoice`, `OpenWithProgids`, `OpenWithList`, `StartMenuInternet`) dynamically\n* **Reveal in Finder / File Explorer & Back to Source（定位文件 / 切回源码）**\n  * **Finder** (macOS) / **资源管理器** (Windows): highlights the file directly (`open -R` / `explorer.exe /select,\"...\"`).\n  * **源码**: opens Antigravity's built-in file viewer (`fileView`) whenever you do want to inspect source code.\n* **Batch Anti-Spam Protection（批量防刷屏）**\n  * Always-on rule enforces **at most 1 card per turn** and prioritizes entry-point files (e.g., `index.html`).\n  * Lists with **> 3 files** automatically prioritize `.html` files and collapse to the top 3 with an expandable **\"展开其余 N 个文件\"** toggle.\n  * Lists with **> 5 files** replace **\"全部打开\"** with **\"打开所在目录\"** so you never accidentally pop open 20 tabs at once.\n* **Side Pane Launcher（右侧栏「系统外开文件」）**\n  * Open from Antigravity's side pane **`+`** menu → **系统外开文件**.\n  * A silent `PostToolUse` hook automatically tracks generated `.html`, `.pdf`, Office docs, and images across all conversations without ever stealing window focus.\n  * Includes search, category filters (`HTML` / `文档` / `图片` / `其他`), quick path open, and directory scan.\n* **Safe by Design（安全机制）**\n  * All launch/reveal tools use `visibility: [\"app\"]` — **only user clicks** in the UI can invoke them; the LLM cannot execute arbitrary launches directly.\n  * Zero shell interpolation; blocks direct execution of executable/script file types (`.exe`, `.bat`, `.cmd`, `.ps1`, `.vbs`, `.js`, `.sh`, `.app`, `.command`, `.dmg`, `.pkg`, etc.).\n\n---\n\n## Installation / 安装方式\n\nAntigravity automatically discovers plugins placed under `~/.gemini/config/plugins/` (macOS/Linux) or `%USERPROFILE%\\.gemini\\config\\plugins\\` (Windows). No app restart is required; tools and rules activate on your next message.\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/wuying1991/antigravity-open-default.git \\\n  ~/.gemini/config/plugins/antigravity-open-default\ncd ~/.gemini/config/plugins/antigravity-open-default\nnpm install --omit=dev\n```\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/wuying1991/antigravity-open-default.git `\n  \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-open-default\"\nSet-Location \"$env:USERPROFILE\\.gemini\\config\\plugins\\antigravity-open-default\"\nnpm install --omit=dev\n```\n\n> **Note on Node runtime**: `mcp_config.json` uses Antigravity's built-in cross-platform `agy-node` runtime, so it works reliably on both macOS and Windows even when system `node` is not in the GUI `PATH`. You only need `npm` once to install the 3 runtime dependencies (`@modelcontextprotocol/sdk`, `@modelcontextprotocol/ext-apps`, `zod`). Pre-built UI bundles (`dist/card.html`, `dist/pane.html`) are included in the repository.\n\n---\n\n## Usage / 使用方法\n\n1. Ask Antigravity in **any conversation** to generate an `.html` page (or PDF, chart, spreadsheet, etc.).\n2. At the end of the reply, an inline **Open in Default App** card appears automatically:\n   * Click the **filename** or **浏览器打开 / 默认软件打开** → opens in your OS default app.\n   * Click **`▾`** → pick any of the top 5 installed apps, or expand to view all compatible apps.\n   * Click **Finder** / **资源管理器** → reveals the file on disk.\n   * Click **源码** → opens the file in Antigravity's built-in code viewer.\n3. Click **`+`** in Antigravity's right auxiliary pane → select **系统外开文件** anytime to browse, filter, and reopen recent outputs across conversations.\n4. Manage, toggle, or uninstall anytime in Antigravity's **Customizations → Plugins** page.\n\n---\n\n## Development & Testing / 本地开发与测试\n\n```bash\nnpm install\nnpm run build   # Rebuild self-contained dist/card.html and dist/pane.html\nnpm test        # Run cross-platform unit tests, hook test, and MCP stdio E2E test\n```\n\n### Project Layout\n\n```text\nantigravity-open-default/\n├── plugin.json           # Antigravity plugin manifest\n├── mcp_config.json       # Cross-platform MCP server launch config (agy-node)\n├── hooks.json            # Silent PostToolUse deliverable tracker\n├── rules/AGENTS.md       # Always-on rule (HTML-first, 1 card/turn anti-spam)\n├── hooks/track-output.mjs\n├── src/\n│   ├── platform.mjs      # macOS / Windows / Linux launch, reveal, and Open With discovery\n│   ├── store.mjs         # Persistent recent file history and metadata enrichment\n│   ├── server.mjs        # MCP stdio server & MCP App tool/resource registration\n│   ├── card-ui.js        # Inline MCP App card UI\n│   ├── pane-ui.js        # Side-pane MCP App launcher UI\n│   └── styles.css        # Native Antigravity light/dark theme variables\n├── dist/\n│   ├── card.html         # Self-contained inline card bundle\n│   └── pane.html         # Self-contained side-pane bundle\n├── build.mjs             # Zero-binary HTML single-file builder\n└── test/smoke.test.mjs   # End-to-end verification suite\n```\n\n## License\n\nMIT © [wuying1991](https://github.com/wuying1991)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"track-deliverable-outputs\" executes a shell command on PostToolUse (matcher: write_file|write_to_file|edit_file|replace_file_content|multi_replace_file_content).",
+        "file": "hooks.json",
+        "line": 9,
+        "snippet": "agy-node ./hooks/track-output.mjs || node ./hooks/track-output.mjs",
+        "githubBlobUrl": "https://github.com/wuying1991/antigravity-open-default/blob/7032513a42912714024f173a0a31327cc1edcaec/hooks.json#L9"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/platform.mjs",
+        "line": 108,
+        "snippet": "const child = spawn(command, args, { detached: true, stdio: \"ignore\", windowsHide: false, });",
+        "githubBlobUrl": "https://github.com/wuying1991/antigravity-open-default/blob/7032513a42912714024f173a0a31327cc1edcaec/src/platform.mjs#L108"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "build.mjs",
+        "line": 88,
+        "snippet": "fs.writeFileSync(path.join(__dirname, \"dist\", \"card.html\"), cardHtml, \"utf8\");",
+        "githubBlobUrl": "https://github.com/wuying1991/antigravity-open-default/blob/7032513a42912714024f173a0a31327cc1edcaec/build.mjs#L88"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "build.mjs",
+        "line": 89,
+        "snippet": "fs.writeFileSync(path.join(__dirname, \"dist\", \"pane.html\"), paneHtml, \"utf8\");",
+        "githubBlobUrl": "https://github.com/wuying1991/antigravity-open-default/blob/7032513a42912714024f173a0a31327cc1edcaec/build.mjs#L89"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/store.mjs",
+        "line": 217,
+        "snippet": "fs.writeFileSync(tmpPath, JSON.stringify({ version: 1, files: trimmed }, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/wuying1991/antigravity-open-default/blob/7032513a42912714024f173a0a31327cc1edcaec/src/store.mjs#L217"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "rules/AGENTS.md",
+        "line": 11,
+        "snippet": "- **Let the user click**: Do not automatically execute shell `open` / `start` on generated files unless the user explicitly asks to auto-launch them; presenting the interactive car",
+        "githubBlobUrl": "https://github.com/wuying1991/antigravity-open-default/blob/7032513a42912714024f173a0a31327cc1edcaec/rules/AGENTS.md#L11"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "7032513a42912714024f173a0a31327cc1edcaec",
+      "scannedAt": "2026-11-27T18:18:45.544Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

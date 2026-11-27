@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "id": "Adspirer/adspirer-antigravity-plugin",
+  "sha": "2e5b8087c6aab0e2a0a4bade064fdead379f4665",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:19:09.814Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "adspirer-advertising-agent",
+    "displayName": "Adspirer Advertising Agent",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "adspirer",
+        "runtimeName": "adspirer-advertising-agent_adspirer",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://mcp.adspirer.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "adspirer-ads-manager-browser",
+        "slashCommand": "/adspirer-ads-manager-browser",
+        "description": "Read-only conversion-tracking check in an ad platform's own web UI — Google Ads, Meta, Microsoft Advertising, LinkedIn, TikTok, and Amazon. Use when the user wants pixel, tag, or conversion-action health checked in the ads manager, when the",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-ads-manager-browser/SKILL.md"
+      },
+      {
+        "name": "adspirer-ads-manager-sign-in",
+        "slashCommand": "/adspirer-ads-manager-sign-in",
+        "description": "Have the user sign in to an ads manager in the agent-controlled browser before a read-only UI check. The user takes control and signs in themselves. The agent never asks for, types, or receives passwords or 2FA codes. If the host has no con",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-ads-manager-sign-in/SKILL.md"
+      },
+      {
+        "name": "adspirer-agent",
+        "slashCommand": "/adspirer-agent",
+        "description": "Paid-media advertising agent behavior for Adspirer — create, analyze, and optimize ad campaigns across Google Ads, Meta, TikTok, LinkedIn, Microsoft Advertising, Amazon, Walmart Connect, and ChatGPT Ads. Use for any request about ads, campa",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-agent/SKILL.md"
+      },
+      {
+        "name": "adspirer-amazon-ads",
+        "slashCommand": "/adspirer-amazon-ads",
+        "description": "Create and manage Amazon Ads through Adspirer — Sponsored Products, Sponsored Brands, and Sponsored Display, with ASIN targeting, search-term reports, ACoS, and bid optimization. Use for anything on Amazon Advertising or Seller/Vendor Centr",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-amazon-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-chatgpt-ads",
+        "slashCommand": "/adspirer-chatgpt-ads",
+        "description": "Create and manage ChatGPT Ads (OpenAI Ads) through Adspirer — ads that appear inside ChatGPT responses. Use for OpenAI Ads, ChatGPT advertising, chat card ads, or placing ads in ChatGPT. Covers the one-shot launch tool and irreversible arch",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-chatgpt-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-competitors",
+        "slashCommand": "/adspirer-competitors",
+        "description": "Research a competitor's public ads through Adspirer — headlines, offers, calls to action, formats, and landing URLs on Google and, when asked, Meta, TikTok, or LinkedIn. Needs a real domain. Never estimates competitor spend or performance. ",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-competitors/SKILL.md"
+      },
+      {
+        "name": "adspirer-creative",
+        "slashCommand": "/adspirer-creative",
+        "description": "Write and refresh ad creative with Adspirer — headlines, descriptions, primary text, and ad copy for Google, Meta, TikTok, LinkedIn, and Amazon, plus diagnosing and fixing creative fatigue when CTR falls and frequency rises. Respects each p",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-creative/SKILL.md"
+      },
+      {
+        "name": "adspirer-dashboard",
+        "slashCommand": "/adspirer-dashboard",
+        "description": "Build a visual paid-media dashboard from Adspirer data across Google, Microsoft, Meta, TikTok, LinkedIn, Amazon, Walmart Connect, and ChatGPT Ads, with GA4 and Search Console only as context. Read-only. Every number comes from a tool result",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-dashboard/SKILL.md"
+      },
+      {
+        "name": "adspirer-digest",
+        "slashCommand": "/adspirer-digest",
+        "description": "Draft a paid-media digest for email or Slack — a scorecard, dashboard, or alert — and send or post it only after a fresh explicit yes in this conversation for that exact draft and destination. A scheduled run, a saved recipient, or a reply ",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-digest/SKILL.md"
+      },
+      {
+        "name": "adspirer-docs",
+        "slashCommand": "/adspirer-docs",
+        "description": "Answer questions about Adspirer itself — pricing, plans, quota and tool-call limits, what Adspirer can do, connecting an ad account, supported platforms and AI clients, security, and troubleshooting. Uses the official documentation at adspi",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-docs/SKILL.md"
+      },
+      {
+        "name": "adspirer-google-ads",
+        "slashCommand": "/adspirer-google-ads",
+        "description": "Create and manage Google Ads campaigns through Adspirer — Search, Performance Max, Demand Gen, YouTube, and Display. Use for Google Ads keywords, search terms, quality score, bid strategies, sitelinks and extensions, PMax asset groups, or a",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-google-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-google-analytics",
+        "slashCommand": "/adspirer-google-analytics",
+        "description": "Read Google Analytics 4 through Adspirer to inform paid-media decisions — acquisition, landing pages, engagement, and key events. Use when the user wants GA4 alongside ad performance. GA4 numbers stay separate from ad-platform conversions.",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-google-analytics/SKILL.md"
+      },
+      {
+        "name": "adspirer-keywords",
+        "slashCommand": "/adspirer-keywords",
+        "description": "Paid-search keyword research with Adspirer — keyword ideas, match-type grouping, search-term mining, and negative-keyword candidates for Google Ads, plus a labeled planning exercise when Microsoft has no keyword-volume tool. Research only. ",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-keywords/SKILL.md"
+      },
+      {
+        "name": "adspirer-launch",
+        "slashCommand": "/adspirer-launch",
+        "description": "Plan and launch a new ad campaign with Adspirer — start, create, set up, or launch campaigns on one or several platforms, choose which channel fits the goal, and split a budget across channels. Campaigns are created paused and never spend w",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-launch/SKILL.md"
+      },
+      {
+        "name": "adspirer-linkedin-ads",
+        "slashCommand": "/adspirer-linkedin-ads",
+        "description": "Create and manage LinkedIn Ads through Adspirer — sponsored content, single image, video, carousel, text ads, and lead-gen forms with B2B job-title, company, and industry targeting. Use for anything on LinkedIn. Every LinkedIn campaign requ",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-linkedin-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-mcp",
+        "slashCommand": "/adspirer-mcp",
+        "description": "How to call the Adspirer MCP hub correctly — the router two-step (action \\\"list_tools\\\" then action \\\"execute\\\" with tool_name), the direct tools search_tools and get_tool_schema, per-platform account IDs, quota rules, and the budget unit (",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-mcp/SKILL.md"
+      },
+      {
+        "name": "adspirer-meta-ads",
+        "slashCommand": "/adspirer-meta-ads",
+        "description": "Create and manage Meta Ads (Facebook and Instagram) through Adspirer — image, video, carousel, and lead-gen campaigns, ad sets, audiences, pixels, and creative fatigue. Use for anything on Facebook, Instagram, Meta, or FB ads. Covers the ac",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-meta-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-microsoft-ads",
+        "slashCommand": "/adspirer-microsoft-ads",
+        "description": "Create and manage Microsoft Advertising (Bing Ads) through Adspirer — accounts, campaigns, ad groups, keywords, ads, extensions, budgets, and targeting. Campaigns are created paused. There is no Microsoft performance, search-term, or conver",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-microsoft-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-optimize",
+        "slashCommand": "/adspirer-optimize",
+        "description": "Find and fix wasted ad spend with Adspirer — cut spend that isn't converting, add negative keywords, exclude audiences and placements, reallocate budget to what works, and check whether campaigns are pacing over or under budget. Proposes ch",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-optimize/SKILL.md"
+      },
+      {
+        "name": "adspirer-performance-review",
+        "slashCommand": "/adspirer-performance-review",
+        "description": "Review ad performance across platforms with Adspirer — how are my ads doing, weekly or monthly reports, a cross-channel scorecard, CPA, ROAS, CTR, spend trends, and auditing whether conversion tracking is set up correctly. Read-only; change",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-performance-review/SKILL.md"
+      },
+      {
+        "name": "adspirer-search-console",
+        "slashCommand": "/adspirer-search-console",
+        "description": "Read Google Search Console through Adspirer to inform paid search — organic queries, pages, clicks, impressions, CTR, and position. Submitting a URL for indexing is a separate yes. Organic numbers are not paid conversions. Use when the user",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-search-console/SKILL.md"
+      },
+      {
+        "name": "adspirer-setup",
+        "slashCommand": "/adspirer-setup",
+        "description": "Connect Adspirer, see which ad accounts are linked, and optionally build or refresh a brand workspace (BRAND.md and STRATEGY.md) from brand docs and live campaign data. Use when the user asks to set up or connect Adspirer, sees a not-connec",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-setup/SKILL.md"
+      },
+      {
+        "name": "adspirer-status",
+        "slashCommand": "/adspirer-status",
+        "description": "Show which ad accounts and analytics sources are connected to Adspirer Advertising Agent, which account is active on each platform, and how much plan usage is left. Use when the user asks what is connected, whether a connection is healthy, ",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-status/SKILL.md"
+      },
+      {
+        "name": "adspirer-tag-manager",
+        "slashCommand": "/adspirer-tag-manager",
+        "description": "Inspect Google Tag Manager tags, triggers, and variables through Adspirer when diagnosing conversion tracking, and apply a tag fix only after an explicit yes. Publishing the container is a second yes. A tag that exists is not proof it fires",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-tag-manager/SKILL.md"
+      },
+      {
+        "name": "adspirer-tiktok-ads",
+        "slashCommand": "/adspirer-tiktok-ads",
+        "description": "Create and manage TikTok Ads through Adspirer — in-feed video, Spark Ads, carousel, app promotion, and conversions campaigns. Use for anything on TikTok. Covers the pixel-placement rule that causes most TikTok failures, the unsupported sing",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-tiktok-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-walmart-ads",
+        "slashCommand": "/adspirer-walmart-ads",
+        "description": "Create and manage Walmart Connect ads through Adspirer — Sponsored Products with auto or manual targeting, keywords, placements and bid multipliers, brand assets and video, plus search-term, keyword, item and Display performance with ACoS a",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-walmart-ads/SKILL.md"
+      },
+      {
+        "name": "adspirer-wasted-spend",
+        "slashCommand": "/adspirer-wasted-spend",
+        "description": "Find ad spend that is not converting across the connected platforms, such as search terms, keywords, placements, audiences and tired creatives, and propose fixes that are applied only after the user approves. Use when the user asks where bu",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-wasted-spend/SKILL.md"
+      },
+      {
+        "name": "adspirer-write-ad-copy",
+        "slashCommand": "/adspirer-write-ad-copy",
+        "description": "Write on-brand ad copy for a named platform and campaign, using the brand voice, the campaign's current ads and keywords, and real search terms. Use when the user asks for headlines, descriptions, primary text or new ad variants for a speci",
+        "disableModelInvocation": false,
+        "file": "skills/adspirer-write-ad-copy/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/adspirer-ads-manager-browser",
+      "/adspirer-ads-manager-sign-in",
+      "/adspirer-agent",
+      "/adspirer-amazon-ads",
+      "/adspirer-chatgpt-ads",
+      "/adspirer-competitors",
+      "/adspirer-creative",
+      "/adspirer-dashboard",
+      "/adspirer-digest",
+      "/adspirer-docs",
+      "/adspirer-google-ads",
+      "/adspirer-google-analytics",
+      "/adspirer-keywords",
+      "/adspirer-launch",
+      "/adspirer-linkedin-ads",
+      "/adspirer-mcp",
+      "/adspirer-meta-ads",
+      "/adspirer-microsoft-ads",
+      "/adspirer-optimize",
+      "/adspirer-performance-review",
+      "/adspirer-search-console",
+      "/adspirer-setup",
+      "/adspirer-status",
+      "/adspirer-tag-manager",
+      "/adspirer-tiktok-ads",
+      "/adspirer-walmart-ads",
+      "/adspirer-wasted-spend",
+      "/adspirer-write-ad-copy"
+    ],
+    "mcpServerNames": [
+      "adspirer-advertising-agent_adspirer"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Adspirer Advertising Agent for Antigravity\n\nRun your ad campaigns from Antigravity. Adspirer connects the agent to your live ad accounts on Google Ads, Meta Ads (Facebook and Instagram), TikTok Ads, LinkedIn Ads, Microsoft Advertising (Bing), Amazon Ads, Walmart Connect and ChatGPT Ads through Adspirer's hosted MCP server, so you can research keywords, plan, launch and optimize campaigns, and report on ROAS, ACoS, CPA and CTR without leaving the conversation. New campaigns are created paused, and every change that affects spend needs your approval.\n\n## Use it for\n\n- **Paid search:** Google Ads Search and Performance Max, Microsoft Advertising, keyword research with live CPC and search volume, negative keywords and search-term reports.\n- **Paid social:** Facebook and Instagram ads, TikTok in-feed video and Spark Ads, LinkedIn B2B lead generation, and YouTube and Demand Gen campaigns.\n- **Retail media:** Amazon Sponsored Products, Sponsored Brands and Sponsored Display, and Walmart Connect Sponsored Products, with ACoS and bid management.\n- **Reporting:** cross-platform spend, conversions, ROAS, CPA, CTR and CPC, with pacing against budget.\n- **Optimization:** find wasted spend, shift budget to what converts, catch creative fatigue, and audit conversion tracking before you scale.\n- **Ad copy:** headlines, descriptions and primary text written to each platform's limits and your brand voice.\n\n## Install\n\n**Antigravity app:** open **Customizations**, find **Adspirer Advertising Agent** in the\nMarketplace, and install it.\n\n**Antigravity CLI:**\n\n```text\nagy plugin install https://github.com/Adspirer/adspirer-antigravity-plugin\n```\n\n**Manual:** clone this repository into your plugins folder.\n\n```text\ngit clone https://github.com/Adspirer/adspirer-antigravity-plugin ~/.gemini/config/plugins/adspirer-advertising-agent\n```\n\nThen sign in: open **Customizations**, then **Installed**, then **MCP Servers**, and choose\n**Authenticate** next to the Adspirer server. Sign in to Adspirer in the browser, then connect the\naccounts you want to work on at [adspirer.ai/connections](https://adspirer.ai/connections). No\nAPI key or client secret is required. An Adspirer account is required, and plan usage limits apply.\n\n## Get started\n\nAsk:\n\n```text\nHow did my ads do across every platform in the last 30 days?\nFind spend that is not converting on Google and Meta, and propose fixes.\nResearch keywords for my product and plan a Google Search campaign.\nWrite five new headlines for my best Search campaign in our brand voice.\n```\n\nOr start with a skill by name:\n\n| Skill | What it does |\n| --- | --- |\n| `/adspirer-setup` | Connect your accounts, get a first look, and optionally build a brand workspace |\n| `/adspirer-status` | Connected accounts and remaining plan usage |\n| `/adspirer-performance-review` | Cross-platform scorecard with the top problems and next actions |\n| `/adspirer-wasted-spend` | Spend that is not converting, with a fix proposed for each item |\n| `/adspirer-write-ad-copy` | On-brand copy for a named platform and campaign |\n| `/adspirer-launch` | Plan and build a campaign, created paused for your review |\n\nAdd a platform and period if you want, for example `/adspirer-performance-review last 7 days`.\n\n## What it covers\n\n| Area | Capabilities |\n| --- | --- |\n| Ad platforms | Google, Meta, TikTok, LinkedIn, Microsoft, Amazon, Walmart Connect and ChatGPT Ads: campaigns, budgets, bids, keywords, audiences, creative and reporting |\n| Research | Keyword research, search-term mining, and public competitor ads |\n| Measurement | Conversion-tracking audit and funnel diagnosis, plus Google Analytics 4, Search Console and Tag Manager when you connect them |\n| Reporting | Scorecards, a local dashboard file, and email or Slack digest drafts that are sent only after you approve each one |\n\nAvailable operations depend on the platforms you connect and on your Adspirer plan.\n\n## What's included\n\n- **Skills** (`skills/`): the entry points above, plus `adspirer-agent`, `adspirer-mcp`,\n  `adspirer-optimize`, `adspirer-keywords`, `adspirer-creative`, `adspirer-competitors`,\n  `adspirer-dashboard`, `adspirer-digest`, `adspirer-docs`, one skill per ad platform\n  (`adspirer-google-ads`, `adspirer-meta-ads`, `adspirer-tiktok-ads`, `adspirer-linkedin-ads`,\n  `adspirer-microsoft-ads`, `adspirer-amazon-ads`, `adspirer-walmart-ads`, `adspirer-chatgpt-ads`),\n  `adspirer-google-analytics`, `adspirer-search-console`, `adspirer-tag-manager`, and the read-only\n  `adspirer-ads-manager-sign-in` and `adspirer-ads-manager-browser`, which the agent loads when a\n  request needs them.\n- **A rule** (`rules/adspirer-advertising-agent.md`) that loads only for advertising requests and\n  holds the agent to paused creation and approval before spend.\n- **The Adspirer MCP server** connection (`mcp_config.json`).\n\nThe hosted server is the source of truth for tool names and schemas. The skills teach the agent to\ndiscover the current tools and their parameters instead of hardcoding every operation.\n\n## Safety\n\n- **Created paused.** Every new campaign is created paused and does not spend until you resume it.\n- **Approval before spend.** Creating, resuming, deleting, and changing budgets, bids, keywords or\n  targeting happen only after you approve that exact change on that exact account in the conversation.\n- **Readback.** After a write, the agent reads the object back and reports what actually exists,\n  including partial failures.\n- **No purchases.** The agent never buys, upgrades or renews a plan or paid feature. If a plan limit\n  is reached, it stops and explains the limit.\n- **Confirmation first** before quota-heavy runs, such as reporting on every account.\n- **Nothing sent without a yes.** Email and Slack digests are drafts until you approve that draft\n  and destination.\n- **No credentials in chat.** The optional ads-manager check is read-only, and you sign in yourself.\n- **Honest numbers.** Currency, dates and data freshness are stated; missing data is never reported\n  as zero; totals are never summed across currencies; competitor research covers public ads only.\n- **Your files.** A brand workspace (`BRAND.md`, `STRATEGY.md`) is written only when you ask for\n  one, and existing files are never overwritten.\n\n## MCP and authentication\n\n```json\n{\n  \"mcpServers\": {\n    \"adspirer\": {\n      \"url\": \"https://mcp.adspirer.com/mcp\"\n    }\n  }\n}\n```\n\nThe server speaks Streamable HTTP. Authentication uses OAuth 2.1 with PKCE and dynamic client\nregistration, so Antigravity handles the browser sign-in and the plugin contains no API keys,\ntokens, client secrets, or configuration variables. Ad-platform credentials stay server-side with\nAdspirer and are scoped to the accounts you connect.\n\n## Network and execution surface\n\nThe plugin's only MCP server is `https://mcp.adspirer.com/mcp`. It contains no hooks, scripts,\ntelemetry, local executables, or bundled server code. Skills and the rule are Markdown guidance.\nBeyond the Adspirer server, the skills may ask the agent to read Adspirer's public documentation at\n`adspirer.com/docs`, to read your own website or a competitor's public pages during campaign\nresearch, and, only if you ask for the ads-manager check and your host provides a browser, to view\nan ads manager you sign in to yourself.\n\n## Privacy, support, and source\n\n- Privacy policy: [adspirer.com/privacy](https://www.adspirer.com/privacy)\n- Terms: [adspirer.com/terms](https://www.adspirer.com/terms)\n- Documentation: [adspirer.com/docs](https://www.adspirer.com/docs)\n- Support: [support@adspirer.com](mailto:support@adspirer.com) for help installing, signing in or using this plugin. See [SUPPORT.md](SUPPORT.md).\n- Issues: [github.com/Adspirer/adspirer-antigravity-plugin/issues](https://github.com/Adspirer/adspirer-antigravity-plugin/issues)\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "2e5b8087c6aab0e2a0a4bade064fdead379f4665",
+      "scannedAt": "2026-11-27T18:19:09.814Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

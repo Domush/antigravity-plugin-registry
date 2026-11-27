@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "id": "darkluoboct/agy-prompt-pilot",
+  "sha": "719ea87e993130c219539827d5111a288f994790",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:18:22.685Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-prompt-pilot",
+    "displayName": "Prompt Pilot",
+    "version": "1.0.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "pilot",
+        "runtimeName": "agy-prompt-pilot_pilot",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "enhance",
+        "slashCommand": "/enhance",
+        "description": "Rewrite a rough or brief user prompt draft into a clear, structured, high-signal engineering prompt grounded in the current conversation and workspace context — without executing the task yet until confirmed. Supports styles: concise (defau",
+        "disableModelInvocation": false,
+        "file": "skills/enhance/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/enhance"
+    ],
+    "mcpServerNames": [
+      "agy-prompt-pilot_pilot"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-prompt-pilot (Prompt Pilot)\n\nGoogle Antigravity 2.0 开源插件：提供 **Codex 风格下一步智能预测（每轮结束自动生成 3 条候选草稿 + 一键暂停）** 与 **上下文感知提示词强化（4 种工程风格 + 预览对比 + 5 步撤销栈）**。两大功能均**严格 100% 跟随当前会话所选模型与思考档位**，零第三方依赖，无需额外 API Key。\n\n## 核心特性\n\n1. **双模架构（官方底座 + 可选聊天栏嵌入）**\n   - **Mode 1（官方侧边栏 + MCP App）**：基于 Antigravity 官方 Sidecar Aux Pane 与 SEP-1865 MCP App，不依赖调试端口，始终可用。支持编辑草稿、强化提示词、一键发送或附着为下一条消息上下文。\n   - **Mode 2（聊天栏原生嵌入）**：当 Antigravity 以 `--remote-debugging-port=0 --remote-debugging-address=127.0.0.1` 启动时，在聊天输入框**正上方**挂载独立 Shadow DOM 建议条与「强化」弹窗（与 `agy-capsule` 底部栏完全错位）。重启丢参数或断连时自动无感降级回 Mode 1。\n2. **严格跟随当前所选模型与思考档位**\n   - 通过官方 `hooks.json`（`PreInvocation` / `Stop`）、会话 `transcript.jsonl`、`agy models` 目录及聊天栏可见模型名实时同步当前模型与档位（例如 `Gemini 4 Neon (XHigh)` 对应 `gemini-4-neon-xhigh`）。\n   - 基于本机 `agy` CLI `stream-json` 保活工作池与 `--json-schema` 强制结构化输出执行推理，复用现有 Antigravity 登录态，无需单独配置 API Key。\n   - 用户开始打字或发起新提问时立即通过 `AbortController` 取消进行中的预测，避免浪费高思考档位配额。\n3. **三层防递归守卫**\n   - 内部 `agy` 子进程强制注入 `AGY_PROMPT_PILOT_INTERNAL=1` 并运行在独立空沙箱目录中，`hooks/emit-event.mjs` 秒级跳过内部调用，杜绝 `Stop` 钩子递归死循环。\n4. **Draft-first 与 `/enhance` 斜杠命令**\n   - 点选下一步建议仅填入输入框作为可编辑草稿，输入框非空时弹出「替换草稿 / 追加末尾 / 取消」防误覆盖。\n   - 内置 `/enhance <草稿>` Skill，支持直接在对话中按 `concise` / `impl` / `debug` / `plan` 四种风格强化提示词。\n\n## 环境要求\n\n- Google Antigravity 2.0（App）\n- Node.js `>= 22`（Antigravity Sidecar 自带 Node 24，零外部 `npm` 依赖）\n- 本机已安装并登录 Antigravity CLI（`agy`），用于复用账号凭据执行无头推理\n- （可选）若启用 Mode 2 聊天栏原生嵌入，需在启动 Antigravity 时附带 `--remote-debugging-port=0 --remote-debugging-address=127.0.0.1`\n\n## 安装与卸载\n\n```bash\ngit clone https://github.com/darkluoboct/agy-prompt-pilot.git\ncd agy-prompt-pilot\n```\n\n| 操作 | Windows | macOS / Linux |\n| :--- | :--- | :--- |\n| 安装 / 更新 | `install.bat` | `sh install.sh` |\n| 卸载 | `uninstall.bat` | `sh uninstall.sh` |\n\n安装脚本会将插件同步至 `~/.gemini/config/plugins/agy-prompt-pilot/`，无需重启即可被 Antigravity 发现。个人配置独立保存在 `~/.gemini/config/agy-prompt-pilot/settings.json`，更新或卸载均会保留。\n\n## 快捷键（Mode 2 聊天栏激活时）\n\n| 快捷键 | 行为 |\n| :--- | :--- |\n| `Tab` | 输入框为空时，将第 1 条预测填入草稿（可继续编辑，不自动发送） |\n| `Alt+1` / `Alt+2` / `Alt+3` | 将对应编号的下一步建议填入草稿 |\n| `Ctrl+Shift+E` | 使用当前所选模型强化聊天输入框中的草稿 |\n\n## 目录结构\n\n```text\nagy-prompt-pilot/\n├── plugin.json                      # 插件清单与元信息\n├── hooks.json                       # PreInvocation / Stop 生命周期钩子\n├── mcp_config.json                  # 官方 MCP App 服务配置\n├── assets/logo.svg                  # 插件图标\n├── hooks/emit-event.mjs             # 轻量非阻塞钩子转发器（三层防递归）\n├── skills/enhance/SKILL.md          # /enhance 斜杠命令技能\n├── mcp/server.mjs                   # SEP-1865 MCP App 服务端\n├── sidecars/prompt_pilot/\n│   ├── sidecar.json                 # Sidecar 清单（AUX_PANE）\n│   ├── server.mjs                   # 主服务与环回鉴权 IPC\n│   ├── model_sync.mjs               # 当前模型与思考档位映射\n│   ├── context_packer.mjs           # transcript.jsonl 上下文裁剪器\n│   ├── agy_worker_pool.mjs          # agy CLI stream-json 保活池\n│   ├── predictor.mjs                # 3 路下一步预测引擎与 Schema\n│   ├── enhancer.mjs                 # 4 风格提示词强化与 5 步撤销栈\n│   ├── composer_overlay.mjs         # Mode 2 聊天栏 Shadow DOM 嵌入层\n│   ├── sidebar_ui.mjs               # Mode 1 官方侧边栏前端\n│   ├── settings.mjs                 # 原子持久化配置\n│   └── host_bridge.mjs              # 异步宿主桥接与热重载监听\n└── tests/pilot.test.mjs             # 单元与集成测试套件\n```\n\n## 运行测试\n\n```bash\nnpm test\n# 或\nnode --test tests/pilot.test.mjs\n```\n\n## 开源协议\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "Initial open-source release v1.0.0: dual-mode UI (official Aux Pane + MCP App + optional composer overlay), strict active model & effort sync via agy CLI stream-json warm worker pool, 3-layer anti-recursion hook guard, 4-style prompt enhancer with 5-step undo stack, and cross-platform install scripts.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/prompt_pilot/agy_worker_pool.mjs",
+        "line": 67,
+        "snippet": "this.proc = spawn(agyExe, args, { cwd, env: { ...env, AGY_PROMPT_PILOT_INTERNAL: '1' }, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/agy_worker_pool.mjs#L67"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/prompt_pilot/composer_overlay.mjs",
+        "line": 789,
+        "snippet": "const m = /^(127\\.0\\.0\\.1|localhost):([1-9]\\d{0,4})$/.exec(addr);",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/composer_overlay.mjs#L789"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/prompt_pilot/model_sync.mjs",
+        "line": 30,
+        "snippet": "const paren = EFFORT_RE.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/model_sync.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/prompt_pilot/model_sync.mjs",
+        "line": 35,
+        "snippet": "const slug = SLUG_EFFORT_RE.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/model_sync.mjs#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/prompt_pilot/model_sync.mjs",
+        "line": 37,
+        "snippet": "const spaced = SPACE_EFFORT_RE.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/model_sync.mjs#L37"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/emit-event.mjs",
+        "line": 77,
+        "snippet": "writeFileSync(tmp, JSON.stringify(eventRecord, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/hooks/emit-event.mjs#L77"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "hooks/emit-event.mjs",
+        "line": 81,
+        "snippet": "writeFileSync(latestTmp, JSON.stringify(eventRecord, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/hooks/emit-event.mjs#L81"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "mcp/server.mjs",
+        "line": 45,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${ipc.port}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Pilot-Token': ipc.token, }, body: JSON.stringify(",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/mcp/server.mjs#L45"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/prompt_pilot/agy_worker_pool.mjs",
+        "line": 29,
+        "snippet": "writeFileSync(schemaPath, JSON.stringify(schemaObj, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/agy_worker_pool.mjs#L29"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/prompt_pilot/composer_overlay.mjs",
+        "line": 897,
+        "snippet": "const ws = new WebSocket(target.webSocketDebuggerUrl);",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/composer_overlay.mjs#L897"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/prompt_pilot/composer_overlay.mjs",
+        "line": 978,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(2500), redirect: 'error', });",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/composer_overlay.mjs#L978"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/prompt_pilot/host_bridge.mjs",
+        "line": 71,
+        "snippet": "const res = await fetch(`http://${lsAddress}/healthz`, { signal: AbortSignal.timeout(3000) });",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/host_bridge.mjs#L71"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/prompt_pilot/server.mjs",
+        "line": 509,
+        "snippet": "writeFileSync( tmp, JSON.stringify({ port, token, pid: process.pid, lsAddress: env.ANTIGRAVITY_LS_ADDRESS || '' }, null, 2) + '\\n', { encoding: 'utf8', mode: 0o600 }, );",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/server.mjs#L509"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/prompt_pilot/settings.mjs",
+        "line": 73,
+        "snippet": "writeFileSync(tmp, JSON.stringify(next, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/settings.mjs#L73"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/prompt_pilot/settings.mjs",
+        "line": 2,
+        "snippet": "// Stored at ~/.gemini/config/agy-prompt-pilot/settings.json (survives plugin updates).",
+        "githubBlobUrl": "https://github.com/darkluoboct/agy-prompt-pilot/blob/719ea87e993130c219539827d5111a288f994790/sidecars/prompt_pilot/settings.mjs#L2"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "719ea87e993130c219539827d5111a288f994790",
+      "scannedAt": "2026-11-27T18:18:22.685Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

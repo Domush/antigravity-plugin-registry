@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "id": "tonyfvc2/neko-memory",
+  "sha": "df5a11478ac404a6151997ab6a29f40c7fb3975b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:15:14.088Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "neko-memory",
+    "displayName": "猫猫的记忆 · Neko Memory",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "neko-memory",
+        "runtimeName": "neko-memory_neko-memory",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "./mcp/server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "neko-memory",
+        "slashCommand": "/neko-memory",
+        "description": "管理与使用「猫猫的记忆（Neko Memory）」本地长期记忆插件：按证据检索跨会话记忆、保存重要偏好与交接摘要、导入旧 Markdown 笔记，或打开侧边栏记忆管理面板。",
+        "disableModelInvocation": false,
+        "file": "skills/neko-memory/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/neko-memory"
+    ],
+    "mcpServerNames": [
+      "neko-memory_neko-memory"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.png\" width=\"112\" alt=\"Neko Memory Logo\" />\n\n# 🐾 猫猫的记忆 · Neko Memory\n\n**给 Google Antigravity 一份会自然淡忘、平时零上下文占用、带 2D/3D 可视化星图的本地长期记忆。**\n\n**简体中文** · [English](README.en.md)\n\n![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)\n![SQLite Built-in](https://img.shields.io/badge/storage-local%20SQLite-6366f1)\n![Antigravity Plugin](https://img.shields.io/badge/Antigravity-Native%20Plugin-a855f7)\n![License: MIT](https://img.shields.io/badge/License-MIT-blue)\n\n</div>\n\n---\n\n## ✨ 为什么做这个插件？\n\n在 Google Antigravity 里聊得越久，上下文窗口越挤；开新对话或 `/compact` 压缩后，之前定好的偏好、项目路径、踩过的坑往往就会被忘掉。\n\n**Neko Memory（猫猫的记忆）** 是一个 **100% 本地运行、零第三方依赖、无需额外 API Key** 的原生 Antigravity 插件：\n\n- **🌌 次世代 2D / 3D 发光银河记忆星图（v1.1 全面重制）**：内置原生 Sidecar 面板，支持 **3D 发光星团与螺旋星尘** / **2D 力导向星座图** 一键切换，核心记忆化作金色恒星与冰蓝主题星团，支持悬浮毛玻璃标签、图谱实时检索高亮、节点列表抽屉、关系过滤与 **深空 / 液态玻璃 / 暖光书页** 三套主题。\n- **📦 主动导出与带预览校验的导入（v1.1 新增）**：在「记忆管理」面板内置**导入与导出**工作流——支持一键导出全部记忆为 **JSON / CSV（带 UTF-8 BOM，Excel 零乱码）/ Markdown**；导入支持拖拽或选择文件 → **实时解析预览与重复检测** → 可选 `跳过重复` / `覆盖更新` / `全部新增` 策略后原子事务写入。\n- **⏳ 会自然淡忘（智能半衰期）**：每条记忆都有「鲜活度」，随时间按半衰期柔和衰减——不删除，只是权重变低；再次被召回时会自动唤醒刷新鲜活度。\n- **🔍 平时零上下文占用，按证据精准召回**：不会把全部记忆塞进每轮对话，只在相关时通过中文二/三元组分词 + IDF 证据权重检索最相关的 3–5 条注入。\n- **🧠 跨会话不失忆 & 自动去重**：通过本地 SQLite 永久保存在 `~/.gemini/antigravity/neko_memory/memory.db`，Antigravity 客户端升级也不会丢失；写入高相似度记忆时自动合并更新。\n\n---\n\n## ⏳ 按分类智能默认半衰期\n\n| 分类 (`category`) | 说明 | 默认半衰期 | 备注 |\n| :--- | :--- | :---: | :--- |\n| `preference` | 核心偏好（称呼、语言风格、习惯） | **365 天** | 重要度默认 5，支持在面板一键切换 180 / 365 天 |\n| `decision` | 重要架构 / 方案决策 | **90 天** | 避免反复推翻既有决定 |\n| `pitfall` | 踩坑记录与解决方案 | **90 天** | 防止下次踩进同一个坑 |\n| `project` | 项目路径、结构与约定 | **60 天** | 跨会话无缝接手项目 |\n| `fact` | 一般事实与环境信息 | **30 天** | 自然淡忘 |\n| `handoff` | 长对话交接摘要 | **14 天** | 适合 `/compact` 或开新对话前归档进度 |\n\n---\n\n## 🚀 安装方式\n\n### 方式一：Antigravity CLI 一键安装（推荐）\n\n```bash\nagy plugin install https://github.com/tonyfvc2/neko-memory\n```\n\n### 方式二：Windows 一键安装（无需单独安装 Node.js）\n\n1. 下载本仓库源码或最新 Release 压缩包并解压；\n2. 双击运行 **`install.bat`**（会自动检测系统 Node.js 22.5+；如果没有安装 Node.js，会自动复用 Antigravity 内置的 `agy-node.cmd`！）；\n3. 重启 Antigravity 或开启新对话即可生效。\n\n卸载只需双击 **`uninstall.bat`**（不会删除你的本地记忆数据库）。\n\n### 方式三：macOS / Linux 一键安装\n\n```bash\ngit clone https://github.com/tonyfvc2/neko-memory.git\ncd neko-memory\nchmod +x install.sh && ./install.sh\n```\n\n---\n\n## 🛠️ 提供的 MCP 工具\n\n安装后，Antigravity Agent 会自动获得以下 6 个本地工具：\n\n| 工具名 | 功能说明 |\n| :--- | :--- |\n| `neko_memory_recall` | 按中文/英文自然语言检索最相关的记忆（带相对时间与鲜活度） |\n| `neko_memory_remember` | 写入长期记忆（自动按分类配置半衰期并合并高相似重复项） |\n| `neko_memory_forget` | 软归档指定 ID 的记忆（可在星图面板中随时恢复） |\n| `neko_memory_list` | 列出活跃/归档记忆与数据库统计 |\n| `neko_memory_import_file` | 从本地 `.json` / `.csv` / `.md` / `.txt` 文件批量导入记忆（支持重复策略） |\n| `neko_memory_export_file` | 将全部本地长期记忆导出为 `.json` / `.csv` / `.md` 备份文件 |\n\n### 打开记忆星图面板\n\n在 Antigravity 对话中直接说 **「打开猫猫的记忆星图面板」**，或点击侧边栏的 **猫猫的记忆** 即可打开 2D/3D 交互式星图！\n\n你也可以在本地单独预览星图面板：\n```bash\nnpm run preview:panel\n# 访问 http://127.0.0.1:8789\n```\n\n---\n\n## 🔒 隐私与数据安全\n\n- **100% 本地运行**：不发起任何外部网络请求，不需要任何 API Key。\n- **零外部依赖**：仅使用 Node.js 22.5+ / 24 内置的 `node:sqlite` 与标准库。\n- **数据完全归你所有**：所有记忆存储在 `~/.gemini/antigravity/neko_memory/memory.db`，随时可备份、导出或删除。\n\n---\n\n## 📄 License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "🐾 Neko Memory v1.1.0 — 银河星图全面重制 & 记忆主动导入导出\r\n\r\n本次更新为 猫猫的记忆（Neko Memory） 带来了视觉与实用性的双重飞跃：全面重制的发光银河 2D/3D 星图，以及支持预览校验的一键导入与导出功能！\r\n\r\nThis release introduces a major visual overhaul of the 2D/3D Star Map and a complete Import/Export workflow for backing up and migrating your local memories.\r\n\r\n✨ What's New / 核心更新\r\n🌌 1. 次世代发光银河星图 / Next-Gen Luminous Galaxy Star Map\r\n发光恒星与螺旋星尘：全新 Additive Bloom 发光渲染引擎，核心偏好与高权重记忆化作带星芒的金色恒星，环绕螺旋星尘与冰蓝主题星团，支持优雅的弧形关系光丝连线。\r\n悬浮毛玻璃 HUD 与智能防重叠标签：新增顶部「检索图谱」悬浮搜索栏、左上「节点列表」侧滑抽屉、左下实时遥测与分类图例一键过滤，以及右下「继续运转 / 全部关系 / 主题星团」快捷开关。\r\n三套主题同步升级：继续保留并优化了 深空星图 / 液态玻璃 / 暖光书页 三套主题，兼顾窄侧边栏与宽屏预览。\r\n📦 2. 记忆主动导出与带预览导入 / Active Export & Preview-Verified Import\r\n一键全量导出：在「记忆管理」面板新增可折叠的 导入与导出 卡片，不受当前筛选条件限制，一键导出全部记忆为 JSON / CSV（带 UTF-8 BOM，Excel 零乱码）/ Markdown。\r\n安全预览导入（选择文件 → 检查预览 → 确认导入）：支持点击选择或直接拖拽 .json / .csv / .md / .txt 文件，自动解析并检测重复项，支持实时切换 跳过重复 / 覆盖更新 / 全部新增 三种策略，确认后以 SQLite 事务原子写入。\r\n记忆管理筛选与编辑增强：支持按 #ID / 关键字 / 工作区 / 活跃与归档状态 / 分类 / 多种排序方式精准筛选，并新增卡片内弹窗编辑记忆功能。\r\n🛠️ 3. MCP 工具升级 / MCP Tool Enhancements\r\n新增 neko_memory_export_file：支持 Agent 直接将本地全部记忆导出为 .json / .csv / .md 备份文件。\r\n升级 neko_memory_import_file：除 .md / .txt 外，现已全面支持 .json 与 .csv 批量导入及重复处理策略。\r\n🚀 安装与升级 / Install & Upgrade\r\nAntigravity CLI：\r\nbash\r\nagy plugin install https://github.com/tonyfvc2/neko-memory\r\nWindows 一键安装 / 升级：下载下方 neko-memory-v1.1.0.zip 解压后双击 install.bat（自动保留原有本地 SQLite 记忆数据库 ~/.gemini/antigravity/neko_memory/memory.db，升级不丢数据）。\r\nmacOS / Linux：拉取最新代码后执行 ./install.sh。\r\n\r\n💡 已有老用户升级后，在 Antigravity 侧边栏面板点一下右上角 🔄 刷新或重新打开面板即可体验全新 v1.1.0 银河星图！",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/memory-store.mjs",
+        "line": 166,
+        "snippet": "this.db.exec('PRAGMA journal_mode = WAL;');",
+        "githubBlobUrl": "https://github.com/tonyfvc2/neko-memory/blob/df5a11478ac404a6151997ab6a29f40c7fb3975b/lib/memory-store.mjs#L166"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/memory-store.mjs",
+        "line": 171,
+        "snippet": "this.db.exec(` CREATE TABLE IF NOT EXISTS memories ( id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'fact', tags TEXT NOT NULL DEFAULT ",
+        "githubBlobUrl": "https://github.com/tonyfvc2/neko-memory/blob/df5a11478ac404a6151997ab6a29f40c7fb3975b/lib/memory-store.mjs#L171"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/memory-store.mjs",
+        "line": 1002,
+        "snippet": "this.db.exec('BEGIN');",
+        "githubBlobUrl": "https://github.com/tonyfvc2/neko-memory/blob/df5a11478ac404a6151997ab6a29f40c7fb3975b/lib/memory-store.mjs#L1002"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/memory-store.mjs",
+        "line": 1067,
+        "snippet": "this.db.exec('COMMIT');",
+        "githubBlobUrl": "https://github.com/tonyfvc2/neko-memory/blob/df5a11478ac404a6151997ab6a29f40c7fb3975b/lib/memory-store.mjs#L1067"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/memory-store.mjs",
+        "line": 1069,
+        "snippet": "this.db.exec('ROLLBACK');",
+        "githubBlobUrl": "https://github.com/tonyfvc2/neko-memory/blob/df5a11478ac404a6151997ab6a29f40c7fb3975b/lib/memory-store.mjs#L1069"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 178,
+        "snippet": "fs.writeFileSync(outPath, exp.content, 'utf8');",
+        "githubBlobUrl": "https://github.com/tonyfvc2/neko-memory/blob/df5a11478ac404a6151997ab6a29f40c7fb3975b/mcp/server.mjs#L178"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "df5a11478ac404a6151997ab6a29f40c7fb3975b",
+      "scannedAt": "2026-11-27T18:15:14.088Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

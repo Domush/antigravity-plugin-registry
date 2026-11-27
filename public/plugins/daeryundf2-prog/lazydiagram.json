@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "daeryundf2-prog/lazydiagram",
+  "sha": "446c22e738b3c128e1d8b48035a42dbabfb75519",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T18:24:29.072Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "lazydiagram",
+    "displayName": "lazydiagram",
+    "version": "2.6.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "diagram-design",
+        "slashCommand": "/diagram-design",
+        "description": "Create branded architecture, IT current-state, flowchart, sequence, state machine, ER/data model, timeline, swimlane, quadrant, radar/spider, polar chart (polar/radial lollipop), loop/flywheel, nested, tree, org chart, layer stack, Venn, py",
+        "disableModelInvocation": false,
+        "file": "skills/diagram-design/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/diagram-design"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# lazydiagram\n\nLazy 시리즈의 다이어그램 설계 플러그인 — `lazyothers`에서 분리된 단독 레포.\n\n## 내용\n\n- `skills/diagram-design` — 39종 시각 타입(architecture, flowchart, sequence,\n  ER, timeline, swimlane, Sankey, Wardley map, kanban, story map, DB schema 등)을\n  self-contained HTML/SVG/PNG로 생성하는 스킬. `.drawio`/`.mmd` 소스 재렌더,\n  웹사이트 브랜드 토큰 온보딩, 시맨틱 패턴·콜아웃·접근성 모션·스케치 스타일 지원.\n\n## 설치\n\n시리즈 인스톨러(`lazyothers/install.sh` / `install.ps1`)가 플러그인 목록에\n포함해 함께 클론한다. 수동 설치는 다른 시리즈 플러그인과 동일하게\n플러그인 디렉터리(`~/.gemini/config/plugins/`) 아래에 둔다.\n\n## 라이선스\n\nAll rights reserved. © 법무법인(유한) 대륜. 무단 사용·복제·배포를 금합니다.",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/diagram-design/scripts/drawio_extract.py",
+        "line": 888,
+        "snippet": "Path(args.out).write_text(text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/daeryundf2-prog/lazydiagram/blob/446c22e738b3c128e1d8b48035a42dbabfb75519/skills/diagram-design/scripts/drawio_extract.py#L888"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/diagram-design/scripts/mermaid_extract.py",
+        "line": 1344,
+        "snippet": "Path(args.out).write_text(output, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/daeryundf2-prog/lazydiagram/blob/446c22e738b3c128e1d8b48035a42dbabfb75519/skills/diagram-design/scripts/mermaid_extract.py#L1344"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/diagram-design/SKILL.md",
+        "line": 490,
+        "snippet": "- [ ] From the installed skill directory, did `python3 scripts/self_check.py <file>` pass? (Accessible-SVG contract, single-file safety, motion basics; ships with the skill.)",
+        "githubBlobUrl": "https://github.com/daeryundf2-prog/lazydiagram/blob/446c22e738b3c128e1d8b48035a42dbabfb75519/skills/diagram-design/SKILL.md#L490"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/diagram-design/SKILL.md",
+        "line": 537,
+        "snippet": "1. **Extract, don't render.** From this skill's directory, run `python3 scripts/drawio_extract.py <input>` for draw.io or `python3 scripts/mermaid_extract.py <input>` for Mermaid. ",
+        "githubBlobUrl": "https://github.com/daeryundf2-prog/lazydiagram/blob/446c22e738b3c128e1d8b48035a42dbabfb75519/skills/diagram-design/SKILL.md#L537"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.6.0",
+      "sha": "446c22e738b3c128e1d8b48035a42dbabfb75519",
+      "scannedAt": "2026-11-27T18:24:29.072Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}
