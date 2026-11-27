@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-27T11:29:44.097Z",
+  "generatedAt": "2026-11-27T12:15:43.153Z",
   "crawlerVersion": "1.0.0",
   "scannerVersion": "1.2.0",
-  "totalPlugins": 12,
+  "totalPlugins": 13,
   "marketplaceClient": {
     "latestVersion": "1.0.4",
     "minSupportedVersion": "1.0.0",
@@ -482,11 +482,81 @@
       "detailPath": "plugins/Domush/antigravity-community-marketplace.json"
     },
     {
+      "id": "Domush/antigravity-plugin-agent-team",
+      "name": "Autonomous Agent Team",
+      "pluginName": "agent-team",
+      "summary": "Multi-disciplinary agent team orchestrating planning, full-stack software development, 3D modeling, adversarial auditing, testing, and QA across any codebase.",
+      "author": {
+        "login": "Domush",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
+        "url": "https://github.com/Domush"
+      },
+      "repoUrl": "https://github.com/Domush/antigravity-plugin-agent-team",
+      "license": "UNKNOWN",
+      "version": "1.0.4",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v1.0.4",
+        "sha": "12d26a84ba6dda1a4edafe6f4549a6231898a5b8",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-agent-team/tarball/12d26a84ba6dda1a4edafe6f4549a6231898a5b8",
+        "contentTreeSha256": "bdc9a736169e10935dfbc63e2b91799caad6ff7f494a0751139a2b1d71763fd1",
+        "archiveBytes": 26138,
+        "publishedAt": "2026-11-27T11:53:54Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "agents",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agent",
+        "agent-orchestration",
+        "agentic-ai",
+        "agentic-workflow",
+        "agents",
+        "agy",
+        "antigravity",
+        "antigravity-cli",
+        "antigravity-extension",
+        "antigravity-plugin"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-27T11:45:40Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T12:15:22.471Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "credential_access",
+          "fs_write_workspace",
+          "prompt_mentions_shell"
+        ],
+        "findingCounts": {
+          "critical": 1,
+          "high": 0,
+          "medium": 1,
+          "low": 3
+        }
+      },
+      "detailPath": "plugins/Domush/antigravity-plugin-agent-team.json"
+    },
+    {
       "id": "Domush/antigravity-plugin-context-mode",
       "name": "Context Mode",
-      "pluginName": "antigravity-plugin-context-mode",
+      "pluginName": "context-mode",
       "summary": "Context window protection for Antigravity: local SQLite FTS5 search, sandboxed execution, and lifecycle hook gating against token bloat.",
-      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-context-mode/1342afbcbff06e12d6d73f117c439757db286380/assets/icon.svg",
+      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-context-mode/1bf3ce91fc56e676e6cae7b6305a319b6f69b2ec/assets/icon.svg",
       "author": {
         "login": "Domush",
         "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
@@ -494,15 +564,15 @@
       },
       "repoUrl": "https://github.com/Domush/antigravity-plugin-context-mode",
       "license": "MIT",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "minAppVersion": null,
       "release": {
-        "ref": "v2.0.0",
-        "sha": "1342afbcbff06e12d6d73f117c439757db286380",
-        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-context-mode/tarball/1342afbcbff06e12d6d73f117c439757db286380",
-        "contentTreeSha256": "6bc33dc2c5a43feb40d8eb233af4f38ede7aa508fd88312ad244cd37b24603d3",
-        "archiveBytes": 85264,
-        "publishedAt": "2026-11-21T19:42:03Z"
+        "ref": "v2.0.1",
+        "sha": "1bf3ce91fc56e676e6cae7b6305a319b6f69b2ec",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-context-mode/tarball/1bf3ce91fc56e676e6cae7b6305a319b6f69b2ec",
+        "contentTreeSha256": "07452007b41d31431355eeb775c6b786d3a3f8b9c85907c10d27f9cf73abcdbf",
+        "archiveBytes": 107600,
+        "publishedAt": "2026-11-27T12:08:42Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -532,12 +602,12 @@
         "stars": 150,
         "forks": 10,
         "openIssues": 0,
-        "pushedAt": "2026-11-21T20:03:22Z"
+        "pushedAt": "2026-11-27T12:08:18Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T10:33:30.964Z",
+        "scannedAt": "2026-11-27T12:15:19.272Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -548,7 +618,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 16,
-          "medium": 1,
+          "medium": 2,
           "low": 1
         }
       },
@@ -559,7 +629,7 @@
       "name": "Next Steps Suggester",
       "pluginName": "antigravity-plugin-suggest-next-steps",
       "summary": "Displays interactive prompt cards proposing at least 2 logical next steps at the end of completed turns.",
-      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-suggest-next-steps/e4404eaba8525c70daff129c02366dc59f626ddb/assets/icon.svg",
+      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-suggest-next-steps/9d2af524c86f80e0dd7df64e166016edde3fb8a5/assets/icon.svg",
       "author": {
         "login": "Domush",
         "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
@@ -567,22 +637,21 @@
       },
       "repoUrl": "https://github.com/Domush/antigravity-plugin-suggest-next-steps",
       "license": "MIT",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "minAppVersion": null,
       "release": {
-        "ref": "v1.1.1",
-        "sha": "e4404eaba8525c70daff129c02366dc59f626ddb",
-        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-suggest-next-steps/tarball/e4404eaba8525c70daff129c02366dc59f626ddb",
-        "contentTreeSha256": "48fa6dda0c9fee016d41e07600c3b98b70ca43e3556c4ca1729f3f04170e0085",
-        "archiveBytes": 8053,
-        "publishedAt": "2026-11-17T19:26:14Z"
+        "ref": "v1.1.2",
+        "sha": "9d2af524c86f80e0dd7df64e166016edde3fb8a5",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-suggest-next-steps/tarball/9d2af524c86f80e0dd7df64e166016edde3fb8a5",
+        "contentTreeSha256": "df0f9e60bd86af50d91708611f526b1f83262c31eceb338036d510322867c595",
+        "archiveBytes": 8682,
+        "publishedAt": "2026-11-27T12:11:37Z"
       },
       "surface": {
         "hasSidebarUi": false,
         "uiSlots": [],
         "components": [
-          "rules",
-          "skills"
+          "rules"
         ]
       },
       "categories": [],
@@ -595,12 +664,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-17T19:18:59Z"
+        "pushedAt": "2026-11-27T12:11:18Z"
       },
       "security": {
         "riskTier": "low",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T10:33:38.031Z",
+        "scannedAt": "2026-11-27T12:15:41.913Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace"
@@ -619,7 +688,7 @@
       "name": "Token Tracker",
       "pluginName": "token-tracker",
       "summary": "Hybrid telemetry tracker for Antigravity: context window usage, prompt caching efficiency, context compaction countdown, and 5h/weekly quota monitoring.",
-      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-token-tracker/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/assets/icon.svg",
+      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-token-tracker/8a44675ff9875e6ed2dae038aa50ee6764ee8c25/assets/icon.svg",
       "author": {
         "login": "Domush",
         "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
@@ -627,15 +696,15 @@
       },
       "repoUrl": "https://github.com/Domush/antigravity-plugin-token-tracker",
       "license": "MIT",
-      "version": "1.1.2",
+      "version": "1.1.3",
       "minAppVersion": null,
       "release": {
-        "ref": "main",
-        "sha": "b257943af0a9f9a19831636bf473dfc6cf9aa6ea",
-        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-token-tracker/tarball/b257943af0a9f9a19831636bf473dfc6cf9aa6ea",
-        "contentTreeSha256": "ca3801bb29500b5390dcdf01a1e0e617cd36f38a2c375499038bc092f8a1e210",
-        "archiveBytes": 147861,
-        "publishedAt": "2026-11-27T09:12:52Z"
+        "ref": "v1.1.3",
+        "sha": "8a44675ff9875e6ed2dae038aa50ee6764ee8c25",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-token-tracker/tarball/8a44675ff9875e6ed2dae038aa50ee6764ee8c25",
+        "contentTreeSha256": "8030105e9972d71217c4748f7eb186b2853351d593e5e86cd97b604a60bcc85d",
+        "archiveBytes": 148446,
+        "publishedAt": "2026-11-27T12:08:43Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -661,12 +730,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T09:13:45Z"
+        "pushedAt": "2026-11-27T12:08:21Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T10:33:00.013Z",
+        "scannedAt": "2026-11-27T12:15:26.218Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",

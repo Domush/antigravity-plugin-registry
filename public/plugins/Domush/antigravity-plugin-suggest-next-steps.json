@@ -1,32 +1,22 @@
 {
   "schemaVersion": 1,
   "id": "Domush/antigravity-plugin-suggest-next-steps",
-  "sha": "e4404eaba8525c70daff129c02366dc59f626ddb",
+  "sha": "9d2af524c86f80e0dd7df64e166016edde3fb8a5",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T10:33:38.031Z",
+  "scannedAt": "2026-11-27T12:15:41.913Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "antigravity-plugin-suggest-next-steps",
     "displayName": "Next Steps Suggester",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "minAppVersion": null,
     "mcpServers": [],
     "hooks": [],
-    "skills": [
-      {
-        "name": "suggest-next-steps",
-        "slashCommand": "/suggest-next-steps",
-        "description": "Best practices and instructions for proposing proactive, high-value next steps using interactive chat selection cards.",
-        "disableModelInvocation": false,
-        "file": "skills/suggest-next-steps/SKILL.md"
-      }
-    ],
+    "skills": [],
     "agents": []
   },
   "collisions": {
-    "slashCommands": [
-      "/suggest-next-steps"
-    ],
+    "slashCommands": [],
     "mcpServerNames": [],
     "agentNames": [],
     "hookEvents": []
@@ -36,7 +26,7 @@
     "oauthProviders": []
   },
   "readmeMarkdown": "# Next Steps Suggester for Google Antigravity\n\n> **Proactive, 1-click prompt chips at the end of every turn. Turn completed tasks into immediate momentum.**\n\n[![npm version](https://img.shields.io/npm/v/antigravity-plugin-suggest-next-steps.svg)](https://www.npmjs.com/package/antigravity-plugin-suggest-next-steps)\n[![Live Simulator](https://img.shields.io/badge/Live%20Simulator-domush.github.io-6366f1?style=flat&logo=github)](https://domush.github.io/antigravity-plugin-suggest-next-steps/)\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![Antigravity App Compatible](https://img.shields.io/badge/Antigravity%20App-Native%20Plugin-818cf8.svg)]()\n\n**Next Steps Suggester** stops \"blank canvas fatigue\" in the **Google Antigravity App**. Whenever your agent finishes a task, it presents at least two relevant, clickable follow-up options directly in chat using Antigravity's native prompt chips.\n\nInstead of stopping and typing out a whole new prompt, you click an option and the agent immediately gets to work.\n\n> 🌐 **Try the Live Interactive Simulator:** [domush.github.io/antigravity-plugin-suggest-next-steps](https://domush.github.io/antigravity-plugin-suggest-next-steps/)\n\n---\n<img width=\"1016\" height=\"550\" alt=\"image\" src=\"https://github.com/user-attachments/assets/5dbd6b8c-067e-46a9-ac10-8d4031d8e243\" />\n\n## Quick Install (10 Seconds)\n\nInstall directly into Google Antigravity using `npx`:\n\n```bash\n# Global install (available across all Antigravity chats)\nnpx antigravity-plugin-suggest-next-steps install\n\n# Or per-project install (scoped to current workspace only)\nnpx antigravity-plugin-suggest-next-steps install --workspace\n```\n\nRestart or open the **Google Antigravity App**, and the plugin is active immediately.\n\n---\n\n## How It Works\n\n```text\n┌────────────────────────────────────────────────────────┐\n│ 1. Agent completes your request in full                │\n│    \"Authentication middleware created and verified.\"   │\n└───────────────────────────┬────────────────────────────┘\n                            │\n                            ▼\n┌────────────────────────────────────────────────────────┐\n│ 2. Agent explains candidate follow-ups in chat text    │\n│    • (Recommended) Refresh Token Rotation in Redis     │\n│    • Add OAuth2 Google / GitHub Providers              │\n│    • Generate OpenAPI / Swagger documentation          │\n└───────────────────────────┬────────────────────────────┘\n                            │\n                            ▼\n┌────────────────────────────────────────────────────────┐\n│ 3. Native 1-Click Interactive Prompt Card              │\n│  ┌──────────────────────────────────────────────────┐  │\n│  │ Suggested next steps:                            │  │\n│  │ [✓] (Recommended) Add refresh token rotation     │  │\n│  │ [ ] Add OAuth2 Google / GitHub Providers         │  │\n│  │ [ ] Generate OpenAPI / Swagger documentation     │  │\n│  │                                                  │  │\n│  │ [Skip / Conclude Turn]       [Confirm Selection] │  │\n│  └──────────────────────────────────────────────────┘  │\n└────────────────────────────────────────────────────────┘\n```\n\nYou click an option, and the agent immediately continues with that task. If you're done, simply click **Skip** and the agent concludes cleanly.\n\n---\n\n## Why You'll Love It\n\n* ⚡ **Zero Friction**: Eliminate the pause where you have to think about what to prompt next.\n* 🎯 **Smart Prioritization**: The single highest-leverage continuation (like running tests, updating docs, or staging a deployment) is tagged with `(Recommended)`.\n* ☑️ **Multi-Select Batching**: When multiple tasks can be handled together (e.g. write docs + commit + tag release), select all that apply.\n* 🛡️ **No Subagent Spam**: Strictly isolated to the main chat assistant. Background workers and subagents are barred from prompting you directly.\n* 🚪 **Respectful Skip**: If you skip or dismiss the prompt, the agent wraps up immediately with zero nagging.\n* 🔒 **100% Local & Private**: No analytics, no background telemetry, and zero runtime dependencies.\n\n---\n\n## Managing the Plugin\n\n### Enable / Disable Anytime\nOpen the **Google Antigravity App** &rarr; open **Customizations** &rarr; **Plugins**, and toggle **Next Steps Suggester** on or off with one click.\n\n### Uninstall\nTo remove the plugin from your system:\n\n```bash\n# Remove global plugin\nnpx antigravity-plugin-suggest-next-steps uninstall\n\n# Remove per-project plugin\nnpx antigravity-plugin-suggest-next-steps uninstall --workspace\n```\n\n---\n\n## License\n\nMIT © [Phillip Webber](https://github.com/Domush)\n",
-  "latestReleaseNotes": "## [1.1.1] - 2026-11-17\r\n\r\n### Added\r\n- **1-Click npx CLI Installer (`bin/cli.js`)**: Added automated `npx` installer supporting both global (`~/.gemini/config/plugins/suggest-next-steps`) and per-project workspace installation (`.gemini/plugins/suggest-next-steps`).\r\n- **Streamlined Documentation**: Rewrote `README.md` to be user-centric with 10-second setup instructions and clear workflow illustrations.\r\n\r\n## [1.1.0] - 2026-11-17\r\n\r\n### Added\r\n- **Multi-Select Support**: `is_multi_select: true` enabled when options can be tackled concurrently.\r\n- **Handling User Skip**: Explicit instruction that skipping indicates no further actions are desired, terminating the turn without re-prompting.\r\n\r\n### Changed\r\n- **Option Minimum**: Updated guideline to propose at least 2 options (formerly \"1-3\").\r\n- **Fulfill First Mandate**: Enforced completing current work and user requests in full prior to presenting suggestions.\r\n- **Context Summaries in Chat**: Required summarizing proposed steps and their purposes in response text before invoking the question tool.\r\n- **Subagent Guard**: Restriced suggestion prompts exclusively to the primary root assistant; subagents must communicate via `send_message`.\r\n\r\n## [1.0.0] - 2026-11-16\r\n\r\n### Added\r\n- Initial release of the `suggest-next-steps` plugin.\r\n- Added always-on agent rule and reference skill for turn-ending suggestions.",
+  "latestReleaseNotes": "### Improved\n- **Automated Release Notes**: Updated the GitHub Actions release workflow to automatically extract and publish the matching `CHANGELOG.md` entry for each tagged release.\n- **Streamlined Rules & Packaging**: Updated package metadata, rules, and repository guidelines for cleaner plugin distribution.\n",
   "securityReport": {
     "riskTier": "low",
     "capabilities": [
@@ -53,7 +43,7 @@
         "file": "bin/cli.js",
         "line": 52,
         "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-suggest-next-steps/blob/e4404eaba8525c70daff129c02366dc59f626ddb/bin/cli.js#L52"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-suggest-next-steps/blob/9d2af524c86f80e0dd7df64e166016edde3fb8a5/bin/cli.js#L52"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -64,11 +54,21 @@
         "file": "bin/cli.js",
         "line": 32,
         "snippet": "--global, -g Install globally in ~/.gemini/config/plugins/ (default)",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-suggest-next-steps/blob/e4404eaba8525c70daff129c02366dc59f626ddb/bin/cli.js#L32"
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-suggest-next-steps/blob/9d2af524c86f80e0dd7df64e166016edde3fb8a5/bin/cli.js#L32"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.1.2",
+      "sha": "9d2af524c86f80e0dd7df64e166016edde3fb8a5",
+      "scannedAt": "2026-11-27T12:15:41.913Z",
+      "riskTier": "low",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace"
+      ]
+    },
     {
       "version": "1.1.1",
       "sha": "e4404eaba8525c70daff129c02366dc59f626ddb",

@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "id": "Domush/antigravity-plugin-agent-team",
+  "sha": "12d26a84ba6dda1a4edafe6f4549a6231898a5b8",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T12:15:22.471Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agent-team",
+    "displayName": "Autonomous Agent Team",
+    "version": "1.0.4",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agent-team",
+        "slashCommand": "/agent-team",
+        "description": "Orchestrates the project-agnostic autonomous agent team across planning, full-stack software development, 3D modeling, adversarial auditing, testing, and QA.",
+        "disableModelInvocation": false,
+        "file": "skills/agent-team/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "team-auditor",
+        "description": "Ruthless, read-only adversarial code, architecture, security, and asset auditor. Inspects deliverables from line 1 to EOF without write tools, enforcing zero stubs, fail-fast contracts, and binary PASS/REJECT verdicts.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/team-auditor.md"
+      },
+      {
+        "name": "team-coder",
+        "description": "Full-stack and systems software engineer. Implements robust, production-grade code contracts across backend, frontend, APIs, CLI tools, algorithms, and services in any language.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/team-coder.md"
+      },
+      {
+        "name": "team-modeler",
+        "description": "3D modeling, mesh topology, rigging, and asset specialist. Authors clean manifold geometry, UV unwraps, PBR materials, LODs, collision hulls, and automated Blender/DCC headless pipelines.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/team-modeler.md"
+      },
+      {
+        "name": "team-planner",
+        "description": "Lead Architect and Coordinator for the Autonomous Agent Team. Decomposes tasks, enforces architectural boundaries, dispatches specialist subagents, and performs final deliverable and visual scrutiny.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/team-planner.md"
+      },
+      {
+        "name": "team-qa",
+        "description": "Sole test execution runner, regression verifier, and visual QA gatekeeper. Executes test runners across any framework, enforces zero-warning compiler/linter gates, and inspects visual artifacts.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/team-qa.md"
+      },
+      {
+        "name": "team-test",
+        "description": "Adversarial test authoring specialist. Authors comprehensive unit, integration, boundary, and negative-path test suites. Test execution and production code modification strictly prohibited.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/team-test.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agent-team"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "team-auditor",
+      "team-coder",
+      "team-modeler",
+      "team-planner",
+      "team-qa",
+      "team-test"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Autonomous Agent Team Plugin\n\nA project-agnostic, multi-disciplinary agent team plugin for Antigravity. It coordinates planning, full-stack software development, 3D modeling, adversarial auditing, testing, and quality assurance across any codebase or technology stack.\n\n## Team Roster\n\n| Agent | Role | Write Access | Primary Standard | Focus Area |\n| :--- | :--- | :--- | :--- | :--- |\n| **`@team-planner`** | Lead Architect | No (Coordination) | `planning-standards.md` | Task decomposition, specialist dispatch, acceptance scrutiny |\n| **`@team-coder`** | Software Engineer | Yes | `coding-standards.md` | Production code, backend, frontend, APIs, algorithms |\n| **`@team-modeler`** | 3D Asset Specialist | Yes | `modeling-standards.md` | Meshes, manifold topology, UVs, PBR materials, LODs, DCC scripts |\n| **`@team-auditor`** | Adversarial Auditor | No (Strict) | `audit-standards.md` | Read-only static review, contract proof, binary pass/reject |\n| **`@team-test`** | Test Engineer | Tests Only | `testing-standards.md` | Unit, integration, boundary, and negative-path test authoring |\n| **`@team-qa`** | QA Runner | No (Strict) | `testing-standards.md` | Test suite execution, zero-warning gate, visual artifact QA |\n\n## Key Architectural Principles\n\n1. **Strict Separation of Concerns:** The planner plans and inspects without modifying code. The auditor reviews without write access. Specialists implement without self-review. The test author writes tests without running them. The QA runner executes without editing tests.\n2. **Asymmetric Lifecycle:** `@team-auditor` and `@team-qa` are spawned as fresh instances on every pass to eliminate confirmation bias. Authoring specialists are resumed via message for up to two remediation attempts to preserve working context.\n3. **P0 Operational Laws:** Zero stubs, fail-fast boundary validation, 500-line modularity ceiling, whole-file compliance, and safe non-destructive file operations.\n4. **The 5-Stage Delivery Pipeline:**\n   - Stage 1: Implementation (`@team-coder` / `@team-modeler`)\n   - Stage 2: Adversarial Audit (`@team-auditor`)\n   - Stage 3a: Test Authoring (`@team-test`)\n   - Stage 3b: Test Audit (`@team-auditor`)\n   - Stage 4 & 5: QA Execution (`@team-qa`) and Final Scrutiny (`@team-planner`)\n\n## Directory Layout\n\n```text\nantigravity-plugin-agent-team/\n├── .github/workflows/\n│   └── publish.yml             # Automated npm publish & GitHub release\n├── bin/\n│   └── cli.js                  # CLI & npx installation script\n├── plugin.json                 # Antigravity plugin manifest\n├── package.json                # Project, test, and npm package configuration\n├── CHANGELOG.md                # Release history and feature notes\n├── assets/\n│   └── logo.svg                # High-contrast plugin icon\n├── agents/                     # Subagent persona definitions\n│   ├── team-planner.md\n│   ├── team-coder.md\n│   ├── team-modeler.md\n│   ├── team-auditor.md\n│   ├── team-test.md\n│   └── team-qa.md\n├── rules/                      # Universal and conditional rulesets\n│   ├── AGENTS.md               # Universal root operational law\n│   ├── agent-governance-standards.md\n│   ├── coding-standards.md\n│   ├── modeling-standards.md\n│   ├── testing-standards.md\n│   ├── audit-standards.md\n│   └── planning-standards.md\n├── skills/                     # Detailed team workflows\n│   └── agent-team/\n│       └── SKILL.md\n└── scripts/                    # Static audit gate verification\n    ├── audit-gate.js\n    └── audit-gate.ps1\n```\n\n## Quick Installation via npx\n\nInstall globally into Antigravity with a single command:\n\n```bash\nnpx antigravity-plugin-agent-team install\n```\n\nOr install scoped to your current workspace:\n\n```bash\nnpx antigravity-plugin-agent-team install --workspace\n```\n\n### CLI Commands\n\n```bash\n# Check installation status\nnpx antigravity-plugin-agent-team status\n\n# Uninstall the plugin\nnpx antigravity-plugin-agent-team uninstall\n```\n\n## Verification Gate\n\nRun the deterministic static audit gate against any set of files:\n\n```bash\nnpm test\n# Or directly:\nnode scripts/audit-gate.js -f \"path/to/file1.ext,path/to/file2.ext\"\n```",
+  "latestReleaseNotes": "### Improvements\n- **Automated Release Notes**: Updated the GitHub Actions release workflow to automatically extract and publish the matching `CHANGELOG.md` entry for each tagged release.\n- **Agent Definition Cleanup**: Streamlined formatting and whitespace across all agent persona files.\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "credential_access",
+      "fs_write_workspace",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_CREDENTIAL_EXFIL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "credential_access",
+        "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
+        "file": "rules/AGENTS.md",
+        "line": 51,
+        "snippet": "- Never search for, read, log, export, or pass private keys, API secrets, access tokens, or sensitive user environment variables.",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-agent-team/blob/12d26a84ba6dda1a4edafe6f4549a6231898a5b8/rules/AGENTS.md#L51"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "bin/cli.js",
+        "line": 73,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-agent-team/blob/12d26a84ba6dda1a4edafe6f4549a6231898a5b8/bin/cli.js#L73"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/team-coder.md",
+        "line": 33,
+        "snippet": "1. Run local build, type-check, or lint command (e.g. `npm run build`, `cargo check`, `tsc --noEmit`). Confirm 0 errors and 0 warnings.",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-agent-team/blob/12d26a84ba6dda1a4edafe6f4549a6231898a5b8/agents/team-coder.md#L33"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/team-test.md",
+        "line": 31,
+        "snippet": "1. Run syntax verification or test compilation (e.g. `tsc --noEmit`, `cargo test --no-run`, `python -m py_compile <test_file>`). Confirm 0 errors.",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-agent-team/blob/12d26a84ba6dda1a4edafe6f4549a6231898a5b8/agents/team-test.md#L31"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "bin/cli.js",
+        "line": 34,
+        "snippet": "--global, -g Install globally in ~/.gemini/config/plugins/agent-team (default)",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-agent-team/blob/12d26a84ba6dda1a4edafe6f4549a6231898a5b8/bin/cli.js#L34"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.4",
+      "sha": "12d26a84ba6dda1a4edafe6f4549a6231898a5b8",
+      "scannedAt": "2026-11-27T12:15:22.471Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "fs_write_workspace",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}
