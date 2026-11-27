@@ -3,8 +3,8 @@
 **Date:** 2026-11-27  
 **Repository:** `C:\GitHub\antigravity-plugin-registry`
 
-## Implemented Files (29)
-- `package.json`
+## Implemented Files (30)
+- `package.json`, `README.md`
 - `config/denylist.json`, `config/client-release.json`
 - `scanner/semgrep-rules.yml`
 - `.github/ISSUE_TEMPLATE/submit-plugin.yml`
@@ -17,3 +17,4 @@
 ## Configuration & Verification
 - Configured for `https://github.com/Domush/antigravity-plugin-registry` and Ed25519 Key ID `39619f51b6d74dfa`.
 - `npm test` passed `33/33` tests across `11` suites (`Logs/test-results.log`).
+- Local HTTP portal check returned HTTP `200` for all `9` site assets and signed catalog endpoints.
