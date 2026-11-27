@@ -59,7 +59,9 @@ jobs:
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
                 labels: ["rejected"],
-              }).catch(() => {});
+              }).catch((err) => {
+                core.warning(`Failed to apply issue label: ${err?.message || String(err)}`);
+              });
               await github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -119,12 +121,17 @@ jobs:
       - name: Checkout previous registry state (registry-data)
         if: steps.parse.outputs.valid == 'true'
         run: |
-          git fetch origin registry-data:registry-data 2>/dev/null || true
-          if git show-ref --verify --quiet refs/heads/registry-data; then
+          rc=0
+          git ls-remote --exit-code --heads origin registry-data >/dev/null || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            git fetch origin registry-data:registry-data
             git worktree add ./registry-data registry-data
-          else
+          elif [ "$rc" -eq 2 ]; then
             git worktree add --orphan -b registry-data ./registry-data
             mkdir -p ./registry-data/public/plugins
+          else
+            echo "Failed to probe remote registry-data branch (git ls-remote exit code: $rc)." >&2
+            exit "$rc"
           fi
 
       - name: Setup Node.js
@@ -167,6 +174,7 @@ jobs:
         run: node ./scripts/validate-output.mjs ./registry-data/public
 
       - name: Sign index.json and denylist.json (Ed25519)
+        id: sign
         if: steps.parse.outputs.valid == 'true' && steps.validate.outcome == 'success'
         env:
           REGISTRY_SIGNING_PRIVATE_KEY: ${{ secrets.REGISTRY_SIGNING_PRIVATE_KEY }}
@@ -192,6 +200,7 @@ jobs:
           fi
 
       - name: Assemble GitHub Pages bundle (registry JSON + web portal)
+        id: assemble
         if: steps.commit.outputs.changed == 'true'
         run: |
           rm -rf ./pages-dist
@@ -201,6 +210,7 @@ jobs:
           touch ./pages-dist/.nojekyll
 
       - name: Upload combined Pages artifact
+        id: upload
         if: steps.commit.outputs.changed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
@@ -210,8 +220,13 @@ jobs:
         if: always() && steps.parse.outputs.valid == 'true'
         uses: actions/github-script@v7
         env:
+          JOB_STATUS: ${{ job.status }}
           TARGET_REPO: ${{ steps.parse.outputs.target_repo }}
           VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          SIGN_OUTCOME: ${{ steps.sign.outcome }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
+          ASSEMBLE_OUTCOME: ${{ steps.assemble.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
           PUBLISHED_CHANGE: ${{ steps.commit.outputs.changed }}
         with:
           script: |
@@ -221,10 +236,37 @@ jobs:
             if (fs.existsSync("./crawl-summary.json")) {
               summary = JSON.parse(fs.readFileSync("./crawl-summary.json", "utf8"));
             }
+
+            const stepFailures = [];
             if (process.env.VALIDATE_OUTCOME === "failure") {
+              stepFailures.push("Generated output failed `validate-output.mjs` schema/parity checks.");
+            }
+            if (process.env.SIGN_OUTCOME === "failure") {
+              stepFailures.push("Ed25519 registry signing (`sign-registry.mjs`) failed.");
+            }
+            if (process.env.COMMIT_OUTCOME === "failure") {
+              stepFailures.push("Failed to commit and push updated registry state to `registry-data`.");
+            }
+            if (process.env.ASSEMBLE_OUTCOME === "failure") {
+              stepFailures.push("Failed to assemble GitHub Pages bundle (`./pages-dist`).");
+            }
+            if (process.env.UPLOAD_OUTCOME === "failure") {
+              stepFailures.push("Failed to upload combined GitHub Pages artifact.");
+            }
+
+            if (stepFailures.length > 0) {
               summary = {
                 status: "error",
-                reason: "Generated output failed `validate-output.mjs` schema/parity checks. Inspect workflow run logs.",
+                reason: `${stepFailures.join(" ")} Inspect workflow run logs.`,
+              };
+            } else if (process.env.JOB_STATUS === "failure" || process.env.JOB_STATUS === "cancelled") {
+              const baseReason =
+                summary.status !== "indexed" && summary.status !== "cached" && summary.reason
+                  ? `${summary.reason} (job status: \`${process.env.JOB_STATUS}\`)`
+                  : `Workflow job ended with status \`${process.env.JOB_STATUS}\` before publishing could complete.`;
+              summary = {
+                status: "error",
+                reason: `${baseReason} Inspect workflow run logs.`,
               };
             }
 
@@ -296,7 +338,9 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               labels: [label],
-            }).catch(() => {});
+            }).catch((err) => {
+              core.warning(`Failed to apply issue label: ${err?.message || String(err)}`);
+            });
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -313,6 +357,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Deploy updated registry to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

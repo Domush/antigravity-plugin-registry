@@ -28,14 +28,26 @@ jobs:
 
       - name: Checkout latest published JSON (registry-data)
         run: |
-          git fetch origin registry-data:registry-data 2>/dev/null || true
           mkdir -p ./pages-dist
-          if git show-ref --verify --quiet refs/heads/registry-data; then
+          rc=0
+          git ls-remote --exit-code --heads origin registry-data >/dev/null || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            git fetch origin registry-data:registry-data
             git worktree add ./registry-data registry-data
             cp -r ./registry-data/public/. ./pages-dist/
+          elif [ "$rc" -eq 2 ]; then
+            echo "Remote branch registry-data does not exist yet; deploying site without registry JSON."
+          else
+            echo "Failed to probe remote registry-data branch (git ls-remote exit code: $rc)." >&2
+            exit "$rc"
           fi
           cp -r ./site/. ./pages-dist/
           touch ./pages-dist/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

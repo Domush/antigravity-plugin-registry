@@ -33,12 +33,17 @@ jobs:
 
       - name: Checkout previous registry state (registry-data)
         run: |
-          git fetch origin registry-data:registry-data 2>/dev/null || true
-          if git show-ref --verify --quiet refs/heads/registry-data; then
+          rc=0
+          git ls-remote --exit-code --heads origin registry-data >/dev/null || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            git fetch origin registry-data:registry-data
             git worktree add ./registry-data registry-data
-          else
+          elif [ "$rc" -eq 2 ]; then
             git worktree add --orphan -b registry-data ./registry-data
             mkdir -p ./registry-data/public/plugins
+          else
+            echo "Failed to probe remote registry-data branch (git ls-remote exit code: $rc)." >&2
+            exit "$rc"
           fi
 
       - name: Setup Node.js
@@ -116,6 +121,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
