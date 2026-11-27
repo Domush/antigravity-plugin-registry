@@ -7,15 +7,13 @@ const BLOCK_START_RE =
   /^ {0,3}(?:#{1,6}\s+\S|(?:```|~~~)|(?:-\s*){3,}$|(?:\*\s*){3,}$|(?:_\s*){3,}$|>\s?|[-*+]\s+\S|\d+[.)]\s+\S)/;
 const HR_RE = /^ {0,3}(?:(?:-\s*){3,}|(?:\*\s*){3,}|(?:_\s*){3,})$/;
 const FENCE_OPEN_RE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
-const HEADING_RE = /^ {0,3}(#{1,6})\s+(\S.*?)\s*#*$/;
+const HEADING_RE = /^ {0,3}(#{1,6})\s+(\S.*)$/;
 const UL_ITEM_RE = /^ {0,3}[-*+]\s+(.*)$/;
 const OL_ITEM_RE = /^ {0,3}\d+[.)]\s+(.*)$/;
 const BQ_LINE_RE = /^ {0,3}>\s?(.*)$/;
-const DEST_PART = String.raw`((?:[^()\n]|\([^()\n]*\))+)`;
-const LINKED_BADGE_RE = new RegExp(`\\[!\\[([^\\]]*)\\]\\(${DEST_PART}\\)\\]\\(${DEST_PART}\\)`, "g");
-const IMAGE_RE = new RegExp(`!\\[([^\\]]*)\\]\\(${DEST_PART}\\)`, "g");
-const LINK_RE = new RegExp(`\\[([^\\]]+)\\]\\(${DEST_PART}\\)`, "g");
-const AUTO_URL_RE = /(https?:\/\/(?:[^\s&]|&amp;)+)/g;
+const BQ_LEADING_RE = /^(?: {0,3}>\s?)+/;
+const MAX_BLOCKQUOTE_DEPTH = 32;
+const AUTO_URL_RE = /(https?:\/\/(?:[^\s&\0]|&amp;)+)/g;
 
 /** Escape HTML metacharacters to prevent injection. */
 export function escapeHtml(value) {
@@ -85,23 +83,174 @@ function applyEmphasis(text) {
 }
 
 function stripTrailingPunctuation(raw) {
-  let url = raw;
-  let suffix = "";
-  while (url.length > 0 && /[.,;:!?)]/.test(url[url.length - 1])) {
-    const ch = url[url.length - 1];
-    if (ch === ")" && (url.match(/\)/g) || []).length <= (url.match(/\(/g) || []).length) break;
-    suffix = ch + suffix;
-    url = url.slice(0, -1);
+  let openParens = 0;
+  let closeParens = 0;
+  for (let i = 0; i < raw.length; i += 1) {
+    if (raw[i] === "(") openParens += 1;
+    else if (raw[i] === ")") closeParens += 1;
   }
-  return { url, suffix };
+
+  let end = raw.length;
+  while (end > 0) {
+    const ch = raw[end - 1];
+    if (!/[.,;:!?)]/.test(ch)) break;
+    if (ch === ")") {
+      if (closeParens <= openParens) break;
+      closeParens -= 1;
+    }
+    end -= 1;
+  }
+
+  return { url: raw.slice(0, end), suffix: raw.slice(end) };
+}
+
+/** Map each '(' index to its matching ')' index in O(N) time; unmatched '(' stay -1. */
+function buildParenMap(text) {
+  const map = new Int32Array(text.length).fill(-1);
+  const stack = [];
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === "(") {
+      stack.push(i);
+    } else if (ch === ")" && stack.length > 0) {
+      map[stack.pop()] = i;
+    }
+  }
+  return map;
+}
+
+function replaceLinkedBadges(text, onMatch) {
+  if (!text.includes("[![") || !text.includes("(")) return text;
+  const parenMap = buildParenMap(text);
+  const parts = [];
+  let cursor = 0;
+  let i = 0;
+
+  while (i < text.length) {
+    const start = text.indexOf("[![", i);
+    if (start === -1) break;
+    const altEnd = text.indexOf("]", start + 3);
+    if (altEnd === -1) break;
+
+    if (text[altEnd + 1] === "(") {
+      const imgClose = parenMap[altEnd + 1];
+      if (imgClose !== -1 && text[imgClose + 1] === "]" && text[imgClose + 2] === "(") {
+        const hrefClose = parenMap[imgClose + 2];
+        if (hrefClose !== -1) {
+          const alt = text.slice(start + 3, altEnd);
+          const hrefDest = text.slice(imgClose + 3, hrefClose);
+          parts.push(text.slice(cursor, start), onMatch(alt, hrefDest));
+          cursor = hrefClose + 1;
+          i = cursor;
+          continue;
+        }
+      }
+    }
+    i = altEnd + 1;
+  }
+
+  if (cursor === 0) return text;
+  parts.push(text.slice(cursor));
+  return parts.join("");
+}
+
+function scanBracketLinks(text, prefix, minLabelLen, onMatch) {
+  if (!text.includes(prefix) || !text.includes("(")) return text;
+  const parenMap = buildParenMap(text);
+  const parts = [];
+  let cursor = 0;
+  let i = 0;
+
+  while (i < text.length) {
+    const start = text.indexOf(prefix, i);
+    if (start === -1) break;
+    const labelStart = start + prefix.length;
+    const closeBracket = text.indexOf("]", labelStart);
+    if (closeBracket === -1) break;
+
+    if (closeBracket - labelStart >= minLabelLen && text[closeBracket + 1] === "(") {
+      const destClose = parenMap[closeBracket + 1];
+      if (destClose !== -1) {
+        const label = text.slice(labelStart, closeBracket);
+        const dest = text.slice(closeBracket + 2, destClose);
+        parts.push(text.slice(cursor, start), onMatch(label, dest));
+        cursor = destClose + 1;
+        i = cursor;
+        continue;
+      }
+    }
+    i = closeBracket + 1;
+  }
+
+  if (cursor === 0) return text;
+  parts.push(text.slice(cursor));
+  return parts.join("");
+}
+
+/** Replace inline backtick code spans in strictly O(N) time without regex backtracking. */
+function replaceInlineCode(rawLine, onMatch) {
+  if (!rawLine.includes("`")) return rawLine;
+
+  const runs = [];
+  const runsByLen = new Map();
+  let i = 0;
+  while (i < rawLine.length) {
+    const start = rawLine.indexOf("`", i);
+    if (start === -1) break;
+    let end = start + 1;
+    while (end < rawLine.length && rawLine[end] === "`") end += 1;
+    const len = end - start;
+    const runIdx = runs.length;
+    runs.push({ start, end, len });
+    let list = runsByLen.get(len);
+    if (!list) {
+      list = [];
+      runsByLen.set(len, list);
+    }
+    list.push(runIdx);
+    i = end;
+  }
+
+  if (runs.length < 2) return rawLine;
+
+  const cursorByLen = new Map();
+  const parts = [];
+  let charCursor = 0;
+  let rIdx = 0;
+
+  while (rIdx < runs.length) {
+    const openRun = runs[rIdx];
+    const indices = runsByLen.get(openRun.len);
+    let listPos = cursorByLen.get(openRun.len) ?? 0;
+    while (listPos < indices.length && indices[listPos] <= rIdx) {
+      listPos += 1;
+    }
+    cursorByLen.set(openRun.len, listPos);
+
+    if (listPos < indices.length) {
+      const closeIdx = indices[listPos];
+      const closeRun = runs[closeIdx];
+      parts.push(rawLine.slice(charCursor, openRun.start), onMatch(rawLine.slice(openRun.end, closeRun.start)));
+      charCursor = closeRun.end;
+      cursorByLen.set(openRun.len, listPos + 1);
+      rIdx = closeIdx + 1;
+      continue;
+    }
+    rIdx += 1;
+  }
+
+  if (charCursor === 0) return rawLine;
+  parts.push(rawLine.slice(charCursor));
+  return parts.join("");
 }
 
 function renderInline(rawLine, opts) {
   const codeTokens = [];
   const linkTokens = [];
+  const linkPlainTexts = [];
 
   // 1. Protect inline code spans before escaping or formatting
-  let text = rawLine.replace(/(`+)([\s\S]+?)\1/g, (_, _t, inner) => {
+  let text = replaceInlineCode(rawLine, (inner) => {
     codeTokens.push(`<code>${escapeHtml(inner)}</code>`);
     return `\0C${codeTokens.length - 1}\0`;
   });
@@ -109,25 +258,30 @@ function renderInline(rawLine, opts) {
   // 2. Escape all remaining raw HTML before links, auto-links, and emphasis
   text = escapeHtml(text);
 
-  const stashLink = (safeUrl, labelHtml, fallbackHtml) => {
+  const stashLink = (safeUrl, labelHtml, fallbackHtml, plainText = fallbackHtml) => {
     if (!safeUrl) return fallbackHtml;
     linkTokens.push(renderSafeLink(safeUrl, labelHtml, opts.linkMode));
+    linkPlainTexts.push(plainText);
     return `\0T${linkTokens.length - 1}\0`;
   };
+  const unwrapLinkTokens = (label) =>
+    label.replace(/\0T(\d+)\0/g, (_, idx) => linkPlainTexts[Number(idx)] ?? "");
 
   // 3. Linked badges, standalone images, standard links, and bare http(s) auto-links
-  text = text.replace(LINKED_BADGE_RE, (_, alt, _img, hrefDest) => {
+  text = replaceLinkedBadges(text, (alt, hrefDest) => {
     const safeUrl = resolveSafeUrl(decodeEscapedHref(hrefDest), opts);
-    return stashLink(safeUrl, alt || "Badge", alt || "");
+    return stashLink(safeUrl, alt || "Badge", alt || "", alt || "Badge");
   });
-  text = text.replace(IMAGE_RE, (_, alt, srcDest) => {
+  text = scanBracketLinks(text, "![", 0, (alt, srcDest) => {
+    const unwrappedAlt = unwrapLinkTokens(alt);
     const safeUrl = resolveSafeUrl(decodeEscapedHref(srcDest), opts);
-    return stashLink(safeUrl, alt || "Image", alt || "");
+    return stashLink(safeUrl, unwrappedAlt || "Image", unwrappedAlt || "", unwrappedAlt);
   });
-  text = text.replace(LINK_RE, (_, label, hrefDest) => {
+  text = scanBracketLinks(text, "[", 1, (label, hrefDest) => {
     const safeUrl = resolveSafeUrl(decodeEscapedHref(hrefDest), opts);
-    const formatted = applyEmphasis(label);
-    return stashLink(safeUrl, formatted, formatted);
+    const unwrappedLabel = unwrapLinkTokens(label);
+    const formatted = applyEmphasis(unwrappedLabel);
+    return stashLink(safeUrl, formatted, formatted, unwrappedLabel);
   });
   text = text.replace(AUTO_URL_RE, (match) => {
     const { url, suffix } = stripTrailingPunctuation(match);
@@ -141,17 +295,7 @@ function renderInline(rawLine, opts) {
   return text.replace(/\0C(\d+)\0/g, (_, idx) => codeTokens[Number(idx)] ?? "");
 }
 
-/** Render untrusted Markdown to sanitized HTML. */
-export function renderMarkdown(markdown, { linkMode = "anchor", repoUrl = "", sha = "" } = {}) {
-  if (linkMode !== "anchor" && linkMode !== "button") {
-    throw new TypeError(`Invalid linkMode "${linkMode}"; expected "anchor" or "button".`);
-  }
-  if (markdown === null || markdown === undefined || markdown === "") return "";
-  if (typeof markdown !== "string") {
-    throw new TypeError("renderMarkdown requires markdown to be a string, null, or undefined.");
-  }
-
-  const opts = { linkMode, repoUrl, sha };
+function renderMarkdownBlocks(markdown, opts, depth) {
   const lines = markdown.replaceAll("\0", "").replace(/\r\n?/g, "\n").split("\n");
   const out = [];
   let i = 0;
@@ -188,7 +332,11 @@ export function renderMarkdown(markdown, { linkMode = "anchor", repoUrl = "", sh
     const headingMatch = line.match(HEADING_RE);
     if (headingMatch) {
       const level = headingMatch[1].length;
-      out.push(`<h${level}>${renderInline(headingMatch[2], opts)}</h${level}>`);
+      const rawHeading = headingMatch[2];
+      let end = rawHeading.length;
+      while (end > 1 && rawHeading[end - 1] === "#") end -= 1;
+      while (end > 1 && /\s/.test(rawHeading[end - 1])) end -= 1;
+      out.push(`<h${level}>${renderInline(rawHeading.slice(0, end), opts)}</h${level}>`);
       i += 1;
       continue;
     }
@@ -199,8 +347,13 @@ export function renderMarkdown(markdown, { linkMode = "anchor", repoUrl = "", sh
       return items;
     };
 
-    if (BQ_LINE_RE.test(line)) {
-      out.push(`<blockquote>${renderMarkdown(collectBlock(BQ_LINE_RE).join("\n"), opts)}</blockquote>`);
+    if (depth <= MAX_BLOCKQUOTE_DEPTH && BQ_LINE_RE.test(line)) {
+      const innerLines = collectBlock(BQ_LINE_RE);
+      const nextLines =
+        depth >= MAX_BLOCKQUOTE_DEPTH
+          ? innerLines.map((item) => item.replace(BQ_LEADING_RE, ""))
+          : innerLines;
+      out.push(`<blockquote>${renderMarkdownBlocks(nextLines.join("\n"), opts, depth + 1)}</blockquote>`);
       continue;
     }
     if (UL_ITEM_RE.test(line)) {
@@ -220,4 +373,17 @@ export function renderMarkdown(markdown, { linkMode = "anchor", repoUrl = "", sh
   }
 
   return out.join("\n");
+}
+
+/** Render untrusted Markdown to sanitized HTML. */
+export function renderMarkdown(markdown, { linkMode = "anchor", repoUrl = "", sha = "" } = {}) {
+  if (linkMode !== "anchor" && linkMode !== "button") {
+    throw new TypeError(`Invalid linkMode "${linkMode}"; expected "anchor" or "button".`);
+  }
+  if (markdown === null || markdown === undefined || markdown === "") return "";
+  if (typeof markdown !== "string") {
+    throw new TypeError("renderMarkdown requires markdown to be a string, null, or undefined.");
+  }
+
+  return renderMarkdownBlocks(markdown, { linkMode, repoUrl, sha }, 0);
 }

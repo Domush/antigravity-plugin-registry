@@ -165,4 +165,125 @@ describe("site/markdown.js — XSS-safe zero-dependency Markdown renderer", () =
     assert.match(buttonHtml, /<button type="button" class="md-link" data-external-url="https:\/\/en\.wikipedia\.org\/wiki\/Foo_\(bar\)">External<\/button>/);
     assert.equal(escapeHtml(`a&b<c>"d"'e'`), "a&amp;b&lt;c&gt;&quot;d&quot;&#39;e&#39;");
   });
+
+  it("degrades empty ]() badge, image, and link targets safely without leaking inner badge links", () => {
+    const emptyHrefBadge = renderMarkdown(
+      "[![Build](https://img.shields.io/badge/build-passing-green)]()"
+    );
+    assert.equal(emptyHrefBadge, "<p>Build</p>");
+    assert.doesNotMatch(emptyHrefBadge, /<a\b|<button\b|<img\b|shields\.io/i);
+
+    const emptyImgBadge = renderMarkdown("[![Build]()](https://example.com/status)");
+    assert.equal(
+      emptyImgBadge,
+      '<p><a href="https://example.com/status" target="_blank" rel="noopener noreferrer">Build</a></p>'
+    );
+
+    const emptyImageAndLink = renderMarkdown("![Diagram]() and [Empty Link]()");
+    assert.equal(emptyImageAndLink, "<p>Diagram and Empty Link</p>");
+    assert.doesNotMatch(emptyImageAndLink, /<a\b|<button\b|<img\b/i);
+  });
+
+  it("preserves single and nested balanced parentheses in Wikipedia and badge URLs", () => {
+    const md = [
+      "[wiki](https://en.wikipedia.org/wiki/Foo_(bar))",
+      "[nested](https://en.wikipedia.org/wiki/Foo_(bar_(baz)))",
+      "[![Wiki](https://img.shields.io/badge/wiki-ok.svg)](https://en.wikipedia.org/wiki/Foo_(bar))",
+    ].join(" | ");
+
+    const html = renderMarkdown(md);
+    assert.match(
+      html,
+      /<a href="https:\/\/en\.wikipedia\.org\/wiki\/Foo_\(bar\)" target="_blank" rel="noopener noreferrer">wiki<\/a>/
+    );
+    assert.match(
+      html,
+      /<a href="https:\/\/en\.wikipedia\.org\/wiki\/Foo_\(bar_\(baz\)\)" target="_blank" rel="noopener noreferrer">nested<\/a>/
+    );
+    assert.match(
+      html,
+      /<a href="https:\/\/en\.wikipedia\.org\/wiki\/Foo_\(bar\)" target="_blank" rel="noopener noreferrer">Wiki<\/a>/
+    );
+  });
+
+  it("handles 10,000+ character adversarial ReDoS and trailing-paren inputs in linear time (< 200ms)", () => {
+    const adversarialInputs = [
+      "[".repeat(10000) + "](" + "a".repeat(10000),
+      "[text](" + "(".repeat(10000),
+      "[a](".repeat(2500),
+      "[![badge](https://img.shields.io/a.svg)](" + "(".repeat(10000),
+      "![alt](" + "(".repeat(10000),
+      "# a" + " ".repeat(10000) + "x",
+      "**a*".repeat(2500),
+      "https://example.com/" + ")".repeat(30000),
+      "a " + "`".repeat(30000),
+    ];
+
+    for (const payload of adversarialInputs) {
+      const start = performance.now();
+      const out = renderMarkdown(payload);
+      const elapsedMs = performance.now() - start;
+      assert.equal(typeof out, "string");
+      assert.ok(elapsedMs < 200, `Expected < 200ms for ${payload.length}-char payload, got ${elapsedMs.toFixed(2)}ms`);
+    }
+
+    const recovered = renderMarkdown("[a](unclosed [valid](https://example.com)");
+    assert.equal(
+      recovered,
+      '<p>[a](unclosed <a href="https://example.com/" target="_blank" rel="noopener noreferrer">valid</a></p>'
+    );
+  });
+
+  it("caps deeply nested blockquotes without throwing RangeError", () => {
+    const start = performance.now();
+    const html = renderMarkdown("> ".repeat(5000) + "x");
+    const elapsedMs = performance.now() - start;
+    assert.ok(elapsedMs < 200, `Expected < 200ms for 5000-deep blockquote, got ${elapsedMs.toFixed(2)}ms`);
+    assert.match(html, /^<blockquote>.*<p>x<\/p>.*<\/blockquote>$/);
+    assert.doesNotMatch(html, /&gt;/);
+  });
+
+  it("unwraps nested images inside link labels to plain escaped alt text without leaking NUL tokens", () => {
+    const md = "[Click ![Icon](https://img.shields.io/a.svg)](https://example.com)";
+    const anchorHtml = renderMarkdown(md);
+    assert.equal(anchorHtml.includes("\0"), false);
+    assert.equal(
+      anchorHtml,
+      '<p><a href="https://example.com/" target="_blank" rel="noopener noreferrer">Click Icon</a></p>'
+    );
+
+    const buttonHtml = renderMarkdown(md, { linkMode: "button" });
+    assert.equal(buttonHtml.includes("\0"), false);
+    assert.equal(
+      buttonHtml,
+      '<p><button type="button" class="md-link" data-external-url="https://example.com/">Click Icon</button></p>'
+    );
+
+    const degradedHtml = renderMarkdown("[Click ![Icon](https://img.shields.io/a.svg)](javascript:alert(1))");
+    assert.equal(degradedHtml.includes("\0"), false);
+    assert.equal(degradedHtml, "<p>Click Icon</p>");
+
+    const xssAltHtml = renderMarkdown("[Click ![<script>](https://img.shields.io/a.svg)](https://example.com)");
+    assert.equal(xssAltHtml.includes("\0"), false);
+    assert.equal(
+      xssAltHtml,
+      '<p><a href="https://example.com/" target="_blank" rel="noopener noreferrer">Click &lt;script&gt;</a></p>'
+    );
+
+    const badgeInImageHtml = renderMarkdown("![foo [![b](https://img.com/a.svg)](https://evil.com)](https://example.com)");
+    assert.equal(badgeInImageHtml.includes("\0"), false);
+    assert.equal(
+      badgeInImageHtml,
+      '<p><a href="https://example.com/" target="_blank" rel="noopener noreferrer">foo b</a></p>'
+    );
+
+    const degradedBadgeInImageHtml = renderMarkdown(
+      "![foo [![b](https://img.com/a.svg)](https://evil.com)](javascript:alert(1))"
+    );
+    assert.equal(degradedBadgeInImageHtml.includes("\0"), false);
+    assert.equal(degradedBadgeInImageHtml, "<p>foo b</p>");
+
+    const nestedCodeSpanHtml = renderMarkdown("Use ``code with `backtick` inside`` safely");
+    assert.equal(nestedCodeSpanHtml, "<p>Use <code>code with `backtick` inside</code> safely</p>");
+  });
 });
