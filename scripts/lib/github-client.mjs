@@ -142,6 +142,7 @@ export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-p
   return {
     apiBase: API_BASE,
     githubFetch,
+    githubJson,
     discoverRepositories,
     resolveTargetRelease,
   };

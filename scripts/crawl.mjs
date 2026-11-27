@@ -9,6 +9,7 @@ import {
   resolveInsideSandbox,
   stripTopLevelDir,
 } from "./lib/archive.mjs";
+import { resolveClientRelease } from "./lib/client-release.mjs";
 import { createGitHubClient } from "./lib/github-client.mjs";
 import { fileExists, validateAndParsePlugin } from "./lib/plugin-parser.mjs";
 import { scanPluginSecurity } from "./security-scanner.mjs";
@@ -73,6 +74,20 @@ async function loadJsonSafe(filePath, fallback) {
   }
 }
 
+async function loadClientReleasePolicy(filePath) {
+  let raw;
+  try {
+    raw = await fs.readFile(filePath, "utf8");
+  } catch (err) {
+    throw new Error(`Could not read client release policy ${filePath}: ${err.message}`, { cause: err });
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Malformed JSON in client release policy ${filePath}: ${err.message}`, { cause: err });
+  }
+}
+
 async function pruneStaleDetails(pluginsDir, activeIds) {
   let owners;
   try {
@@ -129,6 +144,13 @@ async function main() {
 
   const prevIndex = await loadJsonSafe(indexPath, { plugins: [] });
   const prevMap = new Map((prevIndex.plugins || []).map((p) => [p.id.toLowerCase(), p]));
+
+  const clientReleasePolicy = await loadClientReleasePolicy(CONFIG.clientReleasePath);
+  const marketplaceClient = await resolveClientRelease({
+    policy: clientReleasePolicy,
+    githubJson: gh.githubJson,
+    previousClientRelease: prevIndex.marketplaceClient,
+  });
 
   const discovered = await gh.discoverRepositories(CONFIG.targetRepo);
   console.log(`[discover] Found ${discovered.length} candidate repositories`);
@@ -350,15 +372,13 @@ async function main() {
     a.id.toLowerCase() < b.id.toLowerCase() ? -1 : a.id.toLowerCase() > b.id.toLowerCase() ? 1 : 0
   );
 
-  const marketplaceClient = await loadJsonSafe(CONFIG.clientReleasePath, null);
-
   const nextIndex = {
     schemaVersion: CONFIG.schemaVersion,
     generatedAt: new Date().toISOString(),
     crawlerVersion: CONFIG.crawlerVersion,
     scannerVersion: CONFIG.scannerVersion,
     totalPlugins: plugins.length,
-    ...(marketplaceClient ? { marketplaceClient } : {}),
+    marketplaceClient,
     plugins,
   };
 
