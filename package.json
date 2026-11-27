@@ -1,0 +1,13 @@
+{
+  "name": "agy-plugin-registry",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "crawl": "node ./scripts/crawl.mjs",
+    "test": "node --test ./tests/*.test.mjs"
+  },
+  "dependencies": {
+    "tar-stream": "^3.1.7"
+  }
+}

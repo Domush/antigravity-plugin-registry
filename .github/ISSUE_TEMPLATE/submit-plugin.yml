@@ -1,0 +1,38 @@
+name: Submit or Refresh Plugin
+description: Index a new Antigravity App plugin or trigger an immediate rescan after a release.
+title: "[Plugin]: "
+labels: ["plugin-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit a public GitHub repository tagged with `agy-plugin` for immediate indexing and security auditing.
+        The bot will scan your latest release (or default branch HEAD), post the audit summary here, and close this issue automatically.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: Enter `owner/repo` or paste the full GitHub repository URL.
+      placeholder: acme-dev/agy-unity-helper
+    validations:
+      required: true
+  - type: dropdown
+    id: rescan_mode
+    attributes:
+      label: Scan Mode
+      description: Standard mode skips scanning if the latest commit SHA is already indexed.
+      options:
+        - Standard (index new release or commit)
+        - Force rescan (re-run security scanner on current commit)
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-flight Checklist
+      options:
+        - label: Repository is public and has the `agy-plugin` GitHub topic.
+          required: true
+        - label: Repository contains a valid `plugin.json` or `.antigravity-plugin/plugin.json` plus at least one Antigravity component (skills, rules, agents, `hooks.json`, or `mcp_config.json`).
+          required: true

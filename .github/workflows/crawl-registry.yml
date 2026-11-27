@@ -1,0 +1,121 @@
+name: Crawl and Publish Plugin Registry
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # Every 6 hours
+  workflow_dispatch:
+    inputs:
+      force_rescan:
+        description: "Re-scan all repos even if commit SHA and scannerVersion match"
+        type: boolean
+        default: false
+      target_repo:
+        description: "Optional owner/repo to scan in isolation (leaves other entries intact)"
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: registry-crawl-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  crawl-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout crawler code (main)
+        uses: actions/checkout@v4
+
+      - name: Checkout previous registry state (registry-data)
+        run: |
+          git fetch origin registry-data:registry-data 2>/dev/null || true
+          if git show-ref --verify --quiet refs/heads/registry-data; then
+            git worktree add ./registry-data registry-data
+          else
+            git worktree add --orphan -b registry-data ./registry-data
+            mkdir -p ./registry-data/public/plugins
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install crawler dependencies
+        run: npm ci
+
+      - name: Run offline fixture tests
+        run: npm test
+
+      - name: Install Semgrep for AST code scanning
+        run: |
+          python3 -m pip install --quiet semgrep
+
+      - name: Copy manual denylist into output
+        run: |
+          mkdir -p ./registry-data/public/plugins
+          cp ./config/denylist.json ./registry-data/public/denylist.json
+
+      - name: Run incremental crawler and security scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_DIR: ./registry-data/public
+          DENYLIST_PATH: ./config/denylist.json
+          CLIENT_RELEASE_PATH: ./config/client-release.json
+          FORCE_RESCAN: ${{ inputs.force_rescan || 'false' }}
+          TARGET_REPO: ${{ inputs.target_repo || '' }}
+          MAX_ARCHIVE_BYTES: "26214400" # 25 MB hard cap per plugin
+        run: |
+          node ./scripts/crawl.mjs
+
+      - name: Validate generated JSON schemas
+        run: |
+          node ./scripts/validate-output.mjs ./registry-data/public
+
+      - name: Sign index.json and denylist.json (Ed25519)
+        env:
+          REGISTRY_SIGNING_PRIVATE_KEY: ${{ secrets.REGISTRY_SIGNING_PRIVATE_KEY }}
+        run: node ./scripts/sign-registry.mjs ./registry-data/public
+
+      - name: Commit updated registry state to registry-data branch
+        working-directory: ./registry-data
+        run: |
+          git config user.name "agy-registry-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/
+          if git diff --cached --quiet; then
+            echo "No registry changes detected."
+          else
+            git commit -m "chore(registry): update index $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push origin registry-data
+          fi
+
+      - name: Assemble GitHub Pages bundle (registry JSON + web portal)
+        run: |
+          rm -rf ./pages-dist
+          mkdir -p ./pages-dist
+          cp -r ./registry-data/public/. ./pages-dist/
+          cp -r ./site/. ./pages-dist/
+          touch ./pages-dist/.nojekyll
+
+      - name: Upload combined Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./pages-dist
+
+  deploy:
+    needs: crawl-and-build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

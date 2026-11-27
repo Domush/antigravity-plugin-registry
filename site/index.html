@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Browse, search, and audit community-made Google Antigravity App plugins with pinned commit SHAs and static security reports."
+    />
+    <title>Antigravity Community Plugin Registry</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./drawer.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <!-- Top Bar -->
+      <header class="site-nav">
+        <div class="container nav-inner">
+          <a href="./" class="brand" id="brand-reset">
+            <span class="brand-mark" aria-hidden="true">AGY</span>
+            <span>
+              <strong>Community Plugin Registry</strong>
+              <small id="registry-meta" class="muted">Loading catalog...</small>
+            </span>
+          </a>
+
+          <div class="nav-actions">
+            <button type="button" id="btn-bookmarks" class="btn btn-ghost" aria-pressed="false">
+              Saved (<span id="bookmark-count">0</span>)
+            </button>
+            <a id="link-submit-plugin" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+              + Submit Plugin
+            </a>
+            <a id="link-install-client" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+              Get Sidebar Plugin
+            </a>
+            <button type="button" id="btn-theme" class="btn btn-ghost" title="Toggle light/dark theme">
+              Theme
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero & Quick Stats -->
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <h1>Discover &amp; Audit Community Antigravity Plugins</h1>
+            <p class="muted">
+              Automatically indexed from public GitHub repos tagged <code>agy-plugin</code>. Every entry is
+              pinned to an immutable commit SHA, verified with a deterministic tree hash, and scanned for
+              code, lifecycle hook, and prompt-injection risks.
+            </p>
+          </div>
+          <div class="hero-stats" id="hero-stats" aria-live="polite">
+            <div class="stat-box"><strong id="stat-total">&ndash;</strong><span>Plugins</span></div>
+            <div class="stat-box"><strong id="stat-low">&ndash;</strong><span>Low Risk</span></div>
+            <div class="stat-box"><strong id="stat-ui">&ndash;</strong><span>Sidebar UI</span></div>
+            <div class="stat-box"><strong id="stat-sig">&ndash;</strong><span>Registry Sig</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Alerts -->
+      <div class="container">
+        <div id="site-alerts" class="alerts" aria-live="polite"></div>
+      </div>
+
+      <!-- Sticky Search & Filter Controls -->
+      <section class="controls-bar">
+        <div class="container controls-inner">
+          <input
+            id="search-input"
+            class="input search-input"
+            type="search"
+            placeholder="Search plugins, authors, tags, or skills... (Press /)"
+            autocomplete="off"
+          />
+          <select id="filter-category" class="select" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+          </select>
+          <select id="filter-surface" class="select" aria-label="Filter by surface">
+            <option value="all">All Surfaces</option>
+            <option value="sidebar_ui">Has Sidebar UI</option>
+            <option value="prompt_only">Prompt / Rules Only</option>
+            <option value="mcp_stdio">Local MCP Server</option>
+            <option value="mcp_remote">Remote MCP Server</option>
+            <option value="hooks">Shell Lifecycle Hooks</option>
+          </select>
+          <select id="filter-risk" class="select" aria-label="Maximum risk tier">
+            <option value="all">Any Risk Tier</option>
+            <option value="low">Low Risk Only</option>
+            <option value="elevated">Low + Elevated</option>
+          </select>
+          <select id="sort-select" class="select" aria-label="Sort plugins">
+            <option value="stars">Sort: Most Stars</option>
+            <option value="updated">Sort: Recently Updated</option>
+            <option value="risk">Sort: Lowest Risk</option>
+            <option value="name">Sort: Name (A&ndash;Z)</option>
+          </select>
+          <label class="chip-check">
+            <input type="checkbox" id="chk-no-creds" />
+            <span>No API Keys</span>
+          </label>
+          <button type="button" id="btn-clear-filters" class="btn btn-ghost" hidden>
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <!-- Results Count & Card Grid -->
+      <main class="container main-content">
+        <div class="results-meta">
+          <span id="results-count" class="muted">Loading plugins...</span>
+          <span id="active-filter-hint" class="muted"></span>
+        </div>
+        <div id="plugin-grid" class="plugin-grid" aria-live="polite"></div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="container footer-inner muted">
+          <span>
+            Community-run registry. Not affiliated with Google. Always inspect pinned source code before installing elevated or high-risk plugins.
+          </span>
+          <div class="footer-links">
+            <a href="./index.json" target="_blank" rel="noopener noreferrer">index.json</a>
+            <a href="./denylist.json" target="_blank" rel="noopener noreferrer">denylist.json</a>
+            <a id="link-registry-repo" target="_blank" rel="noopener noreferrer">Registry GitHub</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Slide-Over Plugin Audit & Install Drawer -->
+    <div id="drawer-backdrop" class="backdrop" hidden></div>
+    <aside id="detail-drawer" class="drawer" role="dialog" aria-modal="true" aria-hidden="true">
+      <div id="drawer-inner" class="drawer-inner"></div>
+    </aside>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

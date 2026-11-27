@@ -1,0 +1,318 @@
+name: Issue-Ops Plugin Submission
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+
+# Shares the exact concurrency group with crawl-registry.yml to prevent git push races
+concurrency:
+  group: registry-crawl-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  submit-and-audit:
+    if: >-
+      contains(github.event.issue.labels.*.name, 'plugin-submission') &&
+      github.event.issue.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      should_deploy: ${{ steps.commit.outputs.changed || 'false' }}
+    steps:
+      - name: Checkout crawler code (main)
+        uses: actions/checkout@v4
+
+      - name: Parse issue form and verify repository eligibility
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("node:fs");
+            const body = context.payload.issue.body || "";
+
+            // Extract "### Repository" section from GitHub Issue Form markdown
+            const repoMatch = body.match(/### Repository\s+([^\r\n]+)/i);
+            const rawRepo = (repoMatch ? repoMatch[1] : "").trim();
+
+            // Normalize full URLs (e.g., https://github.com/owner/repo.git -> owner/repo)
+            const cleaned = rawRepo
+              .replace(/^https?:\/\/github\.com\//i, "")
+              .replace(/\.git$/i, "")
+              .replace(/\/+$/, "");
+
+            const fail = async (reason) => {
+              core.setOutput("valid", "false");
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `### Submission Rejected\n\n${reason}\n\nFix the issue above and open a new submission when ready.`,
+              });
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ["rejected"],
+              }).catch(() => {});
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                state: "closed",
+                state_reason: "not_planned",
+              });
+            };
+
+            if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(cleaned)) {
+              await fail(`Could not parse a valid \`owner/repo\` from \`${rawRepo || "(empty)"}\`.`);
+              return;
+            }
+
+            // Reject repos on denylist.json before doing any crawl work
+            const denylist = JSON.parse(fs.readFileSync("./config/denylist.json", "utf8"));
+            const blocked = (denylist.blockedRepos || []).find(
+              (b) => b.id.toLowerCase() === cleaned.toLowerCase()
+            );
+            if (blocked) {
+              await fail(`\`${cleaned}\` is blocked by the registry denylist: ${blocked.reason}`);
+              return;
+            }
+
+            // Confirm repository exists, is public, is not archived, and carries the agy-plugin topic
+            const [owner, repo] = cleaned.split("/");
+            let repoData;
+            try {
+              ({ data: repoData } = await github.rest.repos.get({ owner, repo }));
+            } catch (err) {
+              await fail(`Could not access public repository \`${cleaned}\` (HTTP ${err.status || "error"}).`);
+              return;
+            }
+
+            if (repoData.private) {
+              await fail(`\`${cleaned}\` is private. Only public repositories can be indexed.`);
+              return;
+            }
+            if (repoData.archived) {
+              await fail(`\`${cleaned}\` is archived and cannot be indexed.`);
+              return;
+            }
+            if (!(repoData.topics || []).includes("agy-plugin")) {
+              await fail(
+                `\`${cleaned}\` is missing the \`agy-plugin\` GitHub repository topic. Add it under **About -> Topics** and resubmit.`
+              );
+              return;
+            }
+
+            const modeMatch = body.match(/### Scan Mode\s+([^\r\n]+)/i);
+            const forceRescan = Boolean(modeMatch && /Force rescan/i.test(modeMatch[1]));
+
+            core.setOutput("valid", "true");
+            core.setOutput("target_repo", repoData.full_name);
+            core.setOutput("force_rescan", forceRescan ? "true" : "false");
+
+      - name: Checkout previous registry state (registry-data)
+        if: steps.parse.outputs.valid == 'true'
+        run: |
+          git fetch origin registry-data:registry-data 2>/dev/null || true
+          if git show-ref --verify --quiet refs/heads/registry-data; then
+            git worktree add ./registry-data registry-data
+          else
+            git worktree add --orphan -b registry-data ./registry-data
+            mkdir -p ./registry-data/public/plugins
+          fi
+
+      - name: Setup Node.js
+        if: steps.parse.outputs.valid == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install crawler dependencies
+        if: steps.parse.outputs.valid == 'true'
+        run: npm ci
+
+      - name: Install Semgrep
+        if: steps.parse.outputs.valid == 'true'
+        run: python3 -m pip install --quiet semgrep
+
+      - name: Sync denylist into output
+        if: steps.parse.outputs.valid == 'true'
+        run: |
+          mkdir -p ./registry-data/public/plugins
+          cp ./config/denylist.json ./registry-data/public/denylist.json
+
+      - name: Run crawler in TARGET_REPO mode
+        if: steps.parse.outputs.valid == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_DIR: ./registry-data/public
+          DENYLIST_PATH: ./config/denylist.json
+          CLIENT_RELEASE_PATH: ./config/client-release.json
+          TARGET_REPO: ${{ steps.parse.outputs.target_repo }}
+          FORCE_RESCAN: ${{ steps.parse.outputs.force_rescan }}
+          CRAWL_SUMMARY_PATH: ./crawl-summary.json
+          MAX_ARCHIVE_BYTES: "26214400"
+        run: node ./scripts/crawl.mjs
+
+      - name: Validate updated registry output
+        id: validate
+        if: steps.parse.outputs.valid == 'true'
+        run: node ./scripts/validate-output.mjs ./registry-data/public
+
+      - name: Sign index.json and denylist.json (Ed25519)
+        if: steps.parse.outputs.valid == 'true' && steps.validate.outcome == 'success'
+        env:
+          REGISTRY_SIGNING_PRIVATE_KEY: ${{ secrets.REGISTRY_SIGNING_PRIVATE_KEY }}
+        run: node ./scripts/sign-registry.mjs ./registry-data/public
+
+      - name: Commit updated registry to registry-data branch
+        id: commit
+        if: steps.parse.outputs.valid == 'true' && steps.validate.outcome == 'success'
+        working-directory: ./registry-data
+        env:
+          TARGET_REPO: ${{ steps.parse.outputs.target_repo }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "agy-registry-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "chore(registry): index ${TARGET_REPO} (issue #${ISSUE_NUM})"
+            git push origin registry-data
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Assemble GitHub Pages bundle (registry JSON + web portal)
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          rm -rf ./pages-dist
+          mkdir -p ./pages-dist
+          cp -r ./registry-data/public/. ./pages-dist/
+          cp -r ./site/. ./pages-dist/
+          touch ./pages-dist/.nojekyll
+
+      - name: Upload combined Pages artifact
+        if: steps.commit.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./pages-dist
+
+      - name: Post audit results and close issue
+        if: always() && steps.parse.outputs.valid == 'true'
+        uses: actions/github-script@v7
+        env:
+          TARGET_REPO: ${{ steps.parse.outputs.target_repo }}
+          VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          PUBLISHED_CHANGE: ${{ steps.commit.outputs.changed }}
+        with:
+          script: |
+            const fs = require("node:fs");
+            const targetRepo = process.env.TARGET_REPO;
+            let summary = { status: "error", reason: "Crawler exited without writing crawl-summary.json." };
+            if (fs.existsSync("./crawl-summary.json")) {
+              summary = JSON.parse(fs.readFileSync("./crawl-summary.json", "utf8"));
+            }
+            if (process.env.VALIDATE_OUTCOME === "failure") {
+              summary = {
+                status: "error",
+                reason: "Generated output failed `validate-output.mjs` schema/parity checks. Inspect workflow run logs.",
+              };
+            }
+
+            let comment = "";
+            let label = "rejected";
+            let stateReason = "not_planned";
+
+            if (summary.status === "indexed" || summary.status === "cached") {
+              const e = summary.indexEntry;
+              const findings = summary.findings || [];
+              const caps = (e.security?.capabilities || []).map((c) => `\`${c}\``).join(", ") || "None";
+              const heading =
+                summary.status === "cached"
+                  ? `### Already Up to Date: \`${e.id}\``
+                  : `### Indexed Successfully: \`${e.id}\``;
+
+              const findingsBlock =
+                findings.length === 0
+                  ? "_No static security or prompt-injection findings flagged._"
+                  : [
+                      "| Severity | Rule | Location | Message |",
+                      "|---|---|---|---|",
+                      ...findings.slice(0, 15).map((f) => {
+                        const msg = String(f.message || "").replaceAll("|", "\\|").slice(0, 120);
+                        return `| **${f.severity}** | \`${f.id}\` | [\`${f.file}:${f.line}\`](${f.githubBlobUrl}) | ${msg} |`;
+                      }),
+                      findings.length > 15 ? `\n_...and ${findings.length - 15} more finding(s) in the published detail JSON._` : "",
+                    ].join("\n");
+
+              comment = [
+                heading,
+                "",
+                `| Field | Value |`,
+                `|---|---|`,
+                `| **Display Name** | ${e.name} |`,
+                `| **Version / Ref** | \`${e.version}\` (\`${e.release.ref}\`) |`,
+                `| **Pinned Commit** | [\`${e.release.sha.slice(0, 12)}\`](${e.repoUrl}/commit/${e.release.sha}) |`,
+                `| **Tree SHA-256** | \`${e.release.contentTreeSha256.slice(0, 16)}...\` |`,
+                `| **Risk Tier** | **${e.security.riskTier}** |`,
+                `| **Capabilities** | ${caps} |`,
+                `| **Sidebar UI** | ${e.surface.hasSidebarUi ? `Yes (${e.surface.uiSlots.join(", ")})` : "No"} |`,
+                `| **Deploy Status** | ${process.env.PUBLISHED_CHANGE === "true" ? "Deploying to GitHub Pages now" : "No index changes required"} |`,
+                "",
+                "#### Audit Findings",
+                findingsBlock,
+              ].join("\n");
+
+              label = "indexed";
+              stateReason = "completed";
+            } else {
+              comment = [
+                `### Could Not Index \`${targetRepo}\``,
+                "",
+                `**Status:** \`${summary.status}\``,
+                `**Reason:** ${summary.reason || "Unknown error"}`,
+                "",
+                `[View workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              ].join("\n");
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment,
+            });
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [label],
+            }).catch(() => {});
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: "closed",
+              state_reason: stateReason,
+            });
+
+  deploy:
+    needs: submit-and-audit
+    if: needs.submit-and-audit.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy updated registry to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,144 @@
+rules:
+  # ---------------------------------------------------------------------------
+  # Critical: Direct Credential & Sensitive Path Access
+  # ---------------------------------------------------------------------------
+  - id: CODE_CREDENTIAL_PATH
+    languages: [javascript, typescript, python]
+    severity: ERROR
+    message: References sensitive credential or key storage paths (~/.ssh, ~/.aws, ~/.gemini, ~/.kube, or .npmrc).
+    metadata:
+      agySeverity: critical
+      capability: credential_access
+    pattern-regex: '(?i)(?:~/|\$HOME/|%USERPROFILE%[\\/]|["''`])(?:\.ssh/|\.aws/credentials|\.gemini/|\.kube/config|\.npmrc|\.netrc|/etc/shadow|id_rsa|id_ed25519)'
+
+  # ---------------------------------------------------------------------------
+  # High: Process Spawning & Dynamic Code Execution
+  # ---------------------------------------------------------------------------
+  - id: CODE_JS_PROCESS_SPAWN
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Spawns an external OS process via node:child_process.
+    metadata:
+      agySeverity: high
+      capability: process_spawn
+    pattern-either:
+      - pattern: $CP.exec(...)
+      - pattern: $CP.execSync(...)
+      - pattern: $CP.spawn(...)
+      - pattern: $CP.spawnSync(...)
+      - pattern: $CP.execFile(...)
+      - pattern: $CP.execFileSync(...)
+      - pattern: $CP.fork(...)
+      - pattern: execSync(...)
+      - pattern: spawnSync(...)
+
+  - id: CODE_PY_PROCESS_SPAWN
+    languages: [python]
+    severity: ERROR
+    message: Spawns an external OS process via subprocess or os.system.
+    metadata:
+      agySeverity: high
+      capability: process_spawn
+    pattern-either:
+      - pattern: subprocess.run(...)
+      - pattern: subprocess.Popen(...)
+      - pattern: subprocess.call(...)
+      - pattern: subprocess.check_output(...)
+      - pattern: subprocess.check_call(...)
+      - pattern: os.system(...)
+      - pattern: os.popen(...)
+
+  - id: CODE_JS_DYNAMIC_EXEC
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).
+    metadata:
+      agySeverity: high
+      capability: dynamic_code_exec
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+      - pattern: $VM.runInNewContext(...)
+      - pattern: $VM.runInThisContext(...)
+      - pattern: $VM.compileFunction(...)
+
+  - id: CODE_PY_DYNAMIC_EXEC
+    languages: [python]
+    severity: ERROR
+    message: Dynamically executes runtime-constructed Python code (eval, exec, or __import__).
+    metadata:
+      agySeverity: high
+      capability: dynamic_code_exec
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+      - pattern: __import__(...)
+
+  # ---------------------------------------------------------------------------
+  # Medium: Outbound Network Calls & Filesystem Writes
+  # ---------------------------------------------------------------------------
+  - id: CODE_JS_NETWORK
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Performs an outbound network request.
+    metadata:
+      agySeverity: medium
+      capability: network_outbound
+    pattern-either:
+      - pattern: fetch(...)
+      - pattern: http.request(...)
+      - pattern: https.request(...)
+      - pattern: http.get(...)
+      - pattern: https.get(...)
+      - pattern: axios.$METHOD(...)
+      - pattern: axios(...)
+      - pattern: new WebSocket(...)
+
+  - id: CODE_PY_NETWORK
+    languages: [python]
+    severity: WARNING
+    message: Performs an outbound network request.
+    metadata:
+      agySeverity: medium
+      capability: network_outbound
+    pattern-either:
+      - pattern: requests.$METHOD(...)
+      - pattern: httpx.$METHOD(...)
+      - pattern: urllib.request.urlopen(...)
+      - pattern: aiohttp.ClientSession(...)
+
+  - id: CODE_JS_FS_WRITE
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Writes, appends, or deletes files on the local filesystem.
+    metadata:
+      agySeverity: medium
+      capability: fs_write_workspace
+    pattern-either:
+      - pattern: $FS.writeFile(...)
+      - pattern: $FS.writeFileSync(...)
+      - pattern: $FS.appendFile(...)
+      - pattern: $FS.appendFileSync(...)
+      - pattern: $FS.createWriteStream(...)
+      - pattern: $FS.rm(...)
+      - pattern: $FS.rmSync(...)
+      - pattern: $FS.unlink(...)
+      - pattern: $FS.unlinkSync(...)
+
+  - id: CODE_PY_FS_WRITE
+    languages: [python]
+    severity: WARNING
+    message: Writes or deletes files on the local filesystem.
+    metadata:
+      agySeverity: medium
+      capability: fs_write_workspace
+    pattern-either:
+      - pattern: open($P, $MODE, ...)
+      - pattern: $PATH.write_text(...)
+      - pattern: $PATH.write_bytes(...)
+      - pattern: shutil.rmtree(...)
+      - pattern: os.remove(...)
+      - pattern: os.unlink(...)
+    metavariable-regex:
+      metavariable: $MODE
+      regex: '^[''"].*[wax+].*[''"]$'

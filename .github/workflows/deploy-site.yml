@@ -1,0 +1,47 @@
+name: Deploy Web Portal
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "site/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: registry-crawl-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout site source (main)
+        uses: actions/checkout@v4
+
+      - name: Checkout latest published JSON (registry-data)
+        run: |
+          git fetch origin registry-data:registry-data 2>/dev/null || true
+          mkdir -p ./pages-dist
+          if git show-ref --verify --quiet refs/heads/registry-data; then
+            git worktree add ./registry-data registry-data
+            cp -r ./registry-data/public/. ./pages-dist/
+          fi
+          cp -r ./site/. ./pages-dist/
+          touch ./pages-dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./pages-dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
