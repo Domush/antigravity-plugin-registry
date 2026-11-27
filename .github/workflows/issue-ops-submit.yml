@@ -86,7 +86,7 @@ jobs:
               return;
             }
 
-            // Confirm repository exists, is public, is not archived, and carries the agy-plugin topic
+            // Confirm repository exists, is public, is not archived, and carries a discovery topic
             const [owner, repo] = cleaned.split("/");
             let repoData;
             try {
@@ -104,9 +104,11 @@ jobs:
               await fail(`\`${cleaned}\` is archived and cannot be indexed.`);
               return;
             }
-            if (!(repoData.topics || []).includes("agy-plugin")) {
+            const allowedTopics = ["agy-plugin", "antigravity-plugin"];
+            const repoTopics = (repoData.topics || []).map((t) => String(t).toLowerCase());
+            if (!allowedTopics.some((t) => repoTopics.includes(t))) {
               await fail(
-                `\`${cleaned}\` is missing the \`agy-plugin\` GitHub repository topic. Add it under **About -> Topics** and resubmit.`
+                `\`${cleaned}\` is missing a discovery topic (\`agy-plugin\` or \`antigravity-plugin\`). Add one under **About -> Topics** and resubmit.`
               );
               return;
             }

@@ -6,7 +6,7 @@ Automated discovery, static security auditing, and cryptographic publishing pipe
 - **Submit or Refresh a Plugin:** [Open Issue-Ops Submission Form](https://github.com/Domush/antigravity-plugin-registry/issues/new?template=submit-plugin.yml)
 - **Companion Sidebar Client:** [Antigravity Community Marketplace Releases](https://github.com/Domush/antigravity-community-marketplace/releases/latest)
 
-Every 6 hours (and on every Issue-Ops submission), the registry crawls public GitHub repositories tagged `agy-plugin`, pins each release to an immutable commit SHA, computes a deterministic tree hash, runs multi-layer static and AST security checks, signs the catalog with Ed25519, and publishes the catalog and web portal to GitHub Pages.
+Every 6 hours (and on every Issue-Ops submission), the registry crawls public GitHub repositories tagged `agy-plugin` or `antigravity-plugin`, pins each release to an immutable commit SHA, computes a deterministic tree hash, runs multi-layer static and AST security checks, signs the catalog with Ed25519, and publishes the catalog and web portal to GitHub Pages.
 
 ---
 
@@ -15,7 +15,7 @@ Every 6 hours (and on every Issue-Ops submission), the registry crawls public Gi
 ### 1. Repository Setup
 
 - **Public & Active:** Your GitHub repository must be public and not archived.
-- **Discovery Topic:** Add the `agy-plugin` topic under **About → Topics** on GitHub.
+- **Discovery Topic:** Add the `agy-plugin` or `antigravity-plugin` topic under **About → Topics** on GitHub.
 - **Optional Category Topics:** Add `agy-cat-<name>` topics (for example `agy-cat-unity` or `agy-cat-devops`) to categorize your plugin alongside manifest `category`/`categories` fields (up to 5 categories; up to 10 tags from `keywords` and remaining GitHub topics).
 - **Archive Bounds:** Tarballs must stay within 25 MB compressed, 50 MB uncompressed, and 5,000 files, with no symlinks or hardlinks.
 - **Opt Out:** Place a `.agy-registry-ignore` file at the repository root to exclude a repository from indexing.

@@ -1,9 +1,44 @@
 const API_BASE = "https://api.github.com";
 
+export const DEFAULT_DISCOVERY_TOPICS = ["agy-plugin", "antigravity-plugin"];
+
+function normalizeTopics(topics) {
+  if (!Array.isArray(topics)) {
+    throw new TypeError("createGitHubClient requires topics to be an array of non-empty strings.");
+  }
+  const normalized = [
+    ...new Set(
+      topics
+        .filter((t) => typeof t === "string")
+        .map((t) => t.trim().toLowerCase())
+        .filter((t) => t.length > 0)
+    ),
+  ];
+  if (normalized.length === 0) {
+    throw new Error("createGitHubClient requires at least one non-empty discovery topic.");
+  }
+  return normalized;
+}
+
 /**
  * Create a rate-limit-aware GitHub REST API client.
  */
-export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-plugin", searchStartDate = "2024-01-01" }) {
+export function createGitHubClient({
+  githubToken = "",
+  userAgent,
+  topics = DEFAULT_DISCOVERY_TOPICS,
+  searchStartDate = "2024-01-01",
+  fetchImpl = globalThis.fetch,
+  searchDelayMs = 2200,
+}) {
+  const discoveryTopics = normalizeTopics(topics);
+  if (typeof fetchImpl !== "function") {
+    throw new TypeError("createGitHubClient requires a valid fetch implementation.");
+  }
+  if (typeof searchDelayMs !== "number" || !Number.isFinite(searchDelayMs) || searchDelayMs < 0) {
+    throw new RangeError("createGitHubClient requires searchDelayMs to be a non-negative finite number.");
+  }
+
   async function githubFetch(url, { accept = "application/vnd.github+json", retries = 3 } = {}) {
     const headers = {
       Accept: accept,
@@ -15,7 +50,7 @@ export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-p
     }
 
     for (let attempt = 1; attempt <= retries; attempt++) {
-      const res = await fetch(url, { headers, redirect: "follow" });
+      const res = await fetchImpl(url, { headers, redirect: "follow" });
 
       if (res.status === 403 || res.status === 429) {
         const remaining = Number(res.headers.get("x-ratelimit-remaining") ?? "1");
@@ -55,9 +90,15 @@ export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-p
     return new Date(ms).toISOString().slice(0, 10);
   }
 
-  async function searchRange(startDate, endDate, collected) {
+  async function pauseForSearchRateLimit() {
+    if (searchDelayMs > 0) {
+      await new Promise((r) => setTimeout(r, searchDelayMs));
+    }
+  }
+
+  async function searchRange(searchTopic, startDate, endDate, collected) {
     const q = encodeURIComponent(
-      `topic:${topic} archived:false created:${startDate}..${endDate}`
+      `topic:${searchTopic} archived:false created:${startDate}..${endDate}`
     );
     const firstPage = await githubJson(`/search/repositories?q=${q}&sort=updated&order=desc&per_page=100&page=1`);
     if (!firstPage) return;
@@ -69,8 +110,8 @@ export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-p
       const midMs = Math.floor((startMs + endMs) / 2);
       const midDate = formatDateUTC(midMs);
       const nextDay = formatDateUTC(midMs + 86_400_000);
-      await searchRange(startDate, midDate, collected);
-      await searchRange(nextDay, endDate, collected);
+      await searchRange(searchTopic, startDate, midDate, collected);
+      await searchRange(searchTopic, nextDay, endDate, collected);
       return;
     }
 
@@ -81,7 +122,7 @@ export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-p
     const totalPages = Math.min(10, Math.ceil((firstPage.total_count || 0) / 100));
     for (let page = 2; page <= totalPages; page++) {
       // Keep search API comfortably below 30 requests/minute
-      await new Promise((r) => setTimeout(r, 2200));
+      await pauseForSearchRateLimit();
       const pageData = await githubJson(
         `/search/repositories?q=${q}&sort=updated&order=desc&per_page=100&page=${page}`
       );
@@ -100,7 +141,10 @@ export function createGitHubClient({ githubToken = "", userAgent, topic = "agy-p
 
     const collected = new Map();
     const tomorrow = formatDateUTC(Date.now() + 86_400_000);
-    await searchRange(searchStartDate, tomorrow, collected);
+    for (let i = 0; i < discoveryTopics.length; i++) {
+      if (i > 0) await pauseForSearchRateLimit();
+      await searchRange(discoveryTopics[i], searchStartDate, tomorrow, collected);
+    }
     return [...collected.values()];
   }
 

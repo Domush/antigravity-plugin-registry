@@ -26,8 +26,8 @@ const CONFIG = {
   forceRescan: process.env.FORCE_RESCAN === "true",
   targetRepo: (process.env.TARGET_REPO || "").trim(),
   summaryPath: (process.env.CRAWL_SUMMARY_PATH || "").trim(),
-  topic: "agy-plugin",
-  crawlerVersion: "1.0.0",
+  topics: ["agy-plugin", "antigravity-plugin"],
+  crawlerVersion: "1.0.1",
   scannerVersion: "1.2.0",
   schemaVersion: 1,
   maxArchiveBytes: Number(process.env.MAX_ARCHIVE_BYTES || 25 * 1024 * 1024), // 25 MB compressed
@@ -36,13 +36,13 @@ const CONFIG = {
   maxReadmeBytes: 32 * 1024,
   maxHistoryEntries: 10,
   searchStartDate: "2024-01-01",
-  userAgent: "agy-plugin-registry-crawler/1.0.0",
+  userAgent: "agy-plugin-registry-crawler/1.0.1",
 };
 
 const gh = createGitHubClient({
   githubToken: CONFIG.githubToken,
   userAgent: CONFIG.userAgent,
-  topic: CONFIG.topic,
+  topics: CONFIG.topics,
   searchStartDate: CONFIG.searchStartDate,
 });
 
@@ -228,7 +228,7 @@ async function main() {
         });
         const { contentTreeSha256, files } = await computeContentTreeSha256(sandboxDir);
         const parsed = await validateAndParsePlugin(sandboxDir, files, repo, {
-          topic: CONFIG.topic,
+          topics: CONFIG.topics,
           maxReadmeBytes: CONFIG.maxReadmeBytes,
         });
 

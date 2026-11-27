@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Submit a public GitHub repository tagged with `agy-plugin` for immediate indexing and security auditing.
+        Submit a public GitHub repository tagged with `agy-plugin` or `antigravity-plugin` for immediate indexing and security auditing.
         The bot will scan your latest release (or default branch HEAD), post the audit summary here, and close this issue automatically.
   - type: input
     id: repository
@@ -32,7 +32,7 @@ body:
     attributes:
       label: Pre-flight Checklist
       options:
-        - label: Repository is public and has the `agy-plugin` GitHub topic.
+        - label: Repository is public and has the `agy-plugin` or `antigravity-plugin` GitHub topic.
           required: true
         - label: Repository contains a valid `plugin.json` or `.antigravity-plugin/plugin.json` plus at least one Antigravity component (skills, rules, agents, `hooks.json`, or `mcp_config.json`).
           required: true

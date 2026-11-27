@@ -305,7 +305,7 @@ export async function validateAndParsePlugin(
   sandboxDir,
   files,
   repo,
-  { topic = "agy-plugin", maxReadmeBytes = 32 * 1024 } = {}
+  { topics = ["agy-plugin", "antigravity-plugin"], maxReadmeBytes = 32 * 1024 } = {}
 ) {
   if (!sandboxDir || !Array.isArray(files) || !repo) {
     throw new Error("validateAndParsePlugin requires sandboxDir, files array, and repo metadata.");
@@ -408,8 +408,11 @@ export async function validateAndParsePlugin(
       .map((v) => v.trim())
       .filter((v) => v.length > 0);
 
-  const topics = Array.isArray(repo.topics) ? toNonEmptyStrings(repo.topics) : [];
-  const topicCategories = topics
+  const discoveryTopics = new Set(
+    toNonEmptyStrings(Array.isArray(topics) ? topics : []).map((t) => t.toLowerCase())
+  );
+  const repoTopics = Array.isArray(repo.topics) ? toNonEmptyStrings(repo.topics) : [];
+  const topicCategories = repoTopics
     .filter((t) => t.startsWith("agy-cat-"))
     .map((t) => t.slice("agy-cat-".length))
     .filter((c) => c.length > 0);
@@ -424,7 +427,7 @@ export async function validateAndParsePlugin(
   const tags = [
     ...new Set([
       ...manifestKeywords,
-      ...topics.filter((t) => t !== topic && !t.startsWith("agy-cat-")),
+      ...repoTopics.filter((t) => !discoveryTopics.has(t.toLowerCase()) && !t.startsWith("agy-cat-")),
     ]),
   ].slice(0, 10);
 

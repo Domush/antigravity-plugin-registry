@@ -164,11 +164,15 @@ Draft a concise commit message.
 `,
       });
 
-      const repo = makeMockRepo("docs-dev/agy-clean-commits", { topics: ["agy-plugin", "agy-cat-git"] });
+      const repo = makeMockRepo("docs-dev/agy-clean-commits", {
+        topics: ["agy-plugin", "antigravity-plugin", "agy-cat-git", "git-tools"],
+      });
       const parsed = await validateAndParsePlugin(dir, files, repo);
       assert.equal(parsed.valid, true);
       assert.equal(parsed.surface.hasSidebarUi, false);
       assert.deepEqual(parsed.surface.components, ["skills"]);
+      assert.deepEqual(parsed.categories, ["git"]);
+      assert.deepEqual(parsed.tags, ["git-tools"]);
 
       const security = await runSecurityScan({
         sandboxDir: dir,
