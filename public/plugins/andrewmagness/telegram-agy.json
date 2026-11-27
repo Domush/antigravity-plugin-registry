@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "id": "andrewmagness/telegram-agy",
+  "sha": "6e68084969e1c48a7b579f391d38759b3e7f5407",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T10:33:20.806Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "telegram-agy",
+    "displayName": "Telegram Channel for Antigravity",
+    "version": "0.1.3",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "telegram-agy",
+        "runtimeName": "telegram-agy_telegram-agy",
+        "transport": "stdio",
+        "command": "python3",
+        "args": [
+          "${PLUGIN_ROOT}/scripts/run_mcp.py"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "telegram-permission-relay",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "./scripts/permission-hook.sh",
+        "prompt": null,
+        "timeout": 130
+      }
+    ],
+    "skills": [
+      {
+        "name": "telegram-access",
+        "slashCommand": "/telegram-access",
+        "description": "Manage Telegram channel pairing codes, user allowlists, DM policies, group chat rules, and execution settings for telegram-agy. Use when the user wants to pair a Telegram account, allow/remove users, change DM policy, or configure group acc",
+        "disableModelInvocation": false,
+        "file": "skills/telegram-access/SKILL.md"
+      },
+      {
+        "name": "telegram-bridge",
+        "slashCommand": "/telegram-bridge",
+        "description": "Start, stop, monitor, or run the Telegram-to-Antigravity bridge daemon and generate systemd service configuration. Use when the user wants to launch, restart, check status, or inspect logs for the Telegram bridge.",
+        "disableModelInvocation": false,
+        "file": "skills/telegram-bridge/SKILL.md"
+      },
+      {
+        "name": "telegram-configure",
+        "slashCommand": "/telegram-configure",
+        "description": "Configure the Telegram bot token, default workspace, and permission mode for telegram-agy. Use when the user wants to set up, connect, or reconfigure a Telegram bot with Antigravity CLI (agy).",
+        "disableModelInvocation": false,
+        "file": "skills/telegram-configure/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/telegram-access",
+      "/telegram-bridge",
+      "/telegram-configure"
+    ],
+    "mcpServerNames": [
+      "telegram-agy_telegram-agy"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# telegram-agy\n\nBridge your Telegram bot to **Google Antigravity CLI (`agy`)** on your local machine—inspired by [Claude Code's Telegram channel plugin](https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/telegram) and built natively on Antigravity's plugin, skills, MCP, and `PreToolUse` hook architecture with **zero external runtime dependencies** (Python 3.10+ stdlib only).\n\n## Features\n\n- **Native Antigravity Plugin**: Installs cleanly with `agy plugin install` and adds:\n  - **Skills**: `telegram-configure`, `telegram-access`, `telegram-bridge`\n  - **MCP Server (`telegram-agy`)**: Exposes `telegram_reply`, `telegram_react`, `telegram_edit_message`, and `telegram_download_attachment` (pinned to the active turn's chat and restricted to workspace/inbox files)\n  - **Channel Rules (`rules/AGENTS.md`)**: Teaches `agy` how to read `<channel source=\"telegram\" ...>` envelopes and `<quoted_reply untrusted=\"true\">` blocks\n  - **Permission Relay Hook (`hooks.json`)**: `PreToolUse` hook that passes through (`allow`) in normal interactive `agy` sessions, and in Telegram bridge `relay` mode prompts via inline `[Approve]` / `[Always (session)]` / `[Deny]` buttons for any tool outside `safeTools`\n- **Fail-Closed Pairing & Access Control**:\n  - Defaults to `dmPolicy: \"pairing\"`: unknown DM senders receive a 6-character pairing code (1h TTL, max 3 pending) and are blocked until approved locally\n  - Supports `allowlist` and `disabled` DM policies, plus opt-in group chats with `requireMention` (`@bot` or reply-to-bot) and fail-closed `allowFrom` (falling back to global `allowFrom` unless `--allow-all` is passed)\n- **Persistent Per-Chat `agy` Sessions**:\n  - Tracks `conversationId` per chat/topic in `sessions.json` and resumes with `agy --conversation=<id>`\n  - Supports attachments (photos, documents, voice, audio, video, stickers saved to `~/.gemini/channels/telegram/inbox/`), emoji `ackReaction`, typing indicators, and code-block-aware 4096-char message chunking\n  - Built-in Telegram chat commands: `/new`, `/status`, `/cd <path>`, `/model [name]`, `/mode [auto|accept-edits|plan]`, `/cancel`, `/help`\n\n---\n\n## Quickstart\n\n### 1. Create a Telegram Bot\n1. Message [@BotFather](https://t.me/BotFather) on Telegram and run `/newbot`.\n2. Choose a name and a username ending in `bot`.\n3. Copy the bot token (`<digits>:<secret>`).\n\n### 2. Install the Plugin & CLI\nClone the repo (or install the plugin directly from GitHub):\n\n```sh\ngit clone https://github.com/andrewmagness/telegram-agy.git\ncd telegram-agy\n\n# Install as an Antigravity plugin (adds skills, MCP tools, rules, and hook)\nagy plugin install .\n```\n\nTo install the `telegram-agy` CLI entrypoint:\n\n- **Debian / Ubuntu (PEP 668 `externally-managed-environment` safe)**:\n  ```sh\n  # Option A: zero-dependency launcher script (no pip/pipx needed)\n  mkdir -p ~/.local/bin\n  printf '#!/usr/bin/env sh\\nPYTHONPATH=\"%s/src${PYTHONPATH:+:$PYTHONPATH}\" exec python3 -m telegram_agy \"$@\"\\n' \"$PWD\" > ~/.local/bin/telegram-agy\n  chmod +x ~/.local/bin/telegram-agy\n\n  # Option B: pipx\n  pipx install -e .\n  ```\n- **Standard Python environments**:\n  ```sh\n  pip install -e .\n  ```\n\n### 3. Configure Your Bot Token\nRun interactively (hidden prompt—keeps the token out of `ps` and shell history) or pipe via `--token-stdin`:\n\n```sh\ntelegram-agy configure --cwd /path/to/your/workspace\n```\n\n*(Or pipe via stdin: `printf '%s\\n' \"$TELEGRAM_BOT_TOKEN\" | telegram-agy configure --token-stdin --cwd /path/to/your/workspace`.)*\n\nThis validates the token against Telegram's `getMe` endpoint and saves it with `0600` permissions to `~/.gemini/channels/telegram/.env`.\n\n### 4. Start the Bridge\n```sh\ntelegram-agy start --cwd /path/to/your/workspace\n```\n\nCheck status or logs anytime:\n```sh\ntelegram-agy status\ntelegram-agy logs -n 50\n```\n\n### 5. Pair Your Telegram Account\n1. Open Telegram and send any message to your bot.\n2. The bot replies with a 6-character pairing code (e.g. `A1B2C3`).\n3. Approve the code locally (or ask `agy` via the `telegram-access` skill):\n\n```sh\ntelegram-agy access pair A1B2C3\n```\n\nYou can now chat with `agy` directly from Telegram!\n\n---\n\n## Permission Modes & Safety Controls\n\nConfigure how `agy` handles tool execution for Telegram-originated turns via `telegram-agy access set permissionMode <mode>`:\n\n| Mode | Behavior |\n| :--- | :--- |\n| `relay` *(default)* | Runs `agy --sandbox`. Read tools (`read_file`, `view_file`, `grep_search`, etc.) auto-approve **only** inside the active workspace or `inbox/`; reads outside those directories, `search_web`, `run_command`, file edits, subagents, unknown MCP tools, and `telegram_reply` with `files` prompt you in Telegram with `[Approve]` / `[Deny]` inline buttons. Access to `~/.gemini/channels/telegram/` outside `inbox/` is always denied. |\n| `sandbox-auto` | Runs `agy --sandbox --dangerously-skip-permissions` (auto-approves within Antigravity's sandbox). Hook-level string matching against `~/.gemini/channels/telegram/` acts as defense-in-depth—use Antigravity's OS sandbox as the hard boundary. |\n| `full-auto` | Runs `agy --dangerously-skip-permissions` without sandbox restrictions. Hook-level state-dir checks are only a speed bump here; use only for trusted single-owner setups. |\n\nAdditional hardening knobs (`telegram-agy access set <key> <value>`):\n- `allowedRoots` — comma-separated list of directories `/cd` is confined to (empty = allow any directory for global owners)\n- `safeTools` — comma-separated list of tools allowed without prompting in `relay` mode (empty resets to defaults)\n- `extraArgs` — comma-separated extra CLI flags passed to `agy` (empty clears)\n- `approvalTimeoutSeconds` — `5..120` seconds (default `120`)\n- `turnTimeoutSeconds` — max runtime per `agy` turn in seconds (`0..86400`, default `600`)\n- `denyOversizedApprovals` — `false` (default: attach full JSON arguments above 3800 chars before the prompt) or `true` (auto-deny oversized tool arguments)\n\nNormal interactive `agy` sessions outside the Telegram bridge are unaffected because `PreToolUse` returns `{\"decision\": \"allow\"}` whenever `TELEGRAM_AGY_RELAY_SOCK` is unset.\n\n---\n\n## Telegram Commands\n\nOnce paired, send these commands in Telegram:\n\n- `/new` — Start a fresh `agy` conversation for this chat\n- `/status` — Show active workspace (`cwd`), `conversationId`, model, mode, and permission policy\n- `/cd <path>` — Switch the active workspace directory for this chat (global owners only; resets conversation)\n- `/model [name]` — View or switch the `agy` model for this chat\n- `/mode [auto|accept-edits|plan]` — View or switch the `agy` execution mode\n- `/cancel` — Abort an in-progress `agy` turn (and its child process group)\n- `/help` — Show command help\n\n---\n\n## Access Management (`telegram-agy access`)\n\n```sh\ntelegram-agy access show\ntelegram-agy access pair <CODE>\ntelegram-agy access clear-pending\ntelegram-agy access allow <USER_ID>\ntelegram-agy access remove <USER_ID>\ntelegram-agy access policy <pairing|allowlist|disabled>\ntelegram-agy access group add <CHAT_ID> [--no-mention] [--allow-all]\ntelegram-agy access group allow <CHAT_ID> <USER_ID>\ntelegram-agy access group remove <CHAT_ID>\ntelegram-agy access set <KEY> <VALUE>\n```\n\n---\n\n## Running as a Background User Service (`systemd`)\n\n```sh\ntelegram-agy systemd --cwd /path/to/your/workspace > ~/.config/systemd/user/telegram-agy.service\nsystemctl --user daemon-reload\nsystemctl --user enable --now telegram-agy.service\n```\n\n---\n\n## Development & Tests\n\n```sh\nPYTHONPATH=src python3 -m unittest discover -s tests -v\nagy plugin validate --strict .\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "**Full Changelog**: https://github.com/andrewmagness/telegram-agy/compare/v0.1.2...v0.1.3",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"telegram-permission-relay\" executes a shell command on PreToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 9,
+        "snippet": "./scripts/permission-hook.sh",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/hooks.json#L9"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/telegram_agy/agy_runner.py",
+        "line": 305,
+        "snippet": "proc = subprocess.Popen( cmd, cwd=str(cwd), env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding=\"utf-8\", errors=\"replace\", start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/agy_runner.py#L305"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/telegram_agy/cli.py",
+        "line": 64,
+        "snippet": "res = subprocess.run( [\"ps\", \"-p\", str(pid), \"-o\", \"command=\"], capture_output=True, text=True, timeout=3.0, check=False, )",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/cli.py#L64"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "src/telegram_agy/cli.py",
+        "line": 372,
+        "snippet": "proc = subprocess.Popen( cmd, cwd=str(cwd), env=env, stdin=subprocess.DEVNULL, stdout=log_handle, stderr=log_handle, start_new_session=True, )",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/cli.py#L372"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/telegram_agy/cli.py",
+        "line": 371,
+        "snippet": "with open(log_file, \"a\", encoding=\"utf-8\") as log_handle:",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/cli.py#L371"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/telegram_agy/cli.py",
+        "line": 381,
+        "snippet": "pid_file.write_text(f\"{proc.pid}\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/cli.py#L381"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/telegram_agy/config.py",
+        "line": 104,
+        "snippet": "os.unlink(tmp_path)",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/config.py#L104"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/telegram_agy/telegram_api.py",
+        "line": 143,
+        "snippet": "with urllib.request.urlopen(req, timeout=timeout) as resp:",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/telegram_api.py#L143"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "src/telegram_agy/telegram_api.py",
+        "line": 414,
+        "snippet": "with urllib.request.urlopen(req, timeout=60.0) as resp:",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/telegram_api.py#L414"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "src/telegram_agy/telegram_api.py",
+        "line": 432,
+        "snippet": "target.write_bytes(b\"\".join(chunks))",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/telegram_api.py#L432"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/telegram_agy/config.py",
+        "line": 15,
+        "snippet": "DEFAULT_STATE_DIR = Path(\"~/.gemini/channels/telegram\")",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/config.py#L15"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/telegram_agy/permission_hook.py",
+        "line": 68,
+        "snippet": "\"~/.gemini/channels/telegram\",",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/permission_hook.py#L68"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "src/telegram_agy/permission_hook.py",
+        "line": 69,
+        "snippet": "\".gemini/channels/telegram\",",
+        "githubBlobUrl": "https://github.com/andrewmagness/telegram-agy/blob/6e68084969e1c48a7b579f391d38759b3e7f5407/src/telegram_agy/permission_hook.py#L69"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.3",
+      "sha": "6e68084969e1c48a7b579f391d38759b3e7f5407",
+      "scannedAt": "2026-11-27T10:33:20.806Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

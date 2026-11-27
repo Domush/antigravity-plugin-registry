@@ -1,0 +1,377 @@
+{
+  "schemaVersion": 1,
+  "id": "yuhhhong/codex-plugin-agy",
+  "sha": "24c6d8f87ae9ee4c59785164c8691308caae5b56",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T10:33:09.376Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-plugin-agy",
+    "displayName": "Codex Plugin Agy",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-adversarial-review",
+        "slashCommand": "/codex-adversarial-review",
+        "description": "Run a steerable adversarial Codex review that challenges the implementation approach, design choices, tradeoffs, and failure modes (read-only). Use when the user wants a deeper challenge review, architecture/risk audit, or focused review in",
+        "disableModelInvocation": false,
+        "file": "skills/codex-adversarial-review/SKILL.md"
+      },
+      {
+        "name": "codex-jobs",
+        "slashCommand": "/codex-jobs",
+        "description": "Show active and recent Codex jobs for this repository (status), fetch stored final output for a finished job (result), cancel an active background job (cancel), or stop the shared broker (stop-broker). Use when the user asks about Codex job",
+        "disableModelInvocation": false,
+        "file": "skills/codex-jobs/SKILL.md"
+      },
+      {
+        "name": "codex-rescue",
+        "slashCommand": "/codex-rescue",
+        "description": "Delegate investigation, an explicit fix request, or follow-up rescue work to the local Codex rescue subagent (foreground or background). Use when the user asks Codex to debug, implement, or continue a previous Codex thread.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-rescue/SKILL.md"
+      },
+      {
+        "name": "codex-review",
+        "slashCommand": "/codex-review",
+        "description": "Run a standard read-only Codex code review against local working-tree or branch git changes using Codex's built-in reviewer. Use when the user asks Codex to review code, diff, or branch changes.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-review/SKILL.md"
+      },
+      {
+        "name": "codex-setup",
+        "slashCommand": "/codex-setup",
+        "description": "Check whether the local Codex CLI, app-server runtime, and authentication are ready, and offer to install Codex if missing. Use when the user asks to check Codex setup, configure the Codex plugin, or troubleshoot Codex availability.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-setup/SKILL.md"
+      },
+      {
+        "name": "gpt-5-4-prompting",
+        "slashCommand": "/gpt-5-4-prompting",
+        "description": "Guidance for composing structured Codex and GPT-5.4 prompts for coding, review, diagnosis, and research tasks when delegating work to Codex.",
+        "disableModelInvocation": false,
+        "file": "skills/gpt-5-4-prompting/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "codex-rescue",
+        "description": "Proactively use when Antigravity is stuck, wants a second implementation or diagnosis pass, needs a deeper root-cause investigation, or should hand a substantial coding task to Codex through the shared runtime.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/codex-rescue.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-adversarial-review",
+      "/codex-jobs",
+      "/codex-rescue",
+      "/codex-review",
+      "/codex-setup",
+      "/gpt-5-4-prompting"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "codex-rescue"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Codex Plugin for Antigravity (`codex-plugin-agy`)\n\nEnglish | [简体中文](./README.zh-CN.md)\n\nUse your local Codex CLI from inside **Antigravity (AGY)** for code reviews, adversarial design reviews, or delegated coding tasks — originally ported from OpenAI's official [openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) and continuously enhanced beyond a 1:1 port for Antigravity and real-world engineering workflows.\n\n## What You Get\n\n- **`codex-review`** skill for standard read-only Codex code review (working tree or branch diff)\n- **`codex-adversarial-review`** skill for steerable challenge reviews questioning design choices, tradeoffs, and failure modes\n- **`codex-rescue`** skill + native **`codex-rescue`** subagent to delegate investigations, fixes, or follow-up work to Codex\n- **`codex-jobs`** skill (`status`, `result`, `cancel`, `stop-broker`) to track and manage background Codex runs\n- **`codex-setup`** skill to check local Codex CLI availability and authentication\n- **`gpt-5-4-prompting`** skill + reference library for structured Codex / GPT-5.4 prompting\n- Shared `codex app-server` broker with automatic idle shutdown and detached background workers for both `review` and `task` runs\n\n## Requirements\n\n- **ChatGPT subscription (incl. Free) or OpenAI API key** configured in local Codex CLI (`codex login`)\n- **Codex CLI** with `codex app-server` support (`npm install -g @openai/codex`)\n- **Node.js 18.18 or later** (macOS, Linux, WSL2, and Windows supported)\n\n## Install & Uninstall\n\nNo `npm install`, build step, or manual edits to `~/.gemini/config/config.json` are required. Antigravity automatically discovers the plugin on the next turn once it is placed in `~/.gemini/config/plugins/codex-plugin-agy`.\n\n### Option 1: Ask Antigravity to install it (Recommended)\n\nPaste this prompt directly into Antigravity:\n\n> Install the `codex-plugin-agy` plugin from `https://github.com/yuhhhong/codex-plugin-agy` into `~/.gemini/config/plugins/codex-plugin-agy` (keep existing plugins and do not hand-edit `config.json`). After installing, run its `setup --json` check to verify Node, Codex CLI, and login status, then report the result.\n\n### Option 2: Direct `git clone` (One command, easy updates)\n\n**macOS / Linux / WSL2:**\n\n```bash\ngit clone https://github.com/yuhhhong/codex-plugin-agy.git ~/.gemini/config/plugins/codex-plugin-agy\n```\n\n**Windows (PowerShell):**\n\n```powershell\ngit clone https://github.com/yuhhhong/codex-plugin-agy.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-plugin-agy\"\n```\n\nTo update later, pull inside the plugin directory:\n\n```bash\ngit -C ~/.gemini/config/plugins/codex-plugin-agy pull\n```\n\n### Option 3: Installer script (ZIP download or local development)\n\nIf you downloaded a ZIP archive or cloned the repo elsewhere, run the cross-platform installer (copies plugin files by default, so deleting the source folder later will not break the plugin):\n\n**macOS / Linux / WSL2:**\n\n```sh\nsh ./install.sh              # copy install (default)\nsh ./install.sh --link       # symlink install for local development\nsh ./install.sh --uninstall  # uninstall\n```\n\n**Windows (PowerShell):**\n\n```powershell\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1              # copy install (default)\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 -Link        # junction install for local development\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\install.ps1 -Uninstall   # uninstall\n```\n\n### Option 4: Antigravity CLI (`agy`)\n\nIf you use the `agy` CLI:\n\n```bash\nagy plugin validate --strict .\nagy plugin install .\n```\n\n### Uninstall\n\nRun the uninstall flag above, or simply remove `~/.gemini/config/plugins/codex-plugin-agy` (`%USERPROFILE%\\.gemini\\config\\plugins\\codex-plugin-agy` on Windows).\n\n## Usage\n\nOnce enabled, you can trigger the plugin naturally in Antigravity (or run the companion CLI directly):\n\n### Check setup\n\nAsk Antigravity to check Codex setup (triggers `codex-setup`), or run:\n\n```bash\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs setup\n```\n\nIf Codex is installed but not logged in yet, run `codex login` in your terminal.\n\n### Standard review (`codex-review`)\n\nRuns Codex's built-in reviewer (read-only) against uncommitted working-tree changes or a branch diff (`--base <ref>`). Supports `--wait` and `--background`.\n\n```bash\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs review --wait\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs review --background --base main\n```\n\n### Adversarial review (`codex-adversarial-review`)\n\nRuns a steerable challenge review that pressure-tests assumptions, tradeoffs, race conditions, rollback safety, and failure modes. Accepts optional focus text after flags.\n\n```bash\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs adversarial-review --wait \"challenge the caching and retry design\"\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs adversarial-review --background --base main \"audit concurrency and data consistency\"\n```\n\n### Delegate tasks (`codex-rescue`)\n\nHands debugging, investigation, or implementation tasks to Codex through the `codex-rescue` subagent. Supports `--write`, repeatable `--add-dir <dir>` (for multi-repo or Git worktree edits in one session), `--cwd <dir>` / `-C <dir>`, `--background`, `--resume-last`, `--model <model|spark>`, and `--effort <none|minimal|low|medium|high|xhigh>`.\n\n```bash\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs task --write \"fix the failing unit test with the smallest safe patch\"\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs task --write --add-dir ../sibling-repo --add-dir ../worktree-dir \"update the shared API contract across repos\"\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs task --cwd ../sibling-repo --write \"fix validation only inside the target repo\"\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs task --background --write \"investigate and fix the flaky integration test\"\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs task --resume-last --write \"apply the top fix from the last run\"\n```\n\n> **Note:** `--model spark` maps to `gpt-5.3-codex-spark`. Leave `--model` and `--effort` unset to use your Codex defaults from `~/.codex/config.toml` or `.codex/config.toml`.\n\n### Manage background jobs (`codex-jobs`)\n\n```bash\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs status\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs status <job-id> --wait\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs result <job-id>\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs cancel <job-id>\nnode ~/.gemini/config/plugins/codex-plugin-agy/scripts/codex-companion.mjs stop-broker\n```\n\nCompleted tasks also print `codex resume <session-id>` so you can continue the thread directly in the Codex CLI or App.\n\n## Relationship to Upstream `openai/codex-plugin-cc`\n\nThis project started as a port of `openai/codex-plugin-cc` and evolves independently for Antigravity and practical development workflows:\n\n1. **Native Antigravity Plugin Layout**: Uses root `plugin.json`, `rules/AGENTS.md`, `agents/codex-rescue.md`, and `skills/*/SKILL.md`, persisting state under `~/.gemini/config/plugin-data/codex-plugin-agy/state` with no Claude-specific paths or env vars.\n2. **Runtime & Job Management Enhancements**: Adds unified detached background workers for both tasks and reviews (`task-worker` / `review-worker`), automatic idle broker shutdown with `stop-broker`, and cross-workspace job tracking.\n3. **Ongoing Workflow Extensions & Trimming**: Omits Claude-specific features (`transfer` and Claude `hooks.json`) while adding Antigravity-focused improvements such as multi-repository and Git worktree support.\n\nFor complete flags, refer to `node scripts/codex-companion.mjs --help` and `skills/*/SKILL.md`. For version-by-version additions and fixes, see [CHANGELOG.md](./CHANGELOG.md) or [GitHub Releases](https://github.com/yuhhhong/codex-plugin-agy/releases).\n\n## License & Attribution\n\nPorted from [openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) under the **Apache License 2.0**. Original [LICENSE](./LICENSE) and [NOTICE](./NOTICE) files are preserved.\n",
+  "latestReleaseNotes": "### 简体中文\n\n#### 新增\n- `task` 命令新增可重复的 `--add-dir <dir>` 参数（配合 `--write` 使用），通过 `turn/start` 的 `sandboxPolicy.workspaceWrite.writableRoots` 在单次 Codex 会话内联动写入多个兄弟仓库与独立 Git Worktree，并继承 `~/.codex/config.toml` 中已有的 `sandbox_workspace_write` 配置，同时支持持久化到后台 `task-worker`。\n- 为 `status`、`result`、`cancel` 增加按完整 `jobId` 跨工作区回退定位能力，并在跨仓后台任务启动提示中附带目标工作区路径。\n\n#### 变更\n- 全面补齐 `codex-rescue` 子代理及 `codex-rescue`、`codex-jobs`、`codex-review`、`codex-adversarial-review` 技能对 `--cwd` / `-C`（含 `task-resume-candidate --cwd` 与 `git -C`）及 `--add-dir` 的透传规范。\n- 精简中英文 README 的上游差异定位说明，将后续版本变更统一引流至 `CHANGELOG.md` 与 GitHub Releases。\n\n#### 修复\n- 修复 `parseArgs` 解析内联 `--option=value` 参数时在第二个 `=` 处截断值的问题（如含 `=` 的目录路径）。\n- 修复跨工作区取消任务时可能因前缀匹配误取消其他仓库运行中任务的问题，确保本地终态任务直接报错且跨仓回退仅接受精确完整 `jobId`。\n\n### English\n\n#### Added\n- Added repeatable `--add-dir <dir>` support to `task` (requires `--write`), extending `turn/start` `sandboxPolicy.workspaceWrite.writableRoots` so a single Codex session can edit sibling repositories and separate Git worktrees while inheriting existing `sandbox_workspace_write` settings from `~/.codex/config.toml` and persisting across background `task-worker` runs.\n- Added exact full-`jobId` cross-workspace lookup for `status`, `result`, and `cancel`, along with workspace path hints when launching background jobs in another workspace.\n\n#### Changed\n- Documented and wired `--cwd` / `-C` (including `task-resume-candidate --cwd` and `git -C`) and repeatable `--add-dir` pass-through across the `codex-rescue` subagent and the `codex-rescue`, `codex-jobs`, `codex-review`, and `codex-adversarial-review` skills.\n- Updated `README.md` and `README.zh-CN.md` to clarify ongoing enhancements beyond the initial upstream port and point version history to `CHANGELOG.md` and GitHub Releases.\n\n#### Fixed\n- Fixed inline `--option=value` argument parsing truncating values containing additional `=` characters (such as paths with `=`).\n- Fixed cross-workspace job cancellation so local terminal-state matches fail directly instead of redirecting prefix matches to running jobs in other repositories, restricting cross-workspace fallback to exact full `jobId` lookups.\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/codex-companion.mjs",
+        "line": 672,
+        "snippet": "const child = spawn(process.execPath, [scriptPath, workerSubcommand, \"--cwd\", cwd, \"--job-id\", jobId], { cwd, env: process.env, detached: true, stdio: \"ignore\", windowsHide: true }",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/codex-companion.mjs#L672"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/app-server.mjs",
+        "line": 192,
+        "snippet": "this.proc = spawn(\"codex\", [\"app-server\"], { cwd: this.cwd, env: this.options.env ?? process.env, stdio: [\"pipe\", \"pipe\", \"pipe\"], shell: process.platform === \"win32\" ? (process.en",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/app-server.mjs#L192"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/broker-lifecycle.mjs",
+        "line": 61,
+        "snippet": "const child = spawn(process.execPath, [scriptPath, \"serve\", \"--endpoint\", endpoint, \"--cwd\", cwd, \"--pid-file\", pidFile], { cwd, env, detached: true, stdio: [\"ignore\", logFd, logFd",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/broker-lifecycle.mjs#L61"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/process.mjs",
+        "line": 5,
+        "snippet": "const result = spawnSync(command, args, { cwd: options.cwd, env: options.env, encoding: \"utf8\", input: options.input, maxBuffer: options.maxBuffer, stdio: options.stdio ?? \"pipe\", ",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/process.mjs#L5"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/app-server-broker.mjs",
+        "line": 47,
+        "snippet": "fs.writeFileSync(pidFile, `${process.pid}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/app-server-broker.mjs#L47"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/app-server-broker.mjs",
+        "line": 144,
+        "snippet": "fs.unlinkSync(listenTarget.path);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/app-server-broker.mjs#L144"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/app-server-broker.mjs",
+        "line": 147,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/app-server-broker.mjs#L147"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 82,
+        "snippet": "fs.unlinkSync(targetDir);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/install.mjs#L82"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 86,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/install.mjs#L86"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/broker-lifecycle.mjs",
+        "line": 92,
+        "snippet": "fs.writeFileSync(resolveBrokerStateFile(cwd), `${JSON.stringify(session, null, 2)}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/broker-lifecycle.mjs#L92"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/broker-lifecycle.mjs",
+        "line": 98,
+        "snippet": "fs.unlinkSync(stateFile);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/broker-lifecycle.mjs#L98"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/broker-lifecycle.mjs",
+        "line": 183,
+        "snippet": "fs.unlinkSync(pidFile);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/broker-lifecycle.mjs#L183"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/broker-lifecycle.mjs",
+        "line": 187,
+        "snippet": "fs.unlinkSync(logFile);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/broker-lifecycle.mjs#L187"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/broker-lifecycle.mjs",
+        "line": 194,
+        "snippet": "fs.unlinkSync(target.path);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/broker-lifecycle.mjs#L194"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/fs.mjs",
+        "line": 18,
+        "snippet": "fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/fs.mjs#L18"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/state.mjs",
+        "line": 94,
+        "snippet": "fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/state.mjs#L94"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/state.mjs",
+        "line": 120,
+        "snippet": "fs.writeFileSync(resolveStateFile(cwd), `${JSON.stringify(nextState, null, 2)}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/state.mjs#L120"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/state.mjs",
+        "line": 206,
+        "snippet": "fs.writeFileSync(jobFile, `${JSON.stringify(payload, null, 2)}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/state.mjs#L206"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/state.mjs",
+        "line": 216,
+        "snippet": "fs.unlinkSync(jobFile);",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/state.mjs#L216"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/tracked-jobs.mjs",
+        "line": 41,
+        "snippet": "fs.appendFileSync(logFile, `[${nowIso()}] ${normalized}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/tracked-jobs.mjs#L41"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/tracked-jobs.mjs",
+        "line": 48,
+        "snippet": "fs.appendFileSync(logFile, `\\n[${nowIso()}] ${title}\\n${String(body).trimEnd()}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/tracked-jobs.mjs#L48"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/tracked-jobs.mjs",
+        "line": 53,
+        "snippet": "fs.writeFileSync(logFile, \"\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/lib/tracked-jobs.mjs#L53"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 51,
+        "snippet": "\" (default) Copy plugin files into ~/.gemini/config/plugins/codex-plugin-agy\",",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/install.mjs#L51"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install.mjs",
+        "line": 53,
+        "snippet": "\" --uninstall Remove ~/.gemini/config/plugins/codex-plugin-agy\"",
+        "githubBlobUrl": "https://github.com/yuhhhong/codex-plugin-agy/blob/24c6d8f87ae9ee4c59785164c8691308caae5b56/scripts/install.mjs#L53"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "24c6d8f87ae9ee4c59785164c8691308caae5b56",
+      "scannedAt": "2026-11-27T10:33:09.376Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    }
+  ]
+}

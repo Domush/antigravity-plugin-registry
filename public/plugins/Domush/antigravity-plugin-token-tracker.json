@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "Domush/antigravity-plugin-token-tracker",
-  "sha": "b70715b53df47902b96eadd528ddef01b2419f2f",
-  "scannerVersion": "1.1.0",
-  "scannedAt": "2026-11-27T08:54:02.445Z",
+  "sha": "b257943af0a9f9a19831636bf473dfc6cf9aa6ea",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T10:33:00.013Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "token-tracker",
     "displayName": "Token Tracker",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -41,40 +41,18 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "# Antigravity Token Tracker Plugin\n\nProduction-grade Hybrid Token Tracker plugin for Antigravity providing real-time context window usage, prompt cache hit ratios, context compaction countdown, and Language Server quota telemetry via synchronized in-app UI and native Sidecar Aux Pane dashboard.\n\n<img width=\"533\" height=\"662\" alt=\"image\" src=\"https://github.com/user-attachments/assets/324088aa-1a0b-42b1-97d3-747a060ed164\" />\n\n---\n\n## Key Features\n\n1. **Context Window Tracking**:\n   - Real-time active tokens, maximum context window tokens, and percentage utilization.\n   - Comprehensive model catalog covering Gemini 4, Gemini 3.x, and Gemini 2.5 (1M/2M context), Claude 5.5 and 4.x (200k/1M context), OpenAI GPT-5, GPT-4.1, o3/o4, and GPT-OSS, DeepSeek, and Grok.\n2. **Prompt Cache Efficiency**:\n   - Accurate tracking of cached prompt tokens vs. newly computed tokens.\n   - Cache hit ratio percentage reflecting prefix caching gains.\n3. **Context Compaction Headroom**:\n   - Tracks active prompt context size relative to each model's context window capacity.\n   - Calculates remaining tokens and KB headroom until Antigravity's per-model automatic compaction trigger is reached (such as 512k for Gemini 4, 256k for Gemini 3.x Flash, and 160k for 200k Claude models).\n   - Generates proactive compaction advisory warnings as active context approaches the compaction trigger.\n4. **Language Server Connect-RPC Quota Telemetry**:\n   - Direct integration with local Language Server `RetrieveUserQuotaSummary` RPC over HTTP.\n   - Auto-discovers active port and `x-codeium-csrf-token` from environment, daemon manifests (`~/.gemini/antigravity/daemon/hub_*.json`), and server logs.\n   - Live 5-Hour and Weekly limits with human-readable reset countdowns (e.g. `1h 25m`, `5d 14h`) for both Gemini Models and Claude/GPT 3P models.\n5. **Synchronized Dual Interface**:\n   - **In-Input-Box Status Pill**: Injected directly into `#antigravity.agentSidePanelInputBox` to the left of the `Turbo ∨` Local Permissions selector. Displays live pill summary with color-coded status dot and interactive hover/click telemetry popover card.\n   - **Native Aux Pane Sidecar Web UI**: Official `SIDECAR_UI_ENTRYPOINT_AUX_PANE` dashboard in `sidecars/dashboard/` displaying a compact 4-across health color-coded quota strip (`Gemini 5-Hour`, `Gemini Weekly`, `Claude/GPT 5-Hour`, `Claude/GPT Weekly`), a live Active Agents tree with mirrored conversation status icons (processing, waiting for response, error, and idle duration), clickable conversation and subagent titles for instant navigation, health color-coded circular progress rings (default view) and compact metrics, dark/light Antigravity theme synchronization, and a header toggle between ring and text views for active subagents.\n\n---\n\n## Quick Install (npx)\n\nInstall the plugin directly into Google Antigravity using `npx`:\n\n> **Note:** Antigravity requires a standard copied plugin directory rather than a symlink or Windows junction. Run the `npx` install command below to deploy a clean copy into your plugins folder.\n\n```bash\n# Install plugin into Antigravity plugins directory (~/.gemini/config/plugins/token-tracker/)\nnpx antigravity-plugin-token-tracker install\n\n# Inject real-time status-bar pill into Antigravity input box\nnpx antigravity-plugin-token-tracker install-injector\n\n# Uninstall plugin when no longer needed\nnpx antigravity-plugin-token-tracker uninstall\n```\n\n### CLI Commands & Options\n\n| Command | Description |\n| :--- | :--- |\n| `npx antigravity-plugin-token-tracker install` | Installs plugin into global Antigravity config directory (`~/.gemini/config/plugins/token-tracker/`) |\n| `npx antigravity-plugin-token-tracker install --workspace` | Installs plugin into current workspace (`.gemini/plugins/token-tracker/`) |\n| `npx antigravity-plugin-token-tracker uninstall` | Removes plugin from global Antigravity config directory |\n| `npx antigravity-plugin-token-tracker uninstall --workspace` | Removes plugin from current workspace directory |\n| `npx antigravity-plugin-token-tracker install-injector` | Patches Electron `app.asar` to enable the status-bar pill |\n| `npx antigravity-plugin-token-tracker install-injector --dry-run` | Validates ASAR patching integrity without mutating files |\n| `npx antigravity-plugin-token-tracker uninstall-injector` | Restores pristine `app.asar` from backup and unlinks script |\n| `npx antigravity-plugin-token-tracker --version` | Displays current version (`v1.1.1`) |\n| `npx antigravity-plugin-token-tracker --help` | Displays CLI usage instructions and options |\n\n---\n\n### On-Demand Agent Status & Subagent Monitoring\n\nAntigravity Token Tracker includes a built-in status tool (`token_tracker_status`) registered automatically through `mcp_config.json`, allowing agents to check live telemetry whenever needed without extra prompt overhead:\n\n- **Live Context & Cache Snapshot**: Inspect active model capacity, context usage, prompt cache hit efficiency, and compaction headroom on demand.\n- **Subagent Visibility**: Monitor token usage, cache efficiency, and active status across child subagents spawned during a session.\n- **Optional Quota Check**: Retrieve current 5-hour and weekly quota levels alongside conversation telemetry in either concise Markdown or structured JSON.\n\n---\n\n## Architecture Overview\n\n```\nantigravity-plugin-token-tracker/\n├── assets/\n│   └── icon.svg                   # Plugin vector icon badge\n├── bin/\n│   └── cli.js                     # Unified NPX CLI entry point (install/injector)\n├── package.json                   # Manifest & npm lifecycle scripts\n├── plugin.json                    # Antigravity plugin descriptor\n├── CHANGELOG.md                   # Release history and version notes\n├── hooks.json                     # SessionStart & PreInvocation hook declarations\n├── mcp_config.json                # On-demand Token Tracker status tool registration\n├── hooks/\n│   ├── session-start.js           # SessionStart hook reporting live context, cache & quota status\n│   └── pre-invocation.js          # PreInvocation hook injecting live context & compaction advisories\n├── lib/\n│   ├── model-catalog.js           # Immutable model context window catalog\n│   ├── model-detector.js          # Binary & text model identifier extraction\n│   ├── models.js                  # Model normalization & context window sizing\n│   ├── compaction.js              # Active-context compaction threshold & headroom calculations\n│   ├── ls-rpc.js                  # Loopback Connect-RPC HTTP transport helper\n│   ├── quota-service.js           # Connect-RPC client for RetrieveUserQuotaSummary\n│   ├── conversation-tracker.js    # Read-only SQLite parser for conversation telemetry\n│   ├── subagent-tracker.js        # Child subagent discovery & context telemetry reader\n│   ├── active-status.js           # Live active vs. idle session & path confinement helpers\n│   ├── agent-tree.js              # Active main & subagent tree discovery\n│   └── telemetry-server.js        # Loopback HTTP server (127.0.0.1:8976)\n├── mcp/\n│   ├── server.js                  # On-demand status tool server for Antigravity agents\n│   ├── status-tool.js             # Status tool schema, validation, and handler\n│   └── format.js                  # Markdown & JSON status output formatters\n├── injector/\n│   ├── status-bar.js              # Vanilla JS widget mounting to #antigravity.agentSidePanelInputBox\n│   ├── install.js                 # Safe, non-destructive installer with backup & rollback\n│   └── uninstall.js               # Pristine rollback uninstaller restoring app.asar\n├── sidecars/\n│   └── dashboard/\n│       ├── sidecar.json           # Native Aux Pane sidecar descriptor\n│       ├── server.mjs             # sidecar_sdk server with standalone fallback\n│       ├── index.html             # Dense compact tree dashboard structure\n│       ├── styles.css             # Theme-aware compact tree & quota strip styles\n│       └── app.js                 # Live telemetry polling & DOM tree renderer\n├── scripts/\n│   └── audit-gate.js              # Deterministic P0 static audit gate\n└── tests/\n    └── run-all.js                 # Comprehensive unit & integration test runner\n```\n\n---\n\n## Verification & Testing\n\nRun unit and integration test suite:\n\n```bash\nnpm test\n```\n\nExecute the deterministic static audit gate:\n\n```bash\nnpm run audit-gate\n```\n",
+  "readmeMarkdown": "# Antigravity Token Tracker Plugin\n\nProduction-grade Hybrid Token Tracker plugin for Antigravity providing real-time context window usage, prompt cache hit ratios, context compaction countdown, and Language Server quota telemetry via synchronized in-app UI and native Sidecar Aux Pane dashboard.\n\n<img width=\"533\" height=\"662\" alt=\"image\" src=\"https://github.com/user-attachments/assets/324088aa-1a0b-42b1-97d3-747a060ed164\" />\n\n---\n\n## Key Features\n\n1. **Context Window Tracking**:\n   - Real-time active tokens, maximum context window tokens, and percentage utilization.\n   - Comprehensive model catalog covering Gemini 4, Gemini 3.x, and Gemini 2.5 (1M/2M context), Claude 5.5 and 4.x (200k/1M context), OpenAI GPT-5, GPT-4.1, o3/o4, and GPT-OSS, DeepSeek, and Grok.\n2. **Prompt Cache Efficiency**:\n   - Accurate tracking of cached prompt tokens vs. newly computed tokens.\n   - Cache hit ratio percentage reflecting prefix caching gains.\n3. **Context Compaction Headroom**:\n   - Tracks active prompt context size relative to each model's context window capacity.\n   - Calculates remaining tokens and KB headroom until Antigravity's per-model automatic compaction trigger is reached (such as 512k for Gemini 4, 256k for Gemini 3.x Flash, and 160k for 200k Claude models).\n   - Generates proactive compaction advisory warnings as active context approaches the compaction trigger.\n4. **Language Server Connect-RPC Quota Telemetry**:\n   - Direct integration with local Language Server `RetrieveUserQuotaSummary` RPC over HTTP.\n   - Auto-discovers active port and `x-codeium-csrf-token` from environment, daemon manifests (`~/.gemini/antigravity/daemon/hub_*.json`), and server logs.\n   - Live 5-Hour and Weekly limits with human-readable reset countdowns (e.g. `1h 25m`, `5d 14h`) for both Gemini Models and Claude/GPT 3P models.\n5. **Synchronized Dual Interface**:\n   - **In-Input-Box Status Pill**: Injected directly into `#antigravity.agentSidePanelInputBox` to the left of the `Turbo ∨` Local Permissions selector. Displays live pill summary with color-coded status dot and interactive hover/click telemetry popover card.\n   - **Native Aux Pane Sidecar Web UI**: Official `SIDECAR_UI_ENTRYPOINT_AUX_PANE` dashboard in `sidecars/dashboard/` displaying a compact 4-across health color-coded quota strip (`Gemini 5-Hour`, `Gemini Weekly`, `Claude/GPT 5-Hour`, `Claude/GPT Weekly`), a live Active Agents tree with mirrored conversation status icons (processing, waiting for response, error, and idle duration), clickable conversation and subagent titles for instant navigation, health color-coded circular progress rings (default view) and compact metrics, dark/light Antigravity theme synchronization, and a header toggle between ring and text views for active subagents.\n\n---\n\n## Quick Install (npx)\n\nInstall the plugin directly into Google Antigravity using `npx`:\n\n> **Note:** Antigravity requires a standard copied plugin directory rather than a symlink or Windows junction. Run the `npx` install command below to deploy a clean copy into your plugins folder.\n\n```bash\n# Install plugin into Antigravity plugins directory (~/.gemini/config/plugins/token-tracker/)\nnpx antigravity-plugin-token-tracker install\n\n# Inject real-time status-bar pill into Antigravity input box\nnpx antigravity-plugin-token-tracker install-injector\n\n# Uninstall plugin when no longer needed\nnpx antigravity-plugin-token-tracker uninstall\n```\n\n### CLI Commands & Options\n\n| Command | Description |\n| :--- | :--- |\n| `npx antigravity-plugin-token-tracker install` | Installs plugin into global Antigravity config directory (`~/.gemini/config/plugins/token-tracker/`) |\n| `npx antigravity-plugin-token-tracker install --workspace` | Installs plugin into current workspace (`.gemini/plugins/token-tracker/`) |\n| `npx antigravity-plugin-token-tracker uninstall` | Removes plugin from global Antigravity config directory |\n| `npx antigravity-plugin-token-tracker uninstall --workspace` | Removes plugin from current workspace directory |\n| `npx antigravity-plugin-token-tracker install-injector` | Patches Electron `app.asar` to enable the status-bar pill |\n| `npx antigravity-plugin-token-tracker install-injector --dry-run` | Validates ASAR patching integrity without mutating files |\n| `npx antigravity-plugin-token-tracker uninstall-injector` | Restores pristine `app.asar` from backup and unlinks script |\n| `npx antigravity-plugin-token-tracker --version` | Displays current version (`v1.1.2`) |\n| `npx antigravity-plugin-token-tracker --help` | Displays CLI usage instructions and options |\n\n---\n\n### On-Demand Agent Status & Subagent Monitoring\n\nAntigravity Token Tracker includes a built-in status tool (`token_tracker_status`) registered automatically through `mcp_config.json`, allowing agents to check live telemetry whenever needed without extra prompt overhead:\n\n- **Live Context & Cache Snapshot**: Inspect active model capacity, context usage, prompt cache hit efficiency, and compaction headroom on demand.\n- **Subagent Visibility**: Monitor token usage, cache efficiency, and active status across child subagents spawned during a session.\n- **Optional Quota Check**: Retrieve current 5-hour and weekly quota levels alongside conversation telemetry in either concise Markdown or structured JSON.\n\n---\n\n## Architecture Overview\n\n```\nantigravity-plugin-token-tracker/\n├── assets/\n│   └── icon.svg                   # Plugin vector icon badge\n├── bin/\n│   └── cli.js                     # Unified NPX CLI entry point (install/injector)\n├── package.json                   # Manifest & npm lifecycle scripts\n├── plugin.json                    # Antigravity plugin descriptor\n├── CHANGELOG.md                   # Release history and version notes\n├── hooks.json                     # SessionStart & PreInvocation hook declarations\n├── mcp_config.json                # On-demand Token Tracker status tool registration\n├── hooks/\n│   ├── session-start.js           # SessionStart hook reporting live context, cache & quota status\n│   └── pre-invocation.js          # PreInvocation hook injecting live context & compaction advisories\n├── lib/\n│   ├── model-catalog.js           # Immutable model context window catalog\n│   ├── model-detector.js          # Binary & text model identifier extraction\n│   ├── models.js                  # Model normalization & context window sizing\n│   ├── compaction.js              # Active-context compaction threshold & headroom calculations\n│   ├── ls-rpc.js                  # Loopback Connect-RPC HTTP transport helper\n│   ├── quota-service.js           # Connect-RPC client for RetrieveUserQuotaSummary\n│   ├── conversation-tracker.js    # Read-only SQLite parser for conversation telemetry\n│   ├── subagent-tracker.js        # Child subagent discovery & context telemetry reader\n│   ├── active-status.js           # Live active vs. idle session & path confinement helpers\n│   ├── agent-tree.js              # Active main & subagent tree discovery\n│   └── telemetry-server.js        # Loopback HTTP server (127.0.0.1:8976)\n├── mcp/\n│   ├── server.js                  # On-demand status tool server for Antigravity agents\n│   ├── status-tool.js             # Status tool schema, validation, and handler\n│   └── format.js                  # Markdown & JSON status output formatters\n├── injector/\n│   ├── status-bar.js              # Vanilla JS widget mounting to #antigravity.agentSidePanelInputBox\n│   ├── install.js                 # Safe, non-destructive installer with backup & rollback\n│   └── uninstall.js               # Pristine rollback uninstaller restoring app.asar\n├── sidecars/\n│   └── dashboard/\n│       ├── sidecar.json           # Native Aux Pane sidecar descriptor\n│       ├── server.mjs             # sidecar_sdk server with standalone fallback\n│       ├── index.html             # Dense compact tree dashboard structure\n│       ├── styles.css             # Theme-aware compact tree & quota strip styles\n│       └── app.js                 # Live telemetry polling & DOM tree renderer\n├── scripts/\n│   └── audit-gate.js              # Deterministic P0 static audit gate\n└── tests/\n    └── run-all.js                 # Comprehensive unit & integration test runner\n```\n\n---\n\n## Verification & Testing\n\nRun unit and integration test suite:\n\n```bash\nnpm test\n```\n\nExecute the deterministic static audit gate:\n\n```bash\nnpm run audit-gate\n```\n",
   "latestReleaseNotes": "",
   "securityReport": {
-    "riskTier": "high",
+    "riskTier": "elevated",
     "capabilities": [
-      "credential_access",
+      "accesses_gemini_dir",
       "fs_write_workspace",
       "mcp_local_exec",
       "network_outbound",
       "process_spawn"
     ],
     "findings": [
-      {
-        "id": "CODE_CREDENTIAL_PATH",
-        "severity": "critical",
-        "layer": "code",
-        "capability": "credential_access",
-        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws, ~/.gemini, ~/.kube, or .npmrc).",
-        "file": "bin/cli.js",
-        "line": 231,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/bin/cli.js#L231"
-      },
-      {
-        "id": "CODE_CREDENTIAL_PATH",
-        "severity": "critical",
-        "layer": "code",
-        "capability": "credential_access",
-        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws, ~/.gemini, ~/.kube, or .npmrc).",
-        "file": "lib/conversation-tracker.js",
-        "line": 3,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/conversation-tracker.js#L3"
-      },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
         "severity": "high",
@@ -83,8 +61,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/subagent-tracker.js",
         "line": 117,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/subagent-tracker.js#L117"
+        "snippet": "while ((protoMatch = ROOT_ID_PROTO_REGEX.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/subagent-tracker.js#L117"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -94,8 +72,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/subagent-tracker.js",
         "line": 148,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/subagent-tracker.js#L148"
+        "snippet": "while ((protoMatch = SUBAGENT_TYPE_PROTO_REGEX.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/subagent-tracker.js#L148"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -105,8 +83,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/pre-invocation.js",
         "line": 125,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/hooks/pre-invocation.js#L125"
+        "snippet": "fs.writeFileSync(filePath, JSON.stringify(state, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/hooks/pre-invocation.js#L125"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -116,8 +94,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/pre-invocation.js",
         "line": 176,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/hooks/pre-invocation.js#L176"
+        "snippet": "fs.writeFileSync( stateFile, JSON.stringify({ conversationId: convId, updatedAt: new Date(currentNow).toISOString() }, null, 2), \"utf8\" );",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/hooks/pre-invocation.js#L176"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -127,8 +105,8 @@
         "message": "Performs an outbound network request.",
         "file": "hooks/session-start.js",
         "line": 35,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/hooks/session-start.js#L35"
+        "snippet": "const req = http.request( { hostname: \"127.0.0.1\", port, path: \"/api/set-conversation\", method: \"POST\", headers: { \"Content-Type\": \"application/json\", \"Content-Length\": Buffer.byte",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/hooks/session-start.js#L35"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -138,8 +116,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/session-start.js",
         "line": 90,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/hooks/session-start.js#L90"
+        "snippet": "fs.writeFileSync(stateFile, JSON.stringify({ conversationId: convId, updatedAt: new Date().toISOString() }, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/hooks/session-start.js#L90"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -149,8 +127,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "injector/install.js",
         "line": 257,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/install.js#L257"
+        "snippet": "fs.unlinkSync(tempAsarPath);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/install.js#L257"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -160,8 +138,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "injector/install.js",
         "line": 274,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/install.js#L274"
+        "snippet": "fs.unlinkSync(tempAsarPath);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/install.js#L274"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -171,8 +149,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "injector/install.js",
         "line": 351,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/install.js#L351"
+        "snippet": "fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/install.js#L351"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -182,8 +160,8 @@
         "message": "Performs an outbound network request.",
         "file": "injector/status-bar.js",
         "line": 381,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/status-bar.js#L381"
+        "snippet": "const res = await fetch(`http://127.0.0.1:${p}/api/${isManual ? \"refresh\" : \"telemetry\"}`, { cache: \"no-store\" });",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/status-bar.js#L381"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -193,8 +171,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "injector/uninstall.js",
         "line": 54,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/uninstall.js#L54"
+        "snippet": "fs.unlinkSync(backupPath);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/uninstall.js#L54"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -204,8 +182,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "injector/uninstall.js",
         "line": 77,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/uninstall.js#L77"
+        "snippet": "fs.unlinkSync(destScript);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/uninstall.js#L77"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -215,8 +193,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "injector/uninstall.js",
         "line": 85,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/injector/uninstall.js#L85"
+        "snippet": "fs.unlinkSync(manifestPath);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/injector/uninstall.js#L85"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -226,8 +204,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "lib/cli-cleanup.js",
         "line": 161,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/cli-cleanup.js#L161"
+        "snippet": "fs.unlinkSync(normalizedPath);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/cli-cleanup.js#L161"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -237,8 +215,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "lib/cli-cleanup.js",
         "line": 172,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/cli-cleanup.js#L172"
+        "snippet": "fs.rmSync(normalizedPath, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/cli-cleanup.js#L172"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -248,8 +226,8 @@
         "message": "Performs an outbound network request.",
         "file": "lib/ls-rpc.js",
         "line": 120,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/ls-rpc.js#L120"
+        "snippet": "req = http.request( { hostname: \"127.0.0.1\", port, path: reqPath, method: \"POST\", headers: { \"Content-Type\": \"application/json\", \"x-codeium-csrf-token\": normalizedCsrfToken, \"Conne",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/ls-rpc.js#L120"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -259,8 +237,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "lib/telemetry-server.js",
         "line": 61,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/telemetry-server.js#L61"
+        "snippet": "fs.writeFileSync(this.registryPath, JSON.stringify(payload, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/telemetry-server.js#L61"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -270,8 +248,8 @@
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "lib/telemetry-server.js",
         "line": 73,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/lib/telemetry-server.js#L73"
+        "snippet": "fs.unlinkSync(this.registryPath);",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/telemetry-server.js#L73"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -281,12 +259,47 @@
         "message": "Performs an outbound network request.",
         "file": "sidecars/dashboard/app.js",
         "line": 195,
-        "snippet": "requires login",
-        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b70715b53df47902b96eadd528ddef01b2419f2f/sidecars/dashboard/app.js#L195"
+        "snippet": ": fetch(url, { cache: \"no-store\" }));",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/sidecars/dashboard/app.js#L195"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "bin/cli.js",
+        "line": 231,
+        "snippet": "--global, -g Target global plugins directory (~/.gemini/config/plugins/token-tracker) [default]",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/bin/cli.js#L231"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/conversation-tracker.js",
+        "line": 3,
+        "snippet": "* Reads Antigravity SQLite conversation database (~/.gemini/antigravity/conversations/<conversation_id>.db)",
+        "githubBlobUrl": "https://github.com/Domush/antigravity-plugin-token-tracker/blob/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/lib/conversation-tracker.js#L3"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.1.2",
+      "sha": "b257943af0a9f9a19831636bf473dfc6cf9aa6ea",
+      "scannedAt": "2026-11-27T10:33:00.013Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.1.1",
       "sha": "b70715b53df47902b96eadd528ddef01b2419f2f",

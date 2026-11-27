@@ -1,21 +1,625 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-27T08:54:02.450Z",
+  "generatedAt": "2026-11-27T10:33:41.465Z",
   "crawlerVersion": "1.0.0",
-  "scannerVersion": "1.1.0",
-  "totalPlugins": 1,
+  "scannerVersion": "1.2.0",
+  "totalPlugins": 12,
   "marketplaceClient": {
-    "latestVersion": "1.1.0",
+    "latestVersion": "1.0.3",
     "minSupportedVersion": "1.0.0",
-    "releaseUrl": "https://github.com/Domush/antigravity-community-marketplace/releases/latest",
-    "notes": "Adds Enable/Disable toggles and OS runtime pre-flight checks."
+    "releaseUrl": "https://github.com/Domush/antigravity-community-marketplace/releases/tag/v1.0.3",
+    "notes": "Collapsible Compact Filter Bar: Moves category, surface, risk, credential, and sort controls into an expandable filter drawer with an active filter count badge and quick reset. Plugin Icons & Monogram Fallbacks: Displays plugin and..."
   },
   "plugins": [
+    {
+      "id": "alibert99/agy-account-manager",
+      "name": "agy-account-manager",
+      "pluginName": "agy-account-manager",
+      "summary": "Native multi-account manager for Antigravity CLI (AGY). Switch Google accounts, monitor live quotas and model tiers in parallel, and auto-rotate on quota exhaustion.",
+      "author": {
+        "login": "alibert99",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/129921895?v=4",
+        "url": "https://github.com/alibert99"
+      },
+      "repoUrl": "https://github.com/alibert99/agy-account-manager",
+      "license": "MIT",
+      "version": "2.0.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v2.0.0",
+        "sha": "982cbf43929d47dcd5a489e85df554bcfa8a433a",
+        "tarballUrl": "https://api.github.com/repos/alibert99/agy-account-manager/tarball/982cbf43929d47dcd5a489e85df554bcfa8a433a",
+        "contentTreeSha256": "e8956e4c4f286ba3161670a35595a62014603b2602b1b418a96e4b183ff7ff41",
+        "archiveBytes": 21528,
+        "publishedAt": "2026-11-24T16:35:10Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "account-manager",
+        "agy",
+        "antigravity",
+        "antigravity-cli",
+        "gemini",
+        "python",
+        "quota"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-24T16:35:08Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:23.356Z",
+        "capabilities": [
+          "fs_write_workspace",
+          "network_outbound",
+          "process_spawn",
+          "prompt_mentions_shell"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 3,
+          "medium": 18,
+          "low": 2
+        }
+      },
+      "detailPath": "plugins/alibert99/agy-account-manager.json"
+    },
+    {
+      "id": "andrewmagness/telegram-agy",
+      "name": "Telegram Channel for Antigravity",
+      "pluginName": "telegram-agy",
+      "summary": "Link a Telegram bot to Antigravity CLI (agy) for remote local execution with pairing security, MCP chat tools, and inline Approve/Deny permission prompts.",
+      "author": {
+        "login": "andrewmagness",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/29032200?v=4",
+        "url": "https://github.com/andrewmagness"
+      },
+      "repoUrl": "https://github.com/andrewmagness/telegram-agy",
+      "license": "MIT",
+      "version": "0.1.3",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v0.1.3",
+        "sha": "6e68084969e1c48a7b579f391d38759b3e7f5407",
+        "tarballUrl": "https://api.github.com/repos/andrewmagness/telegram-agy/tarball/6e68084969e1c48a7b579f391d38759b3e7f5407",
+        "contentTreeSha256": "d98c15ad9b488263eb83543e3061a8bf40176a9a7a8ce3021f5365ed9e763690",
+        "archiveBytes": 57949,
+        "publishedAt": "2026-11-24T17:55:15Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "mcp_stdio",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agy",
+        "agy-cli",
+        "antigravity",
+        "telegram",
+        "telegrambot"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-24T18:01:58Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:20.806Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "network_outbound",
+          "process_spawn",
+          "runs_shell_hooks"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 4,
+          "medium": 6,
+          "low": 3
+        }
+      },
+      "detailPath": "plugins/andrewmagness/telegram-agy.json"
+    },
+    {
+      "id": "AndyAWD/antigravity-help-agent",
+      "name": "agy-help",
+      "pluginName": "agy-help",
+      "summary": "Comprehensive knowledge base and help assistant for the entire Google Antigravity ecosystem (including Antigravity CLI, Antigravity IDE, Antigravity 2.0 Desktop, and Antigravity Python SDK) and Customization System (Skills, Rules, Plugins, ",
+      "author": {
+        "login": "AndyAWD",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/22685999?v=4",
+        "url": "https://github.com/AndyAWD"
+      },
+      "repoUrl": "https://github.com/AndyAWD/antigravity-help-agent",
+      "license": "MIT",
+      "version": "1.1.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v1.1.0",
+        "sha": "5d5be620bf79563029086e5ce2a199793b20ff31",
+        "tarballUrl": "https://api.github.com/repos/AndyAWD/antigravity-help-agent/tarball/5d5be620bf79563029086e5ce2a199793b20ff31",
+        "contentTreeSha256": "2290ef47a6ccca6862b751f6de6a4e72e07ff83a0c09e76d83943a34965919f1",
+        "archiveBytes": 3868966,
+        "publishedAt": "2026-09-08T18:29:59Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "agents",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "agy",
+        "assistant",
+        "documentation",
+        "skills",
+        "agents",
+        "agy-cli",
+        "antigravity-cli",
+        "antigravity-ide",
+        "antigravity-plugin"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 6,
+        "forks": 2,
+        "openIssues": 0,
+        "pushedAt": "2026-09-26T17:00:45Z"
+      },
+      "security": {
+        "riskTier": "low",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:41.463Z",
+        "capabilities": [
+          "prompt_mentions_shell"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/AndyAWD/antigravity-help-agent.json"
+    },
+    {
+      "id": "bangbangda/agy-hub-pro",
+      "name": "AGY Hub Pro",
+      "pluginName": "agy-hub-pro",
+      "summary": "Zero-dependency millisecond StatusLine HUD & lifecycle hooks plugin for Antigravity CLI (agy) tracking context window, cache hit rate, 5h/weekly quota & token ledger, and Git status.",
+      "author": {
+        "login": "bangbangda",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/13864407?v=4",
+        "url": "https://github.com/bangbangda"
+      },
+      "repoUrl": "https://github.com/bangbangda/agy-hub-pro",
+      "license": "MIT",
+      "version": "1.0.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v1.0.0",
+        "sha": "41745091d65e1173719879ede251d12fe1bfc580",
+        "tarballUrl": "https://api.github.com/repos/bangbangda/agy-hub-pro/tarball/41745091d65e1173719879ede251d12fe1bfc580",
+        "contentTreeSha256": "1d64c974f65decdd5f5eecba3f589ecc090b077a8fe8c5e351ee63f572198f5c",
+        "archiveBytes": 359314,
+        "publishedAt": "2026-11-26T04:45:57Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "rules"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "agy",
+        "statusline",
+        "hud",
+        "hooks",
+        "quota",
+        "telemetry",
+        "ai-coding",
+        "antigravity-cli",
+        "cli-plugin"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 1,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-26T04:45:56Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:13.242Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "process_spawn",
+          "prompt_mentions_shell"
+        ],
+        "findingCounts": {
+          "critical": 1,
+          "high": 4,
+          "medium": 8,
+          "low": 4
+        }
+      },
+      "detailPath": "plugins/bangbangda/agy-hub-pro.json"
+    },
+    {
+      "id": "bvarnai/agy-standards",
+      "name": "Antigravity Standards",
+      "pluginName": "standards",
+      "summary": "Centralized standards, lifecycle skills, and stack-specific engineering rules for AI coding agents.",
+      "author": {
+        "login": "bvarnai",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/7565328?v=4",
+        "url": "https://github.com/bvarnai"
+      },
+      "repoUrl": "https://github.com/bvarnai/agy-standards",
+      "license": "MIT",
+      "version": "0.3.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "main",
+        "sha": "a10dfe190f066e1d497d62ad06b1d3149ffe93b4",
+        "tarballUrl": "https://api.github.com/repos/bvarnai/agy-standards/tarball/a10dfe190f066e1d497d62ad06b1d3149ffe93b4",
+        "contentTreeSha256": "c8ad2bd5568d2bcaff78056062227e70580293b1443dc7847e95fe53f9f25045",
+        "archiveBytes": 46821,
+        "publishedAt": "2026-11-25T10:51:47Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agent-skills",
+        "agy",
+        "antigravity",
+        "coding-standards"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-25T10:52:44Z"
+      },
+      "security": {
+        "riskTier": "low",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:16.686Z",
+        "capabilities": [
+          "prompt_mentions_shell"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/bvarnai/agy-standards.json"
+    },
+    {
+      "id": "Commit-Or-Die-Studio/agy-git-graph",
+      "name": "AGY Git Graph",
+      "pluginName": "agy-git-graph",
+      "summary": "Visual Git branch graph and commit diff viewer for AGY Auxiliary Pane. / 專為 AGY 側邊欄打造的 Git 視覺化分支圖與 Commit Diff 檢視器。",
+      "author": {
+        "login": "Commit-Or-Die-Studio",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/358136372?v=4",
+        "url": "https://github.com/Commit-Or-Die-Studio"
+      },
+      "repoUrl": "https://github.com/Commit-Or-Die-Studio/agy-git-graph",
+      "license": "MIT",
+      "version": "2.0.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v2.0.0",
+        "sha": "e0242ed7f44f2b378e7dd82eb7618abf263fcf2a",
+        "tarballUrl": "https://api.github.com/repos/Commit-Or-Die-Studio/agy-git-graph/tarball/e0242ed7f44f2b378e7dd82eb7618abf263fcf2a",
+        "contentTreeSha256": "be11250dded9c8cc5072d0d0b307196f35c3bcf529c2768156ca8912a0f76873",
+        "archiveBytes": 81332,
+        "publishedAt": "2026-11-24T09:20:09Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agy",
+        "antigravity",
+        "antigravity-plugin",
+        "claude",
+        "claude-code",
+        "claude-desktop",
+        "diff-viewer",
+        "git-graph"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-24T09:27:36Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:26.416Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "network_outbound",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 10,
+          "medium": 33,
+          "low": 6
+        }
+      },
+      "detailPath": "plugins/Commit-Or-Die-Studio/agy-git-graph.json"
+    },
+    {
+      "id": "Domush/antigravity-community-marketplace",
+      "name": "agy-community-marketplace",
+      "pluginName": "agy-community-marketplace",
+      "summary": "Browse, audit, install, and update community-made Antigravity App plugins.",
+      "author": {
+        "login": "Domush",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
+        "url": "https://github.com/Domush"
+      },
+      "repoUrl": "https://github.com/Domush/antigravity-community-marketplace",
+      "license": "MIT",
+      "version": "1.0.3",
+      "minAppVersion": "2.34.0",
+      "release": {
+        "ref": "v1.0.3",
+        "sha": "d5d92d1f7cc53ba1316296c327aad9f67fecb250",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-community-marketplace/tarball/d5d92d1f7cc53ba1316296c327aad9f67fecb250",
+        "contentTreeSha256": "75b15a00cf1b1b032e576b1cc9803d128d2e54586318a5940250904cc0efed60",
+        "archiveBytes": 1987525,
+        "publishedAt": "2026-11-27T10:32:30Z"
+      },
+      "surface": {
+        "hasSidebarUi": true,
+        "uiSlots": [
+          "aux_pane",
+          "file",
+          "global"
+        ],
+        "components": [
+          "mcp_stdio",
+          "rules"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agy",
+        "agy-cli",
+        "antigravity",
+        "antigravity-cli",
+        "antigravity-extension",
+        "antigravity-plugin",
+        "antigravity-plugins",
+        "antigravity-tools",
+        "marketplace",
+        "plugin"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-27T10:32:14Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:32:55.961Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "network_outbound",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 3,
+          "medium": 14,
+          "low": 2
+        }
+      },
+      "detailPath": "plugins/Domush/antigravity-community-marketplace.json"
+    },
+    {
+      "id": "Domush/antigravity-plugin-context-mode",
+      "name": "Context Mode",
+      "pluginName": "antigravity-plugin-context-mode",
+      "summary": "Context window protection for Antigravity: local SQLite FTS5 search, sandboxed execution, and lifecycle hook gating against token bloat.",
+      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-context-mode/1342afbcbff06e12d6d73f117c439757db286380/assets/icon.svg",
+      "author": {
+        "login": "Domush",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
+        "url": "https://github.com/Domush"
+      },
+      "repoUrl": "https://github.com/Domush/antigravity-plugin-context-mode",
+      "license": "MIT",
+      "version": "2.0.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v2.0.0",
+        "sha": "1342afbcbff06e12d6d73f117c439757db286380",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-context-mode/tarball/1342afbcbff06e12d6d73f117c439757db286380",
+        "contentTreeSha256": "6bc33dc2c5a43feb40d8eb233af4f38ede7aa508fd88312ad244cd37b24603d3",
+        "archiveBytes": 85264,
+        "publishedAt": "2026-11-21T19:42:03Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "mcp_stdio",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agy",
+        "agy-skill",
+        "antigravity",
+        "antigravity-extension",
+        "antigravity-plugin",
+        "antigravity-skill",
+        "antigravity-skills",
+        "antigravity-tools",
+        "context-engineering",
+        "context-management"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 150,
+        "forks": 10,
+        "openIssues": 0,
+        "pushedAt": "2026-11-21T20:03:22Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:30.964Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "process_spawn",
+          "runs_shell_hooks"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 16,
+          "medium": 1,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/Domush/antigravity-plugin-context-mode.json"
+    },
+    {
+      "id": "Domush/antigravity-plugin-suggest-next-steps",
+      "name": "Next Steps Suggester",
+      "pluginName": "antigravity-plugin-suggest-next-steps",
+      "summary": "Displays interactive prompt cards proposing at least 2 logical next steps at the end of completed turns.",
+      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-suggest-next-steps/e4404eaba8525c70daff129c02366dc59f626ddb/assets/icon.svg",
+      "author": {
+        "login": "Domush",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
+        "url": "https://github.com/Domush"
+      },
+      "repoUrl": "https://github.com/Domush/antigravity-plugin-suggest-next-steps",
+      "license": "MIT",
+      "version": "1.1.1",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v1.1.1",
+        "sha": "e4404eaba8525c70daff129c02366dc59f626ddb",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-suggest-next-steps/tarball/e4404eaba8525c70daff129c02366dc59f626ddb",
+        "contentTreeSha256": "48fa6dda0c9fee016d41e07600c3b98b70ca43e3556c4ca1729f3f04170e0085",
+        "archiveBytes": 8053,
+        "publishedAt": "2026-11-17T19:26:14Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "antigravity-plugin"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 1,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-17T19:18:59Z"
+      },
+      "security": {
+        "riskTier": "low",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:38.031Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 0,
+          "medium": 1,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/Domush/antigravity-plugin-suggest-next-steps.json"
+    },
     {
       "id": "Domush/antigravity-plugin-token-tracker",
       "name": "Token Tracker",
       "pluginName": "token-tracker",
       "summary": "Hybrid telemetry tracker for Antigravity: context window usage, prompt caching efficiency, context compaction countdown, and 5h/weekly quota monitoring.",
+      "iconUrl": "https://raw.githubusercontent.com/Domush/antigravity-plugin-token-tracker/b257943af0a9f9a19831636bf473dfc6cf9aa6ea/assets/icon.svg",
       "author": {
         "login": "Domush",
         "avatarUrl": "https://avatars.githubusercontent.com/u/1557976?v=4",
@@ -23,15 +627,15 @@
       },
       "repoUrl": "https://github.com/Domush/antigravity-plugin-token-tracker",
       "license": "MIT",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "b70715b53df47902b96eadd528ddef01b2419f2f",
-        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-token-tracker/tarball/b70715b53df47902b96eadd528ddef01b2419f2f",
-        "contentTreeSha256": "92afd30b23b94c60adeb24bba76cb29750ea86da5cdee1a266d43863e80ea58e",
-        "archiveBytes": 147077,
-        "publishedAt": "2026-11-27T08:42:44Z"
+        "sha": "b257943af0a9f9a19831636bf473dfc6cf9aa6ea",
+        "tarballUrl": "https://api.github.com/repos/Domush/antigravity-plugin-token-tracker/tarball/b257943af0a9f9a19831636bf473dfc6cf9aa6ea",
+        "contentTreeSha256": "ca3801bb29500b5390dcdf01a1e0e617cd36f38a2c375499038bc092f8a1e210",
+        "archiveBytes": 147861,
+        "publishedAt": "2026-11-27T09:12:52Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -57,27 +661,166 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T08:43:13Z"
+        "pushedAt": "2026-11-27T09:13:45Z"
       },
       "security": {
-        "riskTier": "high",
-        "scannerVersion": "1.1.0",
-        "scannedAt": "2026-11-27T08:54:02.445Z",
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:00.013Z",
         "capabilities": [
-          "credential_access",
+          "accesses_gemini_dir",
           "fs_write_workspace",
           "mcp_local_exec",
           "network_outbound",
           "process_spawn"
         ],
         "findingCounts": {
-          "critical": 2,
+          "critical": 0,
           "high": 2,
           "medium": 17,
-          "low": 0
+          "low": 2
         }
       },
       "detailPath": "plugins/Domush/antigravity-plugin-token-tracker.json"
+    },
+    {
+      "id": "ivanusto/mitosis-orchestrator",
+      "name": "Mitosis Orchestrator",
+      "pluginName": "mitosis-orchestrator",
+      "summary": "Cross-model frontier orchestrator with unified 3-platform support (Google Antigravity agy, Anthropic Claude Code, OpenAI Codex CLI): pins frontier reasoning models (Gemini 4 Argon/Carbon/Neon/Hydrogen High+, agy Orchestrator, Claude Opus/So",
+      "author": {
+        "login": "ivanusto",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/5152907?v=4",
+        "url": "https://github.com/ivanusto"
+      },
+      "repoUrl": "https://github.com/ivanusto/mitosis-orchestrator",
+      "license": "MIT",
+      "version": "2.7.8",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v2.7.8",
+        "sha": "c4a3079cf45ee3fa698f2534f029cdb912d01ae7",
+        "tarballUrl": "https://api.github.com/repos/ivanusto/mitosis-orchestrator/tarball/c4a3079cf45ee3fa698f2534f029cdb912d01ae7",
+        "contentTreeSha256": "407b7336eb52f879693578b565483fc6c88104a2f998986552177a4975165675",
+        "archiveBytes": 1483101,
+        "publishedAt": "2026-11-19T03:47:57Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "agents",
+          "hooks",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agy",
+        "antigravity",
+        "claude",
+        "claude-code",
+        "codex-cli",
+        "deepseek",
+        "gemini",
+        "grok",
+        "mitosis",
+        "multi-agent"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 4,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-19T03:47:56Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:35.622Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "contains_minified",
+          "fs_write_workspace",
+          "network_outbound",
+          "process_spawn",
+          "runs_shell_hooks"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 29,
+          "medium": 71,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/ivanusto/mitosis-orchestrator.json"
+    },
+    {
+      "id": "yuhhhong/codex-plugin-agy",
+      "name": "Codex Plugin Agy",
+      "pluginName": "codex-plugin-agy",
+      "summary": "Use your local Codex CLI from Antigravity to run code reviews, adversarial reviews, and delegated tasks through a shared app-server broker.",
+      "author": {
+        "login": "yuhhhong",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/32285886?v=4",
+        "url": "https://github.com/yuhhhong"
+      },
+      "repoUrl": "https://github.com/yuhhhong/codex-plugin-agy",
+      "license": "Apache-2.0",
+      "version": "1.1.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v1.1.0",
+        "sha": "24c6d8f87ae9ee4c59785164c8691308caae5b56",
+        "tarballUrl": "https://api.github.com/repos/yuhhhong/codex-plugin-agy/tarball/24c6d8f87ae9ee4c59785164c8691308caae5b56",
+        "contentTreeSha256": "4d6040108b81274de613e2a377ead6766f9b13854a4d4db6e2fe4a850ba71d48",
+        "archiveBytes": 65819,
+        "publishedAt": "2026-11-26T10:37:34Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "agents",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "ai-agent",
+        "antigravity",
+        "code-review",
+        "codex",
+        "codex-cli",
+        "developer-tools",
+        "openai"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-26T10:37:27Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-27T10:33:09.376Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 4,
+          "medium": 18,
+          "low": 2
+        }
+      },
+      "detailPath": "plugins/yuhhhong/codex-plugin-agy.json"
     }
   ]
 }

@@ -1,0 +1,1214 @@
+{
+  "schemaVersion": 1,
+  "id": "ivanusto/mitosis-orchestrator",
+  "sha": "c4a3079cf45ee3fa698f2534f029cdb912d01ae7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T10:33:35.622Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "mitosis-orchestrator",
+    "displayName": "Mitosis Orchestrator",
+    "version": "2.7.8",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "mitosis-orchestrator",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "*",
+        "type": "command",
+        "command": "python3 ./scripts/enforce-orchestrator.py pre-tool-use || python ./scripts/enforce-orchestrator.py pre-tool-use || py -3 ./scripts/enforce-orchestrator.py pre-tool-use || exit 0",
+        "prompt": null,
+        "timeout": 10
+      },
+      {
+        "group": "mitosis-orchestrator",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "invoke_subagent|manage_subagents|run_command",
+        "type": "command",
+        "command": "python3 ./scripts/enforce-orchestrator.py post-tool-use || python ./scripts/enforce-orchestrator.py post-tool-use || py -3 ./scripts/enforce-orchestrator.py post-tool-use || exit 0",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "orchestrate",
+        "slashCommand": "/orchestrate",
+        "description": "Structured 4-phase orchestration workflow across 3 platforms (Google Antigravity agy, Anthropic Claude Code, OpenAI Codex CLI) that keeps the primary agent on a frontier reasoning model (Gemini 4 Argon/Carbon/Neon/Hydrogen High+, agy Orches",
+        "disableModelInvocation": false,
+        "file": "skills/orchestrate/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "flash-lite-scout",
+        "description": "Fast read-only subagent pinned to the flash_lite model tier for single-hop file/symbol lookups, grep/glob searches, git/log checks and single-file inspection. No web access, no writes.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/flash-lite-scout/agent.md"
+      },
+      {
+        "name": "flash-worker",
+        "description": "Execution subagent pinned to the flash model tier for multi-file codebase research, web/documentation synthesis, writing and running tests, and scoped code edits or debugging within an explicit file allowlist.",
+        "mainAgent": true,
+        "subagent": true,
+        "file": "agents/flash-worker/agent.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/orchestrate"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "flash-lite-scout",
+      "flash-worker"
+    ],
+    "hookEvents": [
+      "PostToolUse",
+      "PreInvocation",
+      "PreToolUse",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Mitosis Orchestrator (`mitosis-orchestrator`)\n\n[![CI](https://github.com/ivanusto/mitosis-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/ivanusto/mitosis-orchestrator/actions/workflows/ci.yml)\n\n<p align=\"center\">\n  <img src=\"./assets/hero.png\" width=\"100%\" alt=\"Mitosis Orchestrator: one frontier nucleus plans, daughter cells do the lookups and edits, hooks enforce the split\" />\n</p>\n\n<p align=\"center\">\n  <strong>Cross-Model Frontier Orchestrator with Unified 3-Platform Support</strong><br/>\n  <em>Google Antigravity (<code>agy</code>) · Anthropic Claude Code · OpenAI Codex CLI</em><br/>\n  <a href=\"./README.zh-TW.md\">繁體中文說明 (README.zh-TW.md)</a> · <a href=\"./CHANGELOG.md\">Changelog</a> · <a href=\"./SECURITY.md\">Security</a> · <a href=\"./CONTRIBUTING.md\">Contributing</a> · <a href=\"./rules/AGENTS.md\">Orchestration Rules</a>\n</p>\n\n---\n\n## Overview: Why Mitosis?\n\nInspired by biological **mitosis (cell division)**, **Mitosis Orchestrator** treats your chosen **frontier reasoning model** as the central **Master Nucleus (Primary Architect)**. Instead of filling the frontier model's context window with single-file searches, raw log reading, or repetitive edit-and-test cycles, Mitosis Orchestrator divides complex engineering work into specialized, context-bounded **daughter subagents**:\n\n- **Master Nucleus (Primary Frontier Orchestrator)**: Retains full architectural context, designs API contracts, decomposes tasks, resolves cross-cutting invariants, and synthesizes final results.\n- **Execution Daughter Cells (`flash-worker` · `worker`)**: Execute parallel multi-file analysis, documentation/web research, scoped code edits, and unit/integration test loops within an explicit file allowlist.\n- **Reconnaissance Daughter Cells (`flash-lite-scout` · `explorer`)**: Perform high-fan-out, single-hop read-only lookups: locating symbols, running `grep`/`glob` searches, slicing `.log` or `transcript.jsonl` files, and inspecting single configs at minimal latency.\n\n**What it is for.** Isolating the primary's context from noisy reads, and parallelism for work that really is parallel. Neither was measured in the comparison experiment below; the one cost comparison we ran found no saving (see [Is the plugin taking effect?](#is-the-plugin-taking-effect-240)).\n\n## Screenshots\n\nA real Claude Code session (Opus 5.5 primary) running `/orchestrate` on a small demo repo. The primary sends a `flash-lite-scout` to locate the function, then a `flash-worker` to write and run the tests, and re-checks the result itself:\n\n<p align=\"center\"><img src=\"./assets/screenshots/orchestrate-en.png\" width=\"820\" alt=\"Claude Code session: the primary dispatches a flash-lite-scout and a flash-worker, then verifies the tests\" /></p>\n\n`scripts/mitosis-cost-report.py` on a run of the same task: the scout ran on haiku, the worker on sonnet, and the primary still accounts for most of the cost (orchestration did not make this run cheaper; see the comparison below) (see [Choosing the Primary Model](./docs/cost.md#choosing-the-primary-model-on-claude-code-fable-52-vs-opus-55)):\n\n<p align=\"center\"><img src=\"./assets/screenshots/cost.png\" width=\"820\" alt=\"Cost ledger: haiku scout, sonnet worker, opus primary, total 0.41 USD\" /></p>\n\nThe routing eval (`python3 tests/test_routing_eval.py`): no worker task reaches the read-only scout on any labelled set (see [Routing eval](#routing-eval)):\n\n<p align=\"center\"><img src=\"./assets/screenshots/eval.png\" width=\"720\" alt=\"Routing confusion matrices for the training set and holdouts v1 to v5\" /></p>\n\n---\n\n\n## Quick Start\n\nPick the CLI you use. Each block has the install commands and a one-line update command.\n\n**Claude Code**\n\n```bash\n# Install\nclaude plugin marketplace add ivanusto/mitosis-orchestrator\nclaude plugin install mitosis-orchestrator@mitosis-orchestrator\n\n# Update (then start a new session)\nclaude plugin marketplace update mitosis-orchestrator && claude plugin update mitosis-orchestrator@mitosis-orchestrator\n```\n\n**OpenAI Codex CLI**\n\n```bash\n# Install\ngit clone https://github.com/ivanusto/mitosis-orchestrator.git ~/mitosis-orchestrator\npython3 ~/mitosis-orchestrator/scripts/setup-codex.py\ncodex plugin marketplace add ~/mitosis-orchestrator\ncodex plugin add mitosis-orchestrator@mitosis-orchestrator\n# Then set hooks = true under [features] in ~/.codex/config.toml, open Codex and approve the plugin hooks in /hooks\n\n# Update (re-adding refreshes the plugin snapshot). Every update needs a hook review: open Codex once and accept it.\n# Until you do, `codex exec` shows `hook: ... Failed` and runs with no guard, even if the hooks file did not change\ngit -C ~/mitosis-orchestrator pull && python3 ~/mitosis-orchestrator/scripts/setup-codex.py && codex plugin add mitosis-orchestrator@mitosis-orchestrator\n```\n\n**Google Antigravity (`agy`)**\n\n```bash\n# Install (agy loads every directory under its plugin folder)\ngit clone https://github.com/ivanusto/mitosis-orchestrator.git ~/.gemini/config/plugins/mitosis-orchestrator\n\n# Update\ngit -C ~/.gemini/config/plugins/mitosis-orchestrator pull\n```\n\nCheck that it is active: a new session prints `[Mitosis Orchestrator Active] ...` and lists `/orchestrate`. Full options, requirements and what each installer changes are in [Installation & Setup](#installation--setup).\n\n---\n\n## Supported Frontier Primary Models\n\nMitosis Orchestrator is vendor-agnostic at the primary tier across all 3 platforms. It preserves the frontier model you select while filtering out lightweight models from acting as the primary orchestrator:\n\n| Provider | Supported Primary Orchestrator Models | Auto-Filtered Small Tiers (Blocked as Primary) |\n| :--- | :--- | :--- |\n| **OpenAI** (Codex CLI / API) | **`gpt-6.2-sol`**, `gpt-6.2-astra`, `gpt-6.1-sol`, **`gpt-5.6-sol`**, `gpt-5.6-terra`, `gpt-6.1-terra`, `gpt-6-astra`, `o1`, `o3`, `o4` | `gpt-5.6-luna`, `gpt-6-luna`, `gpt-5.4-mini`, `o4-mini`, `o3-mini`, `gpt-4.1-mini` |\n| **Anthropic** (Claude Code) | **`fable`** (Claude Fable 5.2), **`opus`** (Claude Opus 5.5), `sonnet` (Claude Sonnet 5.5) | `haiku` (Claude Haiku 5.5, `claude-haiku-*`) |\n| **Google Gemini** (Antigravity `agy`) | `Gemini 4 Argon (High / Medium)`, `Gemini 4 Carbon (High / Medium)` (agy 1.5.5+, ADC sign-in only), `Gemini 4 Neon (Low / Medium / High / XHigh)` (agy 1.5.11+), `Gemini 4 Hydrogen (High / XHigh)` (default: High), `Orchestrator (Neon / Carbon / Argon)` (agy 1.5.7+), `Gemini Pro`, `Gemini Ultra` | `gemini-3-flash`, `gemini-flash-lite`, `gemini-nano`, `Gemini 4 Hydrogen (Low / Medium)` |\n| **xAI** | `Grok 3`, `Grok 4`, `grok-3`, `grok-4`, `grok-3-thinking` | `grok-3-mini`, `grok-3-mini-fast` |\n| **DeepSeek** | `DeepSeek-R1`, `DeepSeek-V3`, `deepseek-reasoner`, `deepseek-chat` | `deepseek-lite` |\n| **Alibaba Qwen** | `Qwen Max`, `Qwen Plus`, `Qwen 2.5 / 3`, `QwQ` (`qwq-32b`) | `qwen-lite`, `qwen-vl-lite` |\n\n> The default agy pin target and suggestion is now `Gemini 4 Hydrogen (High)` (was Argon). Gemini 4 Neon is a frontier primary at every level (Low, Medium, High, XHigh), like Carbon, and Orchestrator (Neon) (`gemini-pro-orchestrator-neon`) plans with Neon and hands execution to the internal executor. `Orchestrator (Neon)`, `Orchestrator (Carbon)` and `Orchestrator (Argon)` (agy 1.5.7+) already split work internally: Neon, Carbon or Argon plans and Hydrogen executes. This plugin's subagent dispatch (`flash-worker` / `flash-lite-scout`) stacks on top of that. Gemini 4 Hydrogen is accepted as a primary only at High, XHigh (Extra High) or without a level; Low and Medium are treated as small tiers. After `exit_plan_mode`, Orchestrator (Carbon) hands execution to an internal executor whose hook `modelName` is `gemini-flash-worker-agy`; this plugin treats it as part of Orchestrator and does not emit the non-frontier warning.\n\n> [!NOTE]\n> Boundary-aware regex filtering (`(?<![a-z0-9])(flash|lite|mini|nano|haiku|luna|spark)(?![a-z0-9])`) rejects lightweight variants across hyphen, space, or underscore naming conventions while never false-matching `gemini`.\n\n---\n\n## Choosing the Primary Model on Claude Code: Fable 5.2 vs Opus 5.5\n\n- Recommended default: `opus` at `medium` effort. Scouts (`haiku`) and workers (`sonnet`) are pinned by the hook.\n- Use `fable` for multi-hour autonomous runs, ambiguous specifications, cross-cutting refactors with subtle invariants and deep review.\n- Fable 5.2 costs 2x Opus 5.5 (8 / 40 against 4 / 20 per MTok; a 1-hour cache write is 16 against 8). In a three-task check on 2026-11-10, Opus 5.5 was cheaper per task than Fable 5.2, while Fable 5.2 was 8% to 32% faster than Fable 5.1 (n=3 each, a small sample).\n- Fast mode bills every token category at 2x; `mitosis-cost-report.py` reads `usage.speed` from the transcript and prices those turns accordingly.\n- The primary is 70% to 85% of the spend in the sessions measured on Fable 5.1, so the primary model and its effort are the biggest cost lever.\n- Prices, a worked example, the cost report and daughter-cell tuning: [docs/cost.md](./docs/cost.md).\n\n---\n\n## Choosing the Primary Model on agy: Neon, Hydrogen, XHigh and Orchestrator\n\nMeasured in [the cyberq.tw article of 2026-11-19](https://cyberq.tw/2026/11/19/real-world-testing-with-gemini-4-neon/): agy 1.5.11 headless, file system isolated with bwrap, a fresh `AGY_HOME` per run, harness-bench 7 sequential single-directory tasks x 3 runs, 900 s cap, no user plugins loaded. Cost is agy-reported tokens x API standard list price, a token-equivalent and not a bill.\n\n| Group | Pass | Total wall clock | Tokens | Token-equivalent cost | Cache hit |\n| :--- | ---: | ---: | ---: | ---: | ---: |\n| Neon High | 21/21 | 1,923.6 s | 4.09M | US$7.85 | 46.0% |\n| Neon XHigh | 19/21 | 4,313.0 s | 7.98M | US$22.24 | 15.7% |\n| Orchestrator (Neon) | 20/21 | 3,649.2 s | 9.10M | US$21.75 | 26.9% |\n| Hydrogen High | 21/21 | 1,421.3 s | 5.13M | US$2.10 | 83.4% |\n\n- Excluding the long log-triage task 03, per-task median sums were Hydrogen 160.7 s, Neon High 290.0 s (1.8x), Orchestrator 370.3 s and XHigh 607.1 s; cost was Neon High US$1.88 against Hydrogen US$0.82.\n- On task 03 the implicit cache hit rate was Neon High 39% against Hydrogen 89% (one Neon run had 7 consecutive steps with cache_read=0 while input grew from 47K to 89K, not compaction); short tasks were about 60% for both.\n- API list prices per MTok (input / cache read / output incl. thinking): Neon 3.00 / 0.15 / 15.00; Hydrogen 1.50 / 0.075 / 7.50; Carbon 2.00 / 0.10 / 10.00 until 11/30 and 4.00 / 0.20 / 20.00 from 12/1. Neon has no free tier; Hydrogen has one.\n\nRecommendation:\n\n- API-key users: Hydrogen High as the primary; switch to Neon High for hard triage or refactoring.\n- Pro / Ultra subscription users: Neon High.\n- Do not default to XHigh or Orchestrator for sequential single-thread coding work. Orchestrator already splits work internally, and plugin dispatch stacks on top. From 2.7.8 the plugin adds a one-line note for this (`AGY_MITOSIS_PRIMARY_ADVICE=0` silences it).\n\nLimits: n=3 per cell, one author, token-equivalent cost, cache rates may reflect launch-day server state, Carbon was not measured under the same conditions, and these runs did not load this plugin.\n\n---\n\n## Installation & Setup\n\nRequirements: Python 3.11+ (standard library only; `tomllib` is used by the Codex installer), `git`.\n\n**Windows.** Hooks run through `cmd /c` on agy and try `python3`, then `python`, then `py -3`, so any normal install works. The Microsoft Store aliases in `%LOCALAPPDATA%\\Microsoft\\WindowsApps` exit 9009 without running anything; the chain moves past them. If a broken `python` shadows your real one, fix `PATH` or turn the aliases off in Settings > Apps > Advanced app settings > App execution aliases. **With no working Python the hooks exit 0 with no output:** the CLI keeps working (a failed hook blocks every tool on agy), but routing, model pinning and the guardrails are off, without any warning. Check with `python3 --version`, `python --version` or `py -3 --version`.\n\n<!-- BEGIN GENERATED: compat -->\n### Verified CLI versions\n\nThe CLI versions this plugin release was actually verified on. A newer CLI is unverified, not broken; `mitosis-doctor` shows it in an info row `<platform>.cli_verified` that never changes the exit code.\n\n| Platform | Verified version | Verified on | Method |\n| --- | --- | --- | --- |\n| Claude Code | 2.1.322 | 2026-11-10 | headless smoke and interactive background-agent run with claude-fable-5-2 as primary |\n| Codex CLI | 0.169.1 | 2026-11-18 | installed plugin run with gpt-6.2-sol as primary (scout and worker spawn) and gpt-6.2-astra as primary |\n| agy | 1.5.12 | 2026-11-19 | headless /orchestrate runs with gemini-4-neon-high and gemini-pro-orchestrator-neon as primary, plus harness-bench task 03 with the plugin installed (Neon High, filesystem-isolated) |\n\n- Claude Code: The Agent tool now lists `fork` and `web-fetch` as built-in types; both are left unpinned. `--model fable` resolves to `claude-fable-5-2`.\n- Codex CLI: GPT-6.2 ships only Astra (`gpt-6.2-astra`) and Sol (`gpt-6.2-sol`); both are frontier primaries and the default primary is now `gpt-6.2-sol`. There is no 6.2 Terra or Luna, so the worker stays on `gpt-6.1-terra` and the scout on `gpt-6-luna`. The 6.2 API rejects reasoning effort `none`; the plugin pins `low` and `medium` only. A child rollout records the parent model in its first `turn_context` and the pinned model in the last one, which is the one pin verification reads. `models_cache.json` written by an older Codex may not list the 6.2 models yet.\n- agy: Gemini 4 Neon (`gemini-4-neon-low|medium|high|xhigh`, agy 1.5.11+) is a frontier primary at every level, like Carbon. Orchestrator (Neon) (`gemini-pro-orchestrator-neon`) plans with Neon and, as with Carbon, hands execution to `gemini-flash-worker-agy`. The default agy primary is now Gemini 4 Hydrogen (High). XHigh levels and Orchestrator primaries get a one-time cost advisory (`AGY_MITOSIS_PRIMARY_ADVICE=0` silences it); agy SessionStart payloads carry the live `modelName`, which the advisory prefers over settings.json. Gemini 4 Hydrogen (`gemini-4-hydrogen-low|medium|high|xhigh`) is a frontier primary at High and XHigh; Low and Medium are warned about. Orchestrator (Carbon) (`gemini-pro-orchestrator`) and Orchestrator (Argon) (`gemini-pro-orchestrator-argon`) are accepted; they already split planning and execution internally, so subagent dispatch stacks on top. After `exit_plan_mode`, Orchestrator (Carbon) hands execution to an internal executor that hook payloads report as `gemini-flash-worker-agy`, which is accepted without the non-frontier warning; Orchestrator (Argon) kept its own id in the verified run. The `flash` and `flash_lite` subagent tiers are resolved server side and neither the CLI log nor hook payloads show the concrete model, so whether `flash` now means Hydrogen is unverified. Gemini 4 Carbon is listed by `agy models` only under ADC sign-in. agy 1.5.x has no list, grep, glob or find tool: the scout receives only `read_file` and `send_message`, so it reads named paths and reports BLOCKED when a search is needed. Print mode soft-denies a subagent's file write outside a real `/tmp` path even under `--mode accept-edits`, which cancels that subagent; Print mode ignores hook `permissionOverrides` under decision `allow` and `ask`. 1.5.7 and later headless runs start in Auto mode unless `--mode` is given.\n<!-- END GENERATED: compat -->\n\n### 1. Google Antigravity (`agy` 1.4+)\n\n```bash\ngit clone https://github.com/ivanusto/mitosis-orchestrator.git ~/mitosis-orchestrator\nagy plugin install ~/mitosis-orchestrator\nagy plugin list            # mitosis-orchestrator (enabled, 2.7.8)\n```\n\nAlternatively clone straight into the global plugin directory; `agy` loads every directory under it automatically:\n\n```bash\ngit clone https://github.com/ivanusto/mitosis-orchestrator.git ~/.gemini/config/plugins/mitosis-orchestrator\nagy plugin validate ~/.gemini/config/plugins/mitosis-orchestrator --strict\n```\n\n> [!WARNING]\n> If the agy-only sibling plugin [`just-agy-orchestrator`](https://github.com/ivanusto/just-agy-orchestrator) (formerly `argon-orchestrator`) is installed, uninstall or disable it first (`agy plugin uninstall just-agy-orchestrator`, or `argon-orchestrator` for older installs). Both ship a skill named `orchestrate` and agents named `flash-worker` / `flash-lite-scout`, so they would collide and run two hook chains.\n\n### 2. Anthropic Claude Code (2.1.292+)\n\nThe repository doubles as a single-plugin marketplace (`.claude-plugin/marketplace.json`), so it installs straight from GitHub:\n\n```bash\nclaude plugin marketplace add ivanusto/mitosis-orchestrator\nclaude plugin install mitosis-orchestrator@mitosis-orchestrator\nclaude plugin list         # mitosis-orchestrator@mitosis-orchestrator  ✔ enabled\n```\n\nUpdating later: `claude plugin marketplace update mitosis-orchestrator && claude plugin update mitosis-orchestrator@mitosis-orchestrator`.\n\nFor a local checkout, add the directory as the marketplace instead (`claude plugin marketplace add /path/to/mitosis-orchestrator`), or load it for one session only:\n\n```bash\nclaude --plugin-dir /path/to/mitosis-orchestrator\n```\n\nWhat gets loaded: `hooks/claude-hooks.json` (declared by `hooks` in `.claude-plugin/plugin.json`) (SessionStart / UserPromptSubmit / PreToolUse / PostToolUse / SubagentStop / Stop), the `/orchestrate` skill, and two subagents reachable through the `Agent` tool as `subagent_type: \"mitosis-orchestrator:flash-lite-scout\"` (haiku, effort `low`) and `subagent_type: \"mitosis-orchestrator:flash-worker\"` (sonnet, effort `medium`). Verify in a new session: the SessionStart banner `[Mitosis Orchestrator Active] Primary model is 'fable'.` appears and `/orchestrate` is listed.\n\n### 3. OpenAI Codex CLI (0.134+; see the verified versions table above)\n\n```bash\ngit clone https://github.com/ivanusto/mitosis-orchestrator.git ~/mitosis-orchestrator\npython3 ~/mitosis-orchestrator/scripts/setup-codex.py\ncodex exec --profile mitosis-scout \"Locate where parse_token is defined\"\n```\n\nThe installer is idempotent and performs, in order:\n\n1. **Backs up** `$CODEX_HOME/config.toml` to `config.toml.bak` (`$CODEX_HOME` defaults to `~/.codex`).\n2. **Copies** `rules/AGENTS.md` to `$CODEX_HOME/AGENTS.md`.\n3. **Installs** native agent role files into `$CODEX_HOME/agents/`: `explorer.toml` & `flash-lite-scout.toml` (`gpt-6-luna`, `low` effort) and `worker.toml` & `flash-worker.toml` (`gpt-6.1-terra`, `medium` effort). Roles are selectable by the primary agent through `spawn_agent(agent_type=...)`; the `flash-*` role files exist only after this installer has run.\n4. **Installs** profile files `mitosis-scout.config.toml` and `mitosis-worker.config.toml` into `$CODEX_HOME/` (Codex 0.134+ reads `--profile <name>` from `$CODEX_HOME/<name>.config.toml`; the legacy `[profiles.*]` table is no longer honoured).\n5. **Configures** `[mcp_servers.mitosis]` in `config.toml` with the running interpreter and the absolute path to `scripts/mitosis-mcp-server.py`.\n6. **Validates** every TOML file and verifies all mounted files exist.\n\nThe MCP server runs scouts with `--sandbox read-only` and workers with `--sandbox workspace-write`. Set `MITOSIS_CODEX_YOLO=1` only if you deliberately want `--dangerously-bypass-approvals-and-sandbox`.\n\nSince 1.7.0 the plugin hook rewrites `spawn_agent` calls to the built-in `explorer` (scout) and `worker` roles, because Codex 0.163 rejects an unknown `agent_type` (`unknown agent_type '...'`) and the `flash-*` roles do not exist on plugin-only installs. Models and efforts come from `gpt-6-luna` / `gpt-6.1-terra` with `low` / `medium`; override them with `CODEX_MITOSIS_SCOUT_MODEL`, `CODEX_MITOSIS_WORKER_MODEL`, `CODEX_MITOSIS_SCOUT_EFFORT` and `CODEX_MITOSIS_WORKER_EFFORT`. The values are validated (the model is spliced into a `codex exec` command) and there is no `AGY_` form. `setup-codex.py` renders the role and profile TOMLs with the effective values and passes them to the MCP server through its `env` table.\n\n**Going back to the previous models.** The defaults are now `gpt-6.1-terra` (worker) and `gpt-6-luna` (scout). No quality or cost comparison between these and the earlier pair has been measured. To return to the earlier pair, run `CODEX_MITOSIS_WORKER_MODEL=gpt-5.6-terra CODEX_MITOSIS_SCOUT_MODEL=gpt-5.6-luna python3 scripts/setup-codex.py`, and keep both variables exported in the environment Codex runs in. If you do not, the hook expects the 6.x models and reports a pin mismatch for every subagent.\n\n### Plugin hooks (Codex 0.128+)\n\nCodex can also load the hooks as a plugin:\n\n```bash\ncodex plugin marketplace add <path-to-repo>\ncodex plugin add mitosis-orchestrator@mitosis-orchestrator\n```\n\nEnable the hooks feature in `config.toml`, then open Codex and approve the plugin hooks in `/hooks`; a hook that is not approved does not run and the session carries on with no guard. **Every plugin update requires a review on Codex**, even when the hooks file did not change, because Codex hashes the whole plugin directory (excluding `__pycache__`, `.venv`, `*.pyc` and `*.egg-info`). After updating: run `python3 scripts/mitosis-doctor.py` (it reports `trust.bundle` FAIL until you accept, which is correct), open Codex and accept the review, run doctor again (OK), and check that `hook:` lines show `Completed`. `setup-codex.py` is still needed for the MCP server, agent roles and profiles.\n\n<p align=\"center\"><img src=\"./assets/screenshots/codex-hook-review.jpg\" width=\"560\" alt=\"Codex after a plugin update: Hooks need review, 6 hooks are new or changed. Options: Review hooks, Trust all and continue, Continue without trusting (hooks will not run).\" /><br/><em>Codex shows this after every plugin update. Until you trust the hooks, they do not run and the guards are off.</em></p>\n\nCodex 0.163 (multi-agent v2) names its agent tools `collaboration<tool>` in hook payloads (`collaborationspawn_agent`, `collaborationfollowup_task`, `collaborationsend_message`) and passes their `message` as an encrypted token. Since 1.8.0 the hook strips the namespace, registers each spawn under its `task_name` (the address `followup_task` / `send_message` use in `target`), and, because the text cannot be read, refuses follow-ups to a scout instead of checking them. Since 2.0 a child's own hooks (which carry an `agent_id`, not the `task_name`) are bound to its record through the first line of the child rollout (`session_meta.agent_path`), else through the only unbound record of the same role; `SubagentStop` updates that record (stops, `last_turn_id`, `report_ok`). Since 2.1 it also sends a bound scout/worker back once (`{\"decision\":\"block\"}`; Codex re-runs the child, and the second `SubagentStop` carries `stop_hook_active: true`) when its final message is not the four-header report, which happens when the primary dictates its own headings in the hidden `spawn_agent` message. Verified on Codex 0.163: a `SubagentStop` block makes the child answer again, and the parent receives the corrected report. The agent definitions say the four headers win over the task message, and the SessionStart notice tells the primary not to dictate headings. Set `CODEX_MITOSIS_DEBUG=1` in the environment Codex runs in to log every hook call (raw tool name, input keys, state) to `$TMPDIR/mitosis-orchestrator/<session>/mitosis_orchestrator_debug.log`.\n\n---\n\n## Bundled Components & Guardrails\n\n### 1. Lifecycle Enforcement Hooks ([`hooks.json`](./hooks.json) · [`hooks/claude-hooks.json`](./hooks/claude-hooks.json) · [`scripts/enforce-orchestrator.py`](./scripts/enforce-orchestrator.py))\nZero-dependency Python 3.8+ standard library hook engine (entry script plus the [`scripts/mitosis_hook/`](./scripts/mitosis_hook) package) on every turn (~30 ms per call). Model pinning and the scout read-only layer are enforced; delegation of the primary's own edits and tests is advice by default (`*_MITOSIS_FASTPATH_MODE`). On Claude Code the `PreToolUse` matcher is limited to the tools the engine actually inspects (`Agent`, `Task`, `Bash`, `Read`, `NotebookRead`, `Write`, `Edit`, `NotebookEdit`, `SendMessage`), so `Grep` / `Glob` / `WebFetch` / MCP calls no longer pay the hook start-up cost:\n\n| Hook Event | Guardrail / Behavior |\n| :--- | :--- |\n| `SessionStart` | Checks settings, **warns** if the configured primary model is not a supported frontier model, and injects the Mitosis routing policy. Rewrites settings only when `*_MITOSIS_PIN_SETTINGS=1` is enabled. |\n| `PreInvocation` (agy) · `UserPromptSubmit` (Claude Code / Codex) | Verifies the live session model on every turn; warns once per invocation if switched to a non-frontier model. Resets per-turn tracking (`turn_edited_files`, `consecutive_failures`; on agy only when `invocationNum` returns to 0). |\n| `PreToolUse` · `invoke_subagent` (agy) | Classifies every spawned subagent into `flash` or `flash_lite` based on `TypeName`, `Workspace`, and `Prompt` (on agy the short `Role` label is not read, since a label such as \"Add Scout\" would look like a mutation). agy 1.4.6 sends one flat call per subagent (`Prompt`, `Role`, `TypeName`, `Model`, `Workspace`) instead of a `Subagents` list; both forms are handled, and the hook overwrites only the changed top-level keys. Strong signals (testing, debugging, call-graph tracing, mutation verbs) always override lookup keywords. Automatically upgrades `flash-lite-scout` to `flash-worker` if given a mutation task, and appends the `REPORT FORMAT` block to prompts that lack one. |\n| `PreToolUse` · `Agent` (Claude Code) | Pins **only** this plugin's own agent types (`flash-worker`, `flash-lite-scout`, with or without the `mitosis-orchestrator:` prefix) and untyped `Agent` calls that use `model: inherit`. Pins `effort` too (scout `low`, worker `medium`; caller values honoured; `CLAUDE_MITOSIS_PIN_EFFORT=0` disables) and appends the four-header `REPORT FORMAT` block to prompts that lack one (`CLAUDE_MITOSIS_APPEND_REPORT_FORMAT=0` disables). Other plugins' agents, built-in types (`Explore`, `Plan`, `general-purpose`, …), and untyped calls with an explicit model are passed through untouched. `CLAUDE_MITOSIS_PIN_SUBAGENTS=0` disables pinning entirely. Opt-in `CLAUDE_MITOSIS_PIN_BUILTINS=1` (off by default) also pins the built-in `Explore` (scout model and effort) and routes `general-purpose` like an untyped call; an explicit model is still honoured and `Plan` and the rest stay untouched. See the env table for the limits. |\n| `PreToolUse` · `spawn_agent` / `codex exec` (Codex) | Pins subagents to `gpt-6-luna` (scout) or `gpt-6.1-terra` (worker) by prompt classification. When Codex hides the message from hooks (0.163 sends an encrypted token), the requested `agent_type` decides, the message is left untouched, and a call without a role is pinned to `worker`. |\n| `PreToolUse` · `send_message` (agy / Codex) · `SendMessage` (Claude Code) · `followup_task` (Codex) | Blocks code-editing or multi-step (>3 numbered rules) follow-up instructions sent to a scout; a Codex `followup_task` is also routed like a new task. Claude Code recipients are recognised by the agent id that `PostToolUse` / `SubagentStop` pair with the spawn, Codex recipients by the `task_name` registered at `spawn_agent`. Codex follow-up text that hooks cannot read is refused for scouts: spawn a new explorer or a worker instead. |\n| `PreToolUse` · scout's own tools (Claude Code / Codex) | A `flash-lite-scout` or Codex `explorer` cannot use `Write` / `Edit` / `apply_patch`, whatever its prompt says, and its shell commands must pass a read-only allowlist. The check reads command text and denies what it cannot read for certain; it is not a sandbox ([SECURITY.md](./SECURITY.md)). |\n| `PreToolUse` · `run_workflow` | Blocks workflow scripts whose `agent(...)` calls omit model specification. |\n| `PreToolUse` · `define_subagent` | Forces `enable_subagent_tools=false` to prevent recursive nested subagent spawning. |\n| `PreToolUse` · **Context Hygiene** | Blocks the primary agent from directly reading raw `.log` or `transcript.jsonl` files larger than 16 KiB (small files are allowed), keeping noisy logs out of the primary context window by delegating log slicing to reconnaissance scouts. |\n| `PreToolUse` · **Fast-Path Budget** | Caps direct workspace file mutations by the primary agent at `3` distinct files per turn (configurable via `*_MITOSIS_MAX_DIRECT_EDITS`) and flags direct workspace edit + test-runner loops on the primary agent. Mode `*_MITOSIS_FASTPATH_MODE`: `advise` (default) never blocks and adds one short advice note per kind per turn; `enforce` denies as in earlier versions; `off` disables the budget. On agy the budget is per user turn (it resets when `invocationNum` returns to 0). Test-runner detection ignores quoted text, heredoc bodies and `grep`/`git`/`cat`-style commands. |\n| `PreToolUse` · **Circuit Breaker** | After `2` commands in a row fail in one user turn, `*_MITOSIS_CIRCUIT_BREAKER_MODE` decides: `advise` (default) adds one note on agy and never blocks, `enforce` denies `run_command`, `Bash` and subagent spawns until the next turn, `off` disables. On agy the exit code is read from the transcript at the next model call, because PostToolUse carries none. A read-only command that exits 0 or 1 (`grep` with no match) neither counts nor clears the streak, and neither does a single `test`, `[ ]`, `command -v` or `which` question. On agy a subagent call neither counts nor clears either, because agy reports only that the spawn was accepted. Hooks do not run inside agy subagents, so a worker's own test loop is not counted. **On Claude Code and Codex the counter has never counted a real failure**, since their payloads have no field it reads, so the breaker does nothing there. |\n| `PreToolUse` · **Workspace Guard** | Opt-in (`*_MITOSIS_AUTO_ALLOW=1`): auto-approves file and command tools that stay inside the workspace on Claude Code and agy (on Codex the guard only denies, because Codex rejects an allow without `updatedInput`), while prompting (`ask`; `deny` on Codex, which has no `ask`) for outside paths, privilege escalation, root deletes, force pushes, or shell-piped downloads. When disabled it gives no verdict: on Claude Code the hook returns `{}`, so your normal permission rules and prompts apply (1.5.0 and earlier returned `allow`, which skipped them). |\n| `PostToolUse` · `PostToolUseFailure` (Claude Code) | Pairs spawned subagents with platform metadata and updates failure streaks. Captures `SubagentHandback` reports (auto mode). Failed Bash arrives as `PostToolUseFailure` and is counted, observe only. |\n| `SubagentStop` / `Stop` | When the turn is idle and branch worktrees remain alive, reminds the primary agent once per set of live workers to merge/discard changes and clean them up. On Claude Code and Codex (bound agents only; `CODEX_MITOSIS_ENFORCE_REPORT=0` disables there), `SubagentStop` also checks that a `flash-lite-scout` / `flash-worker` ended with the four-header report and, once per agent, sends it back to rewrite its final message (`CLAUDE_MITOSIS_ENFORCE_REPORT=0` disables). |\n\n#### Failure escalation (2.3)\n\n- **Trigger.** A mitosis scout reports `STATUS: FAILED` or `BLOCKED`. Claude Code detects it on `SubagentStop` (background `Agent` calls deliver the report only there) or in a synchronous `PostToolUse` result; Codex on `SubagentStop` of a bound explorer; agy (2.3.1) on the primary's next pre-invocation or `invoke_subagent` call, by reading the reports in `<artifactDirectoryPath>/.system_generated/messages/`. The first scan of a conversation only marks old reports as seen. The same pre-invocation also tells the primary once per subagent when a report breaks the four-header contract.\n- **agy note.** The bundled agents use `inheritCustomizations: false`, so plugin hooks do not run inside them; only the primary-side scan works (see the verified versions table above).\n- **Effect.** The next scout-routed dispatch runs on the worker (rule `escalation`), once, within 3 dispatches or 30 minutes. An escalated spawn never escalates again. Untyped calls keep no `subagent_type` and only get the model.\n- **Opt-in.** `*_MITOSIS_ESCALATE_PRIMARY=1` (Claude Code only) also sends the next dispatch after a failed worker to the primary model. `*_MITOSIS_ESCALATE=0` turns escalation off.\n- **Headless check.** A scout told to read a missing file reported `BLOCKED`, and the same scout-typed re-dispatch ran as `mitosis-orchestrator:flash-worker` on sonnet (0.25 USD session).\n- Since 2.3 background `Agent` launches (`{\"isAsync\": true, \"agentId\": ...}`) are also registered, so the `SendMessage` scout guard sees them.\n- Since 2.5.0 a scout's declared `BLOCKED` or `FAILED` is trusted without a log URI once no retry can come (before, it failed validation and, on interactiv",
+  "latestReleaseNotes": "\nGemini 4 Neon support and agy primary guidance. Google released Gemini 4 Neon on 2026-11-18; agy 1.5.12 lists `gemini-4-neon-low|medium|high|xhigh` and `gemini-pro-orchestrator-neon`. Before this release every Neon primary got the non-frontier warning on each turn.\n\n**After updating.** On agy, start a new session. On Codex, run `python3 scripts/setup-codex.py` and `codex plugin add mitosis-orchestrator@mitosis-orchestrator`, open Codex once and accept the hook review (any plugin file change requires it), then run `python3 scripts/mitosis-doctor.py --platform codex`. On Claude Code, start a new session. Claude Code and Codex behaviour is unchanged.\n\n### Added\n- **Gemini 4 Neon is a frontier primary at every level** (Low, Medium, High, XHigh), like Carbon, since Neon is derived from Carbon. `Orchestrator (Neon)` (`gemini-pro-orchestrator-neon`) plans with Neon and hands execution to the internal executor `gemini-flash-worker-agy`, which is already exempt from the non-frontier warning.\n- **agy primary advice.** When the primary is an XHigh / Extra High level or an Orchestrator model, SessionStart (and once per conversation in PreInvocation) adds a one-line note recommending the High level for sequential work. It never blocks dispatch; `AGY_MITOSIS_PRIMARY_ADVICE=0` silences it.\n\n### Changed\n- The agy default primary (pin target and suggestion) is now `Gemini 4 Hydrogen (High)` (was `Gemini 4 Argon (High)`).\n- The advisory goes by the live `modelName` that agy SessionStart payloads carry, so headless `--model` runs are judged by the model actually in use rather than the one in `settings.json`; the non-frontier check itself is unchanged.\n- `scripts/sanitize-payloads.py` keeps Gemini 4 Hydrogen, Neon, Orchestrator and `gemini-flash-worker-agy` model names (they became `__STR__` before).\n- compat: agy verified on 1.5.12; new fixtures `tests/fixtures/payloads/agy/1.5.12/{neon-high-primary,orchestrator-neon-primary}.jsonl`.\n\n### Docs\n- New README section \"Choosing the Primary Model on agy: Neon, Hydrogen, XHigh and Orchestrator\" (both languages) and an \"agy (Gemini) primaries\" subsection in `docs/cost.md`, with the 2026-11-19 measurements ([article](https://cyberq.tw/2026/11/19/real-world-testing-with-gemini-4-neon/)): Neon High 21/21 at US$7.85 against Hydrogen High 21/21 at US$2.10 (cache hit 46.0% against 83.4%); XHigh 19/21 and Orchestrator (Neon) 20/21 each cost about US$22. n=3 per cell, token-equivalent cost, plugin not loaded in those runs.\n- `CONTRIBUTING.md`: agy keeps full conversations in `AGY_HOME/brain/`, so benchmark runs must rebuild `AGY_HOME` from a template, and file system isolation keeps agents from finding answers in local files.\n\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "contains_minified",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 255,
+        "snippet": "proc = subprocess.Popen(cmd, cwd=str(workdir), env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=err, start_new_session=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L255"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/run.py",
+        "line": 169,
+        "snippet": "return subprocess.run([\"git\"] + list(args), cwd=str(cwd), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L169"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/run.py",
+        "line": 210,
+        "snippet": "proc = subprocess.run([\"git\", \"archive\", \"--format=tar\", commit], cwd=str(plugin_dir), stdout=subprocess.PIPE, stderr=subprocess.PIPE)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L210"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/run.py",
+        "line": 560,
+        "snippet": "proc = subprocess.run([sys.executable, str(script), \"--project\", str(project_dir_for(workdir, session_id, hint)), \"--session\", session_id, \"--json\"], stdout=subprocess.PIPE, stderr",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L560"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/run.py",
+        "line": 593,
+        "snippet": "proc = subprocess.run([sys.executable, str(HERE / \"tasks\" / task / \"scaffold.py\"), str(workdir)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, timeout=3",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L593"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/run.py",
+        "line": 604,
+        "snippet": "proc = subprocess.Popen(cmd, cwd=str(workdir), stdin=subprocess.DEVNULL, stdout=out, stderr=err, start_new_session=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L604"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/run.py",
+        "line": 642,
+        "snippet": "grade = subprocess.run([sys.executable, str(HERE / \"tasks\" / task / \"grade.py\"), str(workdir)], cwd=str(cell_dir), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newli",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L642"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/tasks/fix/grade.py",
+        "line": 19,
+        "snippet": "proc = subprocess.run( [sys.executable, \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", start_dir], cwd=work, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newline",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/fix/grade.py#L19"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/compare/tasks/fix/scaffold.py",
+        "line": 27,
+        "snippet": "subprocess.run(cmd, cwd=work, check=True, stdout=subprocess.DEVNULL)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/fix/scaffold.py#L27"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/run.py",
+        "line": 427,
+        "snippet": "proc = subprocess.run([\"git\", \"clone\", \"--quiet\", \"--no-checkout\", str(repo), str(clone)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L427"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 212,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", str(TASKS / task / \"scaffold.py\"), str(ws / task)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, timeout=30",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L212"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 266,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", str(FIX / \"template\" / \"tests\")], cwd=work, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDO",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L266"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 280,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", str(FIX / \"grade.py\"), str(Path(ws) / \"fix\")], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, timeout=300, ",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L280"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 289,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", str(OPS / \"grade.py\"), str(Path(ws) / \"ops\")], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, timeout=300, ",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L289"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 392,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", \"-c\", code], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, timeout=120, env=dict(os.environ, PYTHONDONTWRITE",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L392"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 433,
+        "snippet": "subprocess.run([sys.executable, \"-B\", str(OPS / \"scaffold.py\"), str(work)], check=True, stdout=subprocess.DEVNULL)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L433"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 434,
+        "snippet": "subprocess.run([sys.executable, \"-B\", str(OPS / \"reference\" / \"solve.py\"), str(work)], check=True, stdout=subprocess.DEVNULL, env=dict(os.environ, PYTHONDONTWRITEBYTECODE=\"1\"))",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L434"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/long/stages.py",
+        "line": 444,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", \"-m\", \"unittest\", \"discover\", \"-s\", str(FIX / \"template\" / \"tests\")], cwd=str(fix_work), env=dict(os.environ, PYTHONPATH=str(fix_work),",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L444"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/overhead/run.py",
+        "line": 289,
+        "snippet": "proc = subprocess.run([\"git\", \"clone\", \"--quiet\", \"--no-checkout\", str(repo), str(clone)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L289"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/overhead/run.py",
+        "line": 432,
+        "snippet": "proc = subprocess.run([sys.executable, \"-B\", str(FIXTURE / \"scaffold.py\"), str(workdir)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, timeout=300)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L432"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "evals/overhead/run.py",
+        "line": 495,
+        "snippet": "grade = subprocess.run([sys.executable, \"-B\", str(FIXTURE / \"grade.py\"), str(workdir)], cwd=str(cell_dir), env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newl",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L495"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"mitosis-orchestrator\" executes a shell command on PreToolUse (matcher: *).",
+        "file": "hooks.json",
+        "line": 24,
+        "snippet": "python3 ./scripts/enforce-orchestrator.py pre-tool-use || python ./scripts/enforce-orchestrator.py pre-tool-use || py -3 ./scripts/enforce-orchestrator.py pre-tool-use || exit 0",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/hooks.json#L24"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"mitosis-orchestrator\" executes a shell command on PostToolUse (matcher: invoke_subagent|manage_subagents|run_command).",
+        "file": "hooks.json",
+        "line": 36,
+        "snippet": "python3 ./scripts/enforce-orchestrator.py post-tool-use || python ./scripts/enforce-orchestrator.py post-tool-use || py -3 ./scripts/enforce-orchestrator.py post-tool-use || exit 0",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/hooks.json#L36"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mitosis-doctor.py",
+        "line": 209,
+        "snippet": "proc = subprocess.run(argv, stdin=subprocess.DEVNULL, capture_output=True, timeout=timeout)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis-doctor.py#L209"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mitosis-doctor.py",
+        "line": 388,
+        "snippet": "proc = subprocess.run(argv, input=stdin, capture_output=True, env=env, cwd=str(cwd), timeout=PROBE_TIMEOUT)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis-doctor.py#L388"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mitosis-doctor.py",
+        "line": 1019,
+        "snippet": "proc = subprocess.run([sys.executable, str(script)], stdin=subprocess.DEVNULL, capture_output=True, timeout=700)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis-doctor.py#L1019"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/mitosis-mcp-server.py",
+        "line": 157,
+        "snippet": "proc = subprocess.run( cmd, cwd=cwd, capture_output=True, text=True, check=False, timeout=int(os.environ.get(\"CODEX_EXEC_TIMEOUT\", \"300\")), )",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis-mcp-server.py#L157"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/smoke-claude.py",
+        "line": 43,
+        "snippet": "return subprocess.run(cmd, text=True, capture_output=True, **kw)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/smoke-claude.py#L43"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "scripts/smoke-claude.py",
+        "line": 73,
+        "snippet": "proc = subprocess.run(cmd, cwd=work, env=env, text=True, capture_output=True, timeout=args.timeout)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/smoke-claude.py#L73"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 254,
+        "snippet": "with open(str(stream_path), \"wb\") as out, open(str(stderr_path), \"wb\") as err:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L254"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 564,
+        "snippet": "shutil.rmtree(str(tmp), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L564"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 566,
+        "snippet": "with open(str(SEAL_PATH), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L566"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 653,
+        "snippet": "with open(str(out / \"frozen.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L653"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 671,
+        "snippet": "shutil.rmtree(str(path), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L671"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 690,
+        "snippet": "with open(str(cell_dir / \"meta.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L690"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 737,
+        "snippet": "with open(str(cell_dir / \"result.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L737"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 741,
+        "snippet": "with open(str(ctx.out / \"sessions.txt\"), \"a\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L741"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 753,
+        "snippet": "with open(str(ctx.out / \"STOPPED.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L753"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 814,
+        "snippet": "with open(str(ctx.out / \"projection.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L814"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 987,
+        "snippet": "with open(str(out / \"report.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L987"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/builtin-pin/run.py",
+        "line": 989,
+        "snippet": "with open(str(out / \"report.txt\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/builtin-pin/run.py#L989"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 147,
+        "snippet": "with open(str(path), \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L147"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 230,
+        "snippet": "with open(str(target), \"wb\") as out:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L230"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 248,
+        "snippet": "shutil.rmtree(str(tmp), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L248"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 267,
+        "snippet": "with open(str(SEAL_PATH), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L267"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 304,
+        "snippet": "with open(str(self.path), \"a\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L304"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 404,
+        "snippet": "shutil.rmtree(real, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L404"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 603,
+        "snippet": "with open(str(stream_path), \"wb\") as out, open(str(stderr_path), \"wb\") as err:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L603"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 632,
+        "snippet": "with open(str(cell_dir / \"meta.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L632"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 637,
+        "snippet": "with open(str(cell_dir / \"result_events.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L637"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 644,
+        "snippet": "with open(str(cell_dir / \"grade.txt\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L644"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 669,
+        "snippet": "with open(str(cell_dir / \"result.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L669"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 673,
+        "snippet": "with open(str(ctx.out / \"sessions.txt\"), \"a\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L673"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 718,
+        "snippet": "with open(str(out / \"frozen.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L718"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/run.py",
+        "line": 770,
+        "snippet": "with open(str(ctx.out / \"STOPPED.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/run.py#L770"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/make_questions.py",
+        "line": 170,
+        "snippet": "with open(os.path.join(HERE, \"questions.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/make_questions.py#L170"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/make_questions.py",
+        "line": 173,
+        "snippet": "with open(os.path.join(HERE, \"key.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/make_questions.py#L173"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/make_questions.py",
+        "line": 177,
+        "snippet": "with open(os.path.join(HERE, \"reference\", \"answers.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/make_questions.py#L177"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/make_questions.py",
+        "line": 188,
+        "snippet": "with open(os.path.join(HERE, \"prompt.md\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/make_questions.py#L188"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/make_questions.py",
+        "line": 193,
+        "snippet": "shutil.rmtree(tmp, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/make_questions.py#L193"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/scaffold.py",
+        "line": 30,
+        "snippet": "with open(path, \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/scaffold.py#L30"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/scaffold.py",
+        "line": 85,
+        "snippet": "with open(MANIFEST, \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/scaffold.py#L85"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/scaffold.py",
+        "line": 111,
+        "snippet": "shutil.rmtree(work, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/scaffold.py#L111"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/lookup/verify_key.py",
+        "line": 48,
+        "snippet": "shutil.rmtree(tmp, ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/lookup/verify_key.py#L48"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/grade.py",
+        "line": 27,
+        "snippet": "with open(path, \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/grade.py#L27"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 22,
+        "snippet": "with open(path, \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L22"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 56,
+        "snippet": "with open(os.path.join(work, \"params\", site + \".json\"), \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L56"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 67,
+        "snippet": "with open(os.path.join(work, \"conf\", site + \".conf\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L67"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 129,
+        "snippet": "with open(log, \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L129"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 131,
+        "snippet": "with open(log + \".1.sha256\", \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L131"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 150,
+        "snippet": "with open(os.path.join(work, \"out\", \"summary.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L150"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/compare/tasks/ops/reference/solve.py",
+        "line": 166,
+        "snippet": "with open(os.path.join(work, \"out\", \"MANIFEST.sha256\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/compare/tasks/ops/reference/solve.py#L166"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 401,
+        "snippet": "self.fh = open(str(self.path), \"w\")",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L401"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 440,
+        "snippet": "shutil.rmtree(str(scratch), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L440"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 459,
+        "snippet": "with open(tmp, \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L459"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 524,
+        "snippet": "with open(str(stage_dir / \"calls.jsonl\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L524"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 594,
+        "snippet": "with open(str(ctx.out / \"sessions.txt\"), \"a\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L594"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 886,
+        "snippet": "(ws / \"small.txt\").write_text(\"alpha\\nbeta\\ngamma\\ndelta\\nepsilon\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L886"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/run.py",
+        "line": 1060,
+        "snippet": "with open(str(out / \"report.txt\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/run.py#L1060"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/long/stages.py",
+        "line": 451,
+        "snippet": "shutil.rmtree(str(scratch), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/long/stages.py#L451"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 301,
+        "snippet": "shutil.rmtree(str(scratch), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L301"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 311,
+        "snippet": "shutil.rmtree(str(tmp), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L311"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 318,
+        "snippet": "with open(str(SEAL_PATH), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L318"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 421,
+        "snippet": "with open(str(out / \"frozen.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L421"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 447,
+        "snippet": "self.fh = open(str(self.path), \"w\")",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L447"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 479,
+        "snippet": "with open(str(cell_dir / \"meta.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L479"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 486,
+        "snippet": "with open(str(cell_dir / \"calls.jsonl\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L486"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 498,
+        "snippet": "with open(str(cell_dir / \"grade.txt\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L498"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 529,
+        "snippet": "with open(str(cell_dir / \"result.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L529"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 533,
+        "snippet": "with open(str(ctx.out / \"sessions.txt\"), \"a\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L533"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 543,
+        "snippet": "with open(str(ctx.out / \"STOPPED.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L543"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 772,
+        "snippet": "with open(str(out / \"report.json\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L772"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "evals/overhead/run.py",
+        "line": 774,
+        "snippet": "with open(str(out / \"report.txt\"), \"w\", encoding=\"utf-8\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/evals/overhead/run.py#L774"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mitosis-doctor.py",
+        "line": 725,
+        "snippet": "with open(full, \"rb\") as fh:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis-doctor.py#L725"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mitosis-doctor.py",
+        "line": 1240,
+        "snippet": "shutil.rmtree(str(tmp), ignore_errors=True)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis-doctor.py#L1240"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "scripts/mitosis_generated.py",
+        "line": 51,
+        "snippet": "'agy': {'verified': '1.5.12', 'verified_on': '2026-11-19', 'method': 'headless /orchestrate runs with gemini-4-neon-high and gemini-pro-orch",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis_generated.py#L51"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mitosis_hook/heartbeat.py",
+        "line": 162,
+        "snippet": "os.unlink(str(tmp))",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis_hook/heartbeat.py#L162"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mitosis_hook/models.py",
+        "line": 245,
+        "snippet": "with open(target_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis_hook/models.py#L245"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mitosis_hook/models.py",
+        "line": 263,
+        "snippet": "os.unlink(tmp_path)",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis_hook/models.py#L263"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/mitosis_hook/models.py",
+        "line": 272,
+        "snippet": "with open(target_path, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/ivanusto/mitosis-orchestrator/blob/c4a3079cf45ee3fa698f2534f029cdb912d01ae7/scripts/mitosis_hook/models.py#L272"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.7.8",
+      "sha": "c4a3079cf45ee3fa698f2534f029cdb912d01ae7",
+      "scannedAt": "2026-11-27T10:33:35.622Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "id": "bvarnai/agy-standards",
+  "sha": "a10dfe190f066e1d497d62ad06b1d3149ffe93b4",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-27T10:33:16.686Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "standards",
+    "displayName": "Antigravity Standards",
+    "version": "0.3.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "00-spec",
+        "slashCommand": "/00-spec",
+        "description": "Author or update authoritative technical specifications under docs/spec/ (global.md for system-wide architecture/invariants and <unit>.md for subcommands or modules) before writing implementation code. Activate when planning architecture, r",
+        "disableModelInvocation": false,
+        "file": "skills/00-spec/SKILL.md"
+      },
+      {
+        "name": "01-roadmap",
+        "slashCommand": "/01-roadmap",
+        "description": "Partition new or updated docs/spec/ contracts into dependency-ordered vertical slices tracked in a transient docs/roadmap.md on an integration branch. Activate for new projects, large spec changes, multi-PR epics, or running /01-roadmap.",
+        "disableModelInvocation": false,
+        "file": "skills/01-roadmap/SKILL.md"
+      },
+      {
+        "name": "02-issue",
+        "slashCommand": "/02-issue",
+        "description": "Strictly draft issues using the mandatory issue template with clear problem context, acceptance criteria, edge cases, and verification plans, saving the raw Markdown to .issue-draft.md. Activate whenever asked to write, draft, or generate a",
+        "disableModelInvocation": false,
+        "file": "skills/02-issue/SKILL.md"
+      },
+      {
+        "name": "03-implement",
+        "slashCommand": "/03-implement",
+        "description": "Implement features, refactors, or bug fixes strictly traceable to an approved specification or issue, enforcing stack-specific engineering standards, living spec synchronization, and automated test verification. Activate when implementing c",
+        "disableModelInvocation": false,
+        "file": "skills/03-implement/SKILL.md"
+      },
+      {
+        "name": "04-docs",
+        "slashCommand": "/04-docs",
+        "description": "Audit and refine user guides, READMEs, and reference documentation for pragmatic developer-to-developer tone, plain active English, sentence-case headings, factual spec/codebase accuracy, and link integrity. Activate when reviewing document",
+        "disableModelInvocation": false,
+        "file": "skills/04-docs/SKILL.md"
+      },
+      {
+        "name": "05-audit",
+        "slashCommand": "/05-audit",
+        "description": "Execute a read-only pre-release readiness audit across code, specifications, user documentation, test suites, and CI/release pipelines to identify P0 blockers before tagging. Activate before running /06-release or /05-audit.",
+        "disableModelInvocation": false,
+        "file": "skills/05-audit/SKILL.md"
+      },
+      {
+        "name": "06-release",
+        "slashCommand": "/06-release",
+        "description": "Calculate the next semantic version, prepare CHANGELOG.md and version manifests via the project's branch/PR flow, and tag the updated default branch. Activate when preparing a release or running /06-release.",
+        "disableModelInvocation": false,
+        "file": "skills/06-release/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/00-spec",
+      "/01-roadmap",
+      "/02-issue",
+      "/03-implement",
+      "/04-docs",
+      "/05-audit",
+      "/06-release"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# <img src=\"assets/logo.svg\" width=\"28\" height=\"28\" alt=\"\" align=\"absmiddle\"> agy-standards\n\n[Google Antigravity](https://antigravity.google) (`agy`) plugin bundling global rules, lifecycle skills, and language-specific standards.\n\n> *\"Building the wrong thing is still a waste even when building is faster.\"* — [Gergely Orosz, LDX3 New York 2026](https://www.youtube.com/watch?v=uErdlVHb8ow)\n>\n> *\"The old system scaled consistency. The new system must scale intent.\"* — [Katie Dill, Stripe](https://www.youtube.com/watch?v=GLvFTMtw4Jk)\n\n*In the era of AI coding, I still plan, write it down, and review the code. Some people run 4–6 agents in parallel—my brain has a concurrency limit of 1.*\n\n---\n\n## Approach\n\n`agy-standards` structures development with `agy` around one habit: **agree on what you want to build and put it in writing before any code exists.**\n\nThat written record replaces long chat histories, where requirements get lost, and takes two forms:\n\n- **Specifications (`docs/spec/`)**: Living requirements and design documents that describe how the project works (CLI flags, APIs, configuration, and behavior).\n- **Issues**: Small, well-defined tasks that describe what needs to change, the edge cases to handle, and how to test it.\n\nEach coding or review step can then start in a fresh session and read what it needs from these files. *(See [docs/philosophy.md](docs/philosophy.md) for why the workflow is built this way.)*\n\n---\n\n## Workflow\n\n```mermaid\nflowchart LR\n    subgraph Upfront [\"Upfront design\"]\n        Spec[\"Spec<br/>(/standards:00-spec)\"] -.-> Roadmap[\"Roadmap<br/>(/standards:01-roadmap)\"]\n    end\n\n    subgraph Daily [\"Daily development loop\"]\n        Plan[\"Plan mode<br/>(/plan)\"] --> Issue[\"Issue<br/>(/standards:02-issue)\"] --> Code[\"Implement<br/>(/standards:03-implement)\"]\n    end\n\n    subgraph Ship [\"Release pipeline\"]\n        Docs[\"Docs<br/>(/standards:04-docs)\"] --> Audit[\"Audit<br/>(/standards:05-audit)\"] --> Release[\"Release<br/>(/standards:06-release)\"]\n    end\n\n    Roadmap -.->|\"New project / module / epic\"| Plan\n    Code -->|\"Next issue\"| Plan\n    Code -->|\"Ready to ship\"| Docs\n```\n\n1. **Upfront design (`/standards:00-spec`, `/standards:01-roadmap`, as needed)**:\n   - **Write or update specs (`/standards:00-spec`)**: Create or update `docs/spec/` when starting a new project, adding a module, designing a large feature/change, or documenting existing code.\n   - **Slice a large spec (`/standards:01-roadmap`)**: When a new or updated spec is too large for one PR, split the work into ordered vertical slices (`docs/roadmap.md` on an integration branch), then run the **Daily development loop** once per slice.\n2. **Daily development loop (`Plan` $\\rightarrow$ `/standards:02-issue` $\\rightarrow$ `/standards:03-implement`)**:\n   - **Plan (`--mode plan` / `/plan`)**: Discuss the problem and agree on the approach before touching code (or select the next `Pending` roadmap slice when inside an epic).\n   - **Create issue (`/standards:02-issue`)**: Turn the agreed plan or roadmap slice into a structured issue draft (`.issue-draft.md`) with acceptance criteria, edge cases, and test cases.\n   - **Implement (`/standards:03-implement`)**: Create a topic branch (off the default branch, or off the integration branch for epic slices), update `docs/spec/` and the code together, run tests and linters, and open a PR. Once all epic slices merge, remove `docs/roadmap.md` and merge the integration branch into `main`.\n3. **Release pipeline (`/standards:04-docs` $\\rightarrow$ `/standards:05-audit` $\\rightarrow$ `/standards:06-release`)**: When ready to release, review user docs, run a read-only audit across specs, code, and tests, and cut the release tag.\n\n*(For a step-by-step example of how a full session looks in practice, see [docs/walkthrough.md](docs/walkthrough.md).)*\n\n### Companion tool: [`git-brx`](https://github.com/bvarnai/git-brx) (optional)\n\n`agy-standards` shapes how the agent plans, writes specs, codes, audits, and writes commits. `git-brx` serves a different purpose in the same workflow: it covers your side of it. It brings its own branching conventions and turns them into concrete commands (`git brx create`, `sync`, `publish`, `review`, and so on) on top of Git, so you can follow the workflow without being fluent in Git. It also ships its own agent skill; see its [AI agent integration guide](https://github.com/bvarnai/git-brx/blob/main/docs/user-guide/getting-started.md).\n\nIf `git-brx` is on `PATH`, the agent uses it for branches, syncing, and PRs. If not, the agent follows the project's own conventions.\n\n### Working effectively\n\n- **Use plan mode as an interview.** Give a rough 2-sentence idea and ask `agy` to challenge the edge cases and trade-offs. Answering a few sharp questions triggers the same design thinking that used to happen while coding by hand. Then let `/standards:00-spec` or `/standards:02-issue` draft the Markdown from your answers.\n- **Prototype when the design isn't clear yet.** Build a rough, throwaway version to learn what works, then write the real design into `docs/spec/`.\n- **Use the fast path for trivial changes.** Small fixes, doc edits, and dependency bumps don't need an issue.\n\n---\n\n## Repository organization\n\n```text\nagy-standards/\n├── plugin.json                         # Native agy plugin manifest\n├── assets/logo.svg                     # Monochrome plugin mark\n├── rules/                              # Universal always-on rule entrypoint\n│   └── GEMINI.md                       # @-imports fragments + formatting & tool policy\n├── standards/                          # Stack-specific standards (routed via fragments/stack-routing.md)\n│   ├── go.md                           # Go architecture, error wrapping, concurrency & testing\n│   ├── python.md                       # Python CLI/service architecture, strict typing, ruff/mypy/pytest\n│   ├── java.md                         # Modern Java idioms, null-safety, Maven/Gradle verification\n│   ├── embedded.md                     # Embedded C/C++ deterministic memory, ISR safety, HAL\n│   └── shell.md                        # Bash/Shell naming (kebab-case CLI), safety, shellcheck & Bats\n├── skills/                             # Lifecycle slash commands (/standards:00-spec .. /standards:06-release)\n│   └── <NN-skill>/SKILL.md             # Skill definition (+ templates/ where applicable)\n└── fragments/                          # Shared rule & prompt fragments (spec-driven, git, stack-routing, tone)\n```\n\n---\n\n## Universal lifecycle skills\n\nRun these skills inside an interactive `agy` session (assuming the plugin is linked as `standards`):\n\n| Stage | Slash command | When to run | Purpose |\n| :--- | :--- | :--- | :--- |\n| **0. Spec** | `/standards:00-spec` | New project, module, or big change | Author or update technical specs in `docs/spec/`. |\n| **1. Roadmap** | `/standards:01-roadmap` | Spec too large for a single PR | Partition `docs/spec/` into vertical slices on an integration branch. |\n| **2. Issue** | `/standards:02-issue` | Each PR (standalone or slice) | Draft strict, spec-driven issues. |\n| **3. Implement** | `/standards:03-implement` | Every PR | Implement features/fixes with spec sync & tests. |\n| **4. Docs** | `/standards:04-docs` | Before release | Audit docs for tone and factual accuracy. |\n| **5. Audit** | `/standards:05-audit` | Before release | Read-only pre-release readiness checklist. |\n| **6. Release** | `/standards:06-release` | When cutting a tag | Prepare changelog/manifests and tag default branch. |\n\n### Model & effort mental compass\n\nStart your `agy` session in **Build** (`medium`) as the default, then shift up to **Design** (`high`) or down to **Ship** (`low`) when the stage calls for it:\n\n| Gear | When to use | Stages | Model profile | Effort & mode |\n| :--- | :--- | :--- | :--- | :--- |\n| **1. Design** | Designing architecture, slicing epics, catching subtle drift, or stuck on a hard bug | `00-spec`, `01-roadmap` | Strongest reasoning model | `high` *(+ `plan` for `00-spec`, `01-roadmap`)* |\n| **2. Build** *(default)* | Day-to-day coding, tests, issue drafting, and doc reviews | `02-issue`, `03-implement`, `04-docs` | Fast, surgical coding model | `medium` |\n| **3. Ship** | Deterministic checklists and release steps where deep reasoning adds latency | `05-audit`, `06-release` | Fastest available (or same model) | `low` |\n\nFor concrete model picks and per-stage rationale, see [docs/models.md](./docs/models.md).\n\n---\n\n## Multi-stack domain rule routing\n\nAlways-on [`fragments/stack-routing.md`](fragments/stack-routing.md) (imported by [`rules/GEMINI.md`](rules/GEMINI.md)) inspects the current working directory (`CWD`) during planning, issue drafting, implementation, and auditing to load the matching standard:\n\n- **Go**: Triggered by `go.mod` $\\rightarrow$ enforces [standards/go.md](standards/go.md) (`go test -race ./...`, `go vet ./...`).\n- **Python**: Triggered by `pyproject.toml` / `setup.py` / `requirements.txt` $\\rightarrow$ enforces [standards/python.md](standards/python.md) (`ruff check .`, `ruff format --check .`, `mypy` / `pyright`, `pytest`).\n- **Java**: Triggered by `pom.xml` / `build.gradle` / `build.gradle.kts` $\\rightarrow$ enforces [standards/java.md](standards/java.md) (`./mvnw test` / `./gradlew check`).\n- **Embedded C/C++**: Triggered by `CMakeLists.txt` / `platformio.ini` / `Kconfig` / `*.ld` / `Makefile` (firmware) $\\rightarrow$ enforces [standards/embedded.md](standards/embedded.md) (deterministic memory, fixed-width types, ISR safety).\n- **Shell / Bash**: Triggered by `*.sh` / `*.bats` / `.bashrc.d/` / `bin/` $\\rightarrow$ enforces [standards/shell.md](standards/shell.md) (`kebab-case` public interfaces, `shellcheck`, `bats`).\n\nTo add a new stack (e.g. Rust, TypeScript), create `standards/<stack>.md` and add one row to `fragments/stack-routing.md`.\n\n---\n\n## Configuring Antigravity (`agy`)\n\n`agy-standards` is packaged as a native Antigravity plugin (`plugin.json`).\n\n- **Install from GitHub (`agy` >= 1.5.11):**\n\n  ```bash\n  agy plugin install https://github.com/bvarnai/agy-standards\n  ```\n\n- **Install from a local clone (symlink):** Linking the repository into `~/.gemini/config/plugins/` registers both the global rules (`rules/`) and all lifecycle skills (`skills/`) with a single directory symlink:\n\n  ```bash\n  mkdir -p ~/.gemini/config/plugins\n  ln -sfn \"<path-to-agy-standards>\" ~/.gemini/config/plugins/standards\n  ```\n\n---\n\n## 🤖 AI Disclosure\n\n![AI Assisted](https://img.shields.io/badge/AI-Assisted-blue?style=flat-square)\n\nThis project was developed with the assistance of AI tools. All AI-generated code has been reviewed, tested, and manually refined.\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/03-implement/SKILL.md",
+        "line": 40,
+        "snippet": "- Run the stack's automated test suite and static analysis commands from [`fragments/stack-routing.md`](../../fragments/stack-routing.md) (`go test -race ./...`, `go vet ./...`, `r",
+        "githubBlobUrl": "https://github.com/bvarnai/agy-standards/blob/a10dfe190f066e1d497d62ad06b1d3149ffe93b4/skills/03-implement/SKILL.md#L40"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.3.0",
+      "sha": "a10dfe190f066e1d497d62ad06b1d3149ffe93b4",
+      "scannedAt": "2026-11-27T10:33:16.686Z",
+      "riskTier": "low",
+      "capabilities": [
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}
