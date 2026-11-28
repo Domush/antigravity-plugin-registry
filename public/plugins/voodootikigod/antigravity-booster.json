@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "voodootikigod/antigravity-booster",
-  "sha": "59e0a829087ebd1974c9787cdf3c688199ecab9b",
+  "sha": "9aaa4e992222bdb5afb8430a0a0319d86c6efa51",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:13:28.614Z",
+  "scannedAt": "2026-11-28T00:24:47.765Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "antigravity-booster",
@@ -262,9 +262,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "lib/agy.mjs",
-        "line": 1200,
+        "line": 1303,
         "snippet": "join(realAllowedDir, '.npmrc'),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1200"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1303"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -273,9 +273,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "lib/agy.mjs",
-        "line": 1202,
+        "line": 1305,
         "snippet": "join(realAllowedDir, '.netrc'),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1202"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1305"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -284,9 +284,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "lib/agy.mjs",
-        "line": 1210,
+        "line": 1313,
         "snippet": "join(userHome, '.netrc'),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1210"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1313"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -295,9 +295,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "lib/agy.mjs",
-        "line": 1212,
+        "line": 1315,
         "snippet": "join(userHome, '.npmrc'),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1212"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1315"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -306,9 +306,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "lib/agy.mjs",
-        "line": 1218,
+        "line": 1321,
         "snippet": "join(homedir(), '.netrc'),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1218"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1321"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -317,9 +317,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "lib/agy.mjs",
-        "line": 1220,
+        "line": 1323,
         "snippet": "join(homedir(), '.npmrc'),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1220"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1323"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -330,7 +330,7 @@
         "file": ".agents/skills/modernize/scripts/audit.mjs",
         "line": 418,
         "snippet": "const res = cp.spawnSync(agyBin, ['--version'], { encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL', shell: process.platform === 'win32' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.agents/skills/modernize/scripts/audit.mjs#L418"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.agents/skills/modernize/scripts/audit.mjs#L418"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -341,7 +341,7 @@
         "file": ".agents/skills/modernize/scripts/audit.mjs",
         "line": 435,
         "snippet": "const res = cp.spawnSync(agyBin, ['--help'], { encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL', shell: process.platform === 'win32' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.agents/skills/modernize/scripts/audit.mjs#L435"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.agents/skills/modernize/scripts/audit.mjs#L435"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -352,7 +352,7 @@
         "file": ".agents/skills/modernize/scripts/audit.mjs",
         "line": 446,
         "snippet": "const res = cp.spawnSync(agyBin, ['models'], { encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL', shell: process.platform === 'win32' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.agents/skills/modernize/scripts/audit.mjs#L446"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.agents/skills/modernize/scripts/audit.mjs#L446"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -363,7 +363,7 @@
         "file": ".agents/skills/modernize/scripts/audit.mjs",
         "line": 953,
         "snippet": "cp.execFileSync('npm', ['pack', `@adlc/cli@${TARGET_ADLC_VERSION}`], { cwd: tempPackDir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 30000, killSignal: 'SIGKILL',",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.agents/skills/modernize/scripts/audit.mjs#L953"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.agents/skills/modernize/scripts/audit.mjs#L953"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -374,7 +374,7 @@
         "file": ".agents/skills/modernize/scripts/trust-anchor.mjs",
         "line": 120,
         "snippet": "cp.execFileSync('npm', ['pack', `@adlc/cli@${adlcVersion}`], { cwd: tmp, stdio: ['ignore', 'pipe', 'pipe'], timeout: 60000 });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.agents/skills/modernize/scripts/trust-anchor.mjs#L120"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.agents/skills/modernize/scripts/trust-anchor.mjs#L120"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -385,7 +385,7 @@
         "file": ".claude/skills/modernize/scripts/audit.mjs",
         "line": 418,
         "snippet": "const res = cp.spawnSync(agyBin, ['--version'], { encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL', shell: process.platform === 'win32' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.claude/skills/modernize/scripts/audit.mjs#L418"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.claude/skills/modernize/scripts/audit.mjs#L418"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -396,7 +396,7 @@
         "file": ".claude/skills/modernize/scripts/audit.mjs",
         "line": 435,
         "snippet": "const res = cp.spawnSync(agyBin, ['--help'], { encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL', shell: process.platform === 'win32' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.claude/skills/modernize/scripts/audit.mjs#L435"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.claude/skills/modernize/scripts/audit.mjs#L435"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -407,7 +407,7 @@
         "file": ".claude/skills/modernize/scripts/audit.mjs",
         "line": 446,
         "snippet": "const res = cp.spawnSync(agyBin, ['models'], { encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL', shell: process.platform === 'win32' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.claude/skills/modernize/scripts/audit.mjs#L446"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.claude/skills/modernize/scripts/audit.mjs#L446"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -418,7 +418,7 @@
         "file": ".claude/skills/modernize/scripts/audit.mjs",
         "line": 953,
         "snippet": "cp.execFileSync('npm', ['pack', `@adlc/cli@${TARGET_ADLC_VERSION}`], { cwd: tempPackDir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 30000, killSignal: 'SIGKILL',",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.claude/skills/modernize/scripts/audit.mjs#L953"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.claude/skills/modernize/scripts/audit.mjs#L953"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -429,18 +429,7 @@
         "file": ".claude/skills/modernize/scripts/trust-anchor.mjs",
         "line": 120,
         "snippet": "cp.execFileSync('npm', ['pack', `@adlc/cli@${adlcVersion}`], { cwd: tmp, stdio: ['ignore', 'pipe', 'pipe'], timeout: 60000 });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/.claude/skills/modernize/scripts/trust-anchor.mjs#L120"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "bin/agb.mjs",
-        "line": 208,
-        "snippet": "commit = execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: repoCwd, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/bin/agb.mjs#L208"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/.claude/skills/modernize/scripts/trust-anchor.mjs#L120"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -450,8 +439,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "bin/agb.mjs",
         "line": 209,
-        "snippet": "date = execFileSync('git', ['log', '-1', '--format=%cd', '--date=short'], { cwd: repoCwd, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/bin/agb.mjs#L209"
+        "snippet": "commit = execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: repoCwd, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();",
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/bin/agb.mjs#L209"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -460,9 +449,20 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "bin/agb.mjs",
-        "line": 211,
+        "line": 210,
+        "snippet": "date = execFileSync('git', ['log', '-1', '--format=%cd', '--date=short'], { cwd: repoCwd, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();",
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/bin/agb.mjs#L210"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/agb.mjs",
+        "line": 212,
         "snippet": "execFileSync('git', ['remote', 'get-url', 'origin'], { cwd: repoCwd, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim()",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/bin/agb.mjs#L211"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/bin/agb.mjs#L212"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -473,7 +473,7 @@
         "file": "evals/live-bench.mjs",
         "line": 416,
         "snippet": "const rNode = spawnSync(process.execPath, [bundlePath], { input: payloadJson, cwd: fxHome, env: childEnv, });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/live-bench.mjs#L416"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/live-bench.mjs#L416"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -484,7 +484,7 @@
         "file": "evals/live-bench.mjs",
         "line": 426,
         "snippet": "const rLauncher = spawnSync('/bin/sh', [launcherPath, bundlePath], { input: payloadJson, cwd: fxHome, env: childEnv, });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/live-bench.mjs#L426"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/live-bench.mjs#L426"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -495,7 +495,7 @@
         "file": "evals/live-bench.mjs",
         "line": 435,
         "snippet": "const rRunner = spawnSync('/bin/sh', [runnerPath, '--timeout', '9', bundlePath], { input: payloadJson, cwd: fxHome, env: childEnv, });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/live-bench.mjs#L435"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/live-bench.mjs#L435"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -506,7 +506,7 @@
         "file": "evals/subsystem-bench.mjs",
         "line": 638,
         "snippet": "const g = (...args) => execFileSync('git', args, { cwd: dir, encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/subsystem-bench.mjs#L638"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/subsystem-bench.mjs#L638"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -517,7 +517,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 816,
         "snippet": "const r2 = spawnSync('/bin/sh', [runnerPath, '--timeout', '9', bundlePath], { input: benignPayload, cwd: passwdHome2, encoding: 'utf8', env: { PATH: '/usr/bin:/bin', NODE_V8_COVERA",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L816"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L816"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -528,7 +528,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 839,
         "snippet": "const r3 = spawnSync('/bin/sh', [runnerPath, '--timeout', '9', bundlePath], { input: benignPayload, cwd: passwdHome3, encoding: 'utf8', env: { PATH: '/usr/bin:/bin', NODE_V8_COVERA",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L839"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L839"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -539,7 +539,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 864,
         "snippet": "const r4 = spawnSync('/bin/sh', [runnerPath, '--timeout', '9', bundlePath], { input: benignPayload, cwd: passwdHome4, encoding: 'utf8', env: { PATH: '/usr/bin:/bin', NODE_V8_COVERA",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L864"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L864"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -550,7 +550,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 901,
         "snippet": "const r5Allow = spawnSync('/bin/sh', [runnerPath, '--timeout', '5', missingChild], { input: manageListPayload, cwd: passwdHome5, encoding: 'utf8', env: { PATH: '/usr/bin:/bin', NOD",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L901"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L901"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -561,7 +561,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 913,
         "snippet": "const r5Deny = spawnSync('/bin/sh', [runnerPath, '--timeout', '5', missingChild], { input: manageSendPayload, cwd: passwdHome5, encoding: 'utf8', env: { PATH: '/usr/bin:/bin', NODE",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L913"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L913"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -572,7 +572,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 936,
         "snippet": "const r6 = spawnSync('/bin/sh', [runnerPath, '--timeout', '9', bundlePath], { input: benignPayload, cwd: passwdHome6, encoding: 'utf8', env: { PATH: '/usr/bin:/bin', NODE_V8_COVERA",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L936"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L936"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -583,7 +583,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 1243,
         "snippet": "const g = (...a) => execFileSync('git', a, { cwd: dir, encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L1243"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L1243"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -594,7 +594,7 @@
         "file": "evals/v13-enhancements-bench.mjs",
         "line": 1424,
         "snippet": "execFileSync('git', ['reset', '--hard', 'HEAD~2'], { cwd: repoBreaker });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/evals/v13-enhancements-bench.mjs#L1424"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/evals/v13-enhancements-bench.mjs#L1424"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -605,7 +605,7 @@
         "file": "hooks.json",
         "line": 9,
         "snippet": "/bin/sh bin/hook-runner.sh --timeout 9 dist/hooks/pre-tool-use.bundle.mjs",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks.json#L9"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks.json#L9"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -616,7 +616,7 @@
         "file": "hooks.json",
         "line": 21,
         "snippet": "/bin/sh bin/node-launcher.sh hooks/lifecycle.mjs PostToolUse",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks.json#L21"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks.json#L21"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -627,7 +627,7 @@
         "file": "hooks/policy/evaluate.mjs",
         "line": 49,
         "snippet": "const [, authority = '', rawPath = ''] = FILE_URL_PARTS.exec(value) ?? [];",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/policy/evaluate.mjs#L49"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/policy/evaluate.mjs#L49"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -638,7 +638,7 @@
         "file": "hooks/policy/evaluate.mjs",
         "line": 634,
         "snippet": "const head = SED_SUB_HEAD_RE.exec(expr);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/policy/evaluate.mjs#L634"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/policy/evaluate.mjs#L634"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -649,7 +649,7 @@
         "file": "hooks/policy/paths.mjs",
         "line": 79,
         "snippet": "const winInputDrive = isWin ? /^[a-zA-Z]:(?:\\/|$)/.exec(normInput) : null;",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/policy/paths.mjs#L79"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/policy/paths.mjs#L79"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -660,7 +660,7 @@
         "file": "hooks/policy/paths.mjs",
         "line": 80,
         "snippet": "const winBaseDrive = isWin ? /^[a-zA-Z]:(?:\\/|$)/.exec(normBase) : null;",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/policy/paths.mjs#L80"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/policy/paths.mjs#L80"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -671,7 +671,7 @@
         "file": "hooks/policy/paths.mjs",
         "line": 132,
         "snippet": "const targetWinDrive = isWin ? /^[a-zA-Z]:(?:\\/|$)/.exec(target) : null;",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/policy/paths.mjs#L132"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/policy/paths.mjs#L132"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -682,7 +682,7 @@
         "file": "hooks/session-start.mjs",
         "line": 181,
         "snippet": "execFileSync(process.execPath, [join(targetPluginRoot, 'dist', 'agb.mjs'), 'bootstrap'], { stdio: 'ignore', timeout: BOOTSTRAP_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/session-start.mjs#L181"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/session-start.mjs#L181"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -693,7 +693,7 @@
         "file": "hooks/session-start.mjs",
         "line": 324,
         "snippet": "const child = spawn( process.execPath, [selfPath, '--worker', pluginRoot, pluginDataDir, pkgVersion], { detached: true, stdio: 'ignore' }, );",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/hooks/session-start.mjs#L324"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/hooks/session-start.mjs#L324"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -704,7 +704,7 @@
         "file": "lib/accept.mjs",
         "line": 150,
         "snippet": "const m = /^diff --git a\\/(.+?) b\\/(.+)$/.exec(line);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/accept.mjs#L150"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/accept.mjs#L150"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -715,7 +715,7 @@
         "file": "lib/accept.mjs",
         "line": 158,
         "snippet": "const hm = headerRe.exec(line);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/accept.mjs#L158"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/accept.mjs#L158"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -726,7 +726,7 @@
         "file": "lib/accept.mjs",
         "line": 450,
         "snippet": "const diffText = execFileSync( 'git', [ '--no-pager', 'diff', '--no-ext-diff', '--no-color', '--src-prefix=a/', '--dst-prefix=b/', '--end-of-options', ref, ], { cwd: canonRepo, enc",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/accept.mjs#L450"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/accept.mjs#L450"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -737,7 +737,7 @@
         "file": "lib/acp-pool.mjs",
         "line": 63,
         "snippet": "const child = spawn(this.agyBin, this.args, { cwd: this.cwd, env: this.env, stdio: ['pipe', 'pipe', 'pipe'], });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/acp-pool.mjs#L63"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/acp-pool.mjs#L63"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -748,7 +748,7 @@
         "file": "lib/adlc-bridge.mjs",
         "line": 1040,
         "snippet": "const whichRes = spawnSync(lookupCmd, ['adlc'], { encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/adlc-bridge.mjs#L1040"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/adlc-bridge.mjs#L1040"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -759,7 +759,7 @@
         "file": "lib/adlc-bridge.mjs",
         "line": 1116,
         "snippet": "const out = execFileSync('ps', ['-p', String(pid), '-o', 'lstart='], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/adlc-bridge.mjs#L1116"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/adlc-bridge.mjs#L1116"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -770,7 +770,7 @@
         "file": "lib/adlc-bridge.mjs",
         "line": 1119,
         "snippet": "const out = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', `(Get-Process -Id ${pid} -ErrorAction SilentlyContinue).StartTime.Ticks`], { encoding: 'utf",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/adlc-bridge.mjs#L1119"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/adlc-bridge.mjs#L1119"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -781,7 +781,7 @@
         "file": "lib/adlc-bridge.mjs",
         "line": 1999,
         "snippet": "const child = spawn(cmd.command, cmd.args, { ...options, ...cmd.options });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/adlc-bridge.mjs#L1999"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/adlc-bridge.mjs#L1999"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -792,7 +792,7 @@
         "file": "lib/adlc-bridge.mjs",
         "line": 2036,
         "snippet": "const result = execFileSync(cmd.command, cmd.args, { ...options, ...cmd.options });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/adlc-bridge.mjs#L2036"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/adlc-bridge.mjs#L2036"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -803,7 +803,7 @@
         "file": "lib/adlc-bridge.mjs",
         "line": 2076,
         "snippet": "execFile(cmd.command, cmd.args, { ...options, ...cmd.options }, (error, stdout, stderr) => { try { verified.seal?.verifyUnchanged(); } catch (sealErr) { try { verified.seal?.releas",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/adlc-bridge.mjs#L2076"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/adlc-bridge.mjs#L2076"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -812,9 +812,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/agy.mjs",
-        "line": 255,
+        "line": 352,
         "snippet": "const m = AGY_ERROR_LINE_RE.exec(line);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L255"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L352"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -823,9 +823,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/agy.mjs",
-        "line": 1394,
+        "line": 1497,
         "snippet": "execFileSync('icacls.exe', [argsTempDir, '/inheritance:r', '/grant:r', `${process.env.USERNAME || 'CURRENT_USER'}:(OI)(CI)F`], { stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1394"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1497"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -834,9 +834,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/agy.mjs",
-        "line": 1708,
+        "line": 1811,
         "snippet": "p = spawn(launchBin, launchArgs, spawnOpts);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1708"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1811"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -845,9 +845,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/agy.mjs",
-        "line": 1744,
+        "line": 1847,
         "snippet": "execFileSync('systemctl', ['--user', 'stop', systemdUnit], { stdio: 'ignore', timeout: 5000 });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1744"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1847"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -856,9 +856,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/agy.mjs",
-        "line": 1750,
+        "line": 1853,
         "snippet": "try { execFileSync('taskkill', ['/pid', String(originalPid), '/T', '/F'], { stdio: 'ignore' }); } catch {}",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1750"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1853"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -867,9 +867,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "lib/agy.mjs",
-        "line": 1754,
+        "line": 1857,
         "snippet": "const pids = execFileSync('pgrep', ['-P', String(originalPid)], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim().split(/\\s+/);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/agy.mjs#L1754"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/agy.mjs#L1857"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -880,7 +880,7 @@
         "file": "lib/bootstrap.mjs",
         "line": 100,
         "snippet": "execSync('command -v jetski', { stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/bootstrap.mjs#L100"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/bootstrap.mjs#L100"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -891,7 +891,7 @@
         "file": "lib/bootstrap.mjs",
         "line": 156,
         "snippet": "execFileSync(runnerBin, ['plugin', 'install', pluginPath], { stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/bootstrap.mjs#L156"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/bootstrap.mjs#L156"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -902,7 +902,7 @@
         "file": "lib/bootstrap.mjs",
         "line": 158,
         "snippet": "execFileSync(runnerBin, ['plugin', 'install', '.'], { cwd: pluginPath, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/bootstrap.mjs#L158"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/bootstrap.mjs#L158"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -913,7 +913,7 @@
         "file": "lib/bootstrap.mjs",
         "line": 320,
         "snippet": "execFileSync(resolvedAgyBin, ['--version'], { stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/bootstrap.mjs#L320"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/bootstrap.mjs#L320"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -924,7 +924,7 @@
         "file": "lib/browser-gate.mjs",
         "line": 293,
         "snippet": "const stdout = execFileSync(shellArgs[0], shellArgs[1], { cwd: opts.worktree ? realpathSync(resolve(opts.worktree)) : realRepo, encoding: 'utf8', timeout: CHECK_CMD_TIMEOUT_MS, std",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/browser-gate.mjs#L293"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/browser-gate.mjs#L293"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -935,7 +935,7 @@
         "file": "lib/context-slice.mjs",
         "line": 455,
         "snippet": "while ((m = exportDiffRe.exec(diffText)) !== null) {",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/context-slice.mjs#L455"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/context-slice.mjs#L455"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -946,7 +946,7 @@
         "file": "lib/context-slice.mjs",
         "line": 468,
         "snippet": "const out = execFileSync(codegraphBin, args, { cwd, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 2 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'], }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/context-slice.mjs#L468"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/context-slice.mjs#L468"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -957,7 +957,7 @@
         "file": "lib/context-slice.mjs",
         "line": 543,
         "snippet": "const out = execFileSync(codegraphBin, ['explore', '--', queryTerms.join(' ')], { cwd: graphRoot, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 2 * 1024 * 1024, stdio: ['ignore'",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/context-slice.mjs#L543"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/context-slice.mjs#L543"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -968,7 +968,7 @@
         "file": "lib/context-slice.mjs",
         "line": 1097,
         "snippet": "while ((m = importRe.exec(content)) !== null) {",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/context-slice.mjs#L1097"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/context-slice.mjs#L1097"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -979,7 +979,7 @@
         "file": "lib/control-ipc.mjs",
         "line": 33,
         "snippet": "const out = execFileSync('ps', ['-p', String(pid), '-o', 'lstart='], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/control-ipc.mjs#L33"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/control-ipc.mjs#L33"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -990,7 +990,7 @@
         "file": "lib/control-ipc.mjs",
         "line": 39,
         "snippet": "const out = execFileSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-Command', `(Get-Process -Id ${pid} -ErrorAction SilentlyContinue).StartTime.Ticks`, ], { encoding: ",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/control-ipc.mjs#L39"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/control-ipc.mjs#L39"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1001,7 +1001,7 @@
         "file": "lib/doctor-models.mjs",
         "line": 45,
         "snippet": "return execFileSync(cmd, args, { env, encoding: 'utf8', timeout: 15000 });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor-models.mjs#L45"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor-models.mjs#L45"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1012,7 +1012,7 @@
         "file": "lib/doctor-models.mjs",
         "line": 48,
         "snippet": "return execFileSync(direct, ['models'], { env, encoding: 'utf8', timeout: 15000 });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor-models.mjs#L48"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor-models.mjs#L48"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1023,7 +1023,7 @@
         "file": "lib/doctor-models.mjs",
         "line": 59,
         "snippet": "const match = MODEL_ROW.exec(line.trim());",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor-models.mjs#L59"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor-models.mjs#L59"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1034,7 +1034,7 @@
         "file": "lib/doctor.mjs",
         "line": 228,
         "snippet": "execFileSync('git', ['init', '-q', repo], { stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L228"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L228"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1045,7 +1045,7 @@
         "file": "lib/doctor.mjs",
         "line": 254,
         "snippet": "return spawnSync(process.execPath, [join(pluginRoot, 'dist', 'hooks', 'pre-tool-use.bundle.mjs')], { cwd: pluginRoot, input: JSON.stringify(payload), encoding: 'utf8', env: hookEnv",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L254"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L254"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1056,7 +1056,7 @@
         "file": "lib/doctor.mjs",
         "line": 261,
         "snippet": "return spawnSync(shellBin, shellArgs, { cwd: pluginRoot, input: JSON.stringify(payload), encoding: 'utf8', // NODE_V8_COVERAGE is pinned empty: Node re-injects it into an explicit ",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L261"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L261"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1067,7 +1067,7 @@
         "file": "lib/doctor.mjs",
         "line": 636,
         "snippet": "const rootCommit = execSync('git rev-list --max-parents=0 HEAD', { cwd: repo, encoding: 'utf8' }).trim().split(/\\s+/)[0];",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L636"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L636"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1078,7 +1078,7 @@
         "file": "lib/doctor.mjs",
         "line": 646,
         "snippet": "originUrl = execSync('git config --get remote.origin.url', { cwd: repo, encoding: 'utf8' }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L646"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L646"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1089,7 +1089,7 @@
         "file": "lib/doctor.mjs",
         "line": 1130,
         "snippet": "execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', 'exit 0'], { stdio: 'ignore', timeout: 5000, env });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L1130"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L1130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1100,7 +1100,7 @@
         "file": "lib/doctor.mjs",
         "line": 1143,
         "snippet": "execFileSync('bwrap', probeArgs, { stdio: 'ignore', timeout: 5000, env });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L1143"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L1143"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1111,7 +1111,7 @@
         "file": "lib/doctor.mjs",
         "line": 1164,
         "snippet": "execFileSync('sandbox-exec', ['-p', '(version 1) (allow default)', 'true'], { stdio: 'ignore', env });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L1164"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L1164"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1122,7 +1122,7 @@
         "file": "lib/doctor.mjs",
         "line": 1926,
         "snippet": "execFileSync(codegraphBin, ['init'], { cwd: realRepo, env, stdio: 'ignore', timeout: 15_000 });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/doctor.mjs#L1926"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/doctor.mjs#L1926"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1133,7 +1133,7 @@
         "file": "lib/gate-ticket.mjs",
         "line": 37,
         "snippet": "return execFileSync('git', ['-c', `core.hooksPath=${resolveNullHooksPath()}`, ...args], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/gate-ticket.mjs#L37"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/gate-ticket.mjs#L37"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1144,7 +1144,7 @@
         "file": "lib/gates.mjs",
         "line": 95,
         "snippet": "const res = spawnSync('which', ['bwrap'], { env });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/gates.mjs#L95"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/gates.mjs#L95"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1155,7 +1155,7 @@
         "file": "lib/handoff.mjs",
         "line": 34,
         "snippet": "return execFileSync( 'git', [ '--no-pager', 'diff', '--no-ext-diff', '--no-color', '--src-prefix=a/', '--dst-prefix=b/', '--end-of-options', baseRefSha, ], { cwd: candidateDir, enc",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/handoff.mjs#L34"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/handoff.mjs#L34"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1166,7 +1166,7 @@
         "file": "lib/holdout.mjs",
         "line": 379,
         "snippet": "execFileSync(process.execPath, ['--check', tmpPath], { cwd: targetDir, timeout: 10_000, stdio: ['ignore', 'pipe', 'pipe'], });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/holdout.mjs#L379"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/holdout.mjs#L379"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1177,7 +1177,7 @@
         "file": "lib/holdout.mjs",
         "line": 571,
         "snippet": "while ((m = re.exec(stripped)) !== null) {",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/holdout.mjs#L571"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/holdout.mjs#L571"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1188,7 +1188,7 @@
         "file": "lib/holdout.mjs",
         "line": 689,
         "snippet": "execFileSync( 'git', ['-c', `core.hooksPath=${NULL_HOOKS_PATH}`, 'checkout', '--', '.'], { cwd: worktreePath, stdio: 'ignore' } );",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/holdout.mjs#L689"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/holdout.mjs#L689"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1199,7 +1199,7 @@
         "file": "lib/holdout.mjs",
         "line": 694,
         "snippet": "execFileSync( 'git', [ '-c', `core.hooksPath=${NULL_HOOKS_PATH}`, 'clean', '-fd', '--', ':(exclude)AGENTS.md', ':(exclude).adlc', ':(exclude).adlc/**', ':(exclude).booster', ':(exc",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/holdout.mjs#L694"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/holdout.mjs#L694"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1210,7 +1210,7 @@
         "file": "lib/json.mjs",
         "line": 166,
         "snippet": "while ((match = fenceRe.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/json.mjs#L166"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/json.mjs#L166"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1221,7 +1221,7 @@
         "file": "lib/migrate.mjs",
         "line": 127,
         "snippet": "const out = execFileSync(agyBin, ['plugin', 'validate', dir], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 60_000, env: { ...process.env, HOME: home }, });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migrate.mjs#L127"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migrate.mjs#L127"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1232,7 +1232,7 @@
         "file": "lib/migrate.mjs",
         "line": 194,
         "snippet": "return execFileSync('npm', ['root', '-g'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 10_000 }).trim() || null;",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migrate.mjs#L194"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migrate.mjs#L194"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1243,7 +1243,7 @@
         "file": "lib/migrate.mjs",
         "line": 267,
         "snippet": "execFileSync(agyBin, ['plugin', 'uninstall', name], { stdio: ['ignore', 'ignore', 'pipe'], timeout: 60_000, env: { ...process.env, HOME: home }, });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migrate.mjs#L267"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migrate.mjs#L267"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1254,7 +1254,7 @@
         "file": "lib/migrate.mjs",
         "line": 448,
         "snippet": "child = spawn(args[0], args.slice(1), { cwd: launcherCwd, detached: true, stdio: 'ignore', env: childEnv });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migrate.mjs#L448"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migrate.mjs#L448"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1265,7 +1265,7 @@
         "file": "lib/migrate.mjs",
         "line": 459,
         "snippet": "? spawn('cmd.exe', ['/c', script], { detached: true, stdio: 'ignore', env: childEnv })",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migrate.mjs#L459"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migrate.mjs#L459"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1276,7 +1276,7 @@
         "file": "lib/migrate.mjs",
         "line": 460,
         "snippet": ": spawn('/bin/sh', [script], { detached: true, stdio: 'ignore', env: childEnv });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migrate.mjs#L460"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migrate.mjs#L460"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1287,7 +1287,7 @@
         "file": "lib/migration-lock.mjs",
         "line": 50,
         "snippet": "exec: (cmd, args) => execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }),",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migration-lock.mjs#L50"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migration-lock.mjs#L50"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1298,7 +1298,7 @@
         "file": "lib/migration-lock.mjs",
         "line": 74,
         "snippet": "const parsed = Date.parse(String(deps.exec('ps', ['-p', String(pid), '-o', 'lstart=']) ?? '').trim());",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migration-lock.mjs#L74"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migration-lock.mjs#L74"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1309,7 +1309,7 @@
         "file": "lib/migration-lock.mjs",
         "line": 325,
         "snippet": "const run = uninstall ?? (() => execFileSync(agyBin, ['plugin', 'uninstall', 'antigravity-booster'], { stdio: ['ignore', 'ignore', 'pipe'], env: { ...process.env, HOME: home }, tim",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/migration-lock.mjs#L325"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/migration-lock.mjs#L325"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1320,7 +1320,7 @@
         "file": "lib/models.mjs",
         "line": 345,
         "snippet": "const m = /^(.+)-(low|medium|high|xhigh)$/.exec(slug);",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/models.mjs#L345"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/models.mjs#L345"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1331,7 +1331,7 @@
         "file": "lib/ndjson-worker.mjs",
         "line": 85,
         "snippet": "execFileSync('taskkill', ['/pid', String(pid), '/T', '/F'], { stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/ndjson-worker.mjs#L85"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/ndjson-worker.mjs#L85"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1342,7 +1342,7 @@
         "file": "lib/ndjson-worker.mjs",
         "line": 92,
         "snippet": "const out = execFileSync('pgrep', ['-P', String(pid)], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], }).trim();",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/ndjson-worker.mjs#L92"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/ndjson-worker.mjs#L92"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1353,11 +1353,29 @@
         "file": "lib/ndjson-worker.mjs",
         "line": 352,
         "snippet": "const child = spawn(launchBin, launchArgs, { cwd: this.cwd, env: spawnEnv, stdio: ['pipe', 'pipe', 'pipe'], detached: process.platform !== 'win32', });",
-        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/59e0a829087ebd1974c9787cdf3c688199ecab9b/lib/ndjson-worker.mjs#L352"
+        "githubBlobUrl": "https://github.com/voodootikigod/antigravity-booster/blob/9aaa4e992222bdb5afb8430a0a0319d86c6efa51/lib/ndjson-worker.mjs#L352"
       }
     ]
   },
   "history": [
+    {
+      "version": "2.0.0",
+      "sha": "9aaa4e992222bdb5afb8430a0a0319d86c6efa51",
+      "scannedAt": "2026-11-28T00:24:47.765Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "credential_access",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "2.0.0",
       "sha": "59e0a829087ebd1974c9787cdf3c688199ecab9b",

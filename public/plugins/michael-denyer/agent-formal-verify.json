@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "michael-denyer/agent-formal-verify",
-  "sha": "ec910aa88d4863468e4385b5f297ced5a3b91df9",
+  "sha": "4a2af9141a155a6073d8ab7596cdb6a4b7d10566",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:13:19.282Z",
+  "scannedAt": "2026-11-28T00:24:23.385Z",
   "manifest": {
     "manifestPath": ".antigravity-plugin/plugin.json",
     "name": "agent-formal-verify",
@@ -62,7 +62,7 @@
         "file": "skills/formal-verify/scripts/processes.py",
         "line": 80,
         "snippet": "process = subprocess.Popen([\"ps\", \"-A\", \"-o\", columns], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/processes.py#L80"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/processes.py#L80"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -73,7 +73,7 @@
         "file": "skills/formal-verify/scripts/processes.py",
         "line": 213,
         "snippet": "process = subprocess.Popen(command, **kwargs)",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/processes.py#L213"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/processes.py#L213"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -84,7 +84,7 @@
         "file": "skills/formal-verify/scripts/storage.py",
         "line": 130,
         "snippet": "done = subprocess.run([\"df\", \"-lkP\"], capture_output=True, text=True, check=False)",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/storage.py#L130"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/storage.py#L130"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -95,7 +95,18 @@
         "file": "skills/formal-verify/scripts/sync.py",
         "line": 101,
         "snippet": "done = subprocess.run([\"git\", \"-C\", str(root), *arguments], capture_output=True, text=True, check=False)",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/sync.py#L101"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/sync.py#L101"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/kani.py",
+        "line": 94,
+        "snippet": "(work / \"CACHEDIR.TAG\").write_text(\"Signature: 8a477f597d28d172789f06886806bc55\\n\", encoding=\"ascii\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/kani.py#L94"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -104,9 +115,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/lean.py",
-        "line": 349,
+        "line": 348,
         "snippet": "module_list.write_text(\"\".join(name + \"\\n\" for name in modules), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/lean.py#L349"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/lean.py#L348"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -115,9 +126,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/lean.py",
-        "line": 422,
+        "line": 426,
         "snippet": "replay_list.write_text(\"\".join(module + \"\\n\" for module in sorted(replayed)), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/lean.py#L422"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/lean.py#L426"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -127,8 +138,8 @@
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/lean_mutations.py",
         "line": 192,
-        "snippet": "copy.write_text(mutation.source, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/lean_mutations.py#L192"
+        "snippet": "copy.write_text(source, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/lean_mutations.py#L192"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -137,9 +148,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/mutate.py",
-        "line": 183,
-        "snippet": "(copy / model.relative_to(project)).write_text(mutation.source, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/mutate.py#L183"
+        "line": 187,
+        "snippet": "(copy / model.relative_to(project)).write_text(mutation.apply(), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/mutate.py#L187"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -148,31 +159,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/tlc.py",
-        "line": 225,
+        "line": 239,
         "snippet": "(directory / \"MC.cfg\").write_text(config, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L225"
-      },
-      {
-        "id": "CODE_PY_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes or deletes files on the local filesystem.",
-        "file": "skills/formal-verify/scripts/tlc.py",
-        "line": 525,
-        "snippet": "dest.write_text(source, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L525"
-      },
-      {
-        "id": "CODE_PY_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes or deletes files on the local filesystem.",
-        "file": "skills/formal-verify/scripts/tlc.py",
-        "line": 527,
-        "snippet": "dest.write_bytes(module.read_bytes())",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L527"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/tlc.py#L239"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -182,8 +171,30 @@
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/tlc.py",
         "line": 539,
+        "snippet": "dest.write_text(source, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/tlc.py#L539"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 541,
+        "snippet": "dest.write_bytes(module.read_bytes())",
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/tlc.py#L541"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/formal-verify/scripts/tlc.py",
+        "line": 553,
         "snippet": "shutil.rmtree(directory / \"states\", ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L539"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/tlc.py#L553"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -192,9 +203,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/tlc.py",
-        "line": 544,
+        "line": 558,
         "snippet": "(directory / f\"{wrapper}.tla\").write_text(f\"---- MODULE {wrapper} ----\\nEXTENDS {name}\\n{invariant} == ~{operator}\\n====\\n\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L544"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/tlc.py#L558"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -203,9 +214,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/formal-verify/scripts/tlc.py",
-        "line": 556,
+        "line": 570,
         "snippet": "shutil.rmtree(directory, ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/scripts/tlc.py#L556"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/scripts/tlc.py#L570"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -216,7 +227,7 @@
         "file": "AGENTS.md",
         "line": 9,
         "snippet": "- `bash tests/models.sh` runs the bundled examples and their mutations through TLC, Lean and Kani. CI runs it as the `models` job.",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/AGENTS.md#L9"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/AGENTS.md#L9"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -227,7 +238,7 @@
         "file": "skills/formal-verify/SKILL.md",
         "line": 28,
         "snippet": "For each model, run `python3 <skill-dir>/scripts/sync.py <model files> --source <file> ... --name <name> ...` with the source files and the covered functions and shared variables t",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L28"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/SKILL.md#L28"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -238,7 +249,7 @@
         "file": "skills/formal-verify/SKILL.md",
         "line": 56,
         "snippet": "- When a target needs Kani, run `bash <skill-dir>/scripts/setup.sh rust`. Before any agent starts, declare `cfg(kani)` in each target crate's `Cargo.toml`, a moved harness's produc",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L56"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/SKILL.md#L56"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -249,7 +260,7 @@
         "file": "skills/formal-verify/SKILL.md",
         "line": 57,
         "snippet": "- When a target needs TLA+, run `bash <skill-dir>/scripts/setup.sh tla`.",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L57"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/SKILL.md#L57"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -260,7 +271,7 @@
         "file": "skills/formal-verify/SKILL.md",
         "line": 58,
         "snippet": "- When a target needs Lean, every Lean model in the repository shares one Lake project. If the repository has none, copy `lakefile.toml`, `lake-manifest.json` and `lean-toolchain` ",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L58"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/SKILL.md#L58"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -271,7 +282,7 @@
         "file": "skills/formal-verify/SKILL.md",
         "line": 76,
         "snippet": "Run every existing model's checker and mutations once, before any agent changes a model, and record the results. Then record what the models specify with `python3 <skill-dir>/scrip",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L76"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/SKILL.md#L76"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -282,11 +293,22 @@
         "file": "skills/formal-verify/SKILL.md",
         "line": 92,
         "snippet": "When the agents have reported, delete each moved harness's old file, and its crate, workspace entry and CI steps once they hold nothing else. Then rerun every check in this thread:",
-        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/ec910aa88d4863468e4385b5f297ced5a3b91df9/skills/formal-verify/SKILL.md#L92"
+        "githubBlobUrl": "https://github.com/michael-denyer/agent-formal-verify/blob/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/skills/formal-verify/SKILL.md#L92"
       }
     ]
   },
   "history": [
+    {
+      "version": "0.4.14",
+      "sha": "4a2af9141a155a6073d8ab7596cdb6a4b7d10566",
+      "scannedAt": "2026-11-28T00:24:23.385Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    },
     {
       "version": "0.4.14",
       "sha": "ec910aa88d4863468e4385b5f297ced5a3b91df9",

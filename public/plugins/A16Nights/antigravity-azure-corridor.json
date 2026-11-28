@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "A16Nights/antigravity-azure-corridor",
-  "sha": "44bad76b9122ef8040d099a24bd3ff1fb049e500",
+  "sha": "acb838330d73c8af402f91c6bc61ffd3f24acb6e",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:18:09.159Z",
+  "scannedAt": "2026-11-28T00:24:52.784Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "azure-corridor",
-    "displayName": "苍蓝回廊",
-    "version": "1.2.2",
+    "displayName": "苍蓝回廊——会话与工作区管理",
+    "version": "1.2.4",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -27,7 +27,7 @@
       {
         "name": "azure-corridor",
         "slashCommand": "/azure-corridor",
-        "description": "苍蓝回廊（Azure Corridor）：纯官方原生 Antigravity 2.35+ 会话与工作区管理面板。100% 同步官方 ConversationService 与工作区配置，支持全文搜索、官方工作区浏览、置顶、收藏、原生标签/分组、归档箱、批量操作、新建会话、跨工作区转移续聊与官方永久删除。",
+        "description": "苍蓝回廊——会话与工作区管理（Azure Corridor）：纯官方原生 Antigravity 2.35+ 会话与工作区管理面板。100% 同步官方 ConversationService 与工作区配置，支持全文搜索、自选快捷标签筛选栏、官方工作区浏览、置顶、收藏、原生标签、官方归档箱、批量操作、指定官方模型新建会话、跨工作区转移续聊与官方永久删除。",
         "disableModelInvocation": false,
         "file": "skills/azure-corridor/SKILL.md"
       }
@@ -48,8 +48,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝回廊 · Azure Corridor\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-corridor/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-corridor?style=flat-square&label=Release&color=3b82f6&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-corridor/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-corridor?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-3b82f6?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>100% 纯官方原生 Antigravity 2.35+ 会话与工作区同步管理 · FTS5 全文检索 · 跨工作区转移续聊 · 原生标签/分组与官方归档箱</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n面向 **Google Antigravity 2.35+** 的纯官方原生会话与工作区管理增强面板（Sidecar + 独立 Web UI）。100% 直连 Antigravity 官方 `ConversationService` 与工作区配置，并结合 `node:sqlite` 查询原生 `conversations_fts` 索引，实现毫秒级全文搜索、官方工作区聚合与新建、置顶/收藏/原生标签与官方分组、官方归档箱、批量操作、跨工作区转移续聊与官方永久删除。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>⚡ 原生秒切 & FTS5 全文检索</h4>\n基于 <code>node:sqlite</code> 直查原生 <code>conversations_fts</code> 索引，毫秒检索标题、正文与代码片段；点击会话通过官方原生协议秒切。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🗂️ 100% 官方原生会话与工作区同步</h4>\n直连官方 <code>ConversationService</code> 与工作区配置，实时同步官方工作区列表、分组、原生标签、置顶、收藏与官方归档状态。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🔀 新建会话 & 跨工作区转移续聊</h4>\n支持按指定工作区直接新建会话，并可将任意历史会话一键跨工作区转移续聊，工作上下文无缝衔接。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>📦 批量整理、官方归档箱与永久删除</h4>\n开启批量管理后支持批量归档、分组、打标或清理；归档箱与官方原生归档完全双向同步，支持恢复或二次确认官方永久删除。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<p align=\"center\">\n  <a href=\"assets/readme/preview-panel.png\"><img src=\"assets/readme/preview-panel.png\" alt=\"苍蓝回廊会话管理面板预览\" width=\"90%\"></a>\n  <br><strong>苍蓝回廊 · FTS5 全文检索、多维筛选与会话整理工作台</strong>\n  <br><sub>毫秒级 FTS5 正文搜索、分组/标签/排序组合筛选、官方已归档同步徽标、行内改名与置顶/收藏/回看/归档操作</sub>\n</p>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 原生会话秒切与多维 FTS5 全文检索\n- **点击标题原生秒切**：通过 Antigravity Sidecar 原生 `toggle-conversation` 协议直接跳转并激活目标会话，搭配独立的「复制会话 ID」按钮。\n- **FTS5 对话正文全文搜索**：基于 Node.js 内置 `node:sqlite` 直接查询 Antigravity 原生 `conversations_fts` 全文索引，毫秒级检索历史对话标题、正文与代码片段。\n- **多维组合筛选与排序**：支持按全部会话、置顶、`★ 已收藏`、官方分组、原生标签、官方工作区与官方归档状态组合筛选与排序。\n\n### 2. 100% 官方原生会话、工作区与分组双向同步\n- **直连官方 `ConversationService`**：置顶、收藏、行内重命名、原生标签、官方分组、归档与恢复全部通过官方原生接口落盘，与 Antigravity 原生侧栏 100% 实时一致。\n- **官方工作区聚合与新建会话**：自动读取本地已配置的官方工作区，支持按工作区聚合浏览，并在面板内直接向任意工作区新建会话。\n\n### 3. 跨工作区转移续聊、官方具体模型选择与批量管理\n- **跨工作区转移续聊**：支持将已有会话一键转移到另一个目标工作区继续对话，告别换目录重新铺背景的烦恼。\n- **实时官方具体模型选择 & 默认沿用当前模型**：新建会话与跨工作区转移续聊均实时拉取本机 Antigravity 官方具体模型列表（同时保留通用档位兜底），默认选项自动识别并沿用原会话或当前活跃对话正在使用的官方模型，避免创建后被回退到默认档位。\n- **批量整理与官方归档箱**：开启批量管理后支持多选批量分组、打标、收藏、归档或恢复；归档箱与官方归档完全同步，支持随时恢复或经二次确认执行官方永久删除。\n\n### 4. 苍蓝统一视觉与交互体系\n- **Neko Glass 毛玻璃界面**：支持深色 / 浅色双主题、自定义毛玻璃下拉框（`AzureSelect`）、7px 细圆角滚动条与切回面板静默刷新。\n- **跨插件共享「苍蓝主题色调中心」**：内置 6 套官方配色预设 + 自定义主副双色取色器 + 4 个自定义保存栏位，与苍蓝全系插件实时联动。\n- **左侧栏入口开关、独立 Web UI 与更新检查**：顶栏一键切换左侧栏快捷入口显隐、在系统浏览器全屏打开独立 `Web UI`、点击版本号实时检查 GitHub 最新 Release。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  DB[\"Antigravity 原生 FTS5<br/>conversations_fts\"] -->|\"只读全文检索 (node:sqlite)\"| C[\"苍蓝回廊 Sidecar\"]\n  SVC[\"Antigravity 官方<br/>ConversationService &amp; 工作区配置\"] <-->|\"100% 原生读写同步\"| C\n  C -->|\"原生协议\"| AGY[\"秒切会话 / 新建会话 / 跨工作区续聊\"]\n  C -->|\"双向同步\"| ARC[\"官方归档箱<br/>恢复 / 二次确认永久删除\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-corridor.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-corridor`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-corridor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-corridor\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-azure-corridor.git ~/.gemini/config/plugins/azure-corridor\n```\n\n重启或重载 Antigravity（`Ctrl+R`），在 **Plugins** 面板启用 **苍蓝回廊** 即可在左侧栏或右侧辅助面板打开。\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **回廊轻量界面偏好**：`~/.gemini/azure-corridor/`（会话元数据、分组、标签与归档全部直连 Antigravity 官方原生存储，无需维护平行影子库）\n- **苍蓝套件左侧栏显示配置**：`~/.gemini/azure-sidebar-nav.json`\n- **苍蓝套件共享主题配置**：`~/.gemini/azure-theme.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 10 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊** &nbsp;`✦ 当前仓库` | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 纯官方原生会话与工作区同步管理、FTS5 全文检索、跨工作区转移续聊、官方具体模型选择与官方归档箱 |\n| 🌌 **蓝汐 · 潮汐认知图谱** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 内部思考语言简体中文 / 英文双档热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n| 🍃 **苍蓝流笺** | [antigravity-azure-drop](https://github.com/A16Nights/antigravity-azure-drop) | 零 `app.asar` 侵入、拖拽与粘贴插入原生文件标签、无损 PNG 截图落盘、图片缩略图灯箱与顶栏面包屑右键菜单 |\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
-  "latestReleaseNotes": "## 更新亮点\n\n- **实时拉取 Antigravity 官方具体模型列表**：新建会话与「跨工作区转移续聊」弹窗均新增实时官方模型选择（通过本机 Language Server `GetUserStatus` 自动过滤并列出全部官方原厂模型，底部保留 `pro / flash / flash_lite` 通用档位兜底）。\n- **默认选项改为自动沿用当前使用模型**：\n  - **转移工作区**时，优先识别并沿用原会话最近一次实际使用的官方具体模型；\n  - **新建会话**时，优先沿用当前打开对话或本机最近活跃会话使用的官方具体模型，并回退到客户端官方默认模型，避免被官方接口空参默默降级成 `flash`。\n- **弹窗实时展示具体模型名称**：首项直观显示如 `默认（当前使用：Gemini 4 Neon (High)）`，切换不同源会话时自动匹配对应模型。\n- **文档与苍蓝套件互链同步**：同步更新中英文 README 与苍蓝套件 10 款插件生态列表。\n\n## 升级方式\n在插件目录执行 `git pull` 后按 `Ctrl+R` 重载 Antigravity 即可生效。",
+  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝回廊——会话与工作区管理 · Azure Corridor\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-corridor/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-corridor?style=flat-square&label=Release&color=3b82f6&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-corridor/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-corridor?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-3b82f6?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>苍蓝回廊——会话与工作区管理 · 100% 纯官方原生同步 · FTS5 全文检索 · 自选快捷标签栏 · 跨工作区转移续聊 · 首次新手引导</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n**苍蓝回廊——会话与工作区管理**（Azure Corridor）是面向 **Google Antigravity 2.35+** 的纯官方原生会话与工作区管理增强面板（Sidecar + 独立 Web UI）。100% 直连 Antigravity 官方 `ConversationService` 与工作区配置，并结合 `node:sqlite` 查询原生 `conversations_fts` 索引，提供毫秒级全文搜索、官方工作区聚合与新建、自选快捷标签筛选栏、指定官方具体模型新建/跨工作区转移续聊、批量整理、官方归档箱、二次确认官方永久删除，以及开箱即用的 5 步交互式首次新手引导。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>⚡ 原生秒切 &amp; FTS5 全文检索</h4>\n基于 <code>node:sqlite</code> 直查原生 <code>conversations_fts</code> 索引，毫秒检索标题、标签、正文与代码片段；点击标题通过官方原生协议秒切会话。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🏷️ 100% 官方原生同步 &amp; 自选快捷标签栏</h4>\n直连官方 <code>ConversationService</code> 与工作区配置，实时同步置顶、收藏、原生标签与官方归档；常用 <code>#标签</code> 可钉选到顶部快捷筛选栏一键直达。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🔀 指定官方模型新建 &amp; 跨工作区转移续聊</h4>\n实时拉取本机可用官方具体模型，默认自动沿用原会话或当前活跃对话的模型；一键把历史会话带上下文转移到目标工作区无缝续聊。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🧭 5 步交互新手引导 &amp; 官方归档箱</h4>\n首次打开自动弹出交互式教程，支持「定位到界面」实时脉冲高亮控件，顶栏 <code>? 指南</code> 随时重看；批量整理与归档箱 100% 同步官方。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<p align=\"center\">\n  <a href=\"assets/readme/preview-panel.png\"><img src=\"assets/readme/preview-panel.png\" alt=\"苍蓝回廊——会话与工作区管理主界面预览\" width=\"90%\"></a>\n  <br><strong>苍蓝回廊——会话与工作区管理 · 主界面工作台</strong>\n  <br><sub>FTS5 毫秒全文搜索、工作区/标签/排序组合筛选、「全部 / 置顶 / 收藏 / 运行中 / + 快捷标签」自选标签筛选栏、卡片快捷编辑标签与转移工作区</sub>\n</p>\n\n<p align=\"center\">\n  <a href=\"assets/readme/preview-onboarding.png\"><img src=\"assets/readme/preview-onboarding.png\" alt=\"苍蓝回廊首次使用交互式新手引导弹窗\" width=\"68%\"></a>\n  <br><strong>首次使用 5 步交互式新手引导弹窗</strong>\n  <br><sub>分步介绍核心用法、支持点击「定位搜索框 / 快捷标签 / 新建按钮」在页面上脉冲高亮真实控件，并支持顶栏 <code>? 指南</code> 随时重看</sub>\n</p>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 原生会话秒切、FTS5 全文检索与自选快捷标签栏\n- **点击标题原生秒切**：通过 Antigravity Sidecar 原生 `toggle-conversation` 协议直接跳转并激活目标会话，搭配行内改名与「复制 ID」快捷按钮。\n- **FTS5 对话正文全文搜索**：基于 Node.js 内置 `node:sqlite` 直接查询 Antigravity 原生 `conversations_fts` 全文索引，毫秒级检索历史对话标题、标签、正文与代码片段。\n- **自选快捷标签筛选栏**：在「全部 / 📌 置顶 / ★ 收藏 / ● 运行中」快捷行末尾点击 **`+ 快捷标签`**，即可挑选常用官方标签（或直接新建标签）钉选成顶部快捷胶囊，一键切换并可叠加置顶/收藏筛选；点击会话卡片里的任意 `#标签` 徽章也能直接按该标签筛选。\n\n### 2. 100% 官方原生会话与工作区双向同步\n- **直连官方 `ConversationService`**：置顶、收藏、行内重命名、原生标签、归档与恢复全部直接写入官方原生接口，与 Antigravity 原生侧栏 100% 实时一致；聚焦「工作区 + 标签」高频整理路径，避免多余概念干扰（历史分组字段保留在编辑弹窗默认折叠的高级兼容项中）。\n- **官方工作区聚合与新建会话**：自动读取本地已配置的官方工作区，支持按工作区聚合浏览每个项目的活跃会话，并在面板内直接向任意工作区新建会话。\n\n### 3. 跨工作区增强续聊、零 LLM 抢救简报与自动沿用当前模型\n- **跨工作区增强交接续聊**：支持将已有会话一键转移到另一个目标工作区继续对话，自动继承标题、标签、置顶/收藏，并零 LLM 提取近期诉求、修改文件列表、校验线索与最后进展塞入交接消息，可选自动归档旧会话。\n- **零 LLM 脱敏「🛟 抢救简报」**：任意活跃或归档会话卡片均支持一键提取本地脱敏 Markdown 抢救简报（`<20ms`，含模型、实测 Token/缓存率、改动文件与最近进展，自动脱敏常见密钥/Token），支持一键复制或 **「✨ 带简报新建会话」** 无缝抢救卡死/爆窗对话。\n- **实时官方具体模型选择 & 默认沿用当前模型**：新建会话与跨工作区转移续聊均实时拉取本机 Antigravity 官方具体模型列表（同时保留通用档位兜底），默认项自动识别并沿用原会话或当前活跃对话正在使用的官方模型，避免创建后被回退到默认档位。\n- **批量整理与官方归档箱**：开启「批量管理」后支持多选批量置顶、收藏、打标签、归档或恢复；归档箱与官方归档完全同步，支持随时恢复或经二次确认执行官方永久删除。\n\n### 4. 首次使用交互式新手引导与苍蓝统一界面\n- **5 步交互式新手引导（`? 指南`）**：首次打开自动展示 5 步功能引导，点击每步右上角的「🎯 定位到界面」按钮可在面板中实时脉冲高亮对应的真实控件并附带浮动返回条；已读状态持久化至本机 JSON（跨重启换端口不复弹），也可随时点顶栏 **`? 指南`** 重看。\n- **Neko Glass 毛玻璃界面与跨插件主题联动**：支持深色 / 浅色双主题、跨插件共享「苍蓝主题色调中心」（6 套官方配色 + 自定义双色 + 4 个自定义保存槽）、顶栏左侧栏入口开关、独立 `Web UI` 与点击版本号实时检查 GitHub 最新 Release。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  DB[\"Antigravity 原生 FTS5<br/>conversations_fts\"] -->|\"只读全文检索 (node:sqlite)\"| C[\"苍蓝回廊 Sidecar\"]\n  SVC[\"Antigravity 官方<br/>ConversationService &amp; 工作区配置\"] <-->|\"100% 原生读写同步\"| C\n  C -->|\"原生协议\"| AGY[\"秒切会话 / 指定模型新建 / 跨工作区续聊\"]\n  C -->|\"双向同步\"| ARC[\"官方归档箱<br/>恢复 / 二次确认永久删除\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-corridor.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-corridor`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-corridor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-corridor\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-azure-corridor.git ~/.gemini/config/plugins/azure-corridor\n```\n\n重启或重载 Antigravity（`Ctrl+R`），在 **Plugins** 面板启用 **苍蓝回廊——会话与工作区管理** 即可在左侧栏或右侧辅助面板打开。\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **回廊轻量界面偏好（含自选快捷标签）**：`~/.gemini/azure-corridor/prefs.json`（会话元数据、标签与归档全部直连 Antigravity 官方原生存储，无需维护平行影子库）\n- **首次新手引导已读状态**：`~/.gemini/azure-onboarding.json`\n- **苍蓝套件左侧栏显示配置**：`~/.gemini/azure-sidebar-nav.json`\n- **苍蓝套件共享主题配置**：`~/.gemini/azure-theme.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 10 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台——外部模型调度与省流** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨——原生菜单外接模型挂载** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘——Agent 预设与上下文监控** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊——会话与工作区管理** &nbsp;`✦ 当前仓库` | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 纯官方原生会话与工作区同步、FTS5 全文检索、自选快捷标签栏、跨工作区转移续聊、官方模型选择与交互式新手引导 |\n| 🌌 **蓝汐——认知图谱长期记忆** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣——人设卡与分层记忆** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文——外接模型中文思考切换** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 内部思考语言简体中文 / 英文双档热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜——思维链观测与实时翻译** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖——Windows 桌面与网页操控** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n| 🍃 **苍蓝流笺——拖拽发图与原生文件标签** | [antigravity-azure-drop](https://github.com/A16Nights/antigravity-azure-drop) | 零 `app.asar` 侵入、拖拽与粘贴插入原生文件标签、无损 PNG 截图落盘、图片缩略图灯箱与顶栏面包屑右键菜单 |\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
+  "latestReleaseNotes": "## 更新亮点\n\n- **零 LLM 脱敏「🛟 抢救简报」**：活跃会话与官方归档箱卡片均新增「🛟 抢救简报」按钮，纯本地 `<20ms` 扫描 `transcript.jsonl` 生成脱敏 Markdown 抢救简报（含最近模型、实测 Token/缓存命中率、最近核心诉求、修改文件列表、校验线索与最后回复摘要，自动脱敏常见密钥/Token）。\n- **一键复制 / 带简报新建续接会话**：抢救简报弹窗支持一键复制粘贴到新对话，或点击 **「✨ 带简报新建会话」** 自动预填标题、标签与完整交接简报，轻松抢救卡死或爆窗长对话。\n- **跨工作区增强交接续聊**：「转移工作区」自动附带零 LLM 抽取的原会话近期改动文件与进度段落，目标工作区无缝接手。\n- **新手引导与文档同步**：更新互动新手引导第 3 步说明及中英文 README。\n\n## 升级方式\n在插件目录执行 `git pull` 后按 `Ctrl+R` 重载 Antigravity 即可生效。",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -69,7 +69,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 82,
         "snippet": "const slotMatch = /^slot-([0-9]+)$/.exec(activeId);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L82"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L82"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -80,7 +80,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 213,
         "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", href], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L213"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L213"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -91,7 +91,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 219,
         "snippet": "spawn(\"open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L219"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L219"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -102,7 +102,40 @@
         "file": "lib/azure-theme.mjs",
         "line": 221,
         "snippet": "spawn(\"xdg-open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L221"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 232,
+        "snippet": "await fetch(apiUrl(), { method: \"POST\", headers: apiHeaders(true), body: JSON.stringify({ action: shouldDismiss ? \"dismiss\" : \"reset\", guideVersion }) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-onboarding-ui.js#L232"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 309,
+        "snippet": "const r = await fetch(apiUrl({ v: guideVersion }), { headers: apiHeaders(false) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-onboarding-ui.js#L309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-onboarding.mjs",
+        "line": 26,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-onboarding.mjs#L26"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -113,7 +146,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 125,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(clean, null, 2) + \"\\n\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L125"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L125"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -124,7 +157,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 128,
         "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L128"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L128"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -135,7 +168,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 132,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/sidebar-nav.mjs#L132"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/sidebar-nav.mjs#L132"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -146,7 +179,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 176,
         "snippet": "fs.writeFileSync(file, JSON.stringify(payload, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/sidebar-nav.mjs#L176"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/sidebar-nav.mjs#L176"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -157,7 +190,18 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 225,
         "snippet": "const req = https.request( { hostname: \"127.0.0.1\", port: Number(hub.httpsPort), path: \"/exa.language_server_pb.LanguageServerService/RefreshMcpServers\", method: \"POST\", rejectUnau",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/sidebar-nav.mjs#L225"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/sidebar-nav.mjs#L225"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/store.mjs",
+        "line": 341,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(next, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/store.mjs#L341"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -168,7 +212,7 @@
         "file": "lib/update-checker.mjs",
         "line": 64,
         "snippet": "return await fetch(url, { ...options, signal: controller.signal });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/update-checker.mjs#L64"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/update-checker.mjs#L64"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -179,7 +223,18 @@
         "file": "lib/azure-theme.mjs",
         "line": 3,
         "snippet": "* 配置文件路径：~/.gemini/azure-theme.json",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/azure-theme.mjs#L3"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/azure-theme.mjs#L3"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/rescue-brief.mjs",
+        "line": 240,
+        "snippet": "`请基于以上脱敏抢救简报接续推进任务；如需回看更早完整细节，可读取 \\`~/.gemini/antigravity/brain/${cid}/.system_generated/logs/transcript.jsonl\\`。`",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/rescue-brief.mjs#L240"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -188,9 +243,9 @@
         "capability": "accesses_gemini_dir",
         "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
         "file": "lib/store.mjs",
-        "line": 52,
+        "line": 55,
         "snippet": "* 读取 Antigravity 官方工作区/项目配置（~/.gemini/config/projects/*.json），",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/store.mjs#L52"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/store.mjs#L55"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -199,13 +254,26 @@
         "capability": "accesses_gemini_dir",
         "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
         "file": "lib/store.mjs",
-        "line": 446,
+        "line": 481,
         "snippet": "`请先了解上述背景（如需回看原会话详细记录，可直接读取 ~/.gemini/antigravity/brain/${sid}/.system_generated/logs/transcript.jsonl），准备好后告诉我继续处理。`",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/44bad76b9122ef8040d099a24bd3ff1fb049e500/lib/store.mjs#L446"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-corridor/blob/acb838330d73c8af402f91c6bc61ffd3f24acb6e/lib/store.mjs#L481"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.2.4",
+      "sha": "acb838330d73c8af402f91c6bc61ffd3f24acb6e",
+      "scannedAt": "2026-11-28T00:24:52.784Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.2.2",
       "sha": "44bad76b9122ef8040d099a24bd3ff1fb049e500",

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-27T18:26:08.983Z",
+  "generatedAt": "2026-11-28T00:30:31.895Z",
   "crawlerVersion": "1.0.1",
   "scannerVersion": "1.2.0",
-  "totalPlugins": 292,
+  "totalPlugins": 295,
   "marketplaceClient": {
     "latestVersion": "1.0.4",
     "minSupportedVersion": "1.0.0",
@@ -13,9 +13,9 @@
   "plugins": [
     {
       "id": "A16Nights/antigravity-azure-compass",
-      "name": "苍蓝罗盘",
+      "name": "苍蓝罗盘——Agent 预设与上下文监控",
       "pluginName": "agent-presets",
-      "summary": "苍蓝罗盘（Azure Compass）— Antigravity 工作模式预设中心、全局 AGENTS.md 热同步编辑器、上下文与媒体载荷防装死监测插件：内置标准/协奏台省流/极简/只读审查 4 套模式，支持自定义预设增删改、Soul.md 人设卡联动、外接模型智能防掉线、全局 AGENTS.md 在线编辑与全会话无损热同步（自动快照回滚 + 24 KB 提醒 + Diff 预览）、上下文 Token 水位监测与 /compact 压缩联动、媒体载荷防装死守卫（PreToo",
+      "summary": "苍蓝罗盘——Agent 预设与上下文监控（Azure Compass）：Antigravity 工作模式预设中心、全局 AGENTS.md 热同步编辑器、上下文与媒体载荷防装死监测插件：内置标准/协奏台省流/极简/只读审查 4 套模式，支持自定义预设增删改、Soul.md 人设卡联动、外接模型智能防掉线、全局 AGENTS.md 在线编辑与全会话无损热同步（自动快照回滚 + 24 KB 提醒 + Diff 预览）、实测 API Token 与缓存命中率监测（按模型自动识别窗口",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -23,15 +23,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-azure-compass",
       "license": "MIT",
-      "version": "1.4.5",
+      "version": "1.4.8",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.4.5",
-        "sha": "3aeeec7a83b8664f8a53093e5b846c95b062cef1",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-compass/tarball/3aeeec7a83b8664f8a53093e5b846c95b062cef1",
-        "contentTreeSha256": "ea8a9b32944f4b0a04e458621c1583c0c97903f542412dbb46c7d884c7d4f4f3",
-        "archiveBytes": 286122,
-        "publishedAt": "2026-11-26T02:33:32Z"
+        "ref": "v1.4.8",
+        "sha": "adebf7301b94376bd78d777b94dc4ea59cc27f6c",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-compass/tarball/adebf7301b94376bd78d777b94dc4ea59cc27f6c",
+        "contentTreeSha256": "26f15c980ce07af3f4bbc90a69ffecb80504dc55b5699a6f4c243eb82bcfb719",
+        "archiveBytes": 304514,
+        "publishedAt": "2026-11-27T20:55:44Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -58,12 +58,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:25:02Z"
+        "pushedAt": "2026-11-27T20:55:42Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:55.110Z",
+        "scannedAt": "2026-11-28T00:24:50.444Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -73,8 +73,8 @@
         ],
         "findingCounts": {
           "critical": 0,
-          "high": 9,
-          "medium": 20,
+          "high": 8,
+          "medium": 24,
           "low": 7
         }
       },
@@ -82,9 +82,9 @@
     },
     {
       "id": "A16Nights/antigravity-azure-corridor",
-      "name": "苍蓝回廊",
+      "name": "苍蓝回廊——会话与工作区管理",
       "pluginName": "azure-corridor",
-      "summary": "苍蓝回廊（Azure Corridor）— 纯官方原生 Antigravity 2.35+ 会话与工作区管理插件：100% 直连官方 ConversationService 与工作区配置，支持 FTS5 正文全文搜索、官方工作区聚合与新建、置顶/收藏/原生标签与官方分组、官方归档箱、批量操作、跨工作区转移续聊与官方永久删除。",
+      "summary": "苍蓝回廊——会话与工作区管理（Azure Corridor）：纯官方原生 Antigravity 2.35+ 会话与工作区管理面板，100% 直连官方 ConversationService 与工作区配置，支持 FTS5 正文全文搜索、自选快捷标签筛选栏、官方工作区聚合与新建、自动沿用当前官方具体模型、跨工作区增强交接续聊、零 LLM 脱敏抢救简报（一键复制/带简报新建会话）、批量整理、官方归档箱与首次交互式新手引导。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -92,15 +92,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-azure-corridor",
       "license": "MIT",
-      "version": "1.2.2",
+      "version": "1.2.4",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.2.2",
-        "sha": "44bad76b9122ef8040d099a24bd3ff1fb049e500",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-corridor/tarball/44bad76b9122ef8040d099a24bd3ff1fb049e500",
-        "contentTreeSha256": "014fb536c602b464df61866e098376bdfd2cd54801159d5e4d1398b20242dbab",
-        "archiveBytes": 193888,
-        "publishedAt": "2026-11-26T01:09:33Z"
+        "ref": "v1.2.4",
+        "sha": "acb838330d73c8af402f91c6bc61ffd3f24acb6e",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-corridor/tarball/acb838330d73c8af402f91c6bc61ffd3f24acb6e",
+        "contentTreeSha256": "ac4258ac21cf5e657fcf3234a8df56a6936b2dd947e877efbc388c76ec7eb917",
+        "archiveBytes": 315748,
+        "publishedAt": "2026-11-27T20:40:54Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -126,12 +126,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T01:09:32Z"
+        "pushedAt": "2026-11-27T20:40:52Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:18:09.159Z",
+        "scannedAt": "2026-11-28T00:24:52.784Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -142,17 +142,17 @@
         "findingCounts": {
           "critical": 0,
           "high": 4,
-          "medium": 6,
-          "low": 3
+          "medium": 10,
+          "low": 4
         }
       },
       "detailPath": "plugins/A16Nights/antigravity-azure-corridor.json"
     },
     {
       "id": "A16Nights/antigravity-azure-drop",
-      "name": "苍蓝流笺 · Azure Drop",
+      "name": "苍蓝流笺——拖拽发图与原生文件标签",
       "pluginName": "azure-drop",
-      "summary": "苍蓝流笺（Azure Drop）— 零 app.asar 侵入、零 Token 前缀税的 Antigravity 输入体验增强插件：纯 Sidecar 经本机 CDP 注入主窗口，支持拖拽与 Ctrl+C/V 文件/文件夹直插清爽原生青色标签（可选附带完整路径或切纯路径，按住 Shift 放行原生附件）、内存截图无损 PNG 落盘、输入框与已发消息上方图片缩略图与无损高清灯箱预览、顶栏路径面包屑右键菜单（打开所在文件夹/打开此文件夹/引用/复制路径），附带苍蓝玻璃截图画廊控制",
+      "summary": "苍蓝流笺——拖拽发图与原生文件标签（Azure Drop）：零 app.asar 侵入、零 Token 前缀税的 Antigravity 输入体验增强插件：纯 Sidecar 经本机 CDP 注入主窗口，支持拖拽与 Ctrl+C/V 文件/文件夹直插清爽原生青色标签（可选附带完整路径或切纯路径，按住 Shift 放行原生附件）、内存截图无损 PNG 落盘、输入框与已发消息上方图片缩略图与无损高清灯箱预览、顶栏路径面包屑右键菜单（打开所在文件夹/打开此文件夹/引用/复制路径），",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -160,15 +160,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-azure-drop",
       "license": "MIT",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.0.1",
-        "sha": "0bab9e77199977a04e0d2703d8edaa56149dd02f",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-drop/tarball/0bab9e77199977a04e0d2703d8edaa56149dd02f",
-        "contentTreeSha256": "6bee09cfcf586048bb2b7c524afa12aab4b31e03e7fcb6fcf1ff0b041a313025",
-        "archiveBytes": 78452,
-        "publishedAt": "2026-11-26T15:43:12Z"
+        "ref": "v1.0.2",
+        "sha": "6c9d660ca0f74c0b6f1c928ec07b46604150809b",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-drop/tarball/6c9d660ca0f74c0b6f1c928ec07b46604150809b",
+        "contentTreeSha256": "6569cbfb30ae11d7db49c8c431e56d79db672feafe561e260ef807b434020ee5",
+        "archiveBytes": 87127,
+        "publishedAt": "2026-11-27T19:16:49Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -194,12 +194,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T15:43:09Z"
+        "pushedAt": "2026-11-27T19:16:49Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:16:31.092Z",
+        "scannedAt": "2026-11-28T00:25:22.710Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -210,7 +210,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 15,
-          "medium": 12,
+          "medium": 15,
           "low": 1
         }
       },
@@ -218,9 +218,9 @@
     },
     {
       "id": "A16Nights/antigravity-azure-orbit",
-      "name": "苍蓝星轨",
+      "name": "苍蓝星轨——原生菜单外接模型挂载",
       "pluginName": "azure-orbit",
-      "summary": "苍蓝星轨（Azure Orbit）— Antigravity 原生主模型挂载与可视化管理插件：将外部大模型 API（DeepSeek / OpenAI 兼容 / Anthropic 兼容 / OpenRouter / Kimi / 本地聚合网关 / Ollama）直接注入客户端左下角原生模型下拉菜单作为主脑使用，支持一键拉取模型、多关键词检索、与苍蓝协奏台一键同步及 2.32+/2.33.0+ 底层补丁管理。",
+      "summary": "苍蓝星轨——原生菜单外接模型挂载（Azure Orbit）：Antigravity 原生主模型挂载与可视化管理插件：将外部大模型 API（DeepSeek / OpenAI 兼容 / Anthropic 兼容 / OpenRouter / Kimi / 本地聚合网关 / Ollama）直接注入客户端左下角原生模型下拉菜单作为主脑使用，支持一键拉取模型、多关键词检索、与苍蓝协奏台一键同步及 2.32+/2.33.0+ 底层补丁管理；内置首次使用交互式新手引导与真实控件定位高亮。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -228,15 +228,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-azure-orbit",
       "license": "NOASSERTION",
-      "version": "1.1.8",
+      "version": "1.1.9",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.1.8",
-        "sha": "d8666d92b6f1293084558723b297497fdf279f68",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-orbit/tarball/d8666d92b6f1293084558723b297497fdf279f68",
-        "contentTreeSha256": "e001a5fd9eb28d63093f1832c36fb5a1b40825963ec6910054ebb0ce14ca4d57",
-        "archiveBytes": 694406,
-        "publishedAt": "2026-11-25T21:38:31Z"
+        "ref": "v1.1.9",
+        "sha": "5b144ef7fa505ef3926c3f07681b1ff02a533737",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-orbit/tarball/5b144ef7fa505ef3926c3f07681b1ff02a533737",
+        "contentTreeSha256": "925d4ac2a02ac0c5aa0c161a0cc1bc4e639fbf0d4ecf9f1aada46942f689dc11",
+        "archiveBytes": 703414,
+        "publishedAt": "2026-11-27T19:16:13Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -263,12 +263,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:24:59Z"
+        "pushedAt": "2026-11-27T19:16:12Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:57.452Z",
+        "scannedAt": "2026-11-28T00:25:38.548Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -279,17 +279,17 @@
         "findingCounts": {
           "critical": 0,
           "high": 10,
-          "medium": 20,
-          "low": 2
+          "medium": 23,
+          "low": 3
         }
       },
       "detailPath": "plugins/A16Nights/antigravity-azure-orbit.json"
     },
     {
       "id": "A16Nights/antigravity-azure-prism",
-      "name": "苍蓝棱镜",
+      "name": "苍蓝棱镜——思维链观测与实时翻译",
       "pluginName": "azure-prism",
-      "summary": "苍蓝棱镜（Azure Prism）— 模型思维链实时观测与多通道中文翻译面板（原生 Gemini 英文思考摘要免密钥实时中译推荐方案）：100% 只读解析会话思考轨迹（thinking / CHECKPOINT / USER_INPUT，截断自动补全），支持原生会话标题与无限历史分页、3.5 秒自适应轮询、滚动锚定、双语对照/仅看译文一键切换、引用思考到下条消息上下文与新会话深挖，以及外部模型/免密钥机器翻译。",
+      "summary": "苍蓝棱镜——思维链观测与实时翻译（Azure Prism）：模型思维链实时观测与多通道中文翻译面板（原生 Gemini 英文思考摘要免密钥实时中译推荐方案）：100% 只读解析会话思考轨迹（thinking / CHECKPOINT / USER_INPUT，截断自动补全），支持原生会话标题与无限历史分页、3.5 秒自适应轮询、滚动锚定、双语对照/仅看译文一键切换、引用思考到下条消息上下文与新会话深挖，以及外部模型/免密钥机器翻译；内置首次使用交互式新手引导与真实控件定位高亮",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -297,15 +297,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-azure-prism",
       "license": "MIT",
-      "version": "1.3.2",
+      "version": "1.3.3",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.3.2",
-        "sha": "b740ef0a28cce28b3a3275340eb1af9744c0a4ea",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-prism/tarball/b740ef0a28cce28b3a3275340eb1af9744c0a4ea",
-        "contentTreeSha256": "adb71bdc804420d5153a289badbb40cb06eacde91a591cd00d7cdc6fd26a3f8e",
-        "archiveBytes": 68295,
-        "publishedAt": "2026-11-26T03:19:55Z"
+        "ref": "v1.3.3",
+        "sha": "b77a445940eb78eef4f71f1adf5fb140612d28ca",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-prism/tarball/b77a445940eb78eef4f71f1adf5fb140612d28ca",
+        "contentTreeSha256": "6bbd4e3e389d910ba79b7e97c2fa8e048994f99b17d0f79e23cdd3eb2130b393",
+        "archiveBytes": 77566,
+        "publishedAt": "2026-11-27T19:16:38Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -331,12 +331,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:25:14Z"
+        "pushedAt": "2026-11-27T19:16:37Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:45.905Z",
+        "scannedAt": "2026-11-28T00:25:28.681Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -347,7 +347,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 4,
-          "medium": 13,
+          "medium": 16,
           "low": 7
         }
       },
@@ -355,9 +355,9 @@
     },
     {
       "id": "A16Nights/antigravity-azure-wand",
-      "name": "苍蓝魔杖",
+      "name": "苍蓝魔杖——Windows 桌面与网页操控",
       "pluginName": "azure-wand",
-      "summary": "苍蓝魔杖（Azure Wand）— Windows 桌面与网页低打扰可视化操控插件：内置 26 项 Windows UIA / OCR / 后台网页 CDP 工具 + 独立输入 15 状态动态 AI 光标（严格不动真实鼠标、不抢焦点），支持 4 套苍蓝玻璃思考浮窗、自定义鼠标标签、Esc / Ctrl+Alt+Q 急停与高度可定制的苍蓝侧栏控制台。",
+      "summary": "苍蓝魔杖——Windows 桌面与网页操控（Azure Wand）：Windows 桌面与网页低打扰可视化操控插件：内置 26 项 Windows UIA / OCR / 后台网页 CDP 工具 + 独立输入 15 状态动态 AI 光标（严格不动真实鼠标、不抢焦点），支持 4 套苍蓝玻璃思考浮窗、自定义鼠标标签、Esc / Ctrl+Alt+Q 急停与高度可定制的苍蓝侧栏控制台；内置首次使用交互式新手引导与真实控件定位高亮。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -365,15 +365,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-azure-wand",
       "license": "NOASSERTION",
-      "version": "1.3.2",
+      "version": "1.3.3",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.3.2",
-        "sha": "5d9fd26f24ff0452bf031dd5a5ffc73543dae414",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-wand/tarball/5d9fd26f24ff0452bf031dd5a5ffc73543dae414",
-        "contentTreeSha256": "30fa89223fe799cc72f531eb67691364cce3214e183e69bac95bbb575f62167d",
-        "archiveBytes": 9006035,
-        "publishedAt": "2026-11-25T21:37:59Z"
+        "ref": "v1.3.3",
+        "sha": "52014f622f36c977cc7bb3fed7294e1b203da8cd",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-wand/tarball/52014f622f36c977cc7bb3fed7294e1b203da8cd",
+        "contentTreeSha256": "f2143d1bced9c1a0cd9207109c1519683427c0809916838061b33b0d890c79f2",
+        "archiveBytes": 9015354,
+        "publishedAt": "2026-11-27T19:16:44Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -401,12 +401,12 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:25:17Z"
+        "pushedAt": "2026-11-27T19:16:44Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:43.712Z",
+        "scannedAt": "2026-11-28T00:25:26.343Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -425,9 +425,9 @@
     },
     {
       "id": "A16Nights/antigravity-external-orchestrator",
-      "name": "苍蓝协奏台",
+      "name": "苍蓝协奏台——外部模型调度与省流",
       "pluginName": "external-orchestrator",
-      "summary": "苍蓝协奏台（External Orchestrator）— 多渠道外部模型协同调度插件：由主脑负责规划与验收，自动委派 DeepSeek / OpenAI / Anthropic / 本地网关等高性价比模型执行多步文件读写、终端命令与文本生成；支持内置与自定义调度角色增删改（含专属 System Prompt 与默认权限）、Fallback 容灾链、断路器、实时进度监控（显示调度角色名称）及独立归档箱。",
+      "summary": "苍蓝协奏台——外部模型调度与省流（External Orchestrator）：多渠道外部模型协同调度插件：由主脑负责规划与验收，自动委派 DeepSeek / OpenAI / Anthropic / 本地网关等高性价比模型执行多步文件读写、终端命令与文本生成；支持内置与自定义调度角色增删改（含专属 System Prompt 与默认权限）、Fallback 容灾链、断路器、实时进度监控（显示调度角色名称）及独立归档箱；内置首次使用交互式新手引导与真实控件定位高亮。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -435,15 +435,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-external-orchestrator",
       "license": "MIT",
-      "version": "1.4.6",
+      "version": "1.4.7",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.4.6",
-        "sha": "87c306212322bc4fbae7cb6c6c9d26d287ac711b",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-external-orchestrator/tarball/87c306212322bc4fbae7cb6c6c9d26d287ac711b",
-        "contentTreeSha256": "077b83df2df48def9a13e7cd2cdfd3204584b41c7acfc9aaedc7669ae2e98ee4",
-        "archiveBytes": 642231,
-        "publishedAt": "2026-11-25T21:38:57Z"
+        "ref": "v1.4.7",
+        "sha": "d395c143716a316c58b4e388897cb6215a037336",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-external-orchestrator/tarball/d395c143716a316c58b4e388897cb6215a037336",
+        "contentTreeSha256": "e9495592797cc67b228871d1a775060b716f508e452c3d7c2d89fa19dd60620b",
+        "archiveBytes": 651698,
+        "publishedAt": "2026-11-27T19:16:08Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -471,12 +471,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:24:56Z"
+        "pushedAt": "2026-11-27T19:16:07Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:59.707Z",
+        "scannedAt": "2026-11-28T00:25:41.111Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -487,7 +487,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 7,
-          "medium": 17,
+          "medium": 20,
           "low": 2
         }
       },
@@ -495,9 +495,9 @@
     },
     {
       "id": "A16Nights/antigravity-lanxi-memory",
-      "name": "蓝汐 · 潮汐认知图谱",
+      "name": "蓝汐——认知图谱长期记忆",
       "pluginName": "lanxi-memory",
-      "summary": "蓝汐 · 潮汐认知图谱（Lanxi Memory）— 纯本地长期记忆与认知图谱插件：融合五层 Markdown 真源文档（定海锚点/自我/结构/知识/情景/目标/待决）与幂律潮汐遗忘曲线，支持 CJK FTS5 全文检索、项目优先召回、硬保护防失忆、磁盘修改实时感知、人设记忆开关联动、可选 AI 混合语义检索/智能凝结，以及「潮汐星海」可视化星图工作台。",
+      "summary": "蓝汐——认知图谱长期记忆（Lanxi Memory）：纯本地长期记忆与认知图谱插件：融合五层 Markdown 真源文档（定海锚点/自我/结构/知识/情景/目标/待决）与幂律潮汐遗忘曲线，支持 CJK FTS5 全文检索、项目优先召回、硬保护防失忆、磁盘修改实时感知、人设记忆开关联动、可选 AI 混合语义检索/智能凝结，以及「潮汐星海」可视化星图工作台；内置首次使用交互式新手引导与真实控件定位高亮。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -505,15 +505,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-lanxi-memory",
       "license": "MIT",
-      "version": "1.5.3",
+      "version": "1.5.4",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.5.3",
-        "sha": "c7161cb2c300e599701ef43c6c45cbf4ecdc9635",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-lanxi-memory/tarball/c7161cb2c300e599701ef43c6c45cbf4ecdc9635",
-        "contentTreeSha256": "4a5b75a48301652c33fe1f34a39d20e16e42c20bdfbc58b65b2d52dd27d69cb7",
-        "archiveBytes": 161939,
-        "publishedAt": "2026-11-25T21:37:15Z"
+        "ref": "v1.5.4",
+        "sha": "47de13a4d23a82613338b3f54d5d1da9560fc10a",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-lanxi-memory/tarball/47de13a4d23a82613338b3f54d5d1da9560fc10a",
+        "contentTreeSha256": "215acbb8f29bddfe24dd4a646db8cec47965288f69e2e22fca3e5190a5ff38d0",
+        "archiveBytes": 171823,
+        "publishedAt": "2026-11-27T19:16:23Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -541,12 +541,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:25:05Z"
+        "pushedAt": "2026-11-27T19:16:23Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:52.741Z",
+        "scannedAt": "2026-11-28T00:25:35.998Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -557,7 +557,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 22,
-          "medium": 24,
+          "medium": 27,
           "low": 2
         }
       },
@@ -565,9 +565,9 @@
     },
     {
       "id": "A16Nights/antigravity-soul-md",
-      "name": "苍蓝魂匣",
+      "name": "苍蓝魂匣——人设卡与分层记忆",
       "pluginName": "soul-md",
-      "summary": "苍蓝魂匣（Soul.md）— 多人设卡管理与分层文件记忆插件：支持新建/在线编辑/一键热切换全局默认人设卡、工作区专属人设绑定、外接模型智能识别的 PreInvocation 底层身份锚防掉线强化、按人设独立开关的 core.md + topics/*.md 分层文件记忆，并与苍蓝罗盘及蓝汐认知图谱深度联动。",
+      "summary": "苍蓝魂匣——人设卡与分层记忆（Soul.md Studio）：多人设卡管理与分层文件记忆插件：支持新建/在线编辑/一键热切换全局默认人设卡、工作区专属人设绑定、外接模型智能识别的 PreInvocation 底层身份锚防掉线强化、按人设独立开关的 core.md + topics/*.md 分层文件记忆，并与苍蓝罗盘及蓝汐认知图谱深度联动；内置首次使用交互式新手引导与真实控件定位高亮。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -575,15 +575,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-soul-md",
       "license": "MIT",
-      "version": "2.3.8",
+      "version": "2.3.9",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v2.3.8",
-        "sha": "de1db1e49b4e493b9760ea2b3f2fb92378c60902",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-soul-md/tarball/de1db1e49b4e493b9760ea2b3f2fb92378c60902",
-        "contentTreeSha256": "ca4ccae2021f3b48b9385bf10518e2c7ac302bce826dee3895b8e6c47ef57941",
-        "archiveBytes": 161925,
-        "publishedAt": "2026-11-25T21:38:20Z"
+        "ref": "v2.3.9",
+        "sha": "ac0da0738186c850a61c7e3bb09824d7d3d57920",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-soul-md/tarball/ac0da0738186c850a61c7e3bb09824d7d3d57920",
+        "contentTreeSha256": "2a4501c5cc45dece31fbaee68df5b738dee8d61b2cac0a8358725337e1f85d2e",
+        "archiveBytes": 171595,
+        "publishedAt": "2026-11-27T19:16:28Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -611,12 +611,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:25:09Z"
+        "pushedAt": "2026-11-27T19:16:28Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:50.255Z",
+        "scannedAt": "2026-11-28T00:25:33.369Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -627,7 +627,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 4,
-          "medium": 19,
+          "medium": 22,
           "low": 3
         }
       },
@@ -635,9 +635,9 @@
     },
     {
       "id": "A16Nights/antigravity-think-zh",
-      "name": "思语中文 · Think-ZH",
+      "name": "思语中文——外接模型中文思考切换",
       "pluginName": "think-zh",
-      "summary": "思语中文（Think-ZH）— 面向外部推理模型的内部思考语言控制插件：专为通过苍蓝星轨等挂载的外部自定义模型设计，默认仅在使用外部模型时通过 PreInvocation 守卫生效（Antigravity 原生模型自动静默跳过）；无法对原生 Gemini 生效（Google 服务端 Thought Summarizer 仅下发英文第三人称摘要，不下发原始思考）。",
+      "summary": "思语中文——外接模型中文思考切换（Think-ZH）：面向外部推理模型的内部思考语言控制插件：专为通过苍蓝星轨等挂载的外部自定义模型设计，默认仅在使用外部模型时通过 PreInvocation 守卫生效（Antigravity 原生模型自动静默跳过）；无法对原生 Gemini 生效（Google 服务端 Thought Summarizer 仅下发英文第三人称摘要，不下发原始思考）；内置首次使用交互式新手引导与真实控件定位高亮。",
       "author": {
         "login": "A16Nights",
         "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
@@ -645,15 +645,15 @@
       },
       "repoUrl": "https://github.com/A16Nights/antigravity-think-zh",
       "license": "MIT",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.2.0",
-        "sha": "11316e55c31ea97edc6fa30d7570a3cbe346a7d5",
-        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-think-zh/tarball/11316e55c31ea97edc6fa30d7570a3cbe346a7d5",
-        "contentTreeSha256": "fc1acaf85c159b44c5f09f9e733b18dc32920e80f25617b218128754b378e08c",
-        "archiveBytes": 239931,
-        "publishedAt": "2026-11-26T03:04:59Z"
+        "ref": "v1.2.1",
+        "sha": "f699621e76dbd0ee48ff400823b7c9381362937f",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-think-zh/tarball/f699621e76dbd0ee48ff400823b7c9381362937f",
+        "contentTreeSha256": "3093d01f9766f8d637772fa27b745cd84eebb0ac9cc168e4a0b8d6af1c0dc24f",
+        "archiveBytes": 249205,
+        "publishedAt": "2026-11-27T19:16:33Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -681,12 +681,12 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T03:25:11Z"
+        "pushedAt": "2026-11-27T19:16:32Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:17:48.048Z",
+        "scannedAt": "2026-11-28T00:25:30.999Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -697,7 +697,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 4,
-          "medium": 8,
+          "medium": 11,
           "low": 2
         }
       },
@@ -6576,7 +6576,7 @@
         "stars": 6,
         "forks": 1,
         "openIssues": 2,
-        "pushedAt": "2026-11-27T16:06:02Z"
+        "pushedAt": "2026-11-28T00:11:43Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -6603,7 +6603,7 @@
       "id": "EVANKRISTANTO/vanzee-designer",
       "name": "Vanzee Designer",
       "pluginName": "vanzee-designer",
-      "summary": "Curated UI/UX design system, 9 dashboard references, 7 analyzed motion video patterns (CDN), 60+ Shadcn Space animated blocks, 42 micro-interactions, 20 text animations, anti-slop typography, auto real-asset search, and Lighthouse rules.",
+      "summary": "Curated UI/UX design system, 12 best color palettes (CDN), 9 dashboard references, 7 analyzed motion videos, 60+ Shadcn Space blocks, 42 micro-interactions, 20 text animations, auto real-asset search, and Lighthouse rules.",
       "author": {
         "login": "EVANKRISTANTO",
         "avatarUrl": "https://avatars.githubusercontent.com/u/92700705?v=4",
@@ -6611,15 +6611,15 @@
       },
       "repoUrl": "https://github.com/EVANKRISTANTO/vanzee-designer",
       "license": "UNKNOWN",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "fba2d69918c6381531506ebdffd89ca8741a1ecf",
-        "tarballUrl": "https://api.github.com/repos/EVANKRISTANTO/vanzee-designer/tarball/fba2d69918c6381531506ebdffd89ca8741a1ecf",
-        "contentTreeSha256": "705e11abfe07e2302d76df576fa3349888fa8bc1a62f6f7627f548ff13cbfc63",
-        "archiveBytes": 1842383,
-        "publishedAt": "2026-11-27T13:35:45Z"
+        "sha": "a1cc0398c4b6c1f340f09a5eaae26ca8978fb41e",
+        "tarballUrl": "https://api.github.com/repos/EVANKRISTANTO/vanzee-designer/tarball/a1cc0398c4b6c1f340f09a5eaae26ca8978fb41e",
+        "contentTreeSha256": "833260f65bc133dbdae817d82d3426e09f482e4ec365876c7a20b9bcd9157619",
+        "archiveBytes": 1845191,
+        "publishedAt": "2026-11-27T19:01:00Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -6647,12 +6647,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T13:35:56Z"
+        "pushedAt": "2026-11-27T19:01:13Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:14:16.374Z",
+        "scannedAt": "2026-11-28T00:25:43.579Z",
         "capabilities": [
           "fs_write_workspace",
           "process_spawn",
@@ -9135,7 +9135,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 23,
+        "stars": 25,
         "forks": 0,
         "openIssues": 0,
         "pushedAt": "2026-11-27T08:55:26Z"
@@ -9432,6 +9432,77 @@
       "detailPath": "plugins/InfSein/antigravity-app-account-manager.json"
     },
     {
+      "id": "iscvlab/iscv-live-preview",
+      "name": "ISCV Live Preview",
+      "pluginName": "iscv-live-preview",
+      "summary": "Live HTML, SVG & motion-stage previewer for side pane, inline chat & full-page views with DOM inspector, live CSS effects & file sync.",
+      "author": {
+        "login": "iscvlab",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/344943731?v=4",
+        "url": "https://github.com/iscvlab"
+      },
+      "repoUrl": "https://github.com/iscvlab/iscv-live-preview",
+      "license": "MIT",
+      "version": "1.0.0",
+      "minAppVersion": "2.34.0",
+      "release": {
+        "ref": "v1.0.0",
+        "sha": "7ff204aeddc4ed6e2aea51f00a80276d82a95c78",
+        "tarballUrl": "https://api.github.com/repos/iscvlab/iscv-live-preview/tarball/7ff204aeddc4ed6e2aea51f00a80276d82a95c78",
+        "contentTreeSha256": "c7ca706a329c1632720730be2cdd6f7b700a250ecd6799f3ab74e4fe5cf2c49c",
+        "archiveBytes": 2494072,
+        "publishedAt": "2026-11-27T23:55:00Z"
+      },
+      "surface": {
+        "hasSidebarUi": true,
+        "uiSlots": [
+          "aux_pane",
+          "file",
+          "global"
+        ],
+        "components": [
+          "mcp_stdio",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "dom-inspector",
+        "html-preview",
+        "live-preview",
+        "mcp",
+        "mcp-apps",
+        "svg-preview"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T00:14:53Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T00:24:20.556Z",
+        "capabilities": [
+          "contains_minified",
+          "credential_access",
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 4,
+          "high": 56,
+          "medium": 13,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/iscvlab/iscv-live-preview.json"
+    },
+    {
       "id": "Ivan0967pro/Rudex",
       "name": "Rudex",
       "pluginName": "rudex",
@@ -9443,15 +9514,15 @@
       },
       "repoUrl": "https://github.com/Ivan0967pro/Rudex",
       "license": "MIT",
-      "version": "5.5.4",
+      "version": "5.5.6",
       "minAppVersion": null,
       "release": {
-        "ref": "v5.5.4",
-        "sha": "c3f45acfcef6791fd83f729bf8fd221aedd85cbf",
-        "tarballUrl": "https://api.github.com/repos/Ivan0967pro/Rudex/tarball/c3f45acfcef6791fd83f729bf8fd221aedd85cbf",
-        "contentTreeSha256": "5c200047ee804000bff4cf511ae39f5190ed33462be46472d10e62bf222b165b",
-        "archiveBytes": 1698739,
-        "publishedAt": "2026-11-27T17:54:33Z"
+        "ref": "v5.5.6",
+        "sha": "51fffa0090bccba0f8d53911103c76f37c447f79",
+        "tarballUrl": "https://api.github.com/repos/Ivan0967pro/Rudex/tarball/51fffa0090bccba0f8d53911103c76f37c447f79",
+        "contentTreeSha256": "1d1901e65dd4b812475ba43146ed12fee1e4c5ae0e003e3eb9ca53705b5c4ab6",
+        "archiveBytes": 1710067,
+        "publishedAt": "2026-11-27T20:11:07Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -9474,15 +9545,15 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 14,
+        "stars": 15,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T17:54:29Z"
+        "pushedAt": "2026-11-27T20:11:02Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:13:04.723Z",
+        "scannedAt": "2026-11-28T00:25:01.986Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -9639,6 +9710,70 @@
         }
       },
       "detailPath": "plugins/jack-zihan/antigravity-session-vault.json"
+    },
+    {
+      "id": "janedogco/openbelt-plugin-antigravity",
+      "name": "OpenBelt",
+      "pluginName": "openbelt",
+      "summary": "Build and run small web apps for your workspace over MCP, with data, realtime, functions, and shared connections.",
+      "author": {
+        "login": "janedogco",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/358420669?v=4",
+        "url": "https://github.com/janedogco"
+      },
+      "repoUrl": "https://github.com/janedogco/openbelt-plugin-antigravity",
+      "license": "MIT",
+      "version": "0.1.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "main",
+        "sha": "0c89aea0a3f07dafa142e71be41cded6d840fd5f",
+        "tarballUrl": "https://api.github.com/repos/janedogco/openbelt-plugin-antigravity/tarball/0c89aea0a3f07dafa142e71be41cded6d840fd5f",
+        "contentTreeSha256": "ee9599d3a287b7afff891a5ed9a85dc0271a443ece8cfa076a49578c88b63b5c",
+        "archiveBytes": 4019,
+        "publishedAt": "2026-11-26T15:17:59Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "mcp_remote",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "openbelt",
+        "mcp",
+        "apps",
+        "internal-tools",
+        "connections",
+        "oauth",
+        "ai-agents",
+        "antigravity"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-26T15:18:05Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T00:26:49.957Z",
+        "capabilities": [
+          "network_external_mcp"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/janedogco/openbelt-plugin-antigravity.json"
     },
     {
       "id": "jdsgnrinfo/unsloop-antigravity",
@@ -9928,11 +10063,11 @@
       "minAppVersion": "2.34.0",
       "release": {
         "ref": "main",
-        "sha": "d95354253fed961c3b503df07796a3e8774fd430",
-        "tarballUrl": "https://api.github.com/repos/jmxt3/astack/tarball/d95354253fed961c3b503df07796a3e8774fd430",
-        "contentTreeSha256": "ba762e0cb5af2c3927615da5d1da6103256669150e74394db4f34edb3f1d374b",
-        "archiveBytes": 4241302,
-        "publishedAt": "2026-11-27T10:21:03Z"
+        "sha": "cd403d45637246ad1c9868ace382cae01d4912c7",
+        "tarballUrl": "https://api.github.com/repos/jmxt3/astack/tarball/cd403d45637246ad1c9868ace382cae01d4912c7",
+        "contentTreeSha256": "8a5f56427e013475e0fa2b8a80fbc6edc424f86e2ffcae8856a1b5f9a3d51ec0",
+        "archiveBytes": 4304997,
+        "publishedAt": "2026-11-27T21:22:25Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -9965,12 +10100,12 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T10:21:03Z"
+        "pushedAt": "2026-11-27T21:22:25Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:15:02.628Z",
+        "scannedAt": "2026-11-28T00:24:32.599Z",
         "capabilities": [
           "accesses_gemini_dir",
           "credential_access",
@@ -10470,11 +10605,11 @@
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "2464d8d574c426c24dc1b7a410e71b173b5e281c",
-        "tarballUrl": "https://api.github.com/repos/KiriuKazurei/antigravity-zh-cn-plugin/tarball/2464d8d574c426c24dc1b7a410e71b173b5e281c",
-        "contentTreeSha256": "1895fa48491aa127c05f53683bd64b9e2e5f96f1e9ed31d841ca34fb2e963545",
-        "archiveBytes": 60913,
-        "publishedAt": "2026-11-27T08:00:38Z"
+        "sha": "2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253",
+        "tarballUrl": "https://api.github.com/repos/KiriuKazurei/antigravity-zh-cn-plugin/tarball/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253",
+        "contentTreeSha256": "39aea262ed2803896de89b71e092497b326e358527ee21942091f82d20ad05cb",
+        "archiveBytes": 63251,
+        "publishedAt": "2026-11-27T18:47:52Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -10500,12 +10635,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T08:01:36Z"
+        "pushedAt": "2026-11-27T18:48:59Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:15:18.373Z",
+        "scannedAt": "2026-11-28T00:25:48.385Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -10514,7 +10649,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 24,
-          "medium": 42,
+          "medium": 43,
           "low": 1
         }
       },
@@ -10641,7 +10776,7 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-04T09:51:30Z"
+        "pushedAt": "2026-11-27T22:23:03Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -10941,15 +11076,15 @@
       },
       "repoUrl": "https://github.com/LEFTX1/antigravity-quota-matrix",
       "license": "MIT",
-      "version": "1.1.0",
+      "version": "1.1.2",
       "minAppVersion": null,
       "release": {
-        "ref": "v1.1.0",
-        "sha": "d93205e07d11a7b00f471652e7969bb589fd3c60",
-        "tarballUrl": "https://api.github.com/repos/LEFTX1/antigravity-quota-matrix/tarball/d93205e07d11a7b00f471652e7969bb589fd3c60",
-        "contentTreeSha256": "58e57fac10fd0957c9483f36a94a1016bc39056b0c7876f1bfa3d7683f2d7522",
-        "archiveBytes": 179544,
-        "publishedAt": "2026-11-27T16:16:17Z"
+        "ref": "v1.1.2",
+        "sha": "7ea16d9310b2e1b8a4532c2222e829cec9c101c8",
+        "tarballUrl": "https://api.github.com/repos/LEFTX1/antigravity-quota-matrix/tarball/7ea16d9310b2e1b8a4532c2222e829cec9c101c8",
+        "contentTreeSha256": "a8aeca8863b4362f23b5face722a6d4f891ff7a89cb91c5fdd6c2268b8abdf83",
+        "archiveBytes": 390167,
+        "publishedAt": "2026-11-27T18:50:21Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -10978,12 +11113,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T17:17:33Z"
+        "pushedAt": "2026-11-27T18:50:20Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:13:11.327Z",
+        "scannedAt": "2026-11-28T00:25:45.822Z",
         "capabilities": [
           "fs_write_workspace",
           "mcp_local_exec",
@@ -11768,7 +11903,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 0,
+        "stars": 1,
         "forks": 0,
         "openIssues": 0,
         "pushedAt": "2026-11-27T13:14:10Z"
@@ -11842,7 +11977,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 1,
-        "pushedAt": "2026-11-27T17:07:03Z"
+        "pushedAt": "2026-11-28T00:17:47Z"
       },
       "security": {
         "riskTier": "high",
@@ -11930,7 +12065,7 @@
       "name": "Agent formal verify",
       "pluginName": "agent-formal-verify",
       "summary": "Model-check protocols with TLA+, prove invariants with Lean 4, and check bounded Rust functions with Kani.",
-      "iconUrl": "https://raw.githubusercontent.com/michael-denyer/agent-formal-verify/ec910aa88d4863468e4385b5f297ced5a3b91df9/assets/icon.png",
+      "iconUrl": "https://raw.githubusercontent.com/michael-denyer/agent-formal-verify/4a2af9141a155a6073d8ab7596cdb6a4b7d10566/assets/icon.png",
       "author": {
         "login": "michael-denyer",
         "avatarUrl": "https://avatars.githubusercontent.com/u/97485362?v=4",
@@ -11942,11 +12077,11 @@
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "ec910aa88d4863468e4385b5f297ced5a3b91df9",
-        "tarballUrl": "https://api.github.com/repos/michael-denyer/agent-formal-verify/tarball/ec910aa88d4863468e4385b5f297ced5a3b91df9",
-        "contentTreeSha256": "ffc1fa5b0308ee3d903f121bc9225532791ac0b3aa897de1c75ac492761f5407",
-        "archiveBytes": 3181012,
-        "publishedAt": "2026-11-27T16:43:15Z"
+        "sha": "4a2af9141a155a6073d8ab7596cdb6a4b7d10566",
+        "tarballUrl": "https://api.github.com/repos/michael-denyer/agent-formal-verify/tarball/4a2af9141a155a6073d8ab7596cdb6a4b7d10566",
+        "contentTreeSha256": "8cc18125c5d6fb467a585d442636cf6d56283d682dc1d40221620a4c5f8cf7ec",
+        "archiveBytes": 3185273,
+        "publishedAt": "2026-11-27T22:31:31Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -11974,12 +12109,12 @@
         "stars": 57,
         "forks": 11,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T16:43:37Z"
+        "pushedAt": "2026-11-27T22:31:34Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:13:19.282Z",
+        "scannedAt": "2026-11-28T00:24:23.385Z",
         "capabilities": [
           "fs_write_workspace",
           "process_spawn",
@@ -11988,7 +12123,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 4,
-          "medium": 10,
+          "medium": 11,
           "low": 7
         }
       },
@@ -13706,7 +13841,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T07:27:08Z"
+        "pushedAt": "2026-11-28T00:00:16Z"
       },
       "security": {
         "riskTier": "low",
@@ -14966,7 +15101,7 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T17:46:54Z"
+        "pushedAt": "2026-11-27T19:44:36Z"
       },
       "security": {
         "riskTier": "high",
@@ -15551,7 +15686,7 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T06:19:46Z"
+        "pushedAt": "2026-11-27T19:41:19Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -16646,7 +16781,7 @@
       "name": "Turbo Notify",
       "pluginName": "turbo-notify",
       "summary": "Connect your WhatsApp number to your AI agent: send and read messages, and run a virtual attendant that answers your customers.",
-      "iconUrl": "https://raw.githubusercontent.com/turbo-notify/agent-skills/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/assets/icon.png",
+      "iconUrl": "https://raw.githubusercontent.com/turbo-notify/agent-skills/1c0a627d01b93da3a99602b902866070cdbdfe76/assets/icon.png",
       "author": {
         "login": "turbo-notify",
         "avatarUrl": "https://avatars.githubusercontent.com/u/218616223?v=4",
@@ -16654,15 +16789,15 @@
       },
       "repoUrl": "https://github.com/turbo-notify/agent-skills",
       "license": "MIT",
-      "version": "1.5.17",
+      "version": "1.5.18",
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139",
-        "tarballUrl": "https://api.github.com/repos/turbo-notify/agent-skills/tarball/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139",
-        "contentTreeSha256": "a682d36efdec5e67d66da6e5f25407e5bcb74c5b500d53a8d76e8d84a2754ecd",
-        "archiveBytes": 1089996,
-        "publishedAt": "2026-11-24T18:16:37Z"
+        "sha": "1c0a627d01b93da3a99602b902866070cdbdfe76",
+        "tarballUrl": "https://api.github.com/repos/turbo-notify/agent-skills/tarball/1c0a627d01b93da3a99602b902866070cdbdfe76",
+        "contentTreeSha256": "06e29540f8474973c42521c42b00f6a0745103856baee6a61ad20865eb161e75",
+        "archiveBytes": 1098461,
+        "publishedAt": "2026-11-27T02:55:41Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -16691,12 +16826,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T08:20:28Z"
+        "pushedAt": "2026-11-27T20:34:39Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:19:32.990Z",
+        "scannedAt": "2026-11-28T00:24:55.416Z",
         "capabilities": [
           "contains_minified",
           "fs_write_workspace",
@@ -17063,11 +17198,11 @@
       "minAppVersion": "2.34.0",
       "release": {
         "ref": "main",
-        "sha": "59e0a829087ebd1974c9787cdf3c688199ecab9b",
-        "tarballUrl": "https://api.github.com/repos/voodootikigod/antigravity-booster/tarball/59e0a829087ebd1974c9787cdf3c688199ecab9b",
-        "contentTreeSha256": "21d2417b6667a7b8792ab2a5133cba8d663224ac1b022f8aad3c315e5b87cfe2",
-        "archiveBytes": 3022470,
-        "publishedAt": "2026-11-27T16:08:58Z"
+        "sha": "9aaa4e992222bdb5afb8430a0a0319d86c6efa51",
+        "tarballUrl": "https://api.github.com/repos/voodootikigod/antigravity-booster/tarball/9aaa4e992222bdb5afb8430a0a0319d86c6efa51",
+        "contentTreeSha256": "23b59d33acf95b73927a05ed85246c5feaac49d48174618cb7c550e298801be1",
+        "archiveBytes": 3037581,
+        "publishedAt": "2026-11-27T20:57:13Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -17098,13 +17233,13 @@
       "stats": {
         "stars": 1,
         "forks": 0,
-        "openIssues": 5,
-        "pushedAt": "2026-11-27T16:08:59Z"
+        "openIssues": 6,
+        "pushedAt": "2026-11-27T23:03:00Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:13:28.614Z",
+        "scannedAt": "2026-11-28T00:24:47.765Z",
         "capabilities": [
           "accesses_gemini_dir",
           "contains_minified",
@@ -17639,15 +17774,15 @@
       },
       "repoUrl": "https://github.com/WhiteBr1ck/agy-powertools",
       "license": "MIT",
-      "version": "2.16.13",
+      "version": "2.16.14",
       "minAppVersion": null,
       "release": {
-        "ref": "v2.16.13",
-        "sha": "53f35c8dade9db928a4ecf7b997c672bd7815db1",
-        "tarballUrl": "https://api.github.com/repos/WhiteBr1ck/agy-powertools/tarball/53f35c8dade9db928a4ecf7b997c672bd7815db1",
-        "contentTreeSha256": "a2d28077851298e7fa16473d37c54e04ae3c6f42da56685b3283dc503c773de9",
-        "archiveBytes": 5707115,
-        "publishedAt": "2026-11-27T15:08:10Z"
+        "ref": "v2.16.14",
+        "sha": "d3fc71bb3dcd5c49f4470b70c8c4f21177673257",
+        "tarballUrl": "https://api.github.com/repos/WhiteBr1ck/agy-powertools/tarball/d3fc71bb3dcd5c49f4470b70c8c4f21177673257",
+        "contentTreeSha256": "c65bfb0d8f207a9f7d33eed03897d8bcd169891c70d8a2adef1e1eb19922f9e8",
+        "archiveBytes": 5721906,
+        "publishedAt": "2026-11-27T19:35:41Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -17667,15 +17802,15 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 1870,
-        "forks": 79,
-        "openIssues": 10,
-        "pushedAt": "2026-11-27T15:08:04Z"
+        "stars": 1898,
+        "forks": 81,
+        "openIssues": 11,
+        "pushedAt": "2026-11-27T19:35:35Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:13:40.423Z",
+        "scannedAt": "2026-11-28T00:25:20.377Z",
         "capabilities": [
           "accesses_gemini_dir",
           "contains_minified",
@@ -18004,6 +18139,70 @@
         }
       },
       "detailPath": "plugins/Wriquet/conversation-timeline.json"
+    },
+    {
+      "id": "WSDyi/codex-executor",
+      "name": "Codex Executor",
+      "pluginName": "codex-executor",
+      "summary": "Antigravity orchestrator paired with Codex CLI as a guarded, cache-optimized execution engine. Antigravity owns planning, design, copywriting, and verification; Codex executes scoped engineering tasks via MCP with runtime guardrails, persis",
+      "author": {
+        "login": "WSDyi",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/298634080?v=4",
+        "url": "https://github.com/WSDyi"
+      },
+      "repoUrl": "https://github.com/WSDyi/codex-executor",
+      "license": "MIT",
+      "version": "1.0.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v1.0.0",
+        "sha": "74c001b68fafb2b0c5bfc386731b0ad44d01748e",
+        "tarballUrl": "https://api.github.com/repos/WSDyi/codex-executor/tarball/74c001b68fafb2b0c5bfc386731b0ad44d01748e",
+        "contentTreeSha256": "0f792d89aaf181ac373fea8fe25ebdb0725c49d30b1953bbf3a75b3ec98f5138",
+        "archiveBytes": 32587,
+        "publishedAt": "2026-11-27T19:59:50Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "mcp_stdio",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "codex",
+        "mcp",
+        "mcp-server",
+        "orchestrator"
+      ],
+      "requiresCredentials": true,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-27T19:59:48Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T00:25:04.307Z",
+        "capabilities": [
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 10,
+          "medium": 11,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/WSDyi/codex-executor.json"
     },
     {
       "id": "wsugree/teach-skill-for-antigravity-and-gemini",
@@ -18563,15 +18762,15 @@
       },
       "repoUrl": "https://github.com/Yomudogly/oh-my-agy",
       "license": "MIT",
-      "version": "0.10.0",
+      "version": "0.11.0",
       "minAppVersion": null,
       "release": {
-        "ref": "v0.10.0",
-        "sha": "3d9298f121a10b16779792737398e71fb25eceef",
-        "tarballUrl": "https://api.github.com/repos/Yomudogly/oh-my-agy/tarball/3d9298f121a10b16779792737398e71fb25eceef",
-        "contentTreeSha256": "273d2cae66921e0a5c9cf48a3ab50a5b385a59e2d9f33cf7d7b8d6f9a13f2811",
-        "archiveBytes": 854824,
-        "publishedAt": "2026-11-23T15:27:15Z"
+        "ref": "v0.11.0",
+        "sha": "13a75db8a195ce2d665d419051e99fcc4a466223",
+        "tarballUrl": "https://api.github.com/repos/Yomudogly/oh-my-agy/tarball/13a75db8a195ce2d665d419051e99fcc4a466223",
+        "contentTreeSha256": "2d46a4787e37c5de5c9effe347cee84a817df785e90ed06dcc52f71606b572ed",
+        "archiveBytes": 866695,
+        "publishedAt": "2026-11-27T21:00:26Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -18602,12 +18801,12 @@
         "stars": 4,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-23T23:19:16Z"
+        "pushedAt": "2026-11-27T21:06:11Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:20:18.679Z",
+        "scannedAt": "2026-11-28T00:24:39.794Z",
         "capabilities": [
           "accesses_gemini_dir",
           "credential_access",
@@ -18808,7 +19007,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 636,
+        "stars": 639,
         "forks": 56,
         "openIssues": 8,
         "pushedAt": "2026-11-27T14:48:12Z"
@@ -18933,7 +19132,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 128,
+        "stars": 129,
         "forks": 3,
         "openIssues": 0,
         "pushedAt": "2026-11-27T17:08:17Z"
@@ -19163,7 +19362,7 @@
       "id": "zou172866/Antigravity-agy-cmd",
       "name": "agy-cmd (自动路由与防停机面板)",
       "pluginName": "agy-cmd",
-      "summary": "Antigravity 桌面端/IDE 高阶能力自动路由插件（v2.7.5）：多智能体与 Swarm 隔离调度、Plan Mode 硬拦截、交付测试门禁、Stop 防停机自动续跑、右侧边栏面板与 SHA-256 在线自更新。",
+      "summary": "Antigravity 桌面端/IDE 高阶能力自动路由插件（v2.8.0）：多智能体与 Swarm 隔离调度、Plan Mode 硬拦截、交付测试门禁、Stop 防停机自动续跑、右侧边栏面板与 SHA-256 在线自更新。",
       "author": {
         "login": "zou172866",
         "avatarUrl": "https://avatars.githubusercontent.com/u/295114258?v=4",
@@ -19171,15 +19370,15 @@
       },
       "repoUrl": "https://github.com/zou172866/Antigravity-agy-cmd",
       "license": "UNKNOWN",
-      "version": "2.7.5",
+      "version": "2.8.0",
       "minAppVersion": null,
       "release": {
-        "ref": "v2.7.5",
-        "sha": "2437cf503bb597a5d7d51e04b2a87dbb10a67a89",
-        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-cmd/tarball/2437cf503bb597a5d7d51e04b2a87dbb10a67a89",
-        "contentTreeSha256": "e6d84d62eb974dc3b90277fd0c1a78ba019fca4767f9809dc07c05eaf2889924",
-        "archiveBytes": 242632,
-        "publishedAt": "2026-11-27T12:11:50Z"
+        "ref": "v2.8.0",
+        "sha": "1a4572506bb80b4c937c72025caf49f5aaf0f7b6",
+        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-cmd/tarball/1a4572506bb80b4c937c72025caf49f5aaf0f7b6",
+        "contentTreeSha256": "33be2c1f8bd3895ce8fd61ddc61a515ad13d5aaca2e12490f1b0b8bb9476b7d4",
+        "archiveBytes": 313182,
+        "publishedAt": "2026-11-27T19:54:45Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -19209,12 +19408,12 @@
         "stars": 72,
         "forks": 1,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T12:11:46Z"
+        "pushedAt": "2026-11-27T19:54:39Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:14:36.961Z",
+        "scannedAt": "2026-11-28T00:25:13.919Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -19225,8 +19424,8 @@
         ],
         "findingCounts": {
           "critical": 0,
-          "high": 15,
-          "medium": 32,
+          "high": 19,
+          "medium": 41,
           "low": 3
         }
       },
@@ -19244,15 +19443,15 @@
       },
       "repoUrl": "https://github.com/zou172866/Antigravity-agy-dart",
       "license": "MIT",
-      "version": "1.9.3",
+      "version": "1.9.4",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.9.3",
-        "sha": "a092614ac847973f770a22c36211f17777533410",
-        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-dart/tarball/a092614ac847973f770a22c36211f17777533410",
-        "contentTreeSha256": "111a9d6b1acbe3aa04a32e91acf817d725613903244eb1d3d3fad99539e38d4d",
-        "archiveBytes": 1559940,
-        "publishedAt": "2026-11-27T14:06:33Z"
+        "ref": "v1.9.4",
+        "sha": "8c705dc93265c1233507403a5caeae77957478aa",
+        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-dart/tarball/8c705dc93265c1233507403a5caeae77957478aa",
+        "contentTreeSha256": "1f885719e8b08296b59fe5a199718a459f567afd95ffdff32994e42d13c1d40c",
+        "archiveBytes": 1611928,
+        "publishedAt": "2026-11-27T19:57:15Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -19283,15 +19482,15 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 231,
+        "stars": 235,
         "forks": 11,
         "openIssues": 4,
-        "pushedAt": "2026-11-27T14:05:23Z"
+        "pushedAt": "2026-11-27T19:57:09Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:14:05.866Z",
+        "scannedAt": "2026-11-28T00:25:11.093Z",
         "capabilities": [
           "accesses_gemini_dir",
           "credential_access",

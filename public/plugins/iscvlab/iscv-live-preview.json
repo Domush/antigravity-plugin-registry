@@ -1,0 +1,885 @@
+{
+  "schemaVersion": 1,
+  "id": "iscvlab/iscv-live-preview",
+  "sha": "7ff204aeddc4ed6e2aea51f00a80276d82a95c78",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T00:24:20.556Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "iscv-live-preview",
+    "displayName": "ISCV Live Preview",
+    "version": "1.0.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "preview",
+        "runtimeName": "iscv-live-preview_preview",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/bin/server.cjs",
+          "--data-dir",
+          "${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "iscv-live-preview",
+        "slashCommand": "/iscv-live-preview",
+        "description": "Live in-app HTML, standalone SVG, and deterministic motion-stage previewer in Antigravity side pane, inline chat, or full-page view with auto-reload, viewport switching, click-to-agent DOM inspection, and frame scrubbing.",
+        "disableModelInvocation": false,
+        "file": "skills/iscv-live-preview/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/iscv-live-preview"
+    ],
+    "mcpServerNames": [
+      "iscv-live-preview_preview"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"76\" alt=\"ISCV Live Preview logo\" />\n  <h1>ISCV Live Preview</h1>\n  <p><strong>Live in-app HTML, standalone SVG, and deterministic motion-stage previewer for Antigravity 2.0 (SEP-1865 MCP App) with auto-reload, viewport switching, click-to-agent DOM inspection, and frame scrubbing.</strong></p>\n\n  <p>\n    <img src=\"https://img.shields.io/badge/version-1.0.0-1D4ED8?style=flat-square\" alt=\"Version v1.0.0\" />\n    <img src=\"https://img.shields.io/badge/license-MIT-059669?style=flat-square\" alt=\"MIT License\" />\n    <img src=\"https://img.shields.io/badge/Antigravity_2.0-MCP_App-0F172A?style=flat-square\" alt=\"Antigravity 2.0 MCP App\" />\n    <img src=\"https://img.shields.io/badge/SEP--1865-Compliant-1D4ED8?style=flat-square\" alt=\"SEP-1865 Compliant\" />\n    <img src=\"https://img.shields.io/badge/tests-65%2F65_PASS-059669?style=flat-square\" alt=\"65 of 65 Tests Passing\" />\n  </p>\n</div>\n\n**ISCV Live Preview** turns Antigravity's Side Pane (`aux_pane`), Inline Chat, and Full-Page Sidebar (`global`) into a hardened live web and motion-stage preview studio—replacing external browser context-switching with zero-flash CSS hot-swap, 1-click viewport/aspect scaling (`Fit`, `Desktop`, `16:9`, `9:16`, `1:1`), click-to-agent DOM & live-editable WCAG 2.1 visual inspection (`updateModelContext` + opt-in `Sync to File`), standalone `.svg` element inspection, and automatic `window.seekToFrame(frame, fps)` timeline scrubbing.\n\n<p align=\"center\">\n  <img src=\"docs/images/pane_canopy_motion_light.png\" alt=\"ISCV Live Preview wide pane showing CanopyGIS v4 motion stage, DOM Inspector with WCAG 2.1 contrast, and seekToFrame scrubber\" width=\"100%\" />\n</p>\n\n| Narrow Side Pane (`460×780`, Stacked Inspector) | Inline Chat Preview Card (`≤ 800 px` Bounded) |\n| :---: | :---: |\n| <img src=\"docs/images/pane_narrow_sidepane_light.png\" alt=\"Narrow Side Pane stacked layout with zero overflow\" width=\"380\" /> | <img src=\"docs/images/inline_card_light.png\" alt=\"Compact Inline Chat Preview Card with motion scrubber\" width=\"460\" /> |\n\n---\n\n## ⚡ TL;DR — Capabilities & Verified Receipts\n\n- **4 Core Differentiating Features (Zero External Browser Needed)**:\n  1. **Targeted Auto Live-Reload**: Watches only the entry directory and served asset folders (`≤ 16` dirs) over same-origin SSE (`0` outer `connectDomains`, `0 / 4` `callServerTool` slots); hot-swaps external `.css` `<link>` tags and inline `<style>`-only edits with zero flash, and restores scroll + motion `frame`/`fps` after full HTML reloads.\n  2. **Viewport & Aspect Switcher (`Fit`, `Desktop`, `16:9`, `9:16`, `1:1`)**: `ResizeObserver`-driven crisp zoom-to-fit (`Math.floor(W × s) × Math.floor(H × s)`, `0` overflow), auto-scaling fixed `1920×1080` stages inside narrow Side Panes and syncing dual-aspect `?aspect=9x16` / `?aspect=16x9` stages.\n  3. **Click-to-Agent DOM Inspector & Live Visual Editor (`updateModelContext` + Opt-in `Sync to File`)**: Pierces `pointer-events: none` motion scenes and outer CSS `box-shadow` frames (`elementsFromPoint` + exact `getClientRects()` fragment hit-testing + shadow-rect hit-testing + clickable DOM ancestor breadcrumb & Figma-style **Layers dropdown** with live hover preview), renders exact multi-line fragment & SVG vector shape boundaries (`getScreenCTM()`), lets you live-edit **FG/BG colors** (with instant **WCAG 2.1 (`0.04045`) contrast** recalculation), **Box W/H**, **Typography (Size/Line-Height/Weight)**, data-driven **Active Effects & Styles** (auto-detects active `box-shadow`, `text-shadow`, SVG `stroke`/`stroke-width`/`dasharray`, `border`/`border-radius`/`outline`, `opacity`, `filter`/`backdrop-filter`, `mix-blend-mode`, `transform`, `clip-path`, or any valid CSS property via `CSS.supports()` + generic **`+ Style`**, zero hardcoded empty cards), multiline **Text (`Enter` → `<br>`)**, and safe-parsed **Outer HTML** (`0 ms` live DOM sync + `Reset`), attaches automatic `Before → After` diffs to your next prompt (strictly capability-gated via `app.getHostCapabilities()`), and optionally writes static `.html`/`.svg` edits back to disk via **`Sync to File`** (atomic write + watcher self-write echo suppression, failing safely on dynamic JS DOM).\n  4. **Auto Motion Stage Scrubber & Standalone SVG Preview**: Automatically detects `window.seekToFrame(frame, fps)` across inline, `defer`, and `type=\"module\"` scripts to reveal Play/Pause, `-1f`/`+1f` stepping, timeline scrubbing, and editable FPS (`24`/`30`/`60`) + duration controls; wraps standalone `.svg` files in a Light/Checker/Dark inspectable vector host.\n- **Hardened Loopback Containment & Dual-OS Parity**: Strictly binds `127.0.0.1` (never `0.0.0.0`) with `Host` DNS-rebinding rejection, `timingSafeEqual` session tokens, `Referrer-Policy: no-referrer`, `realpathSync.native` symlink/junction containment, UNC/ADS/reserved-device rejection, dual-path `.env`/`.git`/key denylist, RFC 9110 `206`/`416` media `Range`, and clean `stdin` EOF zero-zombie shutdown on Windows, macOS, and Linux.\n- **Zero-Dependency Runtime Bundles (`7.62%` of `10 MiB` Cap)**: Ships standalone `bin/server.cjs` (`1,655.9 KiB`), `ui/pane.html` (`780.1 KiB`), and `ui/inline.html` (`780.1 KiB`) with `0` external CDNs and `0` `node_modules` required at plugin runtime.\n\n### One-Prompt Universal Agent Install\n\nCompatible with **Any AI Agent (Cloud • IDE • CLI • Local LLM)**—paste this prompt into your agent or run the Antigravity CLI command below:\n\n```text\nInstall the ISCV Live Preview Antigravity plugin from https://github.com/iscvlab/iscv-live-preview:\n1. If the `agy` CLI is available, run `agy plugin install https://github.com/iscvlab/iscv-live-preview` and verify with `agy plugin validate --strict ~/.gemini/config/plugins/iscv-live-preview` (or `%USERPROFILE%\\.gemini\\config\\plugins\\iscv-live-preview` on Windows) and `agy plugin list --json`.\n2. Otherwise, detect my OS and global plugin directory (`~/.gemini/config/plugins/iscv-live-preview` on Linux/macOS or `%USERPROFILE%\\.gemini\\config\\plugins\\iscv-live-preview` on Windows), clone `https://github.com/iscvlab/iscv-live-preview` there (runtime bundles require zero `node_modules`), and verify `npm test` passes.\n```\n\n```bash\nagy plugin install https://github.com/iscvlab/iscv-live-preview\n```\n\n### Verified Bundle Footprint & 4-Gate Scorecard\n\n| Evaluation Dimension | Component / Verification Gate | Visual Comparison Bar (`20-Block`) | Measured Result & Spec Receipt |\n| :--- | :--- | :--- | :--- |\n| **1. UI Bundle Size vs. `10 MiB` Cap ↓**<br>*(Lower = Better)* | **`ui/pane.html`**<br>**`ui/inline.html`**<br>`bin/server.cjs`<br>`10 MiB` MCP App Cap | `█░░░░░░░░░░░░░░░░░░░` **`7.62%`**<br>`█░░░░░░░░░░░░░░░░░░░` **`7.62%`**<br>`███░░░░░░░░░░░░░░░░░` `16.17%`<br>`████████████████████` `100.0%` | **`780.1 KiB`** (`798,850 B`, `0` CDN)<br>**`780.1 KiB`** (`798,865 B`, `0` CDN)<br>`1,655.9 KiB` (`1,695,636 B`, standalone)<br>`10,240.0 KiB` (Host limit) |\n| **2. Tool Payload vs. `1 MiB` Cap ↓**<br>*(Lower = Better)* | **Loopback Metadata (`CallToolResult`)**<br>Base64 Inline Baseline (`CanopyGIS`) | `█░░░░░░░░░░░░░░░░░░░` **`0.19%`**<br>`████████████████████` `>1,000%` *(Fails)* | **`1.93 KiB`** (`1,976 B` for `9.94 MiB` stage / `12.34 MiB` w/ fonts)<br>`13.2–16.4 MiB` (Exceeds `1 MiB` & `10 MiB`) |\n| **3. Security & Protocol Gates ↑** | **Gate 1: `test_http_security.mjs`**<br>**Gate 2: `test_mcp_stdio.mjs`** | `████████████████████` **`100.0%`**<br>`████████████████████` **`100.0%`** | **`26 / 26` PASS** (`CA-01..CA-03`, `CA-07` patcher, SSE cap; skips optional local fixture on CI)<br>**`8 / 8` PASS** (Live stdio + zero zombie; skips optional local fixture on CI) |\n| **4. Browser E2E & Plugin Gates ↑** | **Gate 3: `test_e2e_playwright.py`**<br>**Gate 4: `agy plugin validate`** | `████████████████████` **`100.0%`**<br>`████████████████████` **`100.0%`** | **`31 / 31` PASS** (`21` synthetic on CI + `10` CanopyGIS/BoostX local; `0` console errs, `13/13` TTF, `0` flake8)<br>**`0` Errors / `0` Warnings** (`strict` mode) + `/xpublish` `0` Blocking / `0` Advisory |\n\n---\n\n## 1. Architecture & Surface Workflow\n\nISCV Live Preview binds an isolated `127.0.0.1` loopback HTTP server before MCP handshake so `_meta.ui.csp.frameDomains` declares only the exact ephemeral origin (`connectDomains: []`, `resourceDomains: []`). All previewed pages and raw HTML/SVG strings load under tokenized `/s/<sid>/<tok>/...` paths with an injected external same-origin `bridge.js` communicating with the outer MCP App shell over an inverted `MessageChannel` port (fully compatible with opaque `\"null\"` sandbox origins).\n\n```mermaid\n%%{init: {'theme': 'neutral'}}%%\nflowchart LR\n    subgraph Canvas [\" \"]\n        Host[\"Antigravity Host and Agent\"] --> MCP[\"Stdio MCP Server (bin/server.cjs)\"]\n        MCP --> Shell[\"MCP App Shell (pane.html / inline.html)\"]\n        MCP --> Session[\"Session Engine and Root Resolver\"]\n\n        subgraph Loopback [\"Hardened 127.0.0.1 Static Server\"]\n            HTTP[\"Tokenized HTTP and Range Server\"]\n            Watch[\"Targeted Served-Dir Watcher\"]\n        end\n\n        Session --> HTTP\n        Session --> Watch\n        HTTP --> Frame[\"Preview Iframe (HTML, SVG, Motion Stage)\"]\n        Watch --> Frame\n        Shell <--> Frame\n        Shell --> Context[\"Gated updateModelContext and FileView\"]\n    end\n    classDef default fill:#ffffff,stroke:#475569,color:#0f172a,stroke-width:1px\n    style Canvas fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#0f172a\n    style Loopback fill:#f8fafc,stroke:#94a3b8,color:#0f172a\n```\n\n```mermaid\n%%{init: {'theme': 'neutral'}}%%\nflowchart LR\n    subgraph Canvas [\" \"]\n        subgraph Step1 [\"1. Open or Update\"]\n            Tool[\"iscv_preview_open or iscv_preview_inline\"]\n            Picker[\"Empty Launch File Picker\"]\n        end\n\n        subgraph Step2 [\"2. Live Preview and Inspect\"]\n            View[\"Viewport Scale and Live Reload\"]\n            Inspect[\"DOM Pierce, WCAG 2.1 and Motion Scrub\"]\n        end\n\n        subgraph Step3 [\"3. Agent Context Loop\"]\n            Attach[\"Attach Selector and Contrast to Chat\"]\n            Edit[\"Agent Edits Source and Auto-Reloads\"]\n        end\n\n        Tool --> View\n        Picker --> View\n        View --> Inspect\n        Inspect --> Attach\n        Attach --> Edit\n        Edit --> View\n    end\n    classDef default fill:#ffffff,stroke:#475569,color:#0f172a,stroke-width:1px\n    style Canvas fill:#ffffff,stroke:#cbd5e1,stroke-width:1.5px,color:#0f172a\n    style Step1 fill:#f8fafc,stroke:#94a3b8,color:#0f172a\n    style Step2 fill:#f8fafc,stroke:#94a3b8,color:#0f172a\n    style Step3 fill:#f8fafc,stroke:#94a3b8,color:#0f172a\n```\n\n---\n\n## 2. Quick Start & Installation\n\n### Option A — Antigravity CLI Install\n\n```bash\nagy plugin install https://github.com/iscvlab/iscv-live-preview\nagy plugin list --json\n```\n\n### Option B — Local Clone, Build & Sync\n\n```bash\ngit clone https://github.com/iscvlab/iscv-live-preview.git\ncd iscv-live-preview\nnpm ci\nnpm run build:sync\nagy plugin validate --strict .\nnpm test\n```\n\n### Example Prompts in Antigravity\n\n- *\"Preview `index.html` live in the side pane with auto-reload and switch to `16:9`.\"*\n- *\"Open `assets/logo.svg` in ISCV Live Preview so I can inspect its vector elements.\"*\n- *\"Preview `canopygis_v4_motion_stage.html` at frame `80` with the motion scrubber.\"*\n\n---\n\n## 3. Benchmarks, Security Model & Tool Reference\n\n| MCP Tool | Visibility | Surface Entrypoints | Primary Responsibility |\n| :--- | :---: | :--- | :--- |\n| **`iscv_preview_open`** | `model`, `app` | `aux_pane`, `global` | Open or live-update the Side Pane / Full-Page previewer (empty `{}` restores last file or opens Workspace File Picker) |\n| **`iscv_preview_inline`** | `model`, `app` | Inline chat only | Render a bounded (`≤ 800 px`) live preview card inline in chat (`liveReload: false` default with opt-in Live toggle) |\n| **`iscv_preview_list_files`** | `app` | — | Scan allowed workspace root for previewable `.html`, `.htm`, and `.svg` files (relative path, kind, size, and mtime) |\n| **`iscv_preview_select_file`** | `app` | — | Switch active file from in-app File Picker or recover stale sessions after server restart |\n| **`iscv_preview_control`** | `app` | — | Pause/resume watcher, persist stage FPS/duration overrides, or apply opt-in fail-safe `check_patch` / `patch_element` source sync |\n\n<details>\n<summary><strong>Deep Technical Reference: Tool Parameters, Security Containment & Motion Cascade</strong></summary>\n\n### Shared Optional Input Schema (`iscv_preview_open` & `iscv_preview_inline`)\n\nAll inputs are strictly optional so Antigravity `+` and sidebar launches (`{}`) work seamlessly:\n\n| Parameter | Type | Description |\n| :--- | :--- | :--- |\n| `filePath` | `string` | Absolute or workspace-relative path to `.html`, `.htm`, or `.svg` file |\n| `html` | `string` | Raw HTML or SVG string served from an in-memory buffer (`≤ 2 MiB`) |\n| `rootDir` | `string` | Optional asset serving root (auto-resolved via 5-tier cascade when omitted) |\n| `viewport` | `enum` | `\"fit\"` (default; scales fixed stages cleanly without switching preset), `\"desktop\"` (`1440×900`), `\"16:9\"` (`1920×1080`), `\"9:16\"` (`1080×1920`), or `\"1:1\"` (`1080×1080`) |\n| `aspectParam` | `enum` | `\"16x9\"` or `\"9x16\"` query parameter for responsive dual-aspect motion stages |\n| `inspect` | `boolean` | Start with DOM Inspect Mode & Inspector sidebar active (`default: true` in pane mode, `false` in inline mode) |\n| `frame` | `number` | Initial motion frame (`≥ 0`, rounded to integer) to seek via `window.seekToFrame(frame, fps)` |\n| `fps` | `number` | Override FPS (`1–240`; auto-inferred when omitted) |\n| `durationSec` | `number` | Override stage duration in seconds (`> 0` and `≤ 3600`; auto-inferred when omitted) |\n| `title` | `string` | Optional display title for the preview tab or inline card |\n| `forceReload` | `boolean` | Force a full iframe reload even if the same file is already open (`default: false`) |\n| `watchEnabled` | `boolean` | Enable automatic live-reload file watching (`default: true`, `iscv_preview_open` only) |\n| `liveReload` | `boolean` | Enable live-reload watching on the inline card (`default: false`, `iscv_preview_inline` only) |\n| `height` | `number` | Inline card viewport height (`180–660 px`, `default: 480`, rounded to integer, `iscv_preview_inline` only) |\n\n### 5-Tier `rootDir` Resolution & Security Invariants\n\n1. **Explicit `rootDir`** (must be canonical ancestor of entry file; rejects system/profile/drive roots).\n2. **MCP Client Roots** (`listRoots()` guarded by client capabilities + `1500 ms` timeout + `fileURLToPath`).\n3. **Project Marker Walk-Up** (`.git`, `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `AGENTS.md`, `GEMINI.md`, `.vscode`, `.antigravity` strictly below `homedir`/`Desktop`/drive roots).\n4. **Static Relative-Ref Ceiling** (scans `src=`, `href=`, CSS `url(...)`, JS `import` `../` hops up to `8` levels, clamped strictly below forbidden roots—supporting deeply nested stages reaching shared font libraries).\n5. **Entry Directory Fallback** (fails closed if entry directory is a forbidden system/profile/temp root).\n\nAll HTTP requests enforce `127.0.0.1` loopback peer address, exact `Host: 127.0.0.1:<port>`, constant-time `timingSafeEqual` token matching, `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff`, `Cache-Control: no-store`, pre-`fs` rejection of UNC/ADS/reserved Windows device names, canonical `fs.realpathSync.native` containment, dual-path sensitive-file denylist (`.env`, `.git`, `.ssh`, `*.pem`, `*.key`, `id_rsa*`), and a server-wide cap of `3` active SSE connections with `event: hlp-paused` eviction.\n\n</details>\n\n---\n\n## 4. License & Credits\n\nReleased under the [MIT License](LICENSE). Created and maintained by **ISCV | Isocurve Research Lab** ([`@iscvlab`](https://github.com/iscvlab)) — Napat Tan ([`@napattan`](https://github.com/napattan)).\n",
+  "latestReleaseNotes": "# ISCV Live Preview v1.0.0 — Initial Antigravity 2.0 MCP App Release\n\nFirst public release of **ISCV Live Preview**, a zero-dependency **live HTML, standalone SVG, and deterministic motion-stage previewer** engineered natively for **Antigravity 2.0 MCP Apps** (Side Pane `aux_pane`, Inline Chat card, and Full-Page `global` sidebar view).\n\n![ISCV Live Preview Light Mode Workbench](https://raw.githubusercontent.com/iscvlab/iscv-live-preview/main/docs/images/pane_canopy_motion_light.png)\n\n## Install in 1 Command\n\n```bash\nagy plugin install https://github.com/iscvlab/iscv-live-preview\n```\n\nZero build step or `node_modules/` required at runtime — prebuilt single-file bundles (`bin/server.cjs`, `ui/pane.html`, `ui/inline.html`) live cleanly at the repository root (`7.62%` of the `10 MiB` MCP App bundle cap).\n\n## What's Included in `v1.0.0`\n\n- **3 Native Antigravity Surfaces**: Side Pane (`aux_pane`), Full-Page Sidebar (`global`), and bounded Inline Chat cards (`180–660 px`, `≤ 800 px` total) with `5` SEP-1865 MCP tools (`iscv_preview_open`, `iscv_preview_inline`, plus app-only `iscv_preview_list_files`, `iscv_preview_select_file`, `iscv_preview_control`) and full MCP `ToolAnnotations`.\n- **Targeted Auto Live-Reload**: Non-recursive directory watching (`≤ 16` LRU dirs) over same-origin SSE; zero-flash external `.css` `<link>` hot-swapping, root-URL-rewritten inline `<style>` patching, and full-reload scroll + motion `frame`/`fps` restoration.\n- **Click-to-Agent DOM Inspector & Live Visual Editor**: Opens ready in Side Pane mode (toggled cleanly via **Inspect**); pierces `pointer-events: none` motion stages and outer CSS `box-shadow` frames with exact `getClientRects()` / SVG `getScreenCTM()` boundaries, Figma-style **Layers dropdown**, clickable DOM ancestor breadcrumb, live **WCAG 2.1 (`0.04045`) contrast** (`5.17:1–7.30:1` Light & Dark controls), data-driven **Active Effects & Styles** (`box-shadow`, `text-shadow`, SVG `stroke`, `border`/`border-radius`/`outline`, `opacity`, `filter`/`backdrop-filter`, `mix-blend-mode`, `transform`, or any CSS property via `CSS.supports()` + generic **`+ Style`**), multiline `Enter → <br>` text editing, XSS-hardened Outer HTML editing with in-place `Reset`, `Before → After` Diff attachment (`updateModelContext`), and opt-in atomic **`Sync to File`** with self-write echo suppression.\n- **Auto Motion Stage Scrubber & Standalone SVG Host**: Detects `window.seekToFrame(frame, fps)` across inline, `defer`, and `type=\"module\"` stages for Play/Pause, `-1f`/`+1f` stepping, timeline scrubbing, and editable FPS/duration; wraps standalone `.svg` entries in a Checker/Light/Dark inspectable vector host.\n- **Hardened `127.0.0.1` Loopback Containment**: Strict `Host` validation, `timingSafeEqual` session tokens, `Referrer-Policy: no-referrer`, 5-tier `rootDir` resolution, `realpathSync.native` symlink containment, segment-wide sensitive-path denylist, RFC 9110 `206`/`416` media `Range`, and `< 2 s` `stdin` EOF zero-zombie shutdown across Windows, macOS, and Linux.\n\n## Verification Receipts\n\n- **65 / 65 Automated Tests PASS**: `26/26` HTTP Security & Patcher + `8/8` Live Stdio MCP + `31/31` Playwright E2E (`0` console errors, `0` flake8 violations).\n- **Plugin Validation**: `agy plugin validate --strict` PASS (`0` errors, `0` warnings).\n- **Pre-Flight Release Audit (`/xpublish --platform github`)**: `0` Blocking / `0` Advisory (`35` files, `0` esbuild warnings).\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "contains_minified",
+      "credential_access",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/server/security.js",
+        "line": 196,
+        "snippet": "lower === \".npmrc\" ||",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L196"
+      },
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/server/security.js",
+        "line": 198,
+        "snippet": "lower === \".netrc\" ||",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L198"
+      },
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/server/security.js",
+        "line": 200,
+        "snippet": "lower.startsWith(\"id_rsa\") ||",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L200"
+      },
+      {
+        "id": "CODE_CREDENTIAL_PATH",
+        "severity": "critical",
+        "layer": "code",
+        "capability": "credential_access",
+        "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
+        "file": "src/server/security.js",
+        "line": 201,
+        "snippet": "lower.startsWith(\"id_ed25519\") ||",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L201"
+      },
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "bin/server.cjs",
+        "line": 16688,
+        "snippet": "\\u041D\\u0435\\u0440\\u0430\\u0441\\u043F\\u0430\\u0437\\u043D\\u0430\\u043D\\u044B",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/bin/server.cjs#L16688"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 350,
+        "snippet": "const sw = pxRe.exec(el.style.width || \"\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L350"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 351,
+        "snippet": "const sh = pxRe.exec(el.style.height || \"\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L351"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 378,
+        "snippet": "const rw = pxRe.exec(rule.style.width || \"\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L378"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 379,
+        "snippet": "const rh = pxRe.exec(rule.style.height || \"\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L379"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 653,
+        "snippet": "/\\(\\s*[^,)]+,\\s*\\w+\\s*=\\s*(?!=)(\\d+(?:\\.\\d+)?)\\s*\\)/i.exec(fnSrc) ||",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L653"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 654,
+        "snippet": "/\\bfps\\s*=\\s*fps\\s*(?:\\|\\||\\?\\?)\\s*(\\d+(?:\\.\\d+)?)/i.exec(fnSrc) ||",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L654"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 655,
+        "snippet": "/\\bfps\\s*=\\s*(?!=)(\\d+(?:\\.\\d+)?)\\b/i.exec(fnSrc);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L655"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 661,
+        "snippet": "const clampMatch = /clamp\\s*\\(\\s*\\w+\\s*,\\s*0\\s*,\\s*(\\d+)\\s*\\)/i.exec(fnSrc);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L661"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 667,
+        "snippet": "const totalComment = /(\\d+(?:\\.\\d+)?)\\s*s\\s+total/i.exec(fnSrc);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L667"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 678,
+        "snippet": "while ((m = timeRe.exec(fnSrc)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L678"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 1024,
+        "snippet": "const pm = /^path\\(\\s*(?:\"([^\"]*)\"|'([^']*)')\\s*\\)$/i.exec(cs.d.trim());",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L1024"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 1049,
+        "snippet": "const pxM = /^([-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[-+]?\\d+)?)px$/i.exec(cv);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L1049"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 1795,
+        "snippet": "/^rgba?\\(\\s*([\\d.]+%?)\\s*,\\s*([\\d.]+%?)\\s*,\\s*([\\d.]+%?)(?:\\s*,\\s*([\\d.]+%?))?\\s*\\)$/i.exec( str );",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L1795"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 1809,
+        "snippet": "/^rgba?\\(\\s*([\\d.]+%?)\\s+([\\d.]+%?)\\s+([\\d.]+%?)(?:\\s*\\/\\s*([\\d.]+%?))?\\s*\\)$/i.exec( str );",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L1809"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 1823,
+        "snippet": "/^color\\(\\s*srgb\\s+([\\d.-]+)\\s+([\\d.-]+)\\s+([\\d.-]+)(?:\\s*\\/\\s*([\\d.]+%?))?\\s*\\)$/i.exec( str );",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L1823"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 3080,
+        "snippet": "const openNameMatch = /^<([a-zA-Z][a-zA-Z0-9:-]*)/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L3080"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/bridge/bridge.js",
+        "line": 3116,
+        "snippet": "const openNameMatch = /^<([a-zA-Z][a-zA-Z0-9:-]*)/.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/bridge/bridge.js#L3116"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/http.js",
+        "line": 149,
+        "snippet": "const nameMatch = /^<([a-zA-Z][a-zA-Z0-9:-]*)/.exec(tag);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L149"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/http.js",
+        "line": 600,
+        "snippet": "const m = /^bytes=(\\d*)-(\\d*)$/i.exec(trimmed);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L600"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/http.js",
+        "line": 805,
+        "snippet": "const routeMatch = /^\\/s\\/([^/]+)\\/([^/]+)\\/(.*)$/.exec(rawPathname);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L805"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/http.js",
+        "line": 855,
+        "snippet": "const inlineMatch = /^__inline\\/([a-zA-Z0-9_-]+)\\.html$/.exec(rawRest);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L855"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/mcp.js",
+        "line": 35,
+        "snippet": "const m = charsetRe.exec(htmlText);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/mcp.js#L35"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/mcp.js",
+        "line": 40,
+        "snippet": "const headMatch = /<head[^>]*>/i.exec(htmlText);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/mcp.js#L40"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 53,
+        "snippet": "let m = FPS_CONST_RE.exec(htmlSource);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L53"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 57,
+        "snippet": "} else if ((m = FPS_SIG_RE.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L57"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 60,
+        "snippet": "} else if ((m = FPS_FALLBACK_RE.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L60"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 63,
+        "snippet": "} else if ((m = FPS_CALLSITE_RE.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 78,
+        "snippet": "const tfConst = TOTAL_FRAMES_CONST_RE.exec(htmlSource);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L78"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 79,
+        "snippet": "const durConst = DURATION_CONST_RE.exec(htmlSource);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L79"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 96,
+        "snippet": "const clampMatch = CLAMP_FRAMES_RE.exec(htmlSource);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L96"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 107,
+        "snippet": "const proseMatch = PROSE_DURATION_RE.exec(htmlSource);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L107"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/motion_hints.js",
+        "line": 120,
+        "snippet": "while ((m = TIMELINE_CALL_RE.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/motion_hints.js#L120"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/patcher.js",
+        "line": 146,
+        "snippet": "const nameMatch = /^<([a-zA-Z][a-zA-Z0-9:-]*)/.exec(openTag);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/patcher.js#L146"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/patcher.js",
+        "line": 242,
+        "snippet": "const m = /^<(script|style)(?=[\\s/>])/i.exec(src.slice(i, i + 16));",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/patcher.js#L242"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/patcher.js",
+        "line": 255,
+        "snippet": "const cm = closeRe.exec(src);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/patcher.js#L255"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/patcher.js",
+        "line": 389,
+        "snippet": "const m = /^<(\\/)?([a-zA-Z][a-zA-Z0-9:-]*)(?=[\\s/>])/.exec(slice);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/patcher.js#L389"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/patcher.js",
+        "line": 517,
+        "snippet": "const selfCloseMatch = /(\\s*\\/\\s*>)$/.exec(openTag);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/patcher.js#L517"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/patcher.js",
+        "line": 591,
+        "snippet": "const closeMatch = /^<\\/([a-zA-Z][a-zA-Z0-9:-]*)\\s*>$/.exec(tagSlice);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/patcher.js#L591"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/security.js",
+        "line": 591,
+        "snippet": "while ((m = attrRe.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L591"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/security.js",
+        "line": 597,
+        "snippet": "while ((m = srcsetRe.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L597"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/security.js",
+        "line": 607,
+        "snippet": "while ((m = cssUrlRe.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L607"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/security.js",
+        "line": 613,
+        "snippet": "while ((m = jsImportRe.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L613"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/security.js",
+        "line": 618,
+        "snippet": "while ((m = jsDynamicImportRe.exec(htmlSource)) !== null) {",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/security.js#L618"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/server/session.js",
+        "line": 84,
+        "snippet": "const m = /<title[^>]*>([^<]{1,140})<\\/title>/i.exec(html);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L84"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 76,
+        "snippet": "const rgbMatch = /^rgba?\\(\\s*([\\d.]+)\\s*,\\s*([\\d.]+)\\s*,\\s*([\\d.]+)/i.exec(s);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L76"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 82,
+        "snippet": "const hexMatch = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(s);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L82"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 213,
+        "snippet": "const m = /^-?\\d+(?:\\.\\d+)?/.exec(String(raw ?? \"\").trim());",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L213"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 292,
+        "snippet": "const rgbaComma = /rgba?\\(\\s*([\\d.]+%?)\\s*,\\s*([\\d.]+%?)\\s*,\\s*([\\d.]+%?)(?:\\s*,\\s*([\\d.]+%?))?\\s*\\)/i.exec(rawLayer);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L292"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 294,
+        "snippet": "? /rgba?\\(\\s*([\\d.]+%?)\\s+([\\d.]+%?)\\s+([\\d.]+%?)(?:\\s*\\/\\s*([\\d.]+%?))?\\s*\\)/i.exec(rawLayer)",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L294"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 314,
+        "snippet": "const hexM = /#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\\b/i.exec(rawLayer);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L314"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 331,
+        "snippet": "const fnM = /(?:oklch|oklab|lab|lch|hsla?|hwb|color-mix|color)\\((?:[^()]|\\([^()]*\\))*\\)/i.exec(rawLayer);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L331"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 451,
+        "snippet": "const wM = /([-+]?(?:\\d+\\.?\\d*|\\.\\d+))px/i.exec(stripped);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L451"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 453,
+        "snippet": "const styleM = /\\b(solid|dashed|dotted|double|groove|ridge|inset|outset)\\b/i.exec(stripped);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L453"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 2358,
+        "snippet": "const scalarM = /^([-+]?(?:\\d+\\.?\\d*|\\.\\d+))([a-z%]*)$/i.exec(fn.args);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L2358"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/ui/shared_app.js",
+        "line": 2419,
+        "snippet": "const uniformPx = /^(\\d+(?:\\.\\d+)?)px$/i.exec(ef.value.trim());",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/ui/shared_app.js#L2419"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "bin/server.cjs",
+        "line": 37706,
+        "snippet": "if ('(()=>{(()=>{\"use strict\";let Ge=\"hlp-bridge/v1\",G=document.documentElement;if(G&&G.dataset&&G.dataset.hlpBridgeLoaded===\"1\")return;G&&G",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/bin/server.cjs#L37706"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 50,
+        "snippet": "fs.rmSync(dstDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/scripts/build.mjs#L50"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 76,
+        "snippet": "fs.rmSync(targetBinDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/scripts/build.mjs#L76"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build.mjs",
+        "line": 176,
+        "snippet": "fs.writeFileSync(t.out, html, \"utf8\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/scripts/build.mjs#L176"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/http.js",
+        "line": 546,
+        "snippet": "fs.writeFileSync(tmpPath, payload, \"utf8\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L546"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/http.js",
+        "line": 550,
+        "snippet": "fs.writeFileSync(portFilePath, payload, \"utf8\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L550"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/http.js",
+        "line": 552,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/http.js#L552"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/session.js",
+        "line": 148,
+        "snippet": "fs.writeFileSync(tmpPath, serialized, \"utf8\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L148"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/session.js",
+        "line": 152,
+        "snippet": "fs.writeFileSync(stateFilePath, serialized, \"utf8\");",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L152"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/session.js",
+        "line": 154,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L154"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/session.js",
+        "line": 1013,
+        "snippet": "fs.writeFileSync(tmpPath, nextBuf);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L1013"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/session.js",
+        "line": 1018,
+        "snippet": "fs.writeFileSync(targetReal, nextBuf);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L1018"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/server/session.js",
+        "line": 1023,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/iscvlab/iscv-live-preview/blob/7ff204aeddc4ed6e2aea51f00a80276d82a95c78/src/server/session.js#L1023"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "7ff204aeddc4ed6e2aea51f00a80276d82a95c78",
+      "scannedAt": "2026-11-28T00:24:20.556Z",
+      "riskTier": "high",
+      "capabilities": [
+        "contains_minified",
+        "credential_access",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

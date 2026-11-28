@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "A16Nights/antigravity-azure-wand",
-  "sha": "5d9fd26f24ff0452bf031dd5a5ffc73543dae414",
+  "sha": "52014f622f36c977cc7bb3fed7294e1b203da8cd",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:17:43.712Z",
+  "scannedAt": "2026-11-28T00:25:26.343Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "azure-wand",
-    "displayName": "苍蓝魔杖",
-    "version": "1.3.2",
+    "displayName": "苍蓝魔杖——Windows 桌面与网页操控",
+    "version": "1.3.3",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -70,8 +70,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝魔杖 · Azure Wand\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-wand/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-wand?style=flat-square&label=Release&color=38bdf8&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-wand/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-wand?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-38bdf8?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Platform-Windows_10%2F11-0ea5e9?style=flat-square&labelColor=1e293b\" alt=\"Windows\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>Windows 桌面与网页低打扰操控台 · 独立输入 15 状态动态 AI 光标 · 套装画廊混搭与外部光标一键导入 · 4 套苍蓝玻璃思考浮窗</strong>\n</p>\n\n<p>\n  <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n面向 **Google Antigravity** 的 Windows 桌面与网页低打扰可视化操控插件（3 组独立 MCP 服务 + 左侧栏/右侧 Sidecar 双入口控制面板）。在不抢你鼠标与键盘焦点的前提下，优先通过 **独立输入（UIA / 窗口消息）** 与 **浏览器后台 CDP 通道** 执行操作，并配有置顶穿透的 **15 状态动态 AI 光标**、**4 套苍蓝玻璃思考浮窗**、**自定义鼠标提示标签** 以及硬件级 `Esc` / `Ctrl+Alt+Q` 随时急停。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🪄 独立输入 · 15 状态动态 AI 光标</h4>\n通过 <code>independent_input</code> 严格走目标窗口 UIA / 窗口消息，<strong>绝不动真实鼠标、绝不抢焦点</strong>；32-bit 逐像素透明渲染无紫边，支持「陪伴 / 整洁 / 避让淡出」三种显示模式与 <code>Ctrl+Alt+Q</code> 急停。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🎨 套装画廊 · 单状态混搭 · 外部光标导入</h4>\n内置纯 Node.js 二进制解码器，支持直接路径或拖拽导入 <code>.cur</code> / <code>.ani</code> / <code>.ico</code> / <code>install.inf</code> / <code>.zip</code> / <code>.rar</code> 光标包，一键切换整套外观或为 15 个状态自由跨套装混搭。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🧰 26 项 Windows UIA / OCR / CDP 工具</h4>\n优先后台网页 CDP 与 Windows UI Automation 控件交互，自绘界面自动用原生 OCR 与像素截屏兜底；支持在面板中按四大分类精细开关任意工具与配置应用启动白名单。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🪟 4 套苍蓝玻璃思考浮窗 & 硬件急停</h4>\n提供苍蓝星辉、深海星曜、星雾薰衣草、冰川霜蓝 4 套玻璃卡片主题与动态测宽渐变鼠标标签，支持实时 3 秒预览与鼠标穿透锁定，按 <code>Esc</code> 毫秒级叫停。\n</td>\n</tr>\n</table>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 独立输入与 15 状态动态 AI 光标（`azure-wand-independent`）\n- **严格零打扰通道**：针对目标窗口句柄 `hwnd` 使用 UI Automation 与窗口消息交互，你可以继续正常移动自己的鼠标、打字或切换窗口，互不干扰。\n- **逐像素 Alpha 渲染引擎**：基于 Win32 `UpdateLayeredWindow` 32-bit 预乘 Alpha 渲染，自适应 64px 像素锐利缩放与 128px 高清抗锯齿缩放，自动读取每套包的真实帧数与帧率。\n- **三种显示方式**：\n  - **陪伴模式**：执行期间常驻屏幕，直观看到 AI 正在操作哪里；\n  - **整洁模式**：每次动作完成后按自定义延时（400~15000ms）自动收起；\n  - **避让淡出模式**：停留 800ms 后轻柔淡出不挡文字，下次移动 80ms 瞬回显现。\n- **随时暂停**：按下 `Ctrl+Alt+Q` 立即暂停独立输入并在光标上切为「禁止」状态。\n\n### 2. 光标套装画廊、单状态混搭与外部外观导入\n- **开箱内置 5 套精选动态光标套装**：包含 **苍蓝星芒**、**夏日镜华 · 泳装动画套装**、**Gemini · 经典紫晶原版**、**Gemini · Plus 醒目符号版**、**DeepSeek · 鲸鱼娘**，无需折腾转换即可在画廊中一键切换。\n- **外部光标一键导入**：纯 Node.js 解码 Windows `.cur` / `.ico`（含 PNG 压缩帧与 32/24/8/4/1bpp DIB + AND Mask）及 RIFF `ACON` `.ani` 动图，支持导入 `install.inf` 整包、逐帧目录、`.zip` / `.rar` 压缩包或零散单文件。\n- **整套切换 + 单状态混搭**：点击画廊卡片即可一键切换整套光标并实时在屏幕上试看；也可以在 15 状态卡片的下拉菜单里，把任意单个状态（如指针、链接、等待、禁止等）指定为另一套光标包的外观。\n\n### 3. 26 项 Windows 桌面 / 网页低打扰工具（`azure-wand`）\n- **网页优先（CDP）**：后台连接浏览器读写 DOM 与触发交互，并在页面内展示虚拟蓝箭头，不抢物理指针。\n- **原生桌面（UIA + OCR）**：支持 `snapshot`、`find`、`invoke`、`set_value`、`ocr`、`screenshot`、`list_windows`、`batch` 等 26 项完整工具。\n- **场景预设与精细开关**：侧栏提供「静默低打扰（推荐）/ 极速前台托管 / 只读观测哨兵 / 精简 12 工具」一键切换，并支持逐项勾选与 `launch_app` 路径白名单。\n\n### 4. 苍蓝玻璃思考浮窗、鼠标标签与安全急停\n- **4 套玻璃浮窗主题**：`苍蓝星辉 (azure)`、`深海星曜 (abyss)`、`星雾薰衣草 (lavender)`、`冰川霜蓝 (frost)`，可自定义透明度、宽高、位置与鼠标穿透锁定。\n- **动态测宽鼠标标签**：自定义标签文案、屏幕边缘光晕与顶部/底部提示胶囊，点击面板按钮即可 3 秒实时预览。\n- **硬件级 `Esc` 急停**：独立接管进程直接监听 `Esc`（可自定义快捷键），触发后立即返回 `COMPUTER_USE_STOPPED_BY_USER` 并交还控制权。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  U[\"Google Antigravity\"] --> M1[\"MCP: azure-wand<br/>26 UIA / OCR / CDP 工具\"]\n  U --> M2[\"MCP: azure-wand-independent<br/>independent_input 独立输入\"]\n  U --> M3[\"MCP: azure-wand-nav<br/>侧栏与导航入口\"]\n  U <--> SC[\"Sidecar 控制台<br/>127.0.0.1 随机端口\"]\n\n  SC --> CFG[\"~/.gemini/azure-wand/<br/>config.json & cursor-packs/\"]\n  M1 --> CFG\n  M2 --> CFG\n\n  M1 --> TK[\"原生接管与玻璃浮窗<br/>wcu-takeover-netfx.dll\"]\n  M2 --> IND[\"独立输入与 32-bit AI 光标<br/>sidecar.ps1 (UpdateLayeredWindow)\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装\" width=\"100%\">\n</picture>\n</h2>\n\n### 方式一：一句话让 Antigravity 帮你安装（推荐）\n\n直接把下面这句话发给 Antigravity：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-wand.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-wand`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二：手动克隆安装\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-wand.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-wand\"\n```\n\n安装完成后按 `Ctrl+R` 重载 Antigravity，在插件列表确认已启用 **苍蓝魔杖（azure-wand）**，即可从**左侧栏**或**右侧 Sidecar 面板**打开控制台。\n\n> **环境要求**：Windows 10 / 11、Node.js >= 22、Windows PowerShell 5.1（系统自带）。\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **苍蓝魔杖主配置文件**：`~/.gemini/azure-wand/config.json`（工作模式、浮窗主题、标签与光标设置保存后实时热生效）\n- **本机导入的光标套装库**：`~/.gemini/azure-wand/cursor-packs/`（仅存本机个人目录，导入的任何外部光标均保存在此处）\n- **苍蓝套件共享主题配置**：`~/.gemini/azure-theme.json`\n- **苍蓝套件左侧栏显示配置**：`~/.gemini/azure-sidebar-nav.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 9 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏与更新总控 |\n| 🏛️ **苍蓝回廊** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 只读原生会话 FTS5 全文检索、自定义项目分组、优先级标签与独立安全归档箱 |\n| 🌌 **蓝汐 · 潮汐认知图谱** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 内部思考语言简体中文 / 英文双档热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖** &nbsp;`✦ 当前仓库` | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n\n---\n\n## 开源致谢与光标套装来源\n\n本插件底层引擎基于以下 MIT 开源项目适配与扩展（完整许可声明见 [LICENSE](./LICENSE) 与 [THIRD_PARTY.md](./THIRD_PARTY.md)）：\n- [dsh-computer-use-win](https://github.com/Yu-tao-Li/dsh-computer-use-win)（Windows UIA / OCR / CDP / 接管引擎）\n- [dsh-independent-input](https://github.com/dongcaodeliyu/dsh-independent-input)（独立输入通道基础代码架构）\n\n内置的 5 套动态光标套装来源如下（均来自网络公开免费分享或原创制作，第三方素材版权归原作者所有，仅作开源社区非商业体验配套）：\n- **苍蓝星芒**：苍蓝魔杖内置原创 MIT 动态光标套装。\n- **Gemini · 经典紫晶原版 / Gemini · Plus 醒目符号版**：[nibushiyigeren123-bot/gemini-cursors (v1.3.0)](https://github.com/nibushiyigeren123-bot/gemini-cursors/releases/tag/v1.3.0)\n- **夏日镜华 · 泳装动画套装**：[Bilibili BV1FPbVzFEC3](https://www.bilibili.com/video/BV1FPbVzFEC3/)\n- **DeepSeek · 鲸鱼娘**：来自 [dsh-independent-input](https://github.com/dongcaodeliyu/dsh-independent-input)（公开免费素材）\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
-  "latestReleaseNotes": "## 更新内容\n\n- **AGY Market 收录合规化**：按 Antigravity 严格 10 字段白名单清理 `plugin.json`（移除 `$schema`），同步 `package.json` 版本号，并新增 `agy-market.json` 声明 Windows 平台限定（`win32`）与市场分类标签。",
+  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝魔杖——Windows 桌面与网页操控 · Azure Wand — Windows Desktop &amp; Web Automation\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-wand/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-wand?style=flat-square&label=Release&color=38bdf8&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-wand/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-wand?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-38bdf8?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Platform-Windows_10%2F11-0ea5e9?style=flat-square&labelColor=1e293b\" alt=\"Windows\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>苍蓝魔杖——Windows 桌面与网页操控 · Windows 桌面与网页低打扰操控台 · 独立输入 15 状态动态 AI 光标 · 套装画廊混搭与外部光标一键导入 · 4 套苍蓝玻璃思考浮窗</strong>\n</p>\n\n<p>\n  <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n面向 **Google Antigravity** 的 Windows 桌面与网页低打扰可视化操控插件（3 组独立 MCP 服务 + 左侧栏/右侧 Sidecar 双入口控制面板）。在不抢你鼠标与键盘焦点的前提下，优先通过 **独立输入（UIA / 窗口消息）** 与 **浏览器后台 CDP 通道** 执行操作，并配有置顶穿透的 **15 状态动态 AI 光标**、**4 套苍蓝玻璃思考浮窗**、**自定义鼠标提示标签** 以及硬件级 `Esc` / `Ctrl+Alt+Q` 随时急停。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🪄 独立输入 · 15 状态动态 AI 光标</h4>\n通过 <code>independent_input</code> 严格走目标窗口 UIA / 窗口消息，<strong>绝不动真实鼠标、绝不抢焦点</strong>；32-bit 逐像素透明渲染无紫边，支持「陪伴 / 整洁 / 避让淡出」三种显示模式与 <code>Ctrl+Alt+Q</code> 急停。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🎨 套装画廊 · 单状态混搭 · 外部光标导入</h4>\n内置纯 Node.js 二进制解码器，支持直接路径或拖拽导入 <code>.cur</code> / <code>.ani</code> / <code>.ico</code> / <code>install.inf</code> / <code>.zip</code> / <code>.rar</code> 光标包，一键切换整套外观或为 15 个状态自由跨套装混搭。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🧰 26 项 Windows UIA / OCR / CDP 工具</h4>\n优先后台网页 CDP 与 Windows UI Automation 控件交互，自绘界面自动用原生 OCR 与像素截屏兜底；支持在面板中按四大分类精细开关任意工具与配置应用启动白名单。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🪟 4 套苍蓝玻璃思考浮窗 & 硬件急停</h4>\n提供苍蓝星辉、深海星曜、星雾薰衣草、冰川霜蓝 4 套玻璃卡片主题与动态测宽渐变鼠标标签，支持实时 3 秒预览与鼠标穿透锁定，按 <code>Esc</code> 毫秒级叫停。\n</td>\n</tr>\n</table>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 独立输入与 15 状态动态 AI 光标（`azure-wand-independent`）\n- **严格零打扰通道**：针对目标窗口句柄 `hwnd` 使用 UI Automation 与窗口消息交互，你可以继续正常移动自己的鼠标、打字或切换窗口，互不干扰。\n- **逐像素 Alpha 渲染引擎**：基于 Win32 `UpdateLayeredWindow` 32-bit 预乘 Alpha 渲染，自适应 64px 像素锐利缩放与 128px 高清抗锯齿缩放，自动读取每套包的真实帧数与帧率。\n- **三种显示方式**：\n  - **陪伴模式**：执行期间常驻屏幕，直观看到 AI 正在操作哪里；\n  - **整洁模式**：每次动作完成后按自定义延时（400~15000ms）自动收起；\n  - **避让淡出模式**：停留 800ms 后轻柔淡出不挡文字，下次移动 80ms 瞬回显现。\n- **随时暂停**：按下 `Ctrl+Alt+Q` 立即暂停独立输入并在光标上切为「禁止」状态。\n\n### 2. 光标套装画廊、单状态混搭与外部外观导入\n- **开箱内置 5 套精选动态光标套装**：包含 **苍蓝星芒**、**夏日镜华 · 泳装动画套装**、**Gemini · 经典紫晶原版**、**Gemini · Plus 醒目符号版**、**DeepSeek · 鲸鱼娘**，无需折腾转换即可在画廊中一键切换。\n- **外部光标一键导入**：纯 Node.js 解码 Windows `.cur` / `.ico`（含 PNG 压缩帧与 32/24/8/4/1bpp DIB + AND Mask）及 RIFF `ACON` `.ani` 动图，支持导入 `install.inf` 整包、逐帧目录、`.zip` / `.rar` 压缩包或零散单文件。\n- **整套切换 + 单状态混搭**：点击画廊卡片即可一键切换整套光标并实时在屏幕上试看；也可以在 15 状态卡片的下拉菜单里，把任意单个状态（如指针、链接、等待、禁止等）指定为另一套光标包的外观。\n\n### 3. 26 项 Windows 桌面 / 网页低打扰工具（`azure-wand`）\n- **网页优先（CDP）**：后台连接浏览器读写 DOM 与触发交互，并在页面内展示虚拟蓝箭头，不抢物理指针。\n- **原生桌面（UIA + OCR）**：支持 `snapshot`、`find`、`invoke`、`set_value`、`ocr`、`screenshot`、`list_windows`、`batch` 等 26 项完整工具。\n- **场景预设与精细开关**：侧栏提供「静默低打扰（推荐）/ 极速前台托管 / 只读观测哨兵 / 精简 12 工具」一键切换，并支持逐项勾选与 `launch_app` 路径白名单。\n\n### 4. 苍蓝玻璃思考浮窗、鼠标标签与安全急停\n- **4 套玻璃浮窗主题**：`苍蓝星辉 (azure)`、`深海星曜 (abyss)`、`星雾薰衣草 (lavender)`、`冰川霜蓝 (frost)`，可自定义透明度、宽高、位置与鼠标穿透锁定。\n- **动态测宽鼠标标签**：自定义标签文案、屏幕边缘光晕与顶部/底部提示胶囊，点击面板按钮即可 3 秒实时预览。\n- **硬件级 `Esc` 急停**：独立接管进程直接监听 `Esc`（可自定义快捷键），触发后立即返回 `COMPUTER_USE_STOPPED_BY_USER` 并交还控制权。\n\n\n### 首次使用交互式新手引导（`? 指南`）\n- **4 步上手教程 + 真实控件定位高亮**：首次打开面板自动弹出分步功能指南，点击「🎯 定位」按钮可在当前界面脉冲高亮对应控件并附带浮动返回条。\n- **本机持久化不复弹**：已读状态保存至 `~/.gemini/azure-onboarding.json`（Sidecar 重启换端口不复弹），日后随时可点击顶栏 **`? 指南`** 重看。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  U[\"Google Antigravity\"] --> M1[\"MCP: azure-wand<br/>26 UIA / OCR / CDP 工具\"]\n  U --> M2[\"MCP: azure-wand-independent<br/>independent_input 独立输入\"]\n  U --> M3[\"MCP: azure-wand-nav<br/>侧栏与导航入口\"]\n  U <--> SC[\"Sidecar 控制台<br/>127.0.0.1 随机端口\"]\n\n  SC --> CFG[\"~/.gemini/azure-wand/<br/>config.json & cursor-packs/\"]\n  M1 --> CFG\n  M2 --> CFG\n\n  M1 --> TK[\"原生接管与玻璃浮窗<br/>wcu-takeover-netfx.dll\"]\n  M2 --> IND[\"独立输入与 32-bit AI 光标<br/>sidecar.ps1 (UpdateLayeredWindow)\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装\" width=\"100%\">\n</picture>\n</h2>\n\n### 方式一：一句话让 Antigravity 帮你安装（推荐）\n\n直接把下面这句话发给 Antigravity：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-wand.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-wand`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二：手动克隆安装\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-wand.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-wand\"\n```\n\n安装完成后按 `Ctrl+R` 重载 Antigravity，在插件列表确认已启用 **苍蓝魔杖（azure-wand）**，即可从**左侧栏**或**右侧 Sidecar 面板**打开控制台。\n\n> **环境要求**：Windows 10 / 11、Node.js >= 22、Windows PowerShell 5.1（系统自带）。\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **苍蓝魔杖主配置文件**：`~/.gemini/azure-wand/config.json`（工作模式、浮窗主题、标签与光标设置保存后实时热生效）\n- **本机导入的光标套装库**：`~/.gemini/azure-wand/cursor-packs/`（仅存本机个人目录，导入的任何外部光标均保存在此处）\n- **苍蓝套件共享主题配置**：`~/.gemini/azure-theme.json`\n- **苍蓝套件左侧栏显示配置**：`~/.gemini/azure-sidebar-nav.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 10 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台——外部模型调度与省流** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器、全链路监控与首次新手引导 |\n| 🪐 **苍蓝星轨——原生菜单外接模型挂载** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘——Agent 预设与上下文监控** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊——会话与工作区管理** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 纯官方原生会话与工作区同步、FTS5 全文检索、自选快捷标签栏、跨工作区转移续聊与新手引导 |\n| 🌌 **蓝汐——认知图谱长期记忆** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣——人设卡与分层记忆** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文——外接模型中文思考切换** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 外接推理模型内部思考简体中文 / 英文热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜——思维链观测与实时翻译** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖——Windows 桌面与网页操控** &nbsp;`✦ 当前仓库` | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n| 🍃 **苍蓝流笺——拖拽发图与原生文件标签** | [antigravity-azure-drop](https://github.com/A16Nights/antigravity-azure-drop) | 零 `app.asar` 侵入、拖拽与粘贴插入原生文件标签、无损 PNG 截图落盘、图片缩略图灯箱与面包屑右键菜单 |\n\n---\n\n## 开源致谢与光标套装来源\n\n本插件底层引擎基于以下 MIT 开源项目适配与扩展（完整许可声明见 [LICENSE](./LICENSE) 与 [THIRD_PARTY.md](./THIRD_PARTY.md)）：\n- [dsh-computer-use-win](https://github.com/Yu-tao-Li/dsh-computer-use-win)（Windows UIA / OCR / CDP / 接管引擎）\n- [dsh-independent-input](https://github.com/dongcaodeliyu/dsh-independent-input)（独立输入通道基础代码架构）\n\n内置的 5 套动态光标套装来源如下（均来自网络公开免费分享或原创制作，第三方素材版权归原作者所有，仅作开源社区非商业体验配套）：\n- **苍蓝星芒**：苍蓝魔杖内置原创 MIT 动态光标套装。\n- **Gemini · 经典紫晶原版 / Gemini · Plus 醒目符号版**：[nibushiyigeren123-bot/gemini-cursors (v1.3.0)](https://github.com/nibushiyigeren123-bot/gemini-cursors/releases/tag/v1.3.0)\n- **夏日镜华 · 泳装动画套装**：[Bilibili BV1FPbVzFEC3](https://www.bilibili.com/video/BV1FPbVzFEC3/)\n- **DeepSeek · 鲸鱼娘**：来自 [dsh-independent-input](https://github.com/dongcaodeliyu/dsh-independent-input)（公开免费素材）\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
+  "latestReleaseNotes": "## ✨ v1.3.3 更新亮点\n\n### 1. 首次使用 4 步交互式新手引导（`? 指南`）\n- 4 步交互式新手引导覆盖「概览与健康自检」「独立 AI 光标」「浮窗与通道设置」与「安全与白名单」。\n- 首次打开面板自动弹出教程，支持点击 **「🎯 定位」** 脉冲高亮页面真实控件并附带浮动返回条，帮助新用户一分钟上手。\n- 已读状态持久化保存至 `~/.gemini/azure-onboarding.json`（Sidecar 重启换端口不复弹），随时可点顶栏 **`? 指南`** 重看，支持 `←` / `→` 翻页与 `Esc` 关闭。\n\n### 2. 名称清晰化与文档升级\n- 介绍名称统一升级为 **「苍蓝魔杖——Windows 桌面与网页操控」**，直观呈现核心用途，同步更新 `plugin.json`、顶部横幅 SVG、中英文 README 与苍蓝 10 款全家桶导航表。\n\n### 3. 界面体验优化\n- 优化苍蓝统一 UI 套件次级按钮选择器权重（使用 `:where(...)` 降权），避免高权重样式意外覆写自定义高亮状态。",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -91,7 +91,7 @@
         "file": "engine/independent/engine.mjs",
         "line": 137,
         "snippet": "const proc = spawn( ps, [\"-NoLogo\", \"-NoProfile\", \"-NonInteractive\", \"-STA\", \"-ExecutionPolicy\", \"Bypass\", \"-File\", SIDECAR], { windowsHide: true, stdio: [\"pipe\", \"pipe\", \"pipe\"], ",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/independent/engine.mjs#L137"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/independent/engine.mjs#L137"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -102,7 +102,7 @@
         "file": "engine/mcp/background-desktop.mjs",
         "line": 19,
         "snippet": "const child = spawn(DEFAULT_POWERSHELL, [...backgroundDesktopArgs(name), '-Own'], { cwd: WORK_DIR, windowsHide: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/background-desktop.mjs#L19"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/background-desktop.mjs#L19"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -113,7 +113,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 39,
         "snippet": "const regBytes = args => new Promise(resolve => execFile('reg.exe', args, { windowsHide: true, timeout: 5000, encoding: 'buffer' }, (error, stdout) => resolve(error ? null : stdout",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L39"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L39"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -124,7 +124,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 47,
         "snippet": ".then(output => /OEMCP\\s+REG_SZ\\s+(\\d+)/.exec(output?.toString('latin1') ?? '')?.[1]);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L47"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L47"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -135,7 +135,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 55,
         "snippet": "const app = /(?:^|\\r?\\n)\\[App\\]\\s*\\r?\\n([\\s\\S]*?)(?=\\r?\\n\\[|$)/i.exec(readFileSync(file, 'utf8'))?.[1] ?? '';",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L55"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L55"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -146,7 +146,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 56,
         "snippet": "const value = key => new RegExp(`^${key}=(.*)$`, 'mi').exec(app)?.[1].trim();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L56"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L56"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -157,7 +157,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 74,
         "snippet": "const value = /REG_SZ\\s+(.*)/.exec(command)?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L74"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L74"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -168,7 +168,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 75,
         "snippet": "const exe = /^\"([^\"]+\\.exe)\"/i.exec(value ?? '')?.[1] ?? /^(.+?\\.exe)(?:\\s|$)/i.exec(value ?? '')?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L75"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L75"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -179,7 +179,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 195,
         "snippet": "const url = /WebDriver BiDi listening on (ws:\\/\\/[^\\s]+)/.exec(stderr)?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L195"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L195"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -190,7 +190,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 398,
         "snippet": "const match = /^(?:web:)?(t[0-9a-z]+):(\\d+|address)$/.exec(args.elementId ?? '');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L398"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L398"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -201,7 +201,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 399,
         "snippet": "const opener = /^(?:(b[0-9a-z]+):)?new-tab$/.exec(args.elementId ?? '');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L399"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L399"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -212,7 +212,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 42,
         "snippet": "const owner = ownerPattern.exec(entries[0]);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L42"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L42"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -223,7 +223,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 108,
         "snippet": "const owner = /^(\\d+)-[A-Za-z0-9]{6}$/.exec(entry.slice(prefix.length));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L108"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L108"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -234,7 +234,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 136,
         "snippet": "const child = spawn(executablePath, args, { stdio: ['ignore', 'ignore', 'ignore', 'pipe', 'pipe'], env: browserEnv(), windowsHide: true, detached: false, });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L136"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L136"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -245,7 +245,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 221,
         "snippet": "const reqMatch = /^GET (\\S+) HTTP\\/1\\.1$/i.exec(requestLine ?? '');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L221"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L221"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -256,7 +256,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 414,
         "snippet": "const output = await new Promise(resolve => execFile(registry, ['query', 'HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\Shell\\\\Associations\\\\UrlAssociations\\\\https', '/s'], { windowsHide: tr",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L414"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L414"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -267,7 +267,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 419,
         "snippet": "const value = /^\\s+ProgId\\s+REG_SZ\\s+(.*\\S)/i.exec(line)?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L419"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L419"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -278,7 +278,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 531,
         "snippet": "const match = /^\\/devtools\\/pipe\\/([a-z0-9._-]+)(\\/devtools\\/.*)$/i.exec(pathname);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L531"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L531"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -289,7 +289,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 955,
         "snippet": "const app = /(?:^|\\r?\\n)\\[App\\]\\s*\\r?\\n([\\s\\S]*?)(?=\\r?\\n\\[|$)/i.exec(ini)?.[1] ?? '';",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L955"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L955"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -300,7 +300,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1060,
         "snippet": "const guid = /\\/devtools\\/browser\\/([^/?#]+)/.exec(candidate.url)?.[1] ?? candidate.url;",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1060"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1060"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -311,7 +311,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1130,
         "snippet": "const code = /^(BROWSER_[A-Z_]+):/.exec(detail)?.[1] ?? 'BROWSER_LANE_UNAVAILABLE';",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1130"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -322,7 +322,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1160,
         "snippet": "const owner = /^profile-(\\d+)-/.exec(entry)?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1160"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1160"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -333,7 +333,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1211,
         "snippet": "const host = spawn(process.execPath, [fileURLToPath(import.meta.url), '--host-kept-profile', configFile], { env: { ...browserEnv(this.env), ELECTRON_RUN_AS_NODE: '1' }, stdio: 'ign",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1211"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1211"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -344,7 +344,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1258,
         "snippet": "const watcher = spawn(process.execPath, [fileURLToPath(import.meta.url), '--watch-profile', profile, url, String(browser.pid)], { env: { ...browserEnv(this.env), ELECTRON_RUN_AS_NO",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1258"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1258"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -355,7 +355,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1262,
         "snippet": "const child = this.agentChild = spawn(executable.path, launchArgs, { stdio: ['ignore', 'ignore', 'ignore', 'pipe', 'pipe'], env: browserEnv(this.env), windowsHide: true, detached: ",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1262"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1262"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -366,7 +366,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 2158,
         "snippet": "const connect = USER_CONNECT.exec(args.elementId ?? '');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L2158"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L2158"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -377,7 +377,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 2164,
         "snippet": "const tabKey = ELEMENT_ID.exec(args.elementId ?? '')?.[1] ?? args.browserTab;",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L2164"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L2164"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -388,7 +388,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 2165,
         "snippet": "const browserKey = NEW_TAB.exec(args.elementId ?? '')?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L2165"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L2165"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -399,7 +399,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 2186,
         "snippet": "const match = typeof args.elementId === 'string' ? ELEMENT_ID.exec(args.elementId) : null;",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L2186"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L2186"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -410,7 +410,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 2187,
         "snippet": "const opener = typeof args.elementId === 'string' ? NEW_TAB.exec(args.elementId) : null;",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L2187"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L2187"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -421,7 +421,7 @@
         "file": "engine/mcp/diagnostics.mjs",
         "line": 144,
         "snippet": "execFile(file, args, { windowsHide: true, timeout, maxBuffer: 8 * 1024 * 1024, encoding: 'utf8', ...(env ? { env } : {}) }, (error, stdout, stderr) => resolve({ error, stdout: Stri",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/diagnostics.mjs#L144"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/diagnostics.mjs#L144"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -432,7 +432,7 @@
         "file": "engine/mcp/diagnostics.mjs",
         "line": 195,
         "snippet": "const version = /^Version=([0-9.]+[a-z\\d]*)\\r?$/im.exec(readFileSync(path.join(root, 'Mozilla Firefox', 'application.ini'), 'utf8'))?.[1];",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/diagnostics.mjs#L195"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/diagnostics.mjs#L195"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -443,7 +443,7 @@
         "file": "engine/mcp/diagnostics.mjs",
         "line": 410,
         "snippet": "const child = spawn(powershellPath(), ['-NoProfile', '-STA', '-EncodedCommand', command], { windowsHide: true, stdio: ['pipe', 'pipe', 'ignore'], });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/diagnostics.mjs#L410"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/diagnostics.mjs#L410"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -454,7 +454,7 @@
         "file": "engine/mcp/diagnostics.mjs",
         "line": 442,
         "snippet": "const child = spawn(command, args, { detached: true, stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/diagnostics.mjs#L442"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/diagnostics.mjs#L442"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -465,7 +465,7 @@
         "file": "engine/mcp/hyperv-relay.mjs",
         "line": 24,
         "snippet": "return spawn(powershell, ['-NoProfile', '-File', script, '-Mode', mode, '-VMName', name], { windowsHide: true, stdio: ['pipe', 'pipe', 'pipe'], env, });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/hyperv-relay.mjs#L24"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/hyperv-relay.mjs#L24"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -476,7 +476,7 @@
         "file": "engine/mcp/policy.mjs",
         "line": 227,
         "snippet": ": (/^(?:web:)?(t[0-9a-z]+):/i.exec(String(args.elementId ?? ''))?.[1] ?? '');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/policy.mjs#L227"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/policy.mjs#L227"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -487,7 +487,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 944,
         "snippet": "? spawn(powershell, [...backgroundDesktopArgs(desktopName), '-Executable', powershell, '-BackendScript', backendPath], options)",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L944"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L944"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -498,7 +498,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 945,
         "snippet": ": spawn(powershell, [\"-NoLogo\", \"-NoProfile\", \"-Sta\", \"-ExecutionPolicy\", \"Bypass\", \"-File\", windowsScript(backendPath), \"-Persistent\"], options);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L945"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L945"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -509,7 +509,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 1285,
         "snippet": "const opener = NEW_TAB.exec(args.elementId ?? '');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L1285"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L1285"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -520,7 +520,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 1548,
         "snippet": "if (target.browserTab && elementId && ELEMENT_ID.exec(elementId)?.[1] !== target.browserTab) throw new Error('INVALID_ARGUMENTS: batch element belongs to another tab.');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L1548"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L1548"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -531,7 +531,7 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 43,
         "snippet": "const wslpath = (flag, file) => execFileSync('wslpath', [flag, file], { encoding: 'utf8', timeout: 5000, stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true }).trim();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L43"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L43"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -542,7 +542,7 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 47,
         "snippet": "const drive = /^\\/mnt\\/([a-z])(?=\\/|$)(.*)$/i.exec(file);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L47"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L47"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -553,7 +553,7 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 382,
         "snippet": "const child = this.child = spawn(this.powershell, args, { cwd: WORK_DIR, env:windowsEnv(helperEnv,Object.keys(helperEnv).filter(name=>name.startsWith('WCU_'))), stdio: ['pipe', 'pi",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L382"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L382"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -564,7 +564,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 82,
         "snippet": "const slotMatch = /^slot-([0-9]+)$/.exec(activeId);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/azure-theme.mjs#L82"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-theme.mjs#L82"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -575,7 +575,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 213,
         "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", href], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/azure-theme.mjs#L213"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-theme.mjs#L213"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -586,7 +586,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 219,
         "snippet": "spawn(\"open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/azure-theme.mjs#L219"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-theme.mjs#L219"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -597,7 +597,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 221,
         "snippet": "spawn(\"xdg-open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/azure-theme.mjs#L221"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-theme.mjs#L221"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -608,7 +608,7 @@
         "file": "lib/cursor-importer.mjs",
         "line": 424,
         "snippet": "execFileSync(\"powershell.exe\", [\"-NoProfile\", \"-ExecutionPolicy\", \"Bypass\", \"-File\", psPath, \"-SpecPath\", specPath], { windowsHide: true, timeout: 60000 });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/cursor-importer.mjs#L424"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/cursor-importer.mjs#L424"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -619,7 +619,7 @@
         "file": "lib/cursor-importer.mjs",
         "line": 485,
         "snippet": "execFileSync(\"tar.exe\", [\"-xf\", sourcePath, \"-C\", extractTmp], { windowsHide: true, timeout: 45000 });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/cursor-importer.mjs#L485"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/cursor-importer.mjs#L485"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -630,7 +630,7 @@
         "file": "lib/wand-store.mjs",
         "line": 546,
         "snippet": "const child = spawn(process.execPath, [serverEntry, \"--self-test\"], { cwd: ENGINE_ROOT, env: { ...process.env, ...this.buildEngineEnv() }, windowsHide: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/wand-store.mjs#L546"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/wand-store.mjs#L546"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -641,7 +641,7 @@
         "file": "lib/wand-store.mjs",
         "line": 584,
         "snippet": "const child = spawn(\"powershell.exe\", [\"-NoProfile\", \"-NonInteractive\", \"-Command\", psScript], { windowsHide: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/wand-store.mjs#L584"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/wand-store.mjs#L584"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -652,7 +652,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 168,
         "snippet": "writeFileSync(path.join(profile, 'user.js'), Object.entries(FIREFOX_PREFS).map(([k, v]) => `user_pref(${JSON.stringify(k)}, ${JSON.stringify(v)});`).join('\\n') + '\\n');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L168"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L168"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -663,7 +663,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 173,
         "snippet": "if (!keep) rmSync(profile, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L173"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L173"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -674,7 +674,7 @@
         "file": "engine/mcp/browser-bidi.mjs",
         "line": 182,
         "snippet": "if (!keep) rmSync(profile, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-bidi.mjs#L182"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-bidi.mjs#L182"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -685,7 +685,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 34,
         "snippet": "unlinkSync(lock);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L34"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L34"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -696,7 +696,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 46,
         "snippet": "unlinkSync(path.join(lock, entries[0]));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L46"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L46"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -707,7 +707,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 63,
         "snippet": "try { writeFileSync(path.join(lock, marker), '', { flag: 'wx' }); }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L63"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L63"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -718,7 +718,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 67,
         "snippet": "unlinkSync(path.join(lock, marker));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L67"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L67"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -729,7 +729,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 81,
         "snippet": "try { unlinkSync(path.join(target, marker)); break; }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L81"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L81"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -740,7 +740,7 @@
         "file": "engine/mcp/browser-profile-lock.mjs",
         "line": 91,
         "snippet": "if (pending) writeFileSync(path.join(pending, marker), '', { flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser-profile-lock.mjs#L91"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser-profile-lock.mjs#L91"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -751,7 +751,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 64,
         "snippet": "if (!processAlive(pid)) rmSync(lease, { force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L64"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L64"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -762,7 +762,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 76,
         "snippet": "writeFileSync(pending, browser.url);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L76"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L76"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -773,7 +773,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 106,
         "snippet": "writeFileSync(pending, JSON.stringify(value));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L106"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L106"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -784,7 +784,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 125,
         "snippet": "finally { try { rmSync(configFile, { force: true }); } catch { } }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L125"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L125"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -795,7 +795,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 397,
         "snippet": "writeFileSync(pendingPort, `0\\n${pipeRoute}\\n`);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L397"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L397"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -806,7 +806,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1049,
         "snippet": "const response = await fetch(new URL('/json/version', url), { signal: AbortSignal.timeout(3000) });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1049"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1049"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -817,7 +817,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1163,
         "snippet": "try { rmSync(path.join(dir, 'lockfile'), { force: true }); } catch { continue; }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1163"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1163"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -828,7 +828,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1164,
         "snippet": "try { rmSync(dir, { recursive: true, force: true }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1164"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1164"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -839,7 +839,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1175,
         "snippet": "rmSync(path.join(profile, 'Default', 'Sessions'), { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1175"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1175"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -850,7 +850,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1237,
         "snippet": "try { rmSync(configFile, { force: true }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1237"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1237"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -861,7 +861,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1238,
         "snippet": "try { rmSync(readyFile, { force: true }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1238"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1238"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -872,7 +872,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1256,
         "snippet": "writeFileSync(path.join(profile, OWNER_FILE), String(process.pid));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1256"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1256"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -883,7 +883,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1276,
         "snippet": "try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1276"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1276"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -894,7 +894,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1321,
         "snippet": "rmSync(path.join(profile, 'DevToolsActivePort'), { force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1321"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1321"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -905,7 +905,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1338,
         "snippet": "if (activePort(profile) === url) rmSync(path.join(profile, 'DevToolsActivePort'), { force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1338"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1338"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -916,7 +916,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1344,
         "snippet": "if (!browser.shared) writeFileSync(path.join(profile, OWNER_FILE), String(process.pid));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1344"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1344"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -927,7 +927,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1362,
         "snippet": "try { rmSync(path.join(browser.kept, 'DevToolsActivePort'), { force: true }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1362"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1362"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -938,7 +938,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1377,
         "snippet": "rmSync(path.join(browser.kept, LEASE_PREFIX + process.pid), { force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1377"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1377"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -949,7 +949,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1381,
         "snippet": "writeFileSync(path.join(browser.kept, OWNER_FILE), String(others[0]));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1381"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1381"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -960,7 +960,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1385,
         "snippet": "try { rmSync(path.join(browser.kept, OWNER_FILE), { force: true }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1385"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1385"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -971,7 +971,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1395,
         "snippet": "if (!running(browser) && activePort(browser.kept) === browser.url) try { rmSync(path.join(browser.kept, 'DevToolsActivePort'), { force: true }); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1395"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1395"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -982,7 +982,7 @@
         "file": "engine/mcp/browser.mjs",
         "line": 1407,
         "snippet": "rmSync(path.join(browser.kept, LEASE_PREFIX + process.pid), { force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/browser.mjs#L1407"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/browser.mjs#L1407"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -993,7 +993,7 @@
         "file": "engine/mcp/diagnostics.mjs",
         "line": 360,
         "snippet": "try { writeFileSync(file, contents, { encoding: 'utf8', flag: 'wx' }); }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/diagnostics.mjs#L360"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/diagnostics.mjs#L360"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1004,7 +1004,7 @@
         "file": "engine/mcp/hyperv-relay.mjs",
         "line": 97,
         "snippet": "try { if ((await stat(file)).mtimeMs < cutoff) await unlink(file); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/hyperv-relay.mjs#L97"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/hyperv-relay.mjs#L97"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1015,7 +1015,7 @@
         "file": "engine/mcp/hyperv-relay.mjs",
         "line": 109,
         "snippet": "await writeFile(file, bytes, { flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/hyperv-relay.mjs#L109"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/hyperv-relay.mjs#L109"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1026,7 +1026,7 @@
         "file": "engine/mcp/observation-budget.mjs",
         "line": 84,
         "snippet": "try { if ((await stat(file)).mtimeMs < cutoff) await unlink(file); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/observation-budget.mjs#L84"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/observation-budget.mjs#L84"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1037,7 +1037,7 @@
         "file": "engine/mcp/observation-budget.mjs",
         "line": 88,
         "snippet": "await writeFile(file, JSON.stringify(result), { flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/observation-budget.mjs#L88"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/observation-budget.mjs#L88"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1048,7 +1048,7 @@
         "file": "engine/mcp/policy.mjs",
         "line": 482,
         "snippet": "writeFileSync(handle, JSON.stringify({marker: 'wcu-approval', pid: process.pid}));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/policy.mjs#L482"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/policy.mjs#L482"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1059,7 +1059,7 @@
         "file": "engine/mcp/policy.mjs",
         "line": 490,
         "snippet": "finally { if (handle !== undefined) { closeSync(handle); try { unlinkSync(lock); } catch {} } }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/policy.mjs#L490"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/policy.mjs#L490"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1070,7 +1070,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 785,
         "snippet": "try { if ((await stat(file)).mtimeMs < cutoff) await unlink(file); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L785"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L785"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1081,7 +1081,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 789,
         "snippet": "await writeFile(metadata.path, bytes, { flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L789"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L789"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1092,7 +1092,7 @@
         "file": "engine/mcp/server.mjs",
         "line": 1071,
         "snippet": "await writeFile(backgroundRequestFile(process.env.WCU_BACKGROUND_FILE), JSON.stringify({ at: requested }));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/server.mjs#L1071"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/server.mjs#L1071"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1103,7 +1103,7 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 112,
         "snippet": "writeFileSync(temporary, serializeJsonLine(value), 'utf8');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L112"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L112"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1114,7 +1114,7 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 117,
         "snippet": "try { unlinkSync(temporary); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L117"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L117"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1125,7 +1125,7 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 138,
         "snippet": "await writeFile(temporary, serializeJsonLine(value), 'utf8');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L138"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L138"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1136,7 +1136,40 @@
         "file": "engine/mcp/takeover.mjs",
         "line": 142,
         "snippet": "try { await unlink(temporary); } catch { }",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/engine/mcp/takeover.mjs#L142"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/engine/mcp/takeover.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 232,
+        "snippet": "await fetch(apiUrl(), { method: \"POST\", headers: apiHeaders(true), body: JSON.stringify({ action: shouldDismiss ? \"dismiss\" : \"reset\", guideVersion }) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-onboarding-ui.js#L232"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 309,
+        "snippet": "const r = await fetch(apiUrl({ v: guideVersion }), { headers: apiHeaders(false) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-onboarding-ui.js#L309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-onboarding.mjs",
+        "line": 26,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-onboarding.mjs#L26"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -1147,44 +1180,24 @@
         "file": "lib/azure-theme.mjs",
         "line": 125,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(clean, null, 2) + \"\\n\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/azure-theme.mjs#L125"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "lib/azure-theme.mjs",
-        "line": 128,
-        "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/azure-theme.mjs#L128"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "lib/cursor-importer.mjs",
-        "line": 325,
-        "snippet": "fs.writeFileSync(specPath, JSON.stringify({ jobs }, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/cursor-importer.mjs#L325"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "lib/cursor-importer.mjs",
-        "line": 422,
-        "snippet": "fs.writeFileSync(psPath, psScript, \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/5d9fd26f24ff0452bf031dd5a5ffc73543dae414/lib/cursor-importer.mjs#L422"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-wand/blob/52014f622f36c977cc7bb3fed7294e1b203da8cd/lib/azure-theme.mjs#L125"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.3.3",
+      "sha": "52014f622f36c977cc7bb3fed7294e1b203da8cd",
+      "scannedAt": "2026-11-28T00:25:26.343Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.3.2",
       "sha": "5d9fd26f24ff0452bf031dd5a5ffc73543dae414",

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "jmxt3/astack",
-  "sha": "d95354253fed961c3b503df07796a3e8774fd430",
+  "sha": "cd403d45637246ad1c9868ace382cae01d4912c7",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:15:02.628Z",
+  "scannedAt": "2026-11-28T00:24:32.599Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "astack",
@@ -250,6 +250,13 @@
         "description": "Adversarial multi-agent code and design review: give a change and its intent to independent adversaries in isolated workspaces, require each finding to be proven with a run against real code, rerun every finding in the parent to verify, and",
         "disableModelInvocation": false,
         "file": "skills/interrogate/SKILL.md"
+      },
+      {
+        "name": "investigate",
+        "slashCommand": "/investigate",
+        "description": "Reproduce, localize, and prove the root cause of a failure or unknown issue read-only, then pause at diagnosis.md (or a Combined Gate in implementation_plan.md) before planning or editing production files. Use for /investigate.",
+        "disableModelInvocation": true,
+        "file": "skills/investigate/SKILL.md"
       },
       {
         "name": "ketchup-video",
@@ -615,6 +622,7 @@
       "/how",
       "/in-your-own-words",
       "/interrogate",
+      "/investigate",
       "/ketchup",
       "/ketchup-video",
       "/maintain-formal-verification-skill",
@@ -681,7 +689,7 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "# AStack: Make AI agents prove their work on your running app\n\n> **Don't trust the agent. Trust the evidence.**\n\n<p align=\"center\">\n  <img src=\"./assets/banner_ASCII%20terminal@1x.png\" alt=\"AStack: Make AI agents prove their work on your running app in Google Antigravity\" width=\"100%\">\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/jmxt3/astack/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/github/actions/workflow/status/jmxt3/astack/ci.yml?branch=main&style=flat-square&label=ci\" alt=\"CI status\"></a>\n  <a href=\"./plugin.json\"><img src=\"https://img.shields.io/badge/plugin-v0.4.0-38BDF8?style=flat-square\" alt=\"Plugin v0.4.0\"></a>\n  <a href=\"https://antigravity.google\"><img src=\"https://img.shields.io/badge/platform-Google%20Antigravity-6366F1?style=flat-square\" alt=\"Platform: Google Antigravity\"></a>\n  <a href=\"https://nodejs.org\"><img src=\"https://img.shields.io/badge/node-%3E%3D22.6-339933?style=flat-square&logo=node.js&logoColor=white\" alt=\"Node.js >= 22.6\"></a>\n  <a href=\"https://www.typescriptlang.org\"><img src=\"https://img.shields.io/badge/stack-ESM%20%2B%20TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white\" alt=\"Stack: ESM + TypeScript\"></a>\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-22C55E?style=flat-square\" alt=\"License: MIT\"></a>\n</p>\n\nAStack is a Google Antigravity plugin that makes AI agents verify their work on your running app before reporting done. Give [`/astack-mode`](./skills/astack-mode/SKILL.md) a goal, and it selects the right playbook, cleans the diff, and checks behavior in your live browser or terminal. It runs locally with zero external npm dependencies, sends no telemetry, and works with whatever model you pick in Antigravity.\n\nfork it. improve it. make it yours. PRs are welcome!\n\n<p align=\"center\">\n  <a href=\"#why-astack\">Why AStack</a> ·\n  <a href=\"#install\">Install</a> ·\n  <a href=\"#quick-start\">Quick start</a> ·\n  <a href=\"#documentation\">Documentation</a> ·\n  <a href=\"#security-and-privacy\">Security and privacy</a> ·\n  <a href=\"./CREDITS.md\">Credits</a> ·\n  <a href=\"./CONTRIBUTING.md\">Contributing</a> ·\n  <a href=\"./SECURITY.md\">Security</a>\n</p>\n\n## Why AStack\n\nAgents write code fast, and reviewing code nobody ran is slow. With AStack, two commands put live testing on the agent so you review captured evidence instead of guesses.\n\n```mermaid\nflowchart LR\n    Setup[\"`**1. Once per repo**\nRun /setup-astack`\"]\n    Goal[\"`**2. State your goal**\nRun /astack-mode\n(add /plan to review first)`\"]\n    Auto[\"`**3. AStack runs automatically**\nReads code · Writes & cleans diff\nTests your live app in browser or CLI`\"]\n    Done[\"`**4. Review with proof**\nVerified local commits\n+ captured output`\"]\n\n    Setup --> Goal --> Auto --> Done\n\n    classDef userStep fill:#111827,stroke:#38bdf8,stroke-width:1.5px,color:#f9fafb\n    classDef autoStep fill:#111827,stroke:#eab308,stroke-width:2px,color:#f9fafb\n    classDef doneStep fill:#111827,stroke:#22c55e,stroke-width:2px,color:#f9fafb\n    class Setup,Goal userStep\n    class Auto autoStep\n    class Done doneStep\n```\n\nUse AStack for nontrivial features, root-cause bug fixes, refactors, and PR reviews. For a one-line edit, ask the agent directly.\n\n## Install\n\nRequires **Google Antigravity** and **Node.js `>= 22.6`** (`22.18+` or `23.6+` for unflagged TypeScript type stripping). Install **Java** only if you run live TLA+ model checking via `/statechart`.\n\n```bash\nagy plugin install https://github.com/jmxt3/astack\nagy plugin list --json\n```\n\nTo install from a local clone instead, run `agy plugin install .` inside the repository. On Windows, if updating while Antigravity is running fails with `Access is denied`, run `agy plugin uninstall astack` first and reinstall.\n\n## Quick start\n\n1. **Initialize verification once per repo.** Run [`/setup-astack`](./skills/setup-astack/SKILL.md) inside Antigravity and pick the recommended option. It scaffolds `.agents/skills/verify-<app>/` so future runs know how to boot and verify your app.\n2. **Run a task with `/astack-mode`.** Describe what you want and how to verify it. Put `/plan` in front whenever you want to approve `implementation_plan.md` before any files change, or `/plan /grill-me` when requirements are still rough.\n\n   ```text\n   /astack-mode clicking Save twice on the profile form creates duplicate records. reproduce it in the browser first, fix the root cause, and prove double-clicking saves only once.\n   ```\n\n   ```text\n   /plan /astack-mode add rate limiting to the login endpoint\n   ```\n\n3. **Ask `/astack-help` when unsure.** It recommends the right skill and returns a copy-ready prompt without editing files.\n\n   ```text\n   /astack-help which skill should I use to review this branch before opening a PR?\n   ```\n\nEnable the optional [`AStack`](./sidecars/astack_timeline/sidecar.json) Timeline sidecar under **Extensions** in Google Antigravity for visual stage tracking and click-to-copy commands.\n\n## Documentation\n\n| Document | Covers |\n|---|---|\n| [AStack User Guide](./docs/user-guide.md) | Quickstart, plan-first approval workflow, and daily habits |\n| [Agent Command Timeline](./docs/agent-timeline.md) | Complete chronological catalog of all skills, playbooks, hooks, and native commands |\n| [Hands-On Daily Tutorials](./docs/tutorials/README.md) | End-to-end walkthroughs from tickets and setup to audits and PR reviews |\n| [The AStack Guide](./docs/guide/README.md) | 10-chapter course including the [24 engineering principles](./docs/guide/08-principles.md) |\n| [Architecture and Swarm](./docs/architecture-and-swarm.md) | Enforcement layers, Orchestrator routing, `astack_trust` MCP server, hooks, and Swarm |\n| [Automation Templates](./docs/automations/beacon/README.md) | Opt-in outer-loop templates for `beacon`, [PR triage](./docs/automations/pr-triage/README.md), and [weekly `/correct`](./docs/automations/weekly-correct/README.md) |\n\n## Security and privacy\n\nAStack runs locally with zero external npm dependencies, no hosted servers, no telemetry, and no stored credentials. [`hooks.json`](./hooks.json) enables `3` passive observe-only hooks by default and keeps all `7` blocking safety gates disabled until you opt in. To report a vulnerability, follow [SECURITY.md](./SECURITY.md).\n\n## Credits and license\n\nAStack adapts ideas from Lauren Tan's [`pstack`](https://github.com/cursor/plugins/tree/main/pstack), Garry Tan's [`gstack`](https://github.com/garrytan/gstack), and Cloudflare's [`security-audit-skill`](https://github.com/cloudflare/security-audit-skill). Read [CREDITS.md](./CREDITS.md) for full attribution.\n\nTo contribute, read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Code of Conduct](./CODE_OF_CONDUCT.md), or [open an issue](https://github.com/jmxt3/astack/issues/new/choose).\n\n[João Machete](https://github.com/jmxt3) maintains AStack under the [MIT License](./LICENSE).\n",
+  "readmeMarkdown": "# AStack: Make AI agents prove their work on your running app\n\n> **Don't trust the agent. Trust the evidence.**\n\n<p align=\"center\">\n  <img src=\"./assets/banner_ASCII%20terminal@1x.png\" alt=\"AStack: Make AI agents prove their work on your running app in Google Antigravity\" width=\"100%\">\n</p>\n\n<p align=\"center\">\n  <a href=\"https://github.com/jmxt3/astack/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/github/actions/workflow/status/jmxt3/astack/ci.yml?branch=main&style=flat-square&label=ci\" alt=\"CI status\"></a>\n  <a href=\"./plugin.json\"><img src=\"https://img.shields.io/badge/plugin-v0.4.0-38BDF8?style=flat-square\" alt=\"Plugin v0.4.0\"></a>\n  <a href=\"https://antigravity.google\"><img src=\"https://img.shields.io/badge/platform-Google%20Antigravity-6366F1?style=flat-square\" alt=\"Platform: Google Antigravity\"></a>\n  <a href=\"https://nodejs.org\"><img src=\"https://img.shields.io/badge/node-%3E%3D22.6-339933?style=flat-square&logo=node.js&logoColor=white\" alt=\"Node.js >= 22.6\"></a>\n  <a href=\"https://www.typescriptlang.org\"><img src=\"https://img.shields.io/badge/stack-ESM%20%2B%20TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white\" alt=\"Stack: ESM + TypeScript\"></a>\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-22C55E?style=flat-square\" alt=\"License: MIT\"></a>\n</p>\n\nAStack is a Google Antigravity plugin that makes AI agents verify their work on your running app before reporting done. Give [`/astack-mode`](./skills/astack-mode/SKILL.md) a goal, and it selects the right playbook, cleans the diff, and checks behavior in your live browser or terminal. It runs locally with zero external npm dependencies, sends no telemetry, and works with whatever model you pick in Antigravity.\n\nfork it. improve it. make it yours. PRs are welcome!\n\n<p align=\"center\">\n  <a href=\"#why-astack\">Why AStack</a> ·\n  <a href=\"#install\">Install</a> ·\n  <a href=\"#quick-start\">Quick start</a> ·\n  <a href=\"#documentation\">Documentation</a> ·\n  <a href=\"#security-and-privacy\">Security and privacy</a> ·\n  <a href=\"./CREDITS.md\">Credits</a> ·\n  <a href=\"./CONTRIBUTING.md\">Contributing</a> ·\n  <a href=\"./SECURITY.md\">Security</a>\n</p>\n\n## Why AStack\n\nAgents write code fast, and reviewing code nobody ran is slow. With AStack, two commands put live testing on the agent so you review captured evidence instead of guesses.\n\n```mermaid\nflowchart LR\n    Setup[\"`**1. Once per repo**\nRun /setup-astack`\"]\n    Goal[\"`**2. State your goal**\nRun /astack-mode\n(add /plan to review first)`\"]\n    Auto[\"`**3. AStack runs automatically**\nReads code · Writes & cleans diff\nTests your live app in browser or CLI`\"]\n    Done[\"`**4. Review with proof**\nVerified local commits\n+ captured output`\"]\n\n    Setup --> Goal --> Auto --> Done\n\n    classDef userStep fill:#111827,stroke:#38bdf8,stroke-width:1.5px,color:#f9fafb\n    classDef autoStep fill:#111827,stroke:#eab308,stroke-width:2px,color:#f9fafb\n    classDef doneStep fill:#111827,stroke:#22c55e,stroke-width:2px,color:#f9fafb\n    class Setup,Goal userStep\n    class Auto autoStep\n    class Done doneStep\n```\n\nUse AStack for nontrivial features, root-cause bug fixes, refactors, and PR reviews. For a one-line edit, ask the agent directly.\n\n## Install\n\nRequires **Google Antigravity** and **Node.js `>= 22.6`** (`22.18+` or `23.6+` for unflagged TypeScript type stripping). Install **Java** only if you run live TLA+ model checking via `/statechart`.\n\n```bash\nagy plugin install https://github.com/jmxt3/astack\nagy plugin list --json\n```\n\nTo install from a local clone instead, run `agy plugin install .` inside the repository. On Windows, if updating while Antigravity is running fails with `Access is denied`, run `agy plugin uninstall astack` first and reinstall.\n\n## Quick start\n\n1. **Initialize verification once per repo.** Run [`/setup-astack`](./skills/setup-astack/SKILL.md) inside Antigravity and pick the recommended option. It scaffolds `.agents/skills/verify-<app>/` so future runs know how to boot and verify your app.\n2. **Run a task with `/astack-mode`.** Describe what you want and how to verify it. Put `/plan` in front whenever you want to approve `implementation_plan.md` before any files change, or `/plan /grill-me` when requirements are still rough.\n\n   ```text\n   /astack-mode clicking Save twice on the profile form creates duplicate records. reproduce it in the browser first, fix the root cause, and prove double-clicking saves only once.\n   ```\n\n   ```text\n   /plan /astack-mode add rate limiting to the login endpoint\n   ```\n\n3. **Ask `/astack-help` when unsure.** It recommends the right skill and returns a copy-ready prompt without editing files.\n\n   ```text\n   /astack-help which skill should I use to review this branch before opening a PR?\n   ```\n\nEnable the optional [`AStack`](./sidecars/astack_timeline/sidecar.json) Timeline sidecar under **Extensions** in Google Antigravity for visual stage tracking and click-to-copy commands.\n\n## Documentation\n\n| Document | Covers |\n|---|---|\n| [AStack User Guide](./docs/user-guide.md) | Quickstart, plan-first approval workflow, and daily habits |\n| [Agent Command Timeline](./docs/agent-timeline.md) | Complete chronological catalog of all skills, playbooks, hooks, and native commands |\n| [Hands-On Daily Tutorials](./docs/tutorials/README.md) | End-to-end walkthroughs from tickets and setup to audits and PR reviews |\n| [The AStack Guide](./docs/guide/README.md) | 10-chapter course including the [24 engineering principles](./docs/guide/08-principles.md) |\n| [Architecture and Swarm](./docs/architecture-and-swarm.md) | Enforcement layers, Orchestrator routing, `astack_trust` MCP server, hooks, and Swarm |\n| [Automation Templates](./docs/automations/beacon/README.md) | Opt-in outer-loop templates for `beacon`, [PR triage](./docs/automations/pr-triage/README.md), and [weekly `/correct`](./docs/automations/weekly-correct/README.md) |\n\n## Security and privacy\n\nAStack runs locally with zero external npm dependencies, no hosted servers, no telemetry, and no stored credentials. [`hooks.json`](./hooks.json) enables `3` passive observe-only hooks plus `astack-verify-reminder --dirty-only` (`Stop`) by default and keeps the remaining `6` blocking safety gates disabled until you opt in. To report a vulnerability, follow [SECURITY.md](./SECURITY.md).\n\n## Credits and license\n\nAStack adapts ideas from Lauren Tan's [`pstack`](https://github.com/cursor/plugins/tree/main/pstack), Garry Tan's [`gstack`](https://github.com/garrytan/gstack), and Cloudflare's [`security-audit-skill`](https://github.com/cloudflare/security-audit-skill). Read [CREDITS.md](./CREDITS.md) for full attribution.\n\nTo contribute, read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Code of Conduct](./CODE_OF_CONDUCT.md), or [open an issue](https://github.com/jmxt3/astack/issues/new/choose).\n\n[João Machete](https://github.com/jmxt3) maintains AStack under the [MIT License](./LICENSE).\n",
   "latestReleaseNotes": "",
   "securityReport": {
     "riskTier": "high",
@@ -706,7 +714,7 @@
         "file": "skills/make-bot-ui/SKILL.md",
         "line": 26,
         "snippet": "1. Generate or copy a strong random sender key on the host (e.g., into `.env.local` with `0600` permissions or OS keychain / secret manager — gitignored and never tracked).",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/make-bot-ui/SKILL.md#L26"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/make-bot-ui/SKILL.md#L26"
       },
       {
         "id": "PROMPT_CREDENTIAL_EXFIL",
@@ -717,7 +725,7 @@
         "file": "skills/make-bot-ui/SKILL.md",
         "line": 28,
         "snippet": "3. The user must **never** paste the sender key or bearer token into chat. Instruct them to set the environment variable locally (e.g., `$env:BOT_UI_SENDER_KEY` or `.env.local`) or",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/make-bot-ui/SKILL.md#L28"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/make-bot-ui/SKILL.md#L28"
       },
       {
         "id": "PROMPT_PIPE_TO_SHELL",
@@ -728,7 +736,7 @@
         "file": "skills/make-bot-ui/SKILL.md",
         "line": 62,
         "snippet": "If Tailscale is not installed, install it using the platform's official installer (on Linux: `curl -fsSL https://tailscale.com/install.sh | sudo sh`; on Windows/macOS: direct the u",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/make-bot-ui/SKILL.md#L62"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/make-bot-ui/SKILL.md#L62"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -739,7 +747,7 @@
         "file": ".agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs",
         "line": 27,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"ignore\"], }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L27"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L27"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -750,7 +758,7 @@
         "file": ".agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs",
         "line": 138,
         "snippet": "while ((m = tokenRe.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L138"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L138"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -761,7 +769,7 @@
         "file": "hooks.json",
         "line": 10,
         "snippet": "node ./scripts/hooks/receipt-ledger.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L10"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L10"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -772,7 +780,7 @@
         "file": "hooks.json",
         "line": 45,
         "snippet": "node ./scripts/hooks/irreversible-guard.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L45"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L45"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -783,7 +791,7 @@
         "file": "hooks.json",
         "line": 60,
         "snippet": "node ./scripts/hooks/secret-guard.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L60"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L60"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -794,7 +802,7 @@
         "file": "hooks.json",
         "line": 85,
         "snippet": "node ./scripts/hooks/evidence-gate.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L85"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L85"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -805,7 +813,7 @@
         "file": "hooks.json",
         "line": 100,
         "snippet": "node ./scripts/hooks/boundary-guard.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L100"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L100"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -816,7 +824,7 @@
         "file": "hooks.json",
         "line": 115,
         "snippet": "node ./scripts/hooks/round-limiter.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L115"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L115"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -827,7 +835,7 @@
         "file": "hooks.json",
         "line": 130,
         "snippet": "node ./scripts/hooks/trust-gate.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/hooks.json#L130"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/hooks.json#L130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -838,7 +846,7 @@
         "file": "scripts/eval/eval.test.mjs",
         "line": 140,
         "snippet": "const res = spawnSync(process.execPath, [evalCli, flag], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/eval.test.mjs#L140"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/eval/eval.test.mjs#L140"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -849,7 +857,7 @@
         "file": "scripts/eval/eval.test.mjs",
         "line": 144,
         "snippet": "const jsonRun = spawnSync(process.execPath, [evalCli, \"--json\"], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/eval.test.mjs#L144"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/eval/eval.test.mjs#L144"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -860,7 +868,7 @@
         "file": "scripts/eval/eval.test.mjs",
         "line": 148,
         "snippet": "const replayRun = spawnSync(process.execPath, [evalCli, \"--replay\", \"--json\"], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/eval.test.mjs#L148"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/eval/eval.test.mjs#L148"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -871,7 +879,7 @@
         "file": "scripts/eval/incident-replay.mjs",
         "line": 90,
         "snippet": "const stdout = execFileSync( \"agy\", [ \"-p\", buildVerifierPrompt(diff), \"--output-format\", \"json\", \"--json-schema\", schemaPath, \"--print-timeout\", \"10m\", \"--sandbox\", \"--agent\", age",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/incident-replay.mjs#L90"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/eval/incident-replay.mjs#L90"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -882,7 +890,7 @@
         "file": "scripts/eval/incident-replay.mjs",
         "line": 130,
         "snippet": "const stdout = execFileSync( \"agy\", [ \"--input-format\", \"stream-json\", \"--output-format\", \"stream-json\", \"--json-schema\", schemaPath, \"--print-timeout\", \"10m\", \"--sandbox\", \"--agen",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/incident-replay.mjs#L130"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/eval/incident-replay.mjs#L130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -893,7 +901,7 @@
         "file": "scripts/eval/risk-backtest.mjs",
         "line": 27,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/eval/risk-backtest.mjs#L27"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/eval/risk-backtest.mjs#L27"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -902,9 +910,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "scripts/trust/internal/dossier.mjs",
-        "line": 45,
+        "line": 48,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/dossier.mjs#L45"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/trust/internal/dossier.mjs#L48"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -913,9 +921,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "scripts/trust/internal/dossier.mjs",
-        "line": 58,
+        "line": 61,
         "snippet": "const res = spawnSync(\"git\", [\"patch-id\", \"--stable\"], { cwd, input: diffText, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/dossier.mjs#L58"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/trust/internal/dossier.mjs#L61"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -924,9 +932,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "scripts/trust/internal/ledger.mjs",
-        "line": 853,
+        "line": 861,
         "snippet": "status = execFileSync(\"git\", [\"status\", \"--porcelain\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/ledger.mjs#L853"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/trust/internal/ledger.mjs#L861"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -937,7 +945,7 @@
         "file": "scripts/trust/internal/policy.mjs",
         "line": 313,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/policy.mjs#L313"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/trust/internal/policy.mjs#L313"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -948,7 +956,7 @@
         "file": "scripts/trust/internal/policy.mjs",
         "line": 1703,
         "snippet": "while ((m = importRegex.exec(stripped)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/policy.mjs#L1703"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/trust/internal/policy.mjs#L1703"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -959,7 +967,7 @@
         "file": "scripts/trust/internal/pr-proof.mjs",
         "line": 141,
         "snippet": "const remote = execFileSync(\"git\", [\"remote\", \"get-url\", \"origin\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"pipe\"], }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/trust/internal/pr-proof.mjs#L141"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/trust/internal/pr-proof.mjs#L141"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -970,7 +978,7 @@
         "file": "scripts/upstream-watch.mjs",
         "line": 24,
         "snippet": "return execFileSync(\"git\", args, { encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/upstream-watch.mjs#L24"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/upstream-watch.mjs#L24"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -981,7 +989,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 128,
         "snippet": "while ((match = mdRegex.exec(withoutCode)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L128"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/validate-astack.mjs#L128"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -992,7 +1000,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 132,
         "snippet": "while ((match = htmlRegex.exec(withoutCode)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L132"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/validate-astack.mjs#L132"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1003,7 +1011,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 455,
         "snippet": "while ((m = slashTokenRe.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L455"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/validate-astack.mjs#L455"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1014,7 +1022,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 563,
         "snippet": "while ((m = spec.regex.exec(content)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L563"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/validate-astack.mjs#L563"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1023,9 +1031,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "scripts/validate-astack.mjs",
-        "line": 1021,
+        "line": 1027,
         "snippet": "while ((principleMatch = PRINCIPLE_REF_REGEX.exec(sanitizedForLeakCheck)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L1021"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/validate-astack.mjs#L1027"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1034,9 +1042,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "scripts/validate-astack.mjs",
-        "line": 1039,
+        "line": 1045,
         "snippet": "const stdout = execFileSync(\"agy\", [\"plugin\", \"validate\", \"--strict\", \"--json\", rootDir], { encoding: \"utf8\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/scripts/validate-astack.mjs#L1039"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/scripts/validate-astack.mjs#L1045"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1045,9 +1053,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/main.mjs",
-        "line": 96,
+        "line": 97,
         "snippet": "execFile(cmd, args, { encoding: \"utf8\", timeout: 4000 }, (err, stdout) => { if (err) { return resolve({ ok: false, payload: null, workspaceDir: \"\", emptyWorkspace: false }); } try ",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/main.mjs#L96"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/main.mjs#L97"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1056,9 +1064,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/main.mjs",
-        "line": 372,
+        "line": 373,
         "snippet": "execFile( \"gh\", [\"pr\", \"list\", \"--state\", \"all\", \"--limit\", \"40\", \"--json\", \"number,title,state,url\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 4000 }, (err, stdout) => { if",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/main.mjs#L372"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/main.mjs#L373"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1069,7 +1077,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 23,
         "snippet": "const res = spawnSync(process.execPath, [MAIN_PATH, flag], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L23"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L23"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1080,7 +1088,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 421,
         "snippet": "const child = spawn(process.execPath, [MAIN_PATH, \"--port\", \"0\", \"--standalone\", \"--allow-fixture-ids\", \"--brain-dir\", brainDir], { env, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L421"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L421"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1089,9 +1097,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 637,
+        "line": 640,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L637"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L640"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1100,9 +1108,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 638,
+        "line": 641,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L638"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L641"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1111,9 +1119,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 639,
+        "line": 642,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L639"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L642"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1122,9 +1130,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 644,
+        "line": 647,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L644"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L647"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1133,9 +1141,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 645,
+        "line": 648,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L645"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L648"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1144,9 +1152,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 646,
+        "line": 649,
         "snippet": "const headSha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: enrolledRepo, encoding: \"utf8\" }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L646"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L649"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1155,31 +1163,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 833,
+        "line": 836,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L833"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 834,
-        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L834"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 835,
-        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L835"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L836"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1189,8 +1175,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 837,
-        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L837"
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L837"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1200,8 +1186,30 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 838,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L838"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 840,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: gitRepo, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L840"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 841,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L838"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L841"
       },
       {
         "id": "CODE_JS_DYNAMIC_EXEC",
@@ -1210,9 +1218,9 @@
         "capability": "dynamic_code_exec",
         "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 1211,
+        "line": 1228,
         "snippet": "vm.runInNewContext(appJs, sandbox, { filename: \"app.js\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1211"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1228"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1221,9 +1229,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 1421,
+        "line": 1438,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1421"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1438"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1232,9 +1240,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 1422,
+        "line": 1439,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1422"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1439"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1243,9 +1251,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 1423,
+        "line": 1440,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1423"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1440"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1254,9 +1262,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 1428,
+        "line": 1445,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1428"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1445"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1265,9 +1273,20 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 1429,
+        "line": 1446,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/server.test.mjs#L1429"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1446"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "sidecars/astack_timeline/server.test.mjs",
+        "line": 1878,
+        "snippet": "vm.runInNewContext(railJs, sandbox, { filename: \"living-rail.js\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/server.test.mjs#L1878"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1276,64 +1295,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/timeline-engine.mjs",
-        "line": 574,
+        "line": 775,
         "snippet": "const out = execFileSync(\"git\", [\"log\", \"-n\", \"80\", \"--format=%s\", targetRef], { cwd: workspaceDir, encoding: \"utf8\", timeout: 1500, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline-engine.mjs#L574"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2844,
-        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2844"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2845,
-        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2845"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2846,
-        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2846"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2848,
-        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2848"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2849,
-        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2849"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline-engine.mjs#L775"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1343,8 +1307,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2859,
-        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2859"
+        "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2859"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1354,8 +1318,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2860,
-        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2860"
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2860"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1364,9 +1328,20 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2871,
+        "line": 2861,
+        "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2861"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2863,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2871"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2863"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1375,9 +1350,53 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/timeline.test.mjs",
-        "line": 2872,
+        "line": 2864,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2864"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2874,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2874"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2875,
+        "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2875"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2886,
+        "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2886"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/astack_timeline/timeline.test.mjs",
+        "line": 2887,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"raise ceiling\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/sidecars/astack_timeline/timeline.test.mjs#L2872"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/sidecars/astack_timeline/timeline.test.mjs#L2887"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1388,7 +1407,7 @@
         "file": "skills/astack-mode/scripts/check-plan.test.ts",
         "line": 59,
         "snippet": "const result = spawnSync(\"node\", [checker, file], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/check-plan.test.ts#L59"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/check-plan.test.ts#L59"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1399,7 +1418,7 @@
         "file": "skills/astack-mode/scripts/check-plan.test.ts",
         "line": 126,
         "snippet": "const help = spawnSync(\"node\", [checker, \"--help\"], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/check-plan.test.ts#L126"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/check-plan.test.ts#L126"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1410,7 +1429,7 @@
         "file": "skills/astack-mode/scripts/check-plan.test.ts",
         "line": 134,
         "snippet": "const jsonRes = spawnSync(\"node\", [checker, \"--json\", file], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/check-plan.test.ts#L134"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/check-plan.test.ts#L134"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1421,7 +1440,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 252,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L252"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L252"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1432,7 +1451,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 253,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@t.com\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L253"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L253"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1443,7 +1462,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 254,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"Tester\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L254"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L254"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1454,7 +1473,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 269,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L269"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L269"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1465,7 +1484,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 270,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L270"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L270"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1476,7 +1495,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 271,
         "snippet": "const headSha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: dir, encoding: \"utf8\" }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L271"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L271"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1487,7 +1506,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 521,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L521"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L521"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1498,7 +1517,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 522,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@t.com\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L522"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L522"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1509,7 +1528,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 523,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"Tester\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L523"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L523"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1520,7 +1539,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 525,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L525"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L525"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1531,7 +1550,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 526,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L526"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L526"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1542,7 +1561,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 782,
         "snippet": "execFileSync(\"git\", [\"remote\", \"add\", \"origin\", \"https://github.com/my-org/my-repo.git\"], { cwd: dir, stdio: \"ignore\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/cli.test.ts#L782"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/cli.test.ts#L782"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1553,7 +1572,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
         "line": 469,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.test.ts#L469"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/github.test.ts#L469"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1564,7 +1583,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
         "line": 499,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.test.ts#L499"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/github.test.ts#L499"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1575,7 +1594,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
         "line": 542,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.test.ts#L542"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/github.test.ts#L542"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1586,7 +1605,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.ts",
         "line": 70,
         "snippet": "? spawn( process.env.ComSpec ?? \"cmd.exe\", [ \"/d\", \"/s\", \"/c\", `\"${[resolved.file, ...argv.slice(1)].map(quoteWindowsBatchArg).join(\" \")}\"`, ], { stdio: [\"ignore\", \"pipe\", \"pipe\"],",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.ts#L70"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/github.ts#L70"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1597,7 +1616,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.ts",
         "line": 84,
         "snippet": ": spawn(resolved.file, argv.slice(1), { stdio: [\"ignore\", \"pipe\", \"pipe\"], ...(cwd ? { cwd } : {}), });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.ts#L84"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/github.ts#L84"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1608,7 +1627,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.ts",
         "line": 406,
         "snippet": "const match = pattern.exec(comment.body);",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/github.ts#L406"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/github.ts#L406"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1619,7 +1638,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/watch-pr.mjs",
         "line": 11,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", entry, ...process.argv.slice(2)], { stdio: \"inherit\" }, );",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/watch-pr/watch-pr.mjs#L11"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/watch-pr/watch-pr.mjs#L11"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1630,7 +1649,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.mjs",
         "line": 27,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"], }).trimEnd();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.mjs#L27"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/worktree-audit.mjs#L27"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1641,7 +1660,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.mjs",
         "line": 127,
         "snippet": "const raw = execFileSync( \"gh\", [\"pr\", \"list\", \"--author\", \"@me\", \"--state\", \"all\", \"--limit\", \"500\", \"--json\", \"number,state,headRefName\"], { cwd: repoDir, encoding: \"utf8\", stdio",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.mjs#L127"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/worktree-audit.mjs#L127"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1652,7 +1671,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.test.mjs",
         "line": 13,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\" }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.test.mjs#L13"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/worktree-audit.test.mjs#L13"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1663,7 +1682,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.test.mjs",
         "line": 94,
         "snippet": "const jsonOut = execFileSync(\"node\", [worktreeAuditCli, \"--base\", \"main\", \"--json\", repo], { encoding: \"utf8\", env: { ...process.env, ASTACK_TRANSCRIPTS_DIR: brainDir }, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/astack-mode/scripts/worktree-audit.test.mjs#L94"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/astack-mode/scripts/worktree-audit.test.mjs#L94"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1674,7 +1693,7 @@
         "file": "skills/audit-architecture/scripts/arch-audit.test.mjs",
         "line": 72,
         "snippet": "const strictRun = spawnSync(process.execPath, [cliPath, \"--cwd\", tmp, \"--strict\", \"--json\"], { encoding: \"utf8\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/audit-architecture/scripts/arch-audit.test.mjs#L72"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/audit-architecture/scripts/arch-audit.test.mjs#L72"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1685,7 +1704,7 @@
         "file": "skills/audit-architecture/scripts/arch-audit.test.mjs",
         "line": 94,
         "snippet": "const res = spawnSync(process.execPath, [cliPath, \"--cwd\", tmp, \"--strict\", \"--json\"], { encoding: \"utf8\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/audit-architecture/scripts/arch-audit.test.mjs#L94"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/audit-architecture/scripts/arch-audit.test.mjs#L94"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1696,7 +1715,7 @@
         "file": "skills/create-verification-skill/references/control-cli-template.mjs",
         "line": 119,
         "snippet": "const res = spawnSync(\"taskkill\", [\"/PID\", String(pid), \"/T\", \"/F\"], { stdio: \"ignore\", windowsHide: true, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/create-verification-skill/references/control-cli-template.mjs#L119"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/create-verification-skill/references/control-cli-template.mjs#L119"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1707,7 +1726,7 @@
         "file": "skills/create-verification-skill/references/control-cli-template.mjs",
         "line": 210,
         "snippet": "const child = spawn(flags.cmd, { shell: true, detached: process.platform !== \"win32\", stdio: \"ignore\", windowsHide: true, env: { ...process.env, PORT: String(port), VERIFY_PORT: St",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/create-verification-skill/references/control-cli-template.mjs#L210"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/create-verification-skill/references/control-cli-template.mjs#L210"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1718,7 +1737,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 64,
         "snippet": "return spawnSync(process.execPath, [...nodeArgs, validatorPath, ledgerPath], { encoding: \"utf8\", timeout, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L64"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L64"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1729,7 +1748,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 594,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, missingPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L594"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L594"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1740,7 +1759,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 628,
         "snippet": "const created = spawnSync(\"mkfifo\", [fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L628"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L628"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1751,7 +1770,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 631,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L631"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L631"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1762,7 +1781,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 660,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, symlinkPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L660"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L660"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1773,7 +1792,7 @@
         "file": "skills/security-audit/scripts/validate-findings.test.cjs",
         "line": 105,
         "snippet": "return spawnSync(process.execPath, [...nodeArgs, validatorPath, findingsPath], { encoding: \"utf8\", timeout, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-findings.test.cjs#L105"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-findings.test.cjs#L105"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1784,22 +1803,28 @@
         "file": "skills/security-audit/scripts/validate-findings.test.cjs",
         "line": 431,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, missingPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-findings.test.cjs#L431"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "skills/security-audit/scripts/validate-findings.test.cjs",
-        "line": 467,
-        "snippet": "const created = spawnSync(\"mkfifo\", [fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/d95354253fed961c3b503df07796a3e8774fd430/skills/security-audit/scripts/validate-findings.test.cjs#L467"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/cd403d45637246ad1c9868ace382cae01d4912c7/skills/security-audit/scripts/validate-findings.test.cjs#L431"
       }
     ]
   },
   "history": [
+    {
+      "version": "0.4.0",
+      "sha": "cd403d45637246ad1c9868ace382cae01d4912c7",
+      "scannedAt": "2026-11-28T00:24:32.599Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "0.4.0",
       "sha": "d95354253fed961c3b503df07796a3e8774fd430",

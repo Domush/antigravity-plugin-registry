@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "janedogco/openbelt-plugin-antigravity",
+  "sha": "0c89aea0a3f07dafa142e71be41cded6d840fd5f",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T00:26:49.957Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "openbelt",
+    "displayName": "OpenBelt",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "cloud",
+        "runtimeName": "openbelt_cloud",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://openbelt.com/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "openbelt-setup",
+        "slashCommand": "/openbelt-setup",
+        "description": "Check the OpenBelt MCP connection and explain the next setup step. Use when asked to set up or check OpenBelt, or when OpenBelt's tools are missing.",
+        "disableModelInvocation": false,
+        "file": "skills/openbelt-setup/SKILL.md"
+      },
+      {
+        "name": "using-openbelt",
+        "slashCommand": "/using-openbelt",
+        "description": "Build, deploy, and use apps and connections in the OpenBelt workspace over MCP. Use when asked to build an internal app, deploy to OpenBelt, read app data, or call a workspace connection.",
+        "disableModelInvocation": false,
+        "file": "skills/using-openbelt/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/openbelt-setup",
+      "/using-openbelt"
+    ],
+    "mcpServerNames": [
+      "openbelt_cloud"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# OpenBelt for Google Antigravity\n\nBuild and run small web apps for your workspace over MCP. [OpenBelt](https://openbelt.com) hosts apps with data, realtime updates, server functions, preview environments, and shared workspace connections, with no build step and instant deploys.\n\n## Install\n\nFrom GitHub:\n\n```bash\nagy plugin install https://github.com/janedogco/openbelt-plugin-antigravity\n```\n\nOnce OpenBelt is listed in the Antigravity Marketplace, you can also open **Customizations -> Marketplace**, search for **OpenBelt**, and choose **Add**.\n\n## Sign in\n\nThe plugin connects to `https://openbelt.com/mcp` over Streamable HTTP with OAuth:\n\n- **App:** open **Customizations -> Installed**, find **OpenBelt**, and choose **Authenticate**.\n- **CLI:** run `/mcp`, select `openbelt_cloud`, and choose **Authenticate**.\n\nOpenBelt opens in your browser. Sign in, pick or create a workspace, and approve access.\n\n## Use\n\nTry asking:\n\n- \"Show me the apps and connections in my OpenBelt workspace.\"\n- \"Build a small tracker app in OpenBelt and prove it works.\"\n- \"Check my OpenBelt connection.\"\n\n## What this plugin includes\n\n- `mcp_config.json`: hosted OpenBelt MCP server (`https://openbelt.com/mcp`, Streamable HTTP + OAuth).\n- `skills/using-openbelt`: how to discover operations with `search`, run them with `call`, and read live docs from the server.\n- `skills/openbelt-setup`: quick connection check and sign-in guide.\n\nRunning a self-hosted OpenBelt instance? Add `https://<workspace>.<your-domain>/mcp` to `~/.gemini/config/mcp_config.json` instead:\n\n```json\n{\n  \"mcpServers\": {\n    \"openbelt\": { \"serverUrl\": \"https://<workspace>.<your-domain>/mcp\" }\n  }\n}\n```\n\n## Development\n\n```bash\nagy plugin validate --strict .\nagy plugin install .\n```\n\n## Support\n\n[openbelt.com](https://openbelt.com) · [OpenBelt source](https://github.com/janedogco/openbelt) · [Issues](https://github.com/janedogco/openbelt-plugin-antigravity/issues) · [hello@openbelt.com](mailto:hello@openbelt.com)\n\n## License\n\nMIT\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "0c89aea0a3f07dafa142e71be41cded6d840fd5f",
+      "scannedAt": "2026-11-28T00:26:49.957Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

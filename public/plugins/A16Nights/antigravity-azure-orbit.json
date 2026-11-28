@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "A16Nights/antigravity-azure-orbit",
-  "sha": "d8666d92b6f1293084558723b297497fdf279f68",
+  "sha": "5b144ef7fa505ef3926c3f07681b1ff02a533737",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:17:57.452Z",
+  "scannedAt": "2026-11-28T00:25:38.548Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "azure-orbit",
-    "displayName": "苍蓝星轨",
-    "version": "1.1.8",
+    "displayName": "苍蓝星轨——原生菜单外接模型挂载",
+    "version": "1.1.9",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -48,8 +48,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝星轨 · Azure Orbit\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-orbit/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-orbit?style=flat-square&label=Release&color=0ea5e9&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-orbit/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-orbit?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-0ea5e9?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-Apache-2.0-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>将 DeepSeek / OpenAI / Anthropic / Kimi / OpenRouter / Ollama 等外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#mcp-tools\">🧰 MCP 工具</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n面向 **Google Antigravity** 的原生主模型接入与侧栏可视化管理插件，与 **[苍蓝协奏台（External Orchestrator）](https://github.com/A16Nights/antigravity-external-orchestrator)** 组成「苍蓝双子」：星轨让外部模型直接驶入左下角原生下拉菜单担任主脑，协奏台负责把重度工作委派给外部执行手。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🪐 直挂原生模型下拉菜单</h4>\n一键 <strong>★ 挂载 / 移除</strong> 任意外部模型到 Antigravity 左下角原生模型选择器，支持自定义显示别名与清理示例占位模型。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🔥 热读取零重启生效</h4>\n底层代理每次请求实时热读取 <code>~/.gemini/antigravity/custom_models.json</code>，增删模型无需重启客户端，按 <code>Ctrl+R</code> 即可刷新菜单。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>⚡ 与苍蓝协奏台一键同步</h4>\n已配置苍蓝协奏台的用户可一键导入全部已启用提供商、密钥与模型列表并直接挂载，彻底告别重复填写。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🛠️ 适配 2.32+ ~ 2.35+ 补丁引擎</h4>\n完整适配新版 <code>...spread</code>（<code>baseLsArgs</code>）启动参数布局，支持原生中/英文下拉菜单实时搜索框与非破坏性共存注入。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<table>\n<tr>\n<td width=\"50%\" align=\"center\" valign=\"top\">\n  <a href=\"assets/readme/preview-models.png\"><img src=\"assets/readme/preview-models.png\" alt=\"原生主模型挂载管理\" width=\"100%\"></a>\n  <br><strong>原生主模型挂载管理</strong>\n  <br><sub>一键从苍蓝协奏台同步并挂载到左下角原生菜单，支持思考档位、Vision 标注与实时检索</sub>\n</td>\n<td width=\"50%\" align=\"center\" valign=\"top\">\n  <a href=\"assets/readme/preview-providers.png\"><img src=\"assets/readme/preview-providers.png\" alt=\"多渠道管理与一键挂载\" width=\"100%\"></a>\n  <br><strong>多渠道管理与一键挂载</strong>\n  <br><sub>7 大主流渠道快速添加、单模型或整渠道一键挂载到左下角原生下拉菜单</sub>\n</td>\n</tr>\n</table>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 原生模型下拉菜单无缝挂载\n- **直挂原生选择器**：选中任意外部渠道模型即可一键 **「★ 挂载 / 移除」** 到 Antigravity 左下角原生模型下拉框。\n- **热读取零重启**：底层代理每次请求实时读取 `~/.gemini/antigravity/custom_models.json`，挂载或卸载模型后无需重启客户端（若前端下拉列表尚未刷新，按一次 `Ctrl+R` 即可刷出最新模型）。\n- **自定义显示别名与排序**：支持为挂载的模型设置清晰的显示名称，并一键清理默认示例占位模型。\n\n### 2. 多渠道管理、模型拉取与多关键词检索\n- **7 大主流预设开箱即用**：内置 DeepSeek、本地聚合网关、OpenAI 兼容、Kimi / Moonshot、OpenRouter、Anthropic 兼容、Ollama 本地预设，支持自定义请求头（Headers）与超时设置。\n- **一键拉取 `/v1/models`**：在渠道弹窗或列表中直接从远端接口拉取全部可用模型，支持空格分隔的多关键词实时过滤检索、单选/全选批量添加。\n- **密钥隔离与自动脱敏**：API Key 仅保存在本机配置中，界面展示与 MCP 工具返回均自动掩码脱敏。\n\n### 3. 与「苍蓝协奏台」一键双向同步\n- 已配置 **[苍蓝协奏台](https://github.com/A16Nights/antigravity-external-orchestrator)** 的用户，只需点击 **「⚡ 从苍蓝协奏台一键同步并挂载」**（或「⇄ 仅从苍蓝协奏台导入渠道」），即可自动导入所有已启用的提供商渠道、密钥与模型列表，免去重复填写。\n\n### 4. Antigravity 2.32+ ~ 2.35+ 底层补丁引擎（`runtime/`）\n- **新版参数布局完整适配**：完美适配 `dist/languageServer.js` 在 Antigravity 2.32+ / 2.33.0+ / 2.35+ 下的 `...spread`（`baseLsArgs`）启动参数注入，并在原生中文/英文模型下拉菜单内提供实时搜索框。\n- **非破坏性共存注入**：采用增量标记注入，与其他扩展补丁完全共存；支持在侧栏面板实时查看补丁状态，并一键在桌面生成「安装/更新星轨补丁」与「还原官方原版」批处理脚本。\n\n### 5. 苍蓝统一视觉与交互体系\n- **Sidecar + 独立 Web UI 双形态**：采用 Antigravity 官方标准 Sidecar 辅助侧栏 + MCP Server 架构，彻底告别传统 Settings 弹窗 DOM 注入失效问题；点击顶栏 `Web UI` 可在系统浏览器全屏管理。\n- **Neko Glass 毛玻璃界面 & 苍蓝主题色调中心**：支持深色/浅色切换、自定义毛玻璃下拉框与弹窗、6 套官方主题预设 + 自定义主副双色 + 4 个自定义栏位跨插件同步、左侧栏快捷入口开关与 GitHub Release 在线更新检查。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  A[\"苍蓝星轨 Sidecar / MCP\"] -->|\"热写入\"| B[\"~/.gemini/antigravity/<br/>custom_models.json\"]\n  O[\"苍蓝协奏台<br/>External Orchestrator\"] -.->|\"一键同步渠道与模型\"| A\n  B -->|\"每次请求实时热读取\"| C[\"星轨本地代理<br/>runtime/ 补丁引擎\"]\n  C -->|\"注入模型列表 + 实时搜索框\"| D[\"Antigravity 左下角<br/>原生模型下拉菜单\"]\n  C -->|\"转发请求\"| E[\"外部大模型 API<br/>DeepSeek / OpenAI / Anthropic / Ollama\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-orbit.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-orbit`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-orbit.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-orbit\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-azure-orbit.git ~/.gemini/config/plugins/azure-orbit\n```\n\n1. **重启或重载 Antigravity（`Ctrl+R`）**，在右侧辅助面板或左侧栏打开 **「苍蓝星轨」**。\n2. **首次激活底层补丁**：切换到 **「星轨引擎（底层补丁）」** 标签页，点击 **「在桌面生成安装/更新星轨补丁.bat」**，退出 Antigravity 后双击运行一次即可完成注入。\n3. **挂载主模型**：在 **「模型渠道」** 页添加渠道或从苍蓝协奏台一键同步，点击模型将其挂载到 **「原生主模型」**，按 `Ctrl+R` 重载窗口后即可在左下角模型菜单中直接选用。\n\n<h2 id=\"mcp-tools\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-tools-dark.svg\">\n  <img src=\"assets/readme/sec-tools-light.svg\" alt=\"MCP 工具一览\" width=\"100%\">\n</picture>\n</h2>\n\n| 工具名 | 作用 |\n| --- | --- |\n| `orbit_list_models` | 查看当前已挂载到左下角原生菜单的主模型、已配置渠道（脱敏）及底层补丁状态 |\n| `orbit_mount_models` | 将指定渠道的一个或多个模型直接挂载到 Antigravity 左下角原生下拉菜单 |\n| `orbit_unmount_model` | 从左下角原生下拉菜单移除指定模型，或一键清理默认示例模型 |\n| `orbit_sync_from_orchestrator` | 一键从「苍蓝协奏台」同步渠道与模型配置并可选直接挂载到原生菜单 |\n| `orbit_patch_status` | 检查 Antigravity 客户端 `app.asar` 的星轨底层补丁安装状态与版本兼容性 |\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **原生挂载模型列表**：`~/.gemini/antigravity/custom_models.json`\n- **星轨渠道与配置**：`~/.gemini/azure-orbit/config.json`\n- **苍蓝套件共享主题 / 左侧栏配置**：`~/.gemini/azure-theme.json`、`~/.gemini/azure-sidebar-nav.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 9 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨** &nbsp;`✦ 当前仓库` | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 只读原生会话 FTS5 全文检索、自定义项目分组、优先级标签与独立安全归档箱 |\n| 🌌 **蓝汐 · 潮汐认知图谱** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 内部思考语言简体中文 / 英文双档热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>Apache-2.0 License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
-  "latestReleaseNotes": "## 更新内容\n\n- **AGY Market 收录合规化**：按 Antigravity 严格 10 字段白名单清理 `plugin.json`（移除 `$schema`），补全 `author` / `homepage` / `repository`，同步 `package.json` 版本号，并新增 `agy-market.json` 指向预构建自包含资产 `antigravity-azure-orbit.tar.gz`。\n- **更新中英文 README**：将底层补丁引擎兼容范围更新至 `Antigravity 2.32+ ~ 2.35+`。",
+  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝星轨——原生菜单外接模型挂载 · Azure Orbit — Native Custom Model Mount\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-orbit/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-orbit?style=flat-square&label=Release&color=0ea5e9&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-orbit/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-orbit?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-0ea5e9?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-Apache-2.0-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>苍蓝星轨——原生菜单外接模型挂载 · 将 DeepSeek / OpenAI / Anthropic / Kimi / OpenRouter / Ollama 等外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#mcp-tools\">🧰 MCP 工具</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n面向 **Google Antigravity** 的原生主模型接入与侧栏可视化管理插件，与 **[苍蓝协奏台（External Orchestrator）](https://github.com/A16Nights/antigravity-external-orchestrator)** 组成「苍蓝双子」：星轨让外部模型直接驶入左下角原生下拉菜单担任主脑，协奏台负责把重度工作委派给外部执行手。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>🪐 直挂原生模型下拉菜单</h4>\n一键 <strong>★ 挂载 / 移除</strong> 任意外部模型到 Antigravity 左下角原生模型选择器，支持自定义显示别名与清理示例占位模型。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🔥 热读取零重启生效</h4>\n底层代理每次请求实时热读取 <code>~/.gemini/antigravity/custom_models.json</code>，增删模型无需重启客户端，按 <code>Ctrl+R</code> 即可刷新菜单。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>⚡ 与苍蓝协奏台一键同步</h4>\n已配置苍蓝协奏台的用户可一键导入全部已启用提供商、密钥与模型列表并直接挂载，彻底告别重复填写。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🛠️ 适配 2.32+ ~ 2.35+ 补丁引擎</h4>\n完整适配新版 <code>...spread</code>（<code>baseLsArgs</code>）启动参数布局，支持原生中/英文下拉菜单实时搜索框与非破坏性共存注入。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<table>\n<tr>\n<td width=\"50%\" align=\"center\" valign=\"top\">\n  <a href=\"assets/readme/preview-models.png\"><img src=\"assets/readme/preview-models.png\" alt=\"原生主模型挂载管理\" width=\"100%\"></a>\n  <br><strong>原生主模型挂载管理</strong>\n  <br><sub>一键从苍蓝协奏台同步并挂载到左下角原生菜单，支持思考档位、Vision 标注与实时检索</sub>\n</td>\n<td width=\"50%\" align=\"center\" valign=\"top\">\n  <a href=\"assets/readme/preview-providers.png\"><img src=\"assets/readme/preview-providers.png\" alt=\"多渠道管理与一键挂载\" width=\"100%\"></a>\n  <br><strong>多渠道管理与一键挂载</strong>\n  <br><sub>7 大主流渠道快速添加、单模型或整渠道一键挂载到左下角原生下拉菜单</sub>\n</td>\n</tr>\n</table>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 原生模型下拉菜单无缝挂载\n- **直挂原生选择器**：选中任意外部渠道模型即可一键 **「★ 挂载 / 移除」** 到 Antigravity 左下角原生模型下拉框。\n- **热读取零重启**：底层代理每次请求实时读取 `~/.gemini/antigravity/custom_models.json`，挂载或卸载模型后无需重启客户端（若前端下拉列表尚未刷新，按一次 `Ctrl+R` 即可刷出最新模型）。\n- **自定义显示别名与排序**：支持为挂载的模型设置清晰的显示名称，并一键清理默认示例占位模型。\n\n### 2. 多渠道管理、模型拉取与多关键词检索\n- **7 大主流预设开箱即用**：内置 DeepSeek、本地聚合网关、OpenAI 兼容、Kimi / Moonshot、OpenRouter、Anthropic 兼容、Ollama 本地预设，支持自定义请求头（Headers）与超时设置。\n- **一键拉取 `/v1/models`**：在渠道弹窗或列表中直接从远端接口拉取全部可用模型，支持空格分隔的多关键词实时过滤检索、单选/全选批量添加。\n- **密钥隔离与自动脱敏**：API Key 仅保存在本机配置中，界面展示与 MCP 工具返回均自动掩码脱敏。\n\n### 3. 与「苍蓝协奏台」一键双向同步\n- 已配置 **[苍蓝协奏台](https://github.com/A16Nights/antigravity-external-orchestrator)** 的用户，只需点击 **「⚡ 从苍蓝协奏台一键同步并挂载」**（或「⇄ 仅从苍蓝协奏台导入渠道」），即可自动导入所有已启用的提供商渠道、密钥与模型列表，免去重复填写。\n\n### 4. Antigravity 2.32+ ~ 2.35+ 底层补丁引擎（`runtime/`）\n- **新版参数布局完整适配**：完美适配 `dist/languageServer.js` 在 Antigravity 2.32+ / 2.33.0+ / 2.35+ 下的 `...spread`（`baseLsArgs`）启动参数注入，并在原生中文/英文模型下拉菜单内提供实时搜索框。\n- **非破坏性共存注入**：采用增量标记注入，与其他扩展补丁完全共存；支持在侧栏面板实时查看补丁状态，并一键在桌面生成「安装/更新星轨补丁」与「还原官方原版」批处理脚本。\n\n### 5. 苍蓝统一视觉与交互体系\n- **Sidecar + 独立 Web UI 双形态**：采用 Antigravity 官方标准 Sidecar 辅助侧栏 + MCP Server 架构，彻底告别传统 Settings 弹窗 DOM 注入失效问题；点击顶栏 `Web UI` 可在系统浏览器全屏管理。\n- **Neko Glass 毛玻璃界面 & 苍蓝主题色调中心**：支持深色/浅色切换、自定义毛玻璃下拉框与弹窗、6 套官方主题预设 + 自定义主副双色 + 4 个自定义栏位跨插件同步、左侧栏快捷入口开关与 GitHub Release 在线更新检查。\n\n\n### 首次使用交互式新手引导（`? 指南`）\n- **3 步上手教程 + 真实控件定位高亮**：首次打开面板自动弹出分步功能指南，点击「🎯 定位」按钮可在当前界面脉冲高亮对应控件并附带浮动返回条。\n- **本机持久化不复弹**：已读状态保存至 `~/.gemini/azure-onboarding.json`（Sidecar 重启换端口不复弹），日后随时可点击顶栏 **`? 指南`** 重看。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  A[\"苍蓝星轨 Sidecar / MCP\"] -->|\"热写入\"| B[\"~/.gemini/antigravity/<br/>custom_models.json\"]\n  O[\"苍蓝协奏台<br/>External Orchestrator\"] -.->|\"一键同步渠道与模型\"| A\n  B -->|\"每次请求实时热读取\"| C[\"星轨本地代理<br/>runtime/ 补丁引擎\"]\n  C -->|\"注入模型列表 + 实时搜索框\"| D[\"Antigravity 左下角<br/>原生模型下拉菜单\"]\n  C -->|\"转发请求\"| E[\"外部大模型 API<br/>DeepSeek / OpenAI / Anthropic / Ollama\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-orbit.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-orbit`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-orbit.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-orbit\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-azure-orbit.git ~/.gemini/config/plugins/azure-orbit\n```\n\n1. **重启或重载 Antigravity（`Ctrl+R`）**，在右侧辅助面板或左侧栏打开 **「苍蓝星轨」**。\n2. **首次激活底层补丁**：切换到 **「星轨引擎（底层补丁）」** 标签页，点击 **「在桌面生成安装/更新星轨补丁.bat」**，退出 Antigravity 后双击运行一次即可完成注入。\n3. **挂载主模型**：在 **「模型渠道」** 页添加渠道或从苍蓝协奏台一键同步，点击模型将其挂载到 **「原生主模型」**，按 `Ctrl+R` 重载窗口后即可在左下角模型菜单中直接选用。\n\n<h2 id=\"mcp-tools\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-tools-dark.svg\">\n  <img src=\"assets/readme/sec-tools-light.svg\" alt=\"MCP 工具一览\" width=\"100%\">\n</picture>\n</h2>\n\n| 工具名 | 作用 |\n| --- | --- |\n| `orbit_list_models` | 查看当前已挂载到左下角原生菜单的主模型、已配置渠道（脱敏）及底层补丁状态 |\n| `orbit_mount_models` | 将指定渠道的一个或多个模型直接挂载到 Antigravity 左下角原生下拉菜单 |\n| `orbit_unmount_model` | 从左下角原生下拉菜单移除指定模型，或一键清理默认示例模型 |\n| `orbit_sync_from_orchestrator` | 一键从「苍蓝协奏台」同步渠道与模型配置并可选直接挂载到原生菜单 |\n| `orbit_patch_status` | 检查 Antigravity 客户端 `app.asar` 的星轨底层补丁安装状态与版本兼容性 |\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **原生挂载模型列表**：`~/.gemini/antigravity/custom_models.json`\n- **星轨渠道与配置**：`~/.gemini/azure-orbit/config.json`\n- **苍蓝套件共享主题 / 左侧栏配置**：`~/.gemini/azure-theme.json`、`~/.gemini/azure-sidebar-nav.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 10 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台——外部模型调度与省流** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器、全链路监控与首次新手引导 |\n| 🪐 **苍蓝星轨——原生菜单外接模型挂载** &nbsp;`✦ 当前仓库` | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘——Agent 预设与上下文监控** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊——会话与工作区管理** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 纯官方原生会话与工作区同步、FTS5 全文检索、自选快捷标签栏、跨工作区转移续聊与新手引导 |\n| 🌌 **蓝汐——认知图谱长期记忆** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣——人设卡与分层记忆** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文——外接模型中文思考切换** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 外接推理模型内部思考简体中文 / 英文热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜——思维链观测与实时翻译** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖——Windows 桌面与网页操控** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n| 🍃 **苍蓝流笺——拖拽发图与原生文件标签** | [antigravity-azure-drop](https://github.com/A16Nights/antigravity-azure-drop) | 零 `app.asar` 侵入、拖拽与粘贴插入原生文件标签、无损 PNG 截图落盘、图片缩略图灯箱与面包屑右键菜单 |\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>Apache-2.0 License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
+  "latestReleaseNotes": "## ✨ v1.1.9 更新亮点\n\n### 1. 首次使用 3 步交互式新手引导（`? 指南`）\n- 3 步交互式新手引导覆盖「配置模型渠道」「挂载到原生菜单」与「星轨引擎检查」，新手第一次打开就能按步配通外接主模型。\n- 首次打开面板自动弹出教程，支持点击 **「🎯 定位」** 脉冲高亮页面真实控件并附带浮动返回条，帮助新用户一分钟上手。\n- 已读状态持久化保存至 `~/.gemini/azure-onboarding.json`（Sidecar 重启换端口不复弹），随时可点顶栏 **`? 指南`** 重看，支持 `←` / `→` 翻页与 `Esc` 关闭。\n\n### 2. 名称清晰化与文档升级\n- 介绍名称统一升级为 **「苍蓝星轨——原生菜单外接模型挂载」**，直观呈现核心用途，同步更新 `plugin.json`、顶部横幅 SVG、中英文 README 与苍蓝 10 款全家桶导航表。\n\n### 3. 界面体验优化\n- 优化苍蓝统一 UI 套件次级按钮选择器权重（使用 `:where(...)` 降权），避免高权重样式意外覆写自定义高亮状态。",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -69,7 +69,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 82,
         "snippet": "const slotMatch = /^slot-([0-9]+)$/.exec(activeId);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L82"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L82"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -80,7 +80,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 213,
         "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", href], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L213"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L213"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -91,7 +91,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 219,
         "snippet": "spawn(\"open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L219"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L219"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -102,7 +102,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 221,
         "snippet": "spawn(\"xdg-open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L221"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L221"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -113,7 +113,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 86,
         "snippet": "const m = EFFORT_NAME_REGEX.exec(s);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L86"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L86"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -124,7 +124,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 92,
         "snippet": "const m = EFFORT_LABEL_REGEX.exec(s);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L92"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L92"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -135,7 +135,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 533,
         "snippet": "const effortMatch = EFFORT_NAME_REGEX.exec(m.name) || EFFORT_LABEL_REGEX.exec(m.displayName || \"\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L533"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L533"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -146,7 +146,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 802,
         "snippet": ".map((x) => x.reasoningEffort || (EFFORT_NAME_REGEX.exec(x.name)?.[2] ?? \"\"))",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L802"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L802"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -157,7 +157,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 477,
         "snippet": "const m = /pid=(\\d+)/.exec(lockText);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L477"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L477"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -166,9 +166,42 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/orbit/server.mjs",
-        "line": 259,
+        "line": 262,
         "snippet": "const child = spawn(\"explorer.exe\", [`/select,${target}`], { detached: true, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/sidecars/orbit/server.mjs#L259"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/sidecars/orbit/server.mjs#L262"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 232,
+        "snippet": "await fetch(apiUrl(), { method: \"POST\", headers: apiHeaders(true), body: JSON.stringify({ action: shouldDismiss ? \"dismiss\" : \"reset\", guideVersion }) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-onboarding-ui.js#L232"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 309,
+        "snippet": "const r = await fetch(apiUrl({ v: guideVersion }), { headers: apiHeaders(false) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-onboarding-ui.js#L309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-onboarding.mjs",
+        "line": 26,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-onboarding.mjs#L26"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -179,7 +212,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 125,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(clean, null, 2) + \"\\n\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L125"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L125"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -190,7 +223,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 128,
         "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L128"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L128"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -201,7 +234,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 227,
         "snippet": "fs.writeFileSync(tmp, content, \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L227"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L227"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -212,7 +245,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 232,
         "snippet": "fs.writeFileSync(filePath, content, \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L232"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L232"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -223,7 +256,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 234,
         "snippet": "try { fs.unlinkSync(tmp); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L234"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L234"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -234,7 +267,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 929,
         "snippet": "const res = await fetch(endpoint, { method: \"GET\", headers: reqHeaders, signal: AbortSignal.timeout(20000) });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L929"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L929"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -245,7 +278,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 992,
         "snippet": "const res = await fetch( `http://127.0.0.1:${info.httpPort}/exa.language_server_pb.LanguageServerService/GetUserStatus`, { method: \"POST\", headers: { \"Content-Type\": \"application/j",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L992"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L992"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -256,7 +289,7 @@
         "file": "lib/orbit-store.mjs",
         "line": 1110,
         "snippet": "fs.writeFileSync(batPath, lines.join(\"\\r\\n\") + \"\\r\\n\", { encoding: \"ascii\" });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L1110"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L1110"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -267,7 +300,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 132,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/sidebar-nav.mjs#L132"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/sidebar-nav.mjs#L132"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -278,7 +311,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 176,
         "snippet": "fs.writeFileSync(file, JSON.stringify(payload, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/sidebar-nav.mjs#L176"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/sidebar-nav.mjs#L176"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -289,7 +322,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 225,
         "snippet": "const req = https.request( { hostname: \"127.0.0.1\", port: Number(hub.httpsPort), path: \"/exa.language_server_pb.LanguageServerService/RefreshMcpServers\", method: \"POST\", rejectUnau",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/sidebar-nav.mjs#L225"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/sidebar-nav.mjs#L225"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -300,7 +333,7 @@
         "file": "lib/update-checker.mjs",
         "line": 64,
         "snippet": "return await fetch(url, { ...options, signal: controller.signal });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/update-checker.mjs#L64"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/update-checker.mjs#L64"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -311,7 +344,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 100,
         "snippet": "fs.rmSync(target, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L100"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L100"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -322,7 +355,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 403,
         "snippet": "fs.writeFileSync(plan, JSON.stringify(entries));",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L403"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L403"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -333,7 +366,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 491,
         "snippet": "try { fs.unlinkSync(lock); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L491"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L491"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -344,7 +377,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 501,
         "snippet": "fs.writeFileSync(lockFd, `pid=${process.pid}\\n`);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L501"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L501"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -355,7 +388,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 532,
         "snippet": "fs.writeFileSync(target, contents);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L532"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L532"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -366,7 +399,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 535,
         "snippet": "if (info.plan.mode === 'fixed') fs.writeFileSync(marker, JSON.stringify({ requiredPort: 50999 }) + '\\n');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L535"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L535"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -377,7 +410,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 556,
         "snippet": "fs.writeFileSync(candidate.binary, info.plan.bytes);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L556"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L556"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -388,7 +421,7 @@
         "file": "runtime/scripts/deploy.mjs",
         "line": 584,
         "snippet": "if (nextState) fs.writeFileSync(stateCandidate, JSON.stringify(nextState, null, 2) + '\\n');",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/runtime/scripts/deploy.mjs#L584"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/runtime/scripts/deploy.mjs#L584"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -399,7 +432,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 3,
         "snippet": "* 配置文件路径：~/.gemini/azure-theme.json",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/azure-theme.mjs#L3"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/azure-theme.mjs#L3"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -410,11 +443,35 @@
         "file": "lib/orbit-store.mjs",
         "line": 446,
         "snippet": "throw new Error(\"未找到苍蓝协奏台配置文件 ~/.gemini/external-orchestrator/config.json\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/d8666d92b6f1293084558723b297497fdf279f68/lib/orbit-store.mjs#L446"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/lib/orbit-store.mjs#L446"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "sidecars/orbit/onboarding-guide.mjs",
+        "line": 52,
+        "snippet": "text: \"底层代理会实时热读取 ~/.gemini/antigravity/custom_models.json；若左下角菜单暂未刷出新项，按一次 Ctrl+R 即可。\"",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-orbit/blob/5b144ef7fa505ef3926c3f07681b1ff02a533737/sidecars/orbit/onboarding-guide.mjs#L52"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.1.9",
+      "sha": "5b144ef7fa505ef3926c3f07681b1ff02a533737",
+      "scannedAt": "2026-11-28T00:25:38.548Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.1.8",
       "sha": "d8666d92b6f1293084558723b297497fdf279f68",

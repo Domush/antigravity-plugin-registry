@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "turbo-notify/agent-skills",
-  "sha": "6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139",
+  "sha": "1c0a627d01b93da3a99602b902866070cdbdfe76",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:19:32.990Z",
+  "scannedAt": "2026-11-28T00:24:55.416Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "turbo-notify",
     "displayName": "Turbo Notify",
-    "version": "1.5.17",
+    "version": "1.5.18",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -37,6 +37,13 @@
         "file": "skills/send-whatsapp-messages/SKILL.md"
       },
       {
+        "name": "summarize-whatsapp",
+        "slashCommand": "/summarize-whatsapp",
+        "description": "Summarize your WhatsApp chats and groups into who is waiting for a reply, money and deadlines, changes of plans and group news, with Turbo Notify. Use when the person asks for a summary, digest, recap, catch-up, \"what did I miss\" or a daily",
+        "disableModelInvocation": false,
+        "file": "skills/summarize-whatsapp/SKILL.md"
+      },
+      {
         "name": "virtual-attendant",
         "slashCommand": "/virtual-attendant",
         "description": "Set up and run a WhatsApp virtual attendant for a business that sells products or services, using the Turbo Notify MCP server. Use when the user wants to create, configure, start, check or update the attendant, when an administrator or an a",
@@ -58,6 +65,7 @@
     "slashCommands": [
       "/get-started-with-whatsapp",
       "/send-whatsapp-messages",
+      "/summarize-whatsapp",
       "/virtual-attendant"
     ],
     "mcpServerNames": [
@@ -72,7 +80,7 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "# WhatsApp skills for AI agents, with Turbo Notify\n\nUse your own WhatsApp number from your AI agent: send and read messages, and run a virtual attendant that answers your\ncustomers. Works with Claude Code, Claude Desktop and Cowork, Codex and the Antigravity CLI, and with any agent that\nreads the Agent Skills format. The Turbo Notify MCP server ([docs](https://docs.turbonotify.com/en/agents/mcp-server/))\nconnects the agent to your number.\n\nIn ChatGPT, the tools are in the plugin directory: search for Turbo Notify under Plugins, install it and sign in\n([guide](https://docs.turbonotify.com/en/agents/chatgpt/)). ChatGPT gets the tools, not the virtual attendant, which runs\non your computer in Claude Code or Codex.\n\n## Skills\n\n| Skill | What it does |\n|---|---|\n| `virtual-attendant` | Serves a business's customers on WhatsApp: answers in the customer's language, remembers each customer, calls a person when it should, and takes commands from administrators and attendants on WhatsApp itself. |\n\nCustomer guides (Portuguese and English): [WhatsApp virtual attendant](https://docs.turbonotify.com/en/guides/virtual-attendant/),\n[Agent skills](https://docs.turbonotify.com/en/agents/skills/) and\n[AI agents](https://docs.turbonotify.com/en/agents/overview/), with one page per agent.\n\n## Install\n\n| Agent | Commands |\n|---|---|\n| Claude Code | `claude plugin marketplace add turbo-notify/agent-skills` then `claude plugin install turbo-notify@turbo-notify` |\n| Claude Desktop and Cowork | Customize, Plugins, Add, Add marketplace, Add from a repository: `turbo-notify/agent-skills`; then Discover, `turbo-notify`, Add |\n| Codex | `codex plugin marketplace add turbo-notify/agent-skills` then `codex plugin add turbo-notify@turbo-notify` |\n| Antigravity | `agy plugin install https://github.com/turbo-notify/agent-skills` |\n| Gemini CLI | `gemini extensions install https://github.com/turbo-notify/agent-skills` (the connection to the tools only; we have not run the Gemini CLI, and the virtual attendant is not included) |\n| Hermes Agent | `hermes skills install turbo-notify/agent-skills/skills/virtual-attendant`, then add the MCP server `https://mcp.turbonotify.com` in Hermes (not run end to end) |\n| OpenCode | `npx skills add turbo-notify/agent-skills -a opencode` (project folder `.agents/skills/`, or `-g` for `~/.config/opencode/skills/`), then `opencode mcp add --global --url https://mcp.turbonotify.com turbo-notify` and `opencode mcp auth turbo-notify` to sign in (only the MCP sign-in and a `list_numbers` call were run; the skill install and the attendant were not run in OpenCode). Guide: [Turbo Notify in OpenCode](https://docs.turbonotify.com/en/agents/opencode/) |\n| Cline | Add the MCP server `https://mcp.turbonotify.com` to `cline_mcp_settings.json` (steps for the editor and the CLI in [`llms-install.md`](llms-install.md); checked with the CLI, the editor steps were not run) |\n| Other agents that read the Agent Skills format (for example Cursor and Copilot; not tested by us) | `npx skills add turbo-notify/agent-skills`, then add the MCP server `https://mcp.turbonotify.com` in that agent's own settings |\n\nThe unattended runner exists for Claude Code and Codex only. In the other agents the attendant runs in\nassisted mode: a session you keep open, where a person approves each draft.\n\nThe plugin rows above already declare the Turbo Notify MCP server (`https://mcp.turbonotify.com`), so\nthere is nothing to add. Sign in with your Turbo Notify account the first time the agent uses it (Claude Code:\n`/mcp`; Codex: `codex mcp login turbo-notify`; Antigravity: Agent settings, Customizations, Authenticate next to the server), then ask it to \"set up the\nTurbo Notify virtual attendant\". No account yet? Create one at https://dashboard.turbonotify.com/auth/signup?locale=en. For anything\nthat runs alone, use an API key instead (see the guide for your agent in `skills/virtual-attendant/references/`).\n\n## Update\n\nThe skill checks its version on every cycle and messages the administrators when a new one exists,\nwith the command for the agent in use.\n\n| Agent | Command |\n|---|---|\n| Claude Code | `claude plugin marketplace update turbo-notify` then `claude plugin update turbo-notify@turbo-notify` |\n| Claude Desktop and Cowork | The marketplace syncs from the repository; if a new version does not show up, remove the marketplace and add it again |\n| Codex | `codex plugin marketplace upgrade` then `codex plugin add turbo-notify@turbo-notify` |\n| Antigravity | Run the install command again |\n| Gemini CLI | `gemini extensions update turbo-notify` |\n\n## What it reaches\n\n- The Turbo Notify MCP server at `https://mcp.turbonotify.com`, which the plugin declares in `.mcp.json`, `mcp.json` and `mcp_config.json` (one file for each family of agents; none holds a key or a header). You sign in with your account, or you connect your own with an API key. It runs with your account or API key permissions.\n- One folder on your computer (by default `~/.turbo-notify/attendant`) holding, for each customer, the conversation (kept 90 days by default, then deleted), short summaries of older parts of it, and a file with the facts that customer gave (name, preferences, what they asked for), plus what you taught. Turbo Notify gets no copy. `/forget` erases one customer's data, and the retention is a number you can change in `memory-policy.json`.\n- The Turbo Notify API at `https://api.turbonotify.com`, called by the helper with your API key when the unattended runner or a console command sends a message.\n- One network address besides Turbo Notify: `raw.githubusercontent.com/turbo-notify/agent-skills/main/latest.json`, read about once an hour (and again after 10 minutes if a check fails) for the version check. A failure changes nothing.\n- Your other MCP servers only if you allow each one during setup.\n\n## What it runs and what it sends\n\n- It runs the `tn_assist` helper with `python3`. The helper uses only the standard library and installs nothing.\n- In the unattended runner (Claude Code and Codex), it starts your own `claude` or `codex` command once per customer, in a separate process with no tools, to write that customer's answer. The process gets that customer's messages, their file and the business knowledge that matches the message (the company, tone and hand-off files, plus up to three more picked by the words of the message), and nothing else.\n- The text of a customer's message goes to the model of the agent you use, under your account with that agent. It goes nowhere else.\n- The unattended runner reads your API key from the `TURBO_NOTIFY_API_KEY` variable you set for it and sends it only to `api.turbonotify.com`, as the sign-in of each request. It is never passed to the process that writes a customer's answer.\n- Answers go out through the Turbo Notify API with your API key, to the customer who wrote. A check before every send stops another customer's number or name, non-public text and credentials.\n- The first answer of each chat tells the customer that it comes from an AI. The line is added by the helper, not by the model.\n- A customer who only says thanks, \"ok\" or sends a thumbs up gets no answer and is not handed to a person. The model has to ask for that, and the helper agrees only when the message is nothing but a thanks or an acknowledgement (no question mark, no number, a few words from a fixed list). Anything more is answered, or goes to a person.\n- A customer goes to a person when the answer is not in what you taught (a price, stock, a deadline, a promise, a policy), when they ask for one or are upset, when the request is outside the business, when a payment problem, a refund or exchange, a complaint or a legal matter comes up, or when they ask the assistant to promise or confirm something in writing. A plain question about a rule you wrote, such as the exchange window, is answered.\n- If the model's answer cannot be read, the helper asks again once with a line naming what was wrong, and a second failure in a row sends the customer a message saying a person will continue.\n\n## Layout\n\n```\n.claude-plugin/        plugin and marketplace manifests (Claude Code, Codex)\n.codex-plugin/         the manifest Codex reads for the name, logo and listing text\nplugin.json            manifest for Antigravity\ngemini-extension.json  manifest for the Gemini CLI (the connection to the server)\n.mcp.json              the Turbo Notify MCP server, as Claude Code, Claude Desktop, Cowork and Codex read it\nmcp.json               the same server, as the Agent Plugins format reads it (Copilot, Cursor)\nmcp_config.json        the same server, as Antigravity reads it\nassets/icon.png        the plugin icon\nagents/                the tool-less agent that answers a customer\nskills/virtual-attendant/\n  SKILL.md             the entry point the agent reads\n  references/          one short file per topic (setup, tick, console, memory, privacy, ...)\n  assets/templates/    interview templates (pt, en) and the memory policy\n  scripts/tn_assist/   the helper: routing, memory, egress check, runner (Python 3.9+, no dependencies)\ntools/release.py       version consistency check and sync\ntests/                 unit, property and security tests (Poetry, development only)\nevals/attendant/       live evaluation of a customer's turn on a real model, with a made-up shop\n```\n\nThe helper holds the guarantees the model cannot be trusted with: who is who is decided by code from\nthe registered numbers, a customer's turn runs without tools, every reply passes an egress check\nbefore it can leave, and the data never leaves the workspace folder.\n\n## Development\n\n```\npoetry install\npoetry run pytest\npoetry run ruff check . && poetry run ruff format --check .\npoetry run mypy\npython3 tools/release.py check\n```\n\nThe live evaluation needs your own `claude` command, logged in. It asks 40 questions that the\nknowledge cannot answer and 11 that it can, and plays seven conversations (some end with a thank\nyou, which is owed no answer). It checks every reply for a price, a date, a time, a quantity, a\ndiscount or a promise the knowledge does not state, for the language of the reply, and that a\nthank you is left alone while an \"ok\" that is really a question is answered. Two last checks cut the\nmodel's answer in half to see what the runner does with an answer it cannot read, and play an \"ok\"\nafter an offer (\"quer que eu chame alguém?\") to see that it is answered, not left alone. Nothing in\nit is real data.\n\n```\npoetry run python -m evals.attendant run                # writes evals/attendant/results/<date>-<label>/\npoetry run python -m evals.attendant run --set refusal  # only the check on an unreadable answer\npoetry run python -m evals.attendant run --set offers   # only the check on an ok that accepts an offer\nTN_EVALS_LIVE=1 poetry run pytest evals                 # the same, as tests (skipped otherwise)\n```\n\nReleases bump `VERSION`, `latest.json`, the five manifests, the helper and pyproject versions and `CHANGELOG.md` together (`tools/release.py sync`),\nthen move the `v1` tag, which stays available for anyone who wants to pin to 1.x (`...agent-skills#v1`, or `--ref v1` in Codex).\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
+  "readmeMarkdown": "# WhatsApp skills for AI agents, with Turbo Notify\n\nUse your own WhatsApp number from your AI agent: send and read messages, and run a virtual attendant that answers your\ncustomers. Works with Claude Code, Claude Desktop and Cowork, Codex and the Antigravity CLI, and with any agent that\nreads the Agent Skills format. The Turbo Notify MCP server ([docs](https://docs.turbonotify.com/en/agents/mcp-server/))\nconnects the agent to your number.\n\nIn ChatGPT, the tools are in the plugin directory: search for Turbo Notify under Plugins, install it and sign in\n([guide](https://docs.turbonotify.com/en/agents/chatgpt/)). ChatGPT gets the tools, not the virtual attendant, which runs\non your computer in Claude Code or Codex.\n\n## Skills\n\n| Skill | What it does |\n|---|---|\n| `summarize-whatsapp` | Summarizes your WhatsApp chats and groups into who is waiting for a reply, money and deadlines, changes of plans and group news. It only reads. If your assistant can schedule tasks, it can set the summary once or twice a day, after you confirm that the run cannot act on your account. |\n| `virtual-attendant` | Serves a business's customers on WhatsApp: answers in the customer's language, remembers each customer, calls a person when it should, and takes commands from administrators and attendants on WhatsApp itself. |\n\nCustomer guides (Portuguese and English): [WhatsApp virtual attendant](https://docs.turbonotify.com/en/guides/virtual-attendant/),\n[Agent skills](https://docs.turbonotify.com/en/agents/skills/) and\n[AI agents](https://docs.turbonotify.com/en/agents/overview/), with one page per agent.\n\n## Install\n\n| Agent | Commands |\n|---|---|\n| Claude Code | `claude plugin marketplace add turbo-notify/agent-skills` then `claude plugin install turbo-notify@turbo-notify` |\n| Claude Desktop and Cowork | Customize, Plugins, Add, Add marketplace, Add from a repository: `turbo-notify/agent-skills`; then Discover, `turbo-notify`, Add |\n| Codex | `codex plugin marketplace add turbo-notify/agent-skills` then `codex plugin add turbo-notify@turbo-notify` |\n| Antigravity | `agy plugin install https://github.com/turbo-notify/agent-skills` |\n| Gemini CLI | `gemini extensions install https://github.com/turbo-notify/agent-skills` (the connection to the tools only; we have not run the Gemini CLI, and the virtual attendant is not included) |\n| Hermes Agent | `hermes skills install turbo-notify/agent-skills/skills/virtual-attendant`, then add the MCP server `https://mcp.turbonotify.com` in Hermes (not run end to end) |\n| OpenCode | `npx skills add turbo-notify/agent-skills -a opencode` (project folder `.agents/skills/`, or `-g` for `~/.config/opencode/skills/`), then `opencode mcp add --global --url https://mcp.turbonotify.com turbo-notify` and `opencode mcp auth turbo-notify` to sign in (only the MCP sign-in and a `list_numbers` call were run; the skill install and the attendant were not run in OpenCode). Guide: [Turbo Notify in OpenCode](https://docs.turbonotify.com/en/agents/opencode/) |\n| Cline | Add the MCP server `https://mcp.turbonotify.com` to `cline_mcp_settings.json` (steps for the editor and the CLI in [`llms-install.md`](llms-install.md); checked with the CLI, the editor steps were not run) |\n| Other agents that read the Agent Skills format (for example Cursor and Copilot; not tested by us) | `npx skills add turbo-notify/agent-skills`, then add the MCP server `https://mcp.turbonotify.com` in that agent's own settings |\n\nThe unattended runner exists for Claude Code and Codex only. In the other agents the attendant runs in\nassisted mode: a session you keep open, where a person approves each draft.\n\nThe plugin rows above already declare the Turbo Notify MCP server (`https://mcp.turbonotify.com`), so\nthere is nothing to add. Sign in with your Turbo Notify account the first time the agent uses it (Claude Code:\n`/mcp`; Codex: `codex mcp login turbo-notify`; Antigravity: Agent settings, Customizations, Authenticate next to the server), then ask it to \"set up the\nTurbo Notify virtual attendant\". No account yet? Create one at https://dashboard.turbonotify.com/auth/signup?locale=en. For anything\nthat runs alone, use an API key instead (see the guide for your agent in `skills/virtual-attendant/references/`).\n\n## Update\n\nThe skill checks its version on every cycle and messages the administrators when a new one exists,\nwith the command for the agent in use.\n\n| Agent | Command |\n|---|---|\n| Claude Code | `claude plugin marketplace update turbo-notify` then `claude plugin update turbo-notify@turbo-notify` |\n| Claude Desktop and Cowork | The marketplace syncs from the repository; if a new version does not show up, remove the marketplace and add it again |\n| Codex | `codex plugin marketplace upgrade` then `codex plugin add turbo-notify@turbo-notify` |\n| Antigravity | Run the install command again |\n| Gemini CLI | `gemini extensions update turbo-notify` |\n\n## What it reaches\n\n- The Turbo Notify MCP server at `https://mcp.turbonotify.com`, which the plugin declares in `.mcp.json`, `mcp.json` and `mcp_config.json` (one file for each family of agents; none holds a key or a header). You sign in with your account, or you connect your own with an API key. It runs with your account or API key permissions.\n- One folder on your computer (by default `~/.turbo-notify/attendant`) holding, for each customer, the conversation (kept 90 days by default, then deleted), short summaries of older parts of it, and a file with the facts that customer gave (name, preferences, what they asked for), plus what you taught. Turbo Notify gets no copy. `/forget` erases one customer's data, and the retention is a number you can change in `memory-policy.json`.\n- The Turbo Notify API at `https://api.turbonotify.com`, called by the helper with your API key when the unattended runner or a console command sends a message.\n- One network address besides Turbo Notify: `raw.githubusercontent.com/turbo-notify/agent-skills/main/latest.json`, read about once an hour (and again after 10 minutes if a check fails) for the version check. A failure changes nothing.\n- Your other MCP servers only if you allow each one during setup.\n\n## What it runs and what it sends\n\n- It runs the `tn_assist` helper with `python3`. The helper uses only the standard library and installs nothing.\n- In the unattended runner (Claude Code and Codex), it starts your own `claude` or `codex` command once per customer, in a separate process with no tools, to write that customer's answer. The process gets that customer's messages, their file and the business knowledge that matches the message (the company, tone and hand-off files, plus up to three more picked by the words of the message), and nothing else.\n- The text of a customer's message goes to the model of the agent you use, under your account with that agent. It goes nowhere else.\n- The unattended runner reads your API key from the `TURBO_NOTIFY_API_KEY` variable you set for it and sends it only to `api.turbonotify.com`, as the sign-in of each request. It is never passed to the process that writes a customer's answer.\n- Answers go out through the Turbo Notify API with your API key, to the customer who wrote. A check before every send stops another customer's number or name, non-public text and credentials.\n- By default the first answer of a chat does not announce that it is an AI. `tn_assist ai-notice on` adds one line, written by the helper and not by the model. Asked, the assistant says it is a virtual attendant, and it never says it is a person.\n- A customer who only says thanks, \"ok\" or sends a thumbs up gets no answer and is not handed to a person. The model has to ask for that, and the helper agrees only when the message is nothing but a thanks or an acknowledgement (no question mark, no number, a few words from a fixed list). Anything more is answered, or goes to a person.\n- A customer goes to a person when the answer is not in what you taught (a price, stock, a deadline, a promise, a policy), when they ask for one or are upset, when the request is outside the business, when a payment problem, a refund or exchange, a complaint or a legal matter comes up, or when they ask the assistant to promise or confirm something in writing. A plain question about a rule you wrote, such as the exchange window, is answered.\n- If the model's answer cannot be read, the helper asks again once with a line naming what was wrong, and a second failure in a row sends the customer a message saying a person will continue.\n\n## Layout\n\n```\n.claude-plugin/        plugin and marketplace manifests (Claude Code, Codex)\n.codex-plugin/         the manifest Codex reads for the name, logo and listing text\nplugin.json            manifest for Antigravity\ngemini-extension.json  manifest for the Gemini CLI (the connection to the server)\n.mcp.json              the Turbo Notify MCP server, as Claude Code, Claude Desktop, Cowork and Codex read it\nmcp.json               the same server, as the Agent Plugins format reads it (Copilot, Cursor)\nmcp_config.json        the same server, as Antigravity reads it\nassets/icon.png        the plugin icon\nagents/                the tool-less agent that answers a customer\nskills/virtual-attendant/\n  SKILL.md             the entry point the agent reads\n  references/          one short file per topic (setup, tick, console, memory, privacy, ...)\n  assets/templates/    interview templates (pt, en) and the memory policy\n  scripts/tn_assist/   the helper: routing, memory, egress check, runner (Python 3.9+, no dependencies)\ntools/release.py       version consistency check and sync\ntests/                 unit, property and security tests (Poetry, development only)\nevals/attendant/       live evaluation of a customer's turn on a real model, with a made-up shop\n```\n\nThe helper holds the guarantees the model cannot be trusted with: who is who is decided by code from\nthe registered numbers, a customer's turn runs without tools, every reply passes an egress check\nbefore it can leave, and the data never leaves the workspace folder.\n\n## Development\n\n```\npoetry install\npoetry run pytest\npoetry run ruff check . && poetry run ruff format --check .\npoetry run mypy\npython3 tools/release.py check\n```\n\nThe live evaluation needs your own `claude` command, logged in. It asks 40 questions that the\nknowledge cannot answer and 11 that it can, and plays seven conversations (some end with a thank\nyou, which is owed no answer). It checks every reply for a price, a date, a time, a quantity, a\ndiscount or a promise the knowledge does not state, for the language of the reply, and that a\nthank you is left alone while an \"ok\" that is really a question is answered. Two last checks cut the\nmodel's answer in half to see what the runner does with an answer it cannot read, and play an \"ok\"\nafter an offer (\"quer que eu chame alguém?\") to see that it is answered, not left alone. Nothing in\nit is real data.\n\n```\npoetry run python -m evals.attendant run                # writes evals/attendant/results/<date>-<label>/\npoetry run python -m evals.attendant run --set refusal  # only the check on an unreadable answer\npoetry run python -m evals.attendant run --set offers   # only the check on an ok that accepts an offer\nTN_EVALS_LIVE=1 poetry run pytest evals                 # the same, as tests (skipped otherwise)\n```\n\nReleases bump `VERSION`, `latest.json`, the five manifests, the helper and pyproject versions and `CHANGELOG.md` together (`tools/release.py sync`),\nthen move the `v1` tag, which stays available for anyone who wants to pin to 1.x (`...agent-skills#v1`, or `--ref v1` in Codex).\n\n## License\n\nMIT. See [LICENSE](LICENSE).\n",
   "latestReleaseNotes": "",
   "securityReport": {
     "riskTier": "elevated",
@@ -94,7 +102,7 @@
         "file": "evals/attendant/harness.py",
         "line": 334,
         "snippet": "done = subprocess.run( [binary, \"--version\"], capture_output=True, text=True, timeout=30, check=False )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/harness.py#L334"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/harness.py#L334"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -105,7 +113,7 @@
         "file": "evals/attendant/harness.py",
         "line": 353,
         "snippet": "done = subprocess.run( [*child.argv, \"--output-format\", \"json\"], input=child.stdin, env=child.env, cwd=str(child.cwd), capture_output=True, text=True, timeout=timeout, check=False,",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/harness.py#L353"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/harness.py#L353"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -116,7 +124,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/runner.py",
         "line": 221,
         "snippet": "done = subprocess.run( # noqa: S603 child.argv, input=child.stdin, env=child.env, cwd=str(child.cwd), capture_output=True, text=True, timeout=timeout, check=False, )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/runner.py#L221"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/runner.py#L221"
       },
       {
         "id": "CODE_OBFUSCATED_ESCAPES",
@@ -125,9 +133,9 @@
         "capability": "contains_minified",
         "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
         "file": "tests/unit/test_egress.py",
-        "line": 124,
+        "line": 126,
         "snippet": "\\uff15\\uff15\\uff11\\uff11\\uff19\\uff16\\uff16\\uff16\\uff16\\uff15\\uff15\\uff15\\uff15",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/tests/unit/test_egress.py#L124"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/tests/unit/test_egress.py#L126"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -138,7 +146,7 @@
         "file": "evals/attendant/report.py",
         "line": 437,
         "snippet": "(directory / \"summary.json\").write_text( json.dumps(summary, ensure_ascii=False, indent=2) + \"\\n\", encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/report.py#L437"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L437"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -149,7 +157,7 @@
         "file": "evals/attendant/report.py",
         "line": 440,
         "snippet": "(directory / \"review.txt\").write_text( review_sheet(cases, turns, reviews, refusals, offers), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/report.py#L440"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L440"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -160,7 +168,7 @@
         "file": "evals/attendant/report.py",
         "line": 443,
         "snippet": "(directory / \"replies.txt\").write_text( transcript(cases, turns, refusals, offers), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/report.py#L443"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L443"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -171,7 +179,7 @@
         "file": "evals/attendant/report.py",
         "line": 471,
         "snippet": "(directory / name).write_text(text, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/report.py#L471"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L471"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -182,7 +190,7 @@
         "file": "evals/attendant/run.py",
         "line": 92,
         "snippet": "(out / name).write_text(\"\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/run.py#L92"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/run.py#L92"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -193,7 +201,7 @@
         "file": "evals/attendant/run.py",
         "line": 107,
         "snippet": "(out / \"meta.json\").write_text( json.dumps(meta, ensure_ascii=False, indent=2) + \"\\n\", encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/evals/attendant/run.py#L107"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/run.py#L107"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -204,7 +212,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 533,
         "snippet": "path.write_text(\"\\n\".join(lines) + \"\\n\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/console.py#L533"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L533"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -215,7 +223,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 563,
         "snippet": "with open(inbox, \"a\", encoding=\"utf-8\") as handle:",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/console.py#L563"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L563"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -226,7 +234,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 577,
         "snippet": "target.write_text(f\"# {data['topic']}\\n\\n{body}\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/console.py#L577"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L577"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -237,7 +245,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 710,
         "snippet": "shutil.rmtree(directory)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/console.py#L710"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L710"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -248,7 +256,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/ingest.py",
         "line": 107,
         "snippet": "tmp.write_text( \"\".join(json.dumps(r, sort_keys=True) + \"\\n\" for r in rows), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/ingest.py#L107"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/ingest.py#L107"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -259,7 +267,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/knowledge.py",
         "line": 60,
         "snippet": "target.write_text(text, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L60"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L60"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -270,7 +278,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/knowledge.py",
         "line": 67,
         "snippet": "index.write_text(\"\\n\".join(lines) + \"\\n\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L67"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L67"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -281,7 +289,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/llm_child.py",
         "line": 52,
         "snippet": "with urllib.request.urlopen(request, timeout=timeout) as response: # noqa: S310",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/llm_child.py#L52"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/llm_child.py#L52"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -292,7 +300,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/memory.py",
         "line": 229,
         "snippet": "path.write_text( f\"covers: {covers[0]}..{covers[1]}\\nwritten: {stamp}\\n---\\n{summary.strip()}\\n\", encoding=\"utf-8\", )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/memory.py#L229"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/memory.py#L229"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -303,7 +311,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/memory.py",
         "line": 331,
         "snippet": "tmp.write_text( \"\".join(json.dumps(r, sort_keys=True) + \"\\n\" for r in kept), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/memory.py#L331"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/memory.py#L331"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -314,7 +322,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/profiles.py",
         "line": 104,
         "snippet": "config.write_text(json.dumps({\"mcpServers\": servers}), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/profiles.py#L104"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/profiles.py#L104"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -325,7 +333,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/runner.py",
         "line": 155,
         "snippet": "with urllib.request.urlopen(request, timeout=self._timeout) as response: # noqa: S310",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/runner.py#L155"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/runner.py#L155"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -336,7 +344,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/schema.py",
         "line": 46,
         "snippet": "shutil.rmtree(entry) if entry.is_dir() else entry.unlink()",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/schema.py#L46"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/schema.py#L46"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -347,7 +355,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/store.py",
         "line": 34,
         "snippet": "os.unlink(tmp)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/store.py#L34"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/store.py#L34"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -358,7 +366,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/store.py",
         "line": 148,
         "snippet": "os.unlink(self._path)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/store.py#L148"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/store.py#L148"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -369,7 +377,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/store.py",
         "line": 166,
         "snippet": "os.unlink(self._path)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/store.py#L166"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/store.py#L166"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -380,7 +388,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/version.py",
         "line": 62,
         "snippet": "with urllib.request.urlopen(LATEST_URL, timeout=timeout) as response: # noqa: S310",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/scripts/tn_assist/version.py#L62"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/version.py#L62"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -391,7 +399,7 @@
         "file": "tools/release.py",
         "line": 70,
         "snippet": "(ROOT / path).write_text( json.dumps(data, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/tools/release.py#L70"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/tools/release.py#L70"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -402,7 +410,7 @@
         "file": "tools/release.py",
         "line": 251,
         "snippet": "(ROOT / path).write_text(pattern.sub(rf\"\\g<1>{ver}\\g<3>\", text, count=1), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/tools/release.py#L251"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/tools/release.py#L251"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -413,11 +421,25 @@
         "file": "skills/virtual-attendant/SKILL.md",
         "line": 10,
         "snippet": "In this skill, **`tn_assist`** means `python3 <this skill's folder>/scripts/tn_assist`, run with `TN_ASSIST_BASE`, `TN_ASSIST_ORG` and `TN_ASSIST_NUMBER` exported (setup explains t",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139/skills/virtual-attendant/SKILL.md#L10"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/SKILL.md#L10"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.5.18",
+      "sha": "1c0a627d01b93da3a99602b902866070cdbdfe76",
+      "scannedAt": "2026-11-28T00:24:55.416Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "network_external_mcp",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    },
     {
       "version": "1.5.17",
       "sha": "6c20ed699e42bbe340edd1dd5e62d5cd0ca2c139",

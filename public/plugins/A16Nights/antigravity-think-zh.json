@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "A16Nights/antigravity-think-zh",
-  "sha": "11316e55c31ea97edc6fa30d7570a3cbe346a7d5",
+  "sha": "f699621e76dbd0ee48ff400823b7c9381362937f",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:17:48.048Z",
+  "scannedAt": "2026-11-28T00:25:30.999Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "think-zh",
-    "displayName": "思语中文 · Think-ZH",
-    "version": "1.2.0",
+    "displayName": "思语中文——外接模型中文思考切换",
+    "version": "1.2.1",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -51,8 +51,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"思语中文 · Think-ZH\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-think-zh/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-think-zh?style=flat-square&label=Release&color=06b6d4&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-think-zh/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-think-zh?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>专为外部推理模型准备：引导外接模型从第一个字起全程使用简体中文思考与推理，原生 Antigravity / Gemini 模型自动跳过</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#mcp-tools\">🧰 MCP 工具</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n> [!IMPORTANT]\n> **适用范围与原生 Gemini 限制说明**\n> - **专为外部模型准备**：本插件面向通过 **[苍蓝星轨 (Azure Orbit)](https://github.com/A16Nights/antigravity-azure-orbit)** 等方式挂载到 Antigravity 的**外部推理模型**（如 DeepSeek、Qwen、GLM、MiniMax 等直接透传原生 `reasoning_content` 的模型）。开启后**仅在使用外部模型时自动生效**，使用 Antigravity 原生模型时自动静默跳过，零额外 Token 消耗。\n> - **为何无法对原生 Gemini 生效**：Google Cloud Code 服务端不会将 Gemini 的原始内部思考下发给客户端，而是由云端 **Thought Summarizer** 将内部思考压缩改写成客观的英文第三人称摘要返回（并附带本地无法解密的加密 `thoughtSignature`）。因此任何客户端提示词或 Hook 都无法关闭或更改云端摘要器的输出语言。\n> - **原生 Gemini 怎么看中文思考**：若希望在原生 Gemini 会话中以中文阅读思考摘要，请使用苍蓝套件中的 **[苍蓝棱镜 (Azure Prism)](https://github.com/A16Nights/antigravity-azure-prism)** 进行按需翻译。\n\n面向 **Google Antigravity** 外部自定义推理模型的零依赖思考语言控制插件。通过 **外接模型智能守卫（`external-model-guard`）+ 生命周期 Hook（默认开启 `PreInvocation` 回合去重强化 + 可选 `SessionStart`）+ 可选静态兜底规则 + MCP Server + Sidecar UI**，让外接推理模型的内部思维链（`thinking / reasoning`）稳定保持简体中文，不强行翻译代码、路径与命令，并支持随时热切换。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>💭 外部模型首字起中文思考</h4>\n专为透传原生 <code>reasoning_content</code> 的外接推理模型设计；涵盖任务分析、工具调用前后推理与报错诊断，严格保留代码与路径原文。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🛡️ 仅外部模型生效 · 原生自动跳过</h4>\n内置 <code>external-model-guard</code> 守卫，自动识别 <code>custom_models.json</code> 与外接模型标识；原生 Gemini / Antigravity 模型默认静默跳过，零无效注入。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>👁️ 自定义文案 & 注入实时预览</h4>\n支持编写 <code>customText</code> 覆盖内置规则，留空一键还原；面板实时预览每轮 Hook、开场注入与静态兜底的完整文本。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>⚡ 热切换感知与回合级去重</h4>\n支持 <code>per_user_turn</code> / <code>every_invocation</code> 两种粒度，同轮多步工具调用自动去重，中途切换 <code>zh ↔ en</code> 自动通知模型即时更新。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<p align=\"center\">\n  <a href=\"assets/readme/preview-panel.png\"><img src=\"assets/readme/preview-panel.png\" alt=\"思语中文 Think-ZH 控制面板预览\" width=\"520\"></a>\n  <br><strong>思语中文 · 双档位思考语言控制、注入通道开关与实时预览</strong>\n  <br><sub>简体中文 / 默认英文思考一键热切、静态规则与生命周期 Hook 分项控制、自定义指令编辑及实际注入内容实时预览</sub>\n</p>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 双档位思考语言预设（即时热切换）\n- **简体中文思考（默认推荐，`zh`）**：\n  - 要求模型内部思考与推理（涵盖任务分析、方案规划、工具调用前后推理、日志排查、报错诊断与最终自查）从第一个字起全程使用简体中文，禁止先用英文起草再翻译；\n  - 即使提问、代码、报错、路径或工具输出为英文，内部思考仍保持简体中文；\n  - 代码、标识符、文件路径、命令行与报错原文保持原样；最终回复跟随用户最近一条实质提问语言。\n- **默认英文思考（`en`）**：\n  - 将内部思考语言交还模型默认英文习惯，仅保留「最终回复跟随用户提问语言」的基础约束。\n\n### 2. 仅外部模型生效的智能守卫（原生模型零干扰）\n- **每轮前置强化（`PreInvocation` + `external-model-guard`，默认开启）**：\n  - 自动读取 `~/.gemini/antigravity/custom_models.json` 与外接模型路径特征，**仅在使用外部自定义模型时触发注入**；\n  - 使用 Antigravity 原生模型（含原生 Gemini）时直接静默跳过返回 `{}`，零额外 Token 消耗；\n  - **智能去重与热切换感知**：默认 `per_user_turn`（每轮用户提问注入一次，同轮工具回调自动去重），可选 `every_invocation`，并在对话中途切换 `zh` ↔ `en` 时自动通知模型更新思考语言。\n- **新会话开场提醒（`SessionStart` + `external-model-guard`，可选）**：同样仅在识别到外部模型时于会话首步注入一次思考语言锚点。\n- **静态全局规则兜底（`rules/AGENTS.md`，默认关闭）**：由于宿主会无差别将静态规则加载给包括原生 Gemini 在内的所有模型，默认保持关闭；仅在确需全模型静态兼容兜底时手动开启。\n\n### 3. 自定义指令文案与实时预览\n- 支持在侧栏面板直接编写自定义思考语言指令（`customText`）覆盖内置文案，留空即可一键恢复官方推荐预设；\n- 面板底部提供 **「实时注入内容预览」**，清晰展示当前配置下实际写入 `AGENTS.md` 的静态规则与 Hook 前置注入文本。\n\n### 4. 苍蓝统一视觉与交互体系\n- **Sidecar + 独立 Web UI 双形态**：提供直观的右侧栏控制面板，点击顶栏 `Web UI` 可在系统默认浏览器中全屏打开。\n- **Neko Glass 毛玻璃界面 & 苍蓝主题色调中心**：支持深色/浅色切换、自定义毛玻璃下拉框（`AzureSelect`）、6 套官方主题预设 + 自定义双色 + 4 个自定义栏位跨插件同步、左侧栏快捷入口开关与 GitHub Release 在线更新检查。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  UI[\"思语中文 Sidecar / MCP\"] -->|\"zh ↔ en 热切换\"| CFG[\"~/.gemini/think-zh/config.json\"]\n  CFG --> HOOK[\"默认主通道<br/>PreInvocation / SessionStart\"]\n  HOOK -->|\"external-model-guard\"| DEC{\"当前是否为外接自定义模型?\"}\n  DEC -->|\"是（DeepSeek / Qwen 等）\"| INJ[\"按回合去重注入中文思考提醒\"]\n  DEC -->|\"否（原生 Gemini 等）\"| SKIP[\"自动静默跳过 · 零额外开销\"]\n  CFG -.->|\"默认关闭 · 可选兜底\"| RULE[\"静态全局规则<br/>rules/AGENTS.md\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-think-zh.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `think-zh`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-think-zh.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\think-zh\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-think-zh.git ~/.gemini/config/plugins/think-zh\n```\n\n重启或重载 Antigravity（`Ctrl+R`），在 **Plugins** 管理页确认 **思语中文 · Think-ZH** 已启用即可生效。\n\n<h2 id=\"mcp-tools\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-tools-dark.svg\">\n  <img src=\"assets/readme/sec-tools-light.svg\" alt=\"MCP 工具一览\" width=\"100%\">\n</picture>\n</h2>\n\n| 工具名 | 用途 |\n| --- | --- |\n| `think_zh_status` | 查看当前思考语言档位（`zh`/`en`）、各通道开关、去重策略、规则文件同步状态及注入预览 |\n| `think_zh_set` | 修改思考语言档位、静态规则开关、`SessionStart`/`PreInvocation` 开关、触发粒度或自定义指令文案 |\n| `think_zh_preview` | 不写入磁盘地预览指定参数组合下生成的静态规则与 Hook 注入文本 |\n| `think_zh_reset` | 一键恢复默认配置并自动同步 `rules/AGENTS.md` |\n\n### 🧪 本地自检\n\n```bash\nnode --test tests/think-zh.test.mjs\n```\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **思考语言配置与会话去重状态**：`~/.gemini/think-zh/config.json`、`state.json`\n- **苍蓝套件共享主题 / 左侧栏配置**：`~/.gemini/azure-theme.json`、`~/.gemini/azure-sidebar-nav.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 9 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 只读原生会话 FTS5 全文检索、自定义项目分组、优先级标签与独立安全归档箱 |\n| 🌌 **蓝汐 · 潮汐认知图谱** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文** &nbsp;`✦ 当前仓库` | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 面向外部推理模型的中文思考语言控制器（原生模型自动跳过、回合去重防漂移） |\n| 🔮 **苍蓝棱镜** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n\n---\n\n### 💡 灵感致谢\n\n本插件的核心规则与双通道强化思路受开源项目 [`Len7183/DSH-Think-zh`](https://github.com/Len7183/DSH-Think-zh)（MIT）启发，并结合 Antigravity 原生插件架构重新设计与实现。\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
-  "latestReleaseNotes": "### ✨ 核心变更\n- **外接模型智能守卫（`lib/external-model-guard.mjs`）**：`PreInvocation` 与 `SessionStart` Hook 统一接入外接模型判定，仅在使用通过苍蓝星轨等挂载的外部自定义推理模型（如 DeepSeek、Qwen、GLM、MiniMax 等）时触发注入；使用 Antigravity 原生模型（含原生 Gemini）时自动静默跳过，零额外 Token 消耗。\n- **默认策略升级**：默认开启 `injectPerTurn: true`（仅外部模型生效 + 回合级去重），默认关闭会无差别加载给所有模型的静态全局规则 `injectPrompt: false`（保留为可选兜底）。\n- **全链路说明完善**：在控制面板顶部提示卡、`README.md` / `README.en.md`、`SKILL.md`、MCP 工具说明与 `plugin.json` 中明确强调本插件专为外部推理模型设计，并说明为何无法对原生 Gemini 生效（Google Cloud Code 云端 **Thought Summarizer** 仅下发英文第三人称摘要与加密 `thoughtSignature`，不下发原始思考原文；看原生 Gemini 摘要中文版请搭配 **苍蓝棱镜 Azure Prism**）。\n- **单元测试补齐**：`tests/think-zh.test.mjs` 新增原生/外部模型守卫与双 Hook 行为测试（7/7 通过）。",
+  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"思语中文——外接模型中文思考切换 · Think-ZH — Chinese Reasoning Switcher\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-think-zh/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-think-zh?style=flat-square&label=Release&color=06b6d4&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-think-zh/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-think-zh?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>思语中文——外接模型中文思考切换 · 专为外部推理模型准备：引导外接模型从第一个字起全程使用简体中文思考与推理，原生 Antigravity / Gemini 模型自动跳过</strong>\n</p>\n\n<p>\n  <a href=\"#preview\">🖼️ 界面预览</a> &nbsp;·&nbsp; <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#mcp-tools\">🧰 MCP 工具</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n> [!IMPORTANT]\n> **适用范围与原生 Gemini 限制说明**\n> - **专为外部模型准备**：本插件面向通过 **[苍蓝星轨 (Azure Orbit)](https://github.com/A16Nights/antigravity-azure-orbit)** 等方式挂载到 Antigravity 的**外部推理模型**（如 DeepSeek、Qwen、GLM、MiniMax 等直接透传原生 `reasoning_content` 的模型）。开启后**仅在使用外部模型时自动生效**，使用 Antigravity 原生模型时自动静默跳过，零额外 Token 消耗。\n> - **为何无法对原生 Gemini 生效**：Google Cloud Code 服务端不会将 Gemini 的原始内部思考下发给客户端，而是由云端 **Thought Summarizer** 将内部思考压缩改写成客观的英文第三人称摘要返回（并附带本地无法解密的加密 `thoughtSignature`）。因此任何客户端提示词或 Hook 都无法关闭或更改云端摘要器的输出语言。\n> - **原生 Gemini 怎么看中文思考**：若希望在原生 Gemini 会话中以中文阅读思考摘要，请使用苍蓝套件中的 **[苍蓝棱镜 (Azure Prism)](https://github.com/A16Nights/antigravity-azure-prism)** 进行按需翻译。\n\n面向 **Google Antigravity** 外部自定义推理模型的零依赖思考语言控制插件。通过 **外接模型智能守卫（`external-model-guard`）+ 生命周期 Hook（默认开启 `PreInvocation` 回合去重强化 + 可选 `SessionStart`）+ 可选静态兜底规则 + MCP Server + Sidecar UI**，让外接推理模型的内部思维链（`thinking / reasoning`）稳定保持简体中文，不强行翻译代码、路径与命令，并支持随时热切换。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>💭 外部模型首字起中文思考</h4>\n专为透传原生 <code>reasoning_content</code> 的外接推理模型设计；涵盖任务分析、工具调用前后推理与报错诊断，严格保留代码与路径原文。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🛡️ 仅外部模型生效 · 原生自动跳过</h4>\n内置 <code>external-model-guard</code> 守卫，自动识别 <code>custom_models.json</code> 与外接模型标识；原生 Gemini / Antigravity 模型默认静默跳过，零无效注入。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>👁️ 自定义文案 & 注入实时预览</h4>\n支持编写 <code>customText</code> 覆盖内置规则，留空一键还原；面板实时预览每轮 Hook、开场注入与静态兜底的完整文本。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>⚡ 热切换感知与回合级去重</h4>\n支持 <code>per_user_turn</code> / <code>every_invocation</code> 两种粒度，同轮多步工具调用自动去重，中途切换 <code>zh ↔ en</code> 自动通知模型即时更新。\n</td>\n</tr>\n</table>\n\n<h2 id=\"preview\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-preview-dark.svg\">\n  <img src=\"assets/readme/sec-preview-light.svg\" alt=\"界面预览\" width=\"100%\">\n</picture>\n</h2>\n\n<p align=\"center\">\n  <a href=\"assets/readme/preview-panel.png\"><img src=\"assets/readme/preview-panel.png\" alt=\"思语中文 Think-ZH 控制面板预览\" width=\"520\"></a>\n  <br><strong>思语中文 · 双档位思考语言控制、注入通道开关与实时预览</strong>\n  <br><sub>简体中文 / 默认英文思考一键热切、静态规则与生命周期 Hook 分项控制、自定义指令编辑及实际注入内容实时预览</sub>\n</p>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 双档位思考语言预设（即时热切换）\n- **简体中文思考（默认推荐，`zh`）**：\n  - 要求模型内部思考与推理（涵盖任务分析、方案规划、工具调用前后推理、日志排查、报错诊断与最终自查）从第一个字起全程使用简体中文，禁止先用英文起草再翻译；\n  - 即使提问、代码、报错、路径或工具输出为英文，内部思考仍保持简体中文；\n  - 代码、标识符、文件路径、命令行与报错原文保持原样；最终回复跟随用户最近一条实质提问语言。\n- **默认英文思考（`en`）**：\n  - 将内部思考语言交还模型默认英文习惯，仅保留「最终回复跟随用户提问语言」的基础约束。\n\n### 2. 仅外部模型生效的智能守卫（原生模型零干扰）\n- **每轮前置强化（`PreInvocation` + `external-model-guard`，默认开启）**：\n  - 自动读取 `~/.gemini/antigravity/custom_models.json` 与外接模型路径特征，**仅在使用外部自定义模型时触发注入**；\n  - 使用 Antigravity 原生模型（含原生 Gemini）时直接静默跳过返回 `{}`，零额外 Token 消耗；\n  - **智能去重与热切换感知**：默认 `per_user_turn`（每轮用户提问注入一次，同轮工具回调自动去重），可选 `every_invocation`，并在对话中途切换 `zh` ↔ `en` 时自动通知模型更新思考语言。\n- **新会话开场提醒（`SessionStart` + `external-model-guard`，可选）**：同样仅在识别到外部模型时于会话首步注入一次思考语言锚点。\n- **静态全局规则兜底（`rules/AGENTS.md`，默认关闭）**：由于宿主会无差别将静态规则加载给包括原生 Gemini 在内的所有模型，默认保持关闭；仅在确需全模型静态兼容兜底时手动开启。\n\n### 3. 自定义指令文案与实时预览\n- 支持在侧栏面板直接编写自定义思考语言指令（`customText`）覆盖内置文案，留空即可一键恢复官方推荐预设；\n- 面板底部提供 **「实时注入内容预览」**，清晰展示当前配置下实际写入 `AGENTS.md` 的静态规则与 Hook 前置注入文本。\n\n### 4. 苍蓝统一视觉与交互体系\n- **Sidecar + 独立 Web UI 双形态**：提供直观的右侧栏控制面板，点击顶栏 `Web UI` 可在系统默认浏览器中全屏打开。\n- **Neko Glass 毛玻璃界面 & 苍蓝主题色调中心**：支持深色/浅色切换、自定义毛玻璃下拉框（`AzureSelect`）、6 套官方主题预设 + 自定义双色 + 4 个自定义栏位跨插件同步、左侧栏快捷入口开关与 GitHub Release 在线更新检查。\n\n\n### 首次使用交互式新手引导（`? 指南`）\n- **3 步上手教程 + 真实控件定位高亮**：首次打开面板自动弹出分步功能指南，点击「🎯 定位」按钮可在当前界面脉冲高亮对应控件并附带浮动返回条。\n- **本机持久化不复弹**：已读状态保存至 `~/.gemini/azure-onboarding.json`（Sidecar 重启换端口不复弹），日后随时可点击顶栏 **`? 指南`** 重看。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  UI[\"思语中文 Sidecar / MCP\"] -->|\"zh ↔ en 热切换\"| CFG[\"~/.gemini/think-zh/config.json\"]\n  CFG --> HOOK[\"默认主通道<br/>PreInvocation / SessionStart\"]\n  HOOK -->|\"external-model-guard\"| DEC{\"当前是否为外接自定义模型?\"}\n  DEC -->|\"是（DeepSeek / Qwen 等）\"| INJ[\"按回合去重注入中文思考提醒\"]\n  DEC -->|\"否（原生 Gemini 等）\"| SKIP[\"自动静默跳过 · 零额外开销\"]\n  CFG -.->|\"默认关闭 · 可选兜底\"| RULE[\"静态全局规则<br/>rules/AGENTS.md\"]\n```\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现）。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-think-zh.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `think-zh`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-think-zh.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\think-zh\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-think-zh.git ~/.gemini/config/plugins/think-zh\n```\n\n重启或重载 Antigravity（`Ctrl+R`），在 **Plugins** 管理页确认 **思语中文 · Think-ZH** 已启用即可生效。\n\n<h2 id=\"mcp-tools\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-tools-dark.svg\">\n  <img src=\"assets/readme/sec-tools-light.svg\" alt=\"MCP 工具一览\" width=\"100%\">\n</picture>\n</h2>\n\n| 工具名 | 用途 |\n| --- | --- |\n| `think_zh_status` | 查看当前思考语言档位（`zh`/`en`）、各通道开关、去重策略、规则文件同步状态及注入预览 |\n| `think_zh_set` | 修改思考语言档位、静态规则开关、`SessionStart`/`PreInvocation` 开关、触发粒度或自定义指令文案 |\n| `think_zh_preview` | 不写入磁盘地预览指定参数组合下生成的静态规则与 Hook 注入文本 |\n| `think_zh_reset` | 一键恢复默认配置并自动同步 `rules/AGENTS.md` |\n\n### 🧪 本地自检\n\n```bash\nnode --test tests/think-zh.test.mjs\n```\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **思考语言配置与会话去重状态**：`~/.gemini/think-zh/config.json`、`state.json`\n- **苍蓝套件共享主题 / 左侧栏配置**：`~/.gemini/azure-theme.json`、`~/.gemini/azure-sidebar-nav.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 10 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台——外部模型调度与省流** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器、全链路监控与首次新手引导 |\n| 🪐 **苍蓝星轨——原生菜单外接模型挂载** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘——Agent 预设与上下文监控** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊——会话与工作区管理** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 纯官方原生会话与工作区同步、FTS5 全文检索、自选快捷标签栏、跨工作区转移续聊与新手引导 |\n| 🌌 **蓝汐——认知图谱长期记忆** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣——人设卡与分层记忆** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文——外接模型中文思考切换** &nbsp;`✦ 当前仓库` | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 外接推理模型内部思考简体中文 / 英文热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜——思维链观测与实时翻译** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖——Windows 桌面与网页操控** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n| 🍃 **苍蓝流笺——拖拽发图与原生文件标签** | [antigravity-azure-drop](https://github.com/A16Nights/antigravity-azure-drop) | 零 `app.asar` 侵入、拖拽与粘贴插入原生文件标签、无损 PNG 截图落盘、图片缩略图灯箱与面包屑右键菜单 |\n\n---\n\n### 💡 灵感致谢\n\n本插件的核心规则与双通道强化思路受开源项目 [`Len7183/DSH-Think-zh`](https://github.com/Len7183/DSH-Think-zh)（MIT）启发，并结合 Antigravity 原生插件架构重新设计与实现。\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
+  "latestReleaseNotes": "## ✨ v1.2.1 更新亮点\n\n### 1. 首次使用 3 步交互式新手引导（`? 指南`）\n- 3 步交互式新手引导覆盖「中英思考切换」「双通道防漂移」与「自定义与预览」，清晰说明原生 Gemini 自动跳过机制。\n- 首次打开面板自动弹出教程，支持点击 **「🎯 定位」** 脉冲高亮页面真实控件并附带浮动返回条，帮助新用户一分钟上手。\n- 已读状态持久化保存至 `~/.gemini/azure-onboarding.json`（Sidecar 重启换端口不复弹），随时可点顶栏 **`? 指南`** 重看，支持 `←` / `→` 翻页与 `Esc` 关闭。\n\n### 2. 名称清晰化与文档升级\n- 介绍名称统一升级为 **「思语中文——外接模型中文思考切换」**，直观呈现核心用途，同步更新 `plugin.json`、顶部横幅 SVG、中英文 README 与苍蓝 10 款全家桶导航表。\n\n### 3. 界面体验优化\n- 优化苍蓝统一 UI 套件次级按钮选择器权重（使用 `:where(...)` 降权），避免高权重样式意外覆写自定义高亮状态。",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -72,7 +72,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 82,
         "snippet": "const slotMatch = /^slot-([0-9]+)$/.exec(activeId);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L82"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L82"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -83,7 +83,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 213,
         "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", href], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L213"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L213"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -94,7 +94,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 219,
         "snippet": "spawn(\"open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L219"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L219"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -105,7 +105,40 @@
         "file": "lib/azure-theme.mjs",
         "line": 221,
         "snippet": "spawn(\"xdg-open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L221"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 232,
+        "snippet": "await fetch(apiUrl(), { method: \"POST\", headers: apiHeaders(true), body: JSON.stringify({ action: shouldDismiss ? \"dismiss\" : \"reset\", guideVersion }) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-onboarding-ui.js#L232"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 309,
+        "snippet": "const r = await fetch(apiUrl({ v: guideVersion }), { headers: apiHeaders(false) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-onboarding-ui.js#L309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-onboarding.mjs",
+        "line": 26,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-onboarding.mjs#L26"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -116,7 +149,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 125,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(clean, null, 2) + \"\\n\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L125"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L125"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -127,7 +160,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 128,
         "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L128"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L128"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -138,7 +171,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 132,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/sidebar-nav.mjs#L132"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/sidebar-nav.mjs#L132"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -149,7 +182,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 176,
         "snippet": "fs.writeFileSync(file, JSON.stringify(payload, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/sidebar-nav.mjs#L176"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/sidebar-nav.mjs#L176"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -160,7 +193,7 @@
         "file": "lib/sidebar-nav.mjs",
         "line": 225,
         "snippet": "const req = https.request( { hostname: \"127.0.0.1\", port: Number(hub.httpsPort), path: \"/exa.language_server_pb.LanguageServerService/RefreshMcpServers\", method: \"POST\", rejectUnau",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/sidebar-nav.mjs#L225"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/sidebar-nav.mjs#L225"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -171,7 +204,7 @@
         "file": "lib/store.mjs",
         "line": 122,
         "snippet": "fs.writeFileSync(tmpPath, content, \"utf8\");",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/store.mjs#L122"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/store.mjs#L122"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -182,7 +215,7 @@
         "file": "lib/store.mjs",
         "line": 127,
         "snippet": "fs.unlinkSync(tmpPath);",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/store.mjs#L127"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/store.mjs#L127"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -193,7 +226,7 @@
         "file": "lib/update-checker.mjs",
         "line": 64,
         "snippet": "return await fetch(url, { ...options, signal: controller.signal });",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/update-checker.mjs#L64"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/update-checker.mjs#L64"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -204,7 +237,7 @@
         "file": "lib/azure-theme.mjs",
         "line": 3,
         "snippet": "* 配置文件路径：~/.gemini/azure-theme.json",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/azure-theme.mjs#L3"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/azure-theme.mjs#L3"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -215,11 +248,24 @@
         "file": "lib/external-model-guard.mjs",
         "line": 45,
         "snippet": "* - 外接模型（命中 ~/.gemini/antigravity/custom_models.json，或使用多级外接路径 models/<provider>/<model> / 推理档位后缀）返回 true。",
-        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/11316e55c31ea97edc6fa30d7570a3cbe346a7d5/lib/external-model-guard.mjs#L45"
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-think-zh/blob/f699621e76dbd0ee48ff400823b7c9381362937f/lib/external-model-guard.mjs#L45"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.2.1",
+      "sha": "f699621e76dbd0ee48ff400823b7c9381362937f",
+      "scannedAt": "2026-11-28T00:25:30.999Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.2.0",
       "sha": "11316e55c31ea97edc6fa30d7570a3cbe346a7d5",

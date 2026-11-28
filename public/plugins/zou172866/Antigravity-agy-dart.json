@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "zou172866/Antigravity-agy-dart",
-  "sha": "a092614ac847973f770a22c36211f17777533410",
+  "sha": "8c705dc93265c1233507403a5caeae77957478aa",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:14:05.866Z",
+  "scannedAt": "2026-11-28T00:25:11.093Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "agy-dart",
     "displayName": "agy-dart",
-    "version": "1.9.3",
+    "version": "1.9.4",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -104,8 +104,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n[简体中文](README.zh-CN.md) · **English**\n\n<img src=\"assets/logo.svg\" alt=\"agy-dart logo\" width=\"80\" />\n\n# agy-dart\n\n**Google Antigravity plugin — Save tokens · Improve cache hits · Keep cache warm on demand · Catch silent background quota burn · Rescue stalled chats**\n\nZero extra dependencies · Works automatically in the background · Built-in right-sidebar dashboard\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-10b981.svg)](LICENSE)\n[![Node.js 22.16+ (22.x) or 24+](https://img.shields.io/badge/Node.js-22.16%2B_(22.x)_or_24%2B-38bdf8.svg)](package.json)\n[![Security Policy](https://img.shields.io/badge/Security-Policy-818cf8.svg)](SECURITY.md)\n[![Glama MCP](https://glama.ai/mcp/servers/zou172866/agy-dart/badges/score.svg)](https://glama.ai/mcp/servers/zou172866/agy-dart)\n[![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zou172866/repo-traffic-archive/main/badges/Antigravity-agy-dart.json)](https://github.com/zou172866/repo-traffic-archive)\n\n[How to Install](#how-to-install) · [Changelog](#changelog) · [Security](SECURITY.md) · [Third-Party Notices](THIRD_PARTY_NOTICES.md)\n\n</div>\n\n<p align=\"center\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/architecture-dark.svg\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"assets/architecture-light.svg\" />\n    <img alt=\"agy-dart architecture\" src=\"assets/architecture-dark.svg\" width=\"860\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <img alt=\"Before vs With agy-dart comparison\" src=\"assets/demo-comparison.svg\" width=\"860\" />\n</p>\n\n---\n\n## What does this plugin do?\n\n`agy-dart` is a token-saving, cache-watching, and session-rescue plugin built for **Google Antigravity** (also supports DeepSeek Harness, Claude Code, and Codex via `--target`).\n\nOnce installed, it runs quietly in the background — **no new commands to memorize, just chat and code as usual**:\n\n### 1. Combine small steps into fewer turns\nWhen the AI needs to search several terms, it runs them in one batch; when it edits multiple files, it edits them together and runs checks in the same step instead of resending your entire chat history turn after turn.\n\n### 2. Block noisy output & read large files smartly\nIf a test run dumps 3,000 lines of logs, the plugin passes only the key failure lines to the AI (e.g., line 42 failed, the other 199 passed) and keeps the full log locally for lookup. On huge code files, it hands over a line-numbered outline first so the AI reads only the lines it needs.\n\n### 3. Monitor cache & keep it warm on demand\nThe plugin keeps the controllable start of each request steady and cuts down repeated reads of unchanged files; actual cache hit rates still depend on how Antigravity builds requests and how the backend caches them (if you use a dynamic rotating proxy, pinning a single exit node is a useful controlled check). Automatic warming and expiry desktop alerts start off; once enabled, the default limit is 1 warm-up per chat until your next message, and both the count and interval can be changed in the panel.\n\n### 4. Right-sidebar dashboard & crash/hang rescue\nSee at a glance how much context space is left, how many minutes until cache expiry, and how much noise has been blocked. With multiple project windows open, if a background chat runs low on context or gets stuck spinning with zero output, a desktop alert names that project and chat — click it to jump right there. If a chat stalls or hits the limit, copy a progress summary in one click and continue in a fresh chat.\n\n### 5. Catch silent background quota burn (Safety Monitor)\nAntigravity can occasionally re-review long chats in the background and quietly burn through your 5-hour quota or trigger 429 errors. The plugin watches local logs automatically (and keeps history even if a restart wipes the log): when everything is calm it stays collapsed to one quiet line; if a burn burst or quota cliff hits, the panel expands in plain language and gives you a one-click **Pack Progress & New Chat** button to stop the bleed.\n\n### Other built-in features\n1. **Keep your place after `/compact`**: Tracks modified files, latest test/build status, and saved reference IDs in the background so the AI picks right back up after compacting.\n2. **Local search for long docs & web pages**: Saves multi-thousand-word docs or web pages locally by section and pulls only matching snippets by keyword.\n3. **Filter huge logs & tables locally first**: On multi-MB logs, CSVs, or huge JSON dumps, the AI runs a quick local script to summarize (e.g., top 5 failing endpoints) and brings only the answer into chat; big JSON blobs automatically surface error rows.\n4. **Workspace map on new chats**: Gives the AI a compact folder layout, script list, and core-file overview as soon as a new chat starts.\n5. **Loop warnings**: Shows a UI-only note (never injected into model context) when the AI gets stuck in `edit → fail → revert → fail` cycles.\n6. **Secret masking & sensitive-file protection**: Masks API keys and tokens in logs or web pages, blocks accidental reads of `.env` files when configured, and stops untrusted Git configs from running external commands.\n7. **Keep tool replies under 8.8 KB**: Antigravity spills tool replies above ~10 KB into a temp file that costs an extra read turn; the plugin stays inside 8.8 KB and shifts leftover space from short passing checks to real error stack traces.\n8. **Usage breakdown, inline diagnostic cards & one-click updates**: Inspect how much context goes to file reads, terminal output, or subagents, view 15-turn cache trends, see interactive inline cards when running `ctx_stats` / `ctx_doctor` (with one-click jump pills to open the side panel on Antigravity `v2.35.1+`), update right from the panel top bar, or replay past chats via CLI to estimate cache hits and warming cost.\n9. **Plays nicely with your Skills + Skills bloat check**: Your Skills handle workflows while `agy-dart` quietly guards file reads, trims logs, and watches cache underneath; run `node bin/agy-dart.mjs audit skills` to see how much startup context each installed Skill uses.\n\n> Antigravity updates frequently — click **Star** at the top right to follow compatibility updates.\n\n---\n\n## How to Install\n\nRequires **Node.js 22.16+ (22.x) or Node.js 24+**. Zero third-party packages — the installer checks that Node's built-in SQLite search engine (FTS5 with trigram) is ready.\n\n### Option 1: One-line terminal install (no clone needed)\n\n**Windows (PowerShell):**\n\n```powershell\nirm https://raw.githubusercontent.com/zou172866/Antigravity-agy-dart/v1.9.3/install.ps1 | iex\n```\n\n**macOS / Linux:**\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/zou172866/Antigravity-agy-dart/v1.9.3/install.sh | sh\n```\n\n### Option 2: Let Antigravity install it\n\nSend this to Antigravity:\n\n```text\nClone tag v1.9.3 of https://github.com/zou172866/Antigravity-agy-dart.git to a temp folder, run `node scripts/install.mjs install` (add `--install-rg` on Windows if `rg` is missing), and confirm `doctor` passes.\n```\n\n### Option 3: Clone & install with custom flags\n\n```powershell\ngit clone --branch v1.9.3 --depth 1 https://github.com/zou172866/Antigravity-agy-dart.git\ncd Antigravity-agy-dart\n\n# Windows PowerShell (optional -InstallRg auto-installs ripgrep)\n.\\install.ps1 -InstallRg\n\n# macOS / Linux\n./install.sh\n```\n\n**Other commands:**\n\n```bash\nnode scripts/install.mjs install                        # Global install (auto-syncs GEMINI_HOME & T3 ACP if present)\nnode scripts/install.mjs install --project /repo/path   # Single-project install\nnode scripts/install.mjs doctor                         # Check install health\nnode scripts/install.mjs uninstall                      # Uninstall\n```\n\nRestart or reload Antigravity after installing and open a new chat. Your own `rules/*.local.md` files are preserved across upgrades. If you previously installed standalone `agy-fast` or `antigravity-plugin-context-mode`, disable the old ones in your plugin list.\n\nSaved document indexes and usage history live locally in `~/.agy-dart/context.db` and stay intact on uninstall. To clear the current chat's index before uninstalling, call `ctx_purge` (when the host omits a session ID, this clears unattributed data for the current workspace); pass `scope: \"all\"` to wipe all projects. Global uninstall also removes installer-tracked Gemini/T3 copies and lists any older untracked copies with a dedicated removal command instead of deleting blindly.\n\n---\n\n## Settings\n\nEveryday switches live right in the **agy-dart Context** side panel:\n\n- **Auto-Keepalive (off by default)**: Turn it on for the current chat in the panel, or click **Warm 1×** next to the countdown anytime for a single manual ping. Use **Global Warm** to set the default count and schedule (**Auto**, **Fixed 4 / 9 / 15 min**, or **Custom 1–60 min**). Turning warming off for a chat also silences its expiry and limit alerts.\n  > Note: Each warm-up asks the model for a short `OK` reply and uses input tokens (or the full conversation if the cache already expired).\n- **Desktop alerts (off by default)**: Cache expiry, stalled-chat alerts, and background quota burn alerts (**Burn Alert: OFF/ON**) all start off and can be toggled individually.\n- **One-click & automatic updates**: Click **Check Update** / **Update Now** in the top bar anytime, or toggle **Auto-Update: OFF/ON** (off by default) for silent same-major upgrades.\n- **Other panel controls**: Pause protection, clear old local data, and adjust file-size limits directly in the panel.\n\nPreset read limits & tool-loading modes via CLI:\n\n```bash\nnode scripts/install.mjs mode host-45k              # Default: direct read up to 45 KB code / 128 KB patches, block >16 KB noisy logs\nnode scripts/install.mjs mode balanced-16k          # Outline first above 16 KB\nnode scripts/install.mjs mode fast-32k              # Raise normal file limit to 32 KB\nnode scripts/install.mjs mode strict-8k             # Block above 8 KB\nnode scripts/install.mjs mode no-read-hook          # Never block file reads, only trim noisy terminal output\n\nnode scripts/install.mjs tool-loading fast-eager    # Default: 4 fast tools eager, 8 context tools lazy\nnode scripts/install.mjs tool-loading lazy          # All 12 tools lazy-loaded\nnode scripts/install.mjs tool-loading eager         # All 12 tools eager-loaded\n```\n\n<details>\n<summary>Troubleshooting: <code>ide-tools</code> duplicate <code>/required</code> schema error</summary>\n\nIf Antigravity fails during toolbox initialization with `building toolbox: tool \"mcp_ide-tools_mcp_agy-dart_fast_apply_edits\" advertises an invalid parameter schema ... at '/required': items at 1 and 2 are equal`, the host's `ide-tools` bridge is duplicating `toolSummary` in `/required`. Switch to lazy loading and restart Antigravity:\n\n```bash\nnode ~/.gemini/config/plugins/agy-dart/scripts/install.mjs tool-loading lazy\n```\n\n(Or remove `\"tools\"` / `\"eager\": true` under `mcpServers.fast` in `~/.gemini/config/plugins/agy-dart/mcp_config.json` and restart. See [skills/agy-dart/references/error-playbook.md](skills/agy-dart/references/error-playbook.md) for diagnostics.)\n\n</details>\n\n---\n\n## Changelog\n\n### v1.9.3\n- **Catppuccin Mocha dark theme & zero-flash startup (thanks `@Ansg2022` in #8)**: Added a full Catppuccin Mocha dark theme to the Sidecar dashboard with automatic system-preference detection, left-click Light/Mocha toggle, right-click or `Shift+Click` / `Shift+Enter` reset back to system theme, and an inline `<script data-theme-init>` FOUC guard so dark mode loads with zero white flash.\n- **Card hierarchy polish & topbar section quick-jump**: Refined Sidecar card surfaces and borders for clear visual hierarchy, and added a sticky topbar section quick-jump pill bar with active scroll-spy tracking, bottom-pinning protection against accidental jumps, full narrow-sidebar wrapping (`300px–820px` verified in headless Edge), and `beforeunload` resource cleanup (`tests/dashboard-theme.test.mjs`).\n\n### v1.9.2\n- **MCP Apps diagnostics card safety & UX hardening**: Fixed `ctx_stats` Refresh button to stay strictly read-only (`reset: false`, never replaying `reset: true`), wired `ctx_doctor` Safety Monitor alerts to display real `diagnosis` + `recommendedAction` text, enforced `event.source === window.parent`, strict host CSS variable allowlist + `background-color` (blocking `url(...)` / internal overrides), `ui/resource-teardown` cleanup, and strict SEP-1865 `mimeTypes` negotiation in `context/server.js`.\n- **Loopback `ConversationService` & unlimited-history SQLite hardening**: Added loopback IP verification on `localhost` DNS lookups, a hard wall-clock total request deadline (preventing slow-drip bypass), strict HTTP 200 contract/ID validation, and shared 60s unsupported-endpoint backoff on Sidecar keepalive sends. Fixed `conversations_fts` archive detection past row 32, enforced shared lock deadlines without negative-cache poisoning on transient `SQLITE_BUSY`, added atomic CAS lease deletion (`deleteWatchdogLeaseIfUnchanged`), WAL-aware transcript scan invalidation, index-aware recent-ID SQL, and streaming `opendirSync` directory scans.\n- **Read-guard, batch-edit checkpoints, simulator & multi-host upgrade fixes**: Required exact full measurements before unlocking wide line ranges on >2 MiB files, passed structured `apply_edits(verify)` results directly so failure checkpoints persist even when 50-file outputs truncate at 8.8 KB, aligned `cache-simulator.js` with Gemini 4's 2,050-token tail-reprocess rule, pruned retired README/SVG files when upgrading shared DSH/Claude/Codex runtimes, updated self-update fallback manifests (`dsh/` + `assets/logo.svg` only), restored standalone single-file `fast/session-start.mjs`, normalized lone UTF-16 surrogates consistently in `truncateUtf8Safe`, and aligned `cache-audit` Markdown totals. _(Watchdog policy note: un-suffixed `gemini-4-carbon`/`neon` intentionally remain in the protective 600s high-reasoning tier to prevent false stall alerts during extended thinking; explicit `-low`/`-medium` suffixes stay on the standard tier.)_\n\n### v1.9.1\n- **Leaner startup prompt & on-demand skill docs (zero feature cuts)**: Trimmed `rules/AGENTS.md` and `agy-dart_context` tool descriptions to cut default Turn-0 startup overhead (`~1,344 → ~1,287` tokens; full catalog `1,956 → 1,883` tokens), and tightened `SKILL.md` + `error-playbook.md` to save **~3,278 tokens (-36%)** whenever troubleshooting docs are loaded on demand.\n- **Smaller installed footprint**: Stopped copying GitHub-only `README` files and 6 architecture/comparison SVGs into the local plugin install directory (`RUNTIME_FILES` slimmed from `72 → 64` files / `-112 KB`, while keeping all repo docs, `LICENSE`, `SECURITY.md`, `THIRD_PARTY_NOTICES.md`, and `assets/logo.svg` intact).\n- **Dead-code cleanup & shared helper consolidation**: Removed unreferenced internal functions/constants and unused dashboard CSS/i18n entries, consolidated 6 copies of hook stdin/session/path boilerplate into already-loaded `hooks/compile-cache.mjs` (zero extra files), and unified 5 copies of `truncateUtf8Safe` into the exact U+FFFD-preserving implementation in `context/lib/stable-json.js` (`-429` core lines, zero behavior drift).\n\n### v1.9.0\n- **Gemini 4 95% cache & pricing alignment**: Updated cache savings math, per-variant pricing (Carbon/Argon, Neon, Hydrogen), minimum cacheable threshold (4,096 tokens), and multi-turn delta checks (2,050 tokens) for Gemini 4 so cost and hit-rate estimates stay accurate without false cache-miss warnings; also recognized Carbon/Neon default high-reasoning tiers and raised the keepalive ROI floor.\n- **Interactive inline diagnostic cards & leaner MCP replies**: On Antigravity `v2.34.0+` UI hosts, `ctx_stats` and `ctx_doctor` now render a self-contained inline card right in chat (auto-following light/dark theme with a built-in Refresh button) while sending a compact summary to the model; CLI/IDE hosts stay zero-overhead with single-line compact JSON. Also added a one-click side-panel link (`sidecar://agy-dart/dashboard/`) on `v2.35.1+`.\n- **Stays fast with unlimited chat history (`ConversationService` API)**: Watchdog and the side panel now query Antigravity's local `ConversationService` API first (strict loopback-only) to check archived, subagent, and active-run states directly, falling back cleanly to bounded SQLite/directory scans with LRU caching so performance never degrades as history grows.\n- **Smarter file slicing, `/swarm` isolation & lower hook overhead**: Ranged reads now measure actual slice bytes before blocking and pass through `.heic`/`.avif`/`.amr`, PDF page slices, and official skill/rule/agent files automatically; `/swarm` workers are isolated cleanly from primary chats without resetting active windows; trimmed read-only tools from `PostToolUse`, wrote `fast` verification checkpoints directly, aligned MCP timeouts (`310s`) / protocol negotiation / built-in subagent eager configs, and upgraded `cache-audit` for `.agents/` layouts and eager-vs-lazy token budgets.\n\n### v1.8.2\n- **Single-file reads now skip background cloud checks completely (+ leaner startup prompt)**: When reading a single large file, the plugin hands over a free outline and sends the AI straight to Antigravity's built-in ranged file reader (zero background cloud reviews) instead of detouring through a plugin tool; multi-file reads, searches, edits, and checks still batch together, and the built-in rules were trimmed further to save tokens on Turn 1.\n- **Optional desktop alert for active quota burn & 2-step new-chat handoff**: Added an opt-in **Burn Alert: OFF/ON** toggle on the dashboard card (off by default, 15-minute cooldown) that pops up as soon as active background burn or 429 spikes start; added a plain-language quota-saver tip next to the Context bar for long chats; clicking **Pack Progress & New Chat** now copies your handoff brief automatically and shows a quick 2-step paste guide.\n- **Fixed occasional missing character counts in burn stats**: Heavy background reviews that straddle two dashboard refresh ticks now keep their full character count and trigger reason instead of occasionally recording `0`.\n\n### v1.8.1\n- **Plain-language Safety Monitor card**: Rewrote the background quota-burn card into clear, everyday wording — put a **\"What to do now\"** box at the top, formatted waits like `14m 15s`, made trigger labels readable, and renamed actions to **Pack Progress & New Chat** and **Copy Evidence (Redacted)**.\n- **Fixed narrow-sidebar layout & calmer status badges**: Fixed 3-line title wrapping, clipped badges, and repeated summary lines in narrow panels; softened past-5h bursts that have been quiet for the last 5 minutes from red to amber (`Past 5h · Calm`) and hid restart-log notes when no restart truncation happened.\n\n### v1.8.0\n- **Background quota-burn monitoring that survives restarts**: Watches local Antigravity Desktop and CLI logs automatically and saves per-minute history locally so restarting Antigravity never wipes the evidence. Stays collapsed to a single quiet line when healthy, and auto-expands with one-click new-chat handoff and redacted report copy if 429 spikes, heavy re-review bursts, or the 5-hour quota cliff appear (also available via `node bin/agy-dart.mjs audit safety`).\n- **Reading files outside the workspace no longer triggers heavy re-reviews**: Large files outside your active project still get a free outline, but now route to built-in ranged reading (zero cloud checks) instead of nudging external tools that could trigger giant background reviews; handoff briefs also remind you to break review loops when starting a fresh chat.\n- **Prevented crashes on affected Antigravity versions**: Turned off inline chat banners by default to avoid crashes in certain host versions, while keeping the side panel, cache countdown, hang detection, and desktop alerts fully working.\n- **Fixed occasional \"workspace root not found\" errors on Turn 1**: The plugin now remembers your active project folder automatically and updates as you switch windows (while still refusing ambiguous multi-window calls so it never edits the wrong repo).\n\n### v1.7.8\n- **Optional silent auto-updates (off by default)**: Added an **Auto-Update: OFF/ON** toggle in the panel top bar. When enabled, startup and 6-hour checks silently install verified same-major releases in the background, waiting if a cache warm-up is in flight, stopping retries on a failed version, and showing a one-time notice after reload.\n\n### v1.7.7\n- **DeepSeek Harness support (`--target dsh`)**: Install into DeepSeek Harness alongside Antigravity, Claude Code, and Codex with automatic read guards and log trimming, plus `node bin/agy-dart.mjs dashboard` to open the live monitor in a browser — zero impact or token overhead on Antigravity.\n- **Pause warming & alerts on archived chats**: Archived chats automatically stop background keepalive pings, manual warm-ups, and desktop alerts without losing state, and resume cleanly if unarchived.\n\n### v1.7.6\n- **One-click online update in the panel** (thanks to [@bestmulicc](https://github.com/bestmulicc), [#5](https://github.com/zou172866/Antigravity-agy-dart/pull/5)): The right panel now checks GitHub Releases on startup and lets you click **Check Update** / **Update Now** to upgrade in place without running terminal commands (startup checks can be turned off in config).\n- **Verified downloads, automatic rollback & preserved settings**: Verifies release package integrity before unpacking, rolls back automatically if a file is locked, reloads the panel cleanly, and keeps your local `rules/*.local.md`, tool-loading mode, and synced copies intact.\n\n### v1.7.5\n- **One-click manual `Warm 1×` button in the panel**: Added a manual warm-up button right next to the cache countdown. It works even when Auto-Keepalive is off and doesn't use up your automatic warm-up limit (with double-click protection and rollback if sending fails).\n- **Skip hopeless last-second warm-ups & unified countdown**: When only a few seconds are left and a warm-up ping won't arrive in time, the plugin skips it to avoid wasting tokens and falls back to a desktop alert instead. The panel, background monitor, and alerts now all share the same expiry countdown, and warming stops right away if the cache has already expired.\n\n### v1.7.4\n- **Warmer wording for \"Copy Handoff Prompt\"**: Updated the handoff prompt templates with a friendlier opening (`宝宝，` in Chinese / `Sweetie,` in English) and asked the AI to start its generated handoff summary the same way — still body-only, with no filler.\n\n### v1.7.3\n- **Custom Auto-Keepalive intervals**: Pick **Auto**, **Fixed 4 / 9 / 15 min**, or **Custom (1–60 min)** globally or per chat, with one-click reset back to **Global**. All existing safety guards (max count, skipping short chats, stopping after a cache miss, and skipping background subagents) stay on.\n- **Fixed false warnings on timeouts and partial test runs**: Timed-out commands no longer trigger \"repeated edit-fail\" alerts; passing an unrelated test or a single test case won't erase an earlier full-suite failure; background test errors stay visible even after editing other files; and if a failing check log gets cut off, the panel keeps flagging it until you re-run it.\n- **Cleaner handoff summaries & clearer cache-miss reasons**: Copy cleaner progress summaries before switching chats or compacting (with secrets auto-masked), and see more accurate reasons when the cache misses.\n\n### v1.7.2\n- **Lighter built-in skill docs & a Skills bloat check**: Moved sample scripts and troubleshooting notes into on-demand files so they don't eat startup context when unused; added `node bin/agy-dart.mjs audit skills` to check how much startup context each installed Skill uses and spot oversized main files.\n- **Leaner output from built-in helper agents**: The built-in coding (`dart-coder`) and review (`dart-reviewer`) subagents stay lightweight without carrying extra external tools or global rules, and now route quick checks through output trimming instead of dumping long terminal logs into the chat.\n\n### v1.7.1\n- **Fixed the panel's \"Blocked Noise\" counter staying at 0**: Bytes saved by sliced file reads, batched searches, and trimmed check outputs are now counted accurately in the panel, without mixing up windows or double-counting.\n- **Roll up subagent savings into the main chat**: Savings from saved long docs, batch lookups, and background subagents now roll up under the main conversation so panel totals stay accurate.\n- **Fixed missed log filtering on Windows / PowerShell**: Commands using flags like `npm --prefix`, `pnpm -C`, `yarn --cwd`, or `--` separators now trim noisy output properly on Windows and PowerShell too.\n\n### v1.7.0\n- **Hand the AI a file map when blocking a full large-file read**: When the AI tries to read a huge code file all at once for the first time, the block message now includes a line-numbered list of functions and classes so it can jump straight to the lines it needs without an extra turn.\n- **Unified CLI with Claude Code & Codex support**: Added `node bin/agy-dart.mjs` to install for Antigravity, Claude Code, or Codex, print file outlines, and compare token usage across chats; also shipped lightweight built-in coding/review subagents and stronger workspace & Node.js checks.\n\n<details>\n<summary>Show earlier releases (v1.1.0 – v1.6.0)</summary>\n\n### v1.6.0\n- **4 core tools preloaded directly, fixing occasional dropped multi-file edits**: Batch search, file outlines, multi-file edits, and quick checks now load directly instead of going through an extra layer that sometimes emptied multi-file edits; the other 8 large-log tools stay on-demand to save startup context.\n- **Fixed Auto-Keepalive stalls & skipped all background subagents**: The background panel now restarts cleanly after plugin updates so stale processes don't interfere; subagents spawned by `/boost`, browser tasks, or workflows — plus closed chats — never send keepalive pings or crowd the top status bar.\n- **Let subagents read freely & protect the plugin folder**: Background subagents can read large or repeated files without hitting red block messages, and any call missing a project path that lands inside the plugin's own install folder is blocked so the AI won't search or edit the plugin by mistake.\n- **One-line install without cloning**: Added single-line PowerShell and Shell commands so you don't have to clone the repo first.\n- **Other polish**: Unused output budget from short checks automatically shifts to long error traces; read-only Git queries block untrusted external commands; fixed Windows hang on exit; upgrades preserve your custom `rules/*.local.md` files; added a security policy and light/dark architecture diagrams.\n\n### v1.5.4\n- **Click alerts to jump to that chat**: Clicking a desktop popup or cross-window panel alert brings the matching project window to the front and opens that conversation; added a multi-window session switcher bar in the panel.\n- **Optional cache keepalive**: Sends a ping for primary chats shortly before expiry; the panel controls the per-chat limit, and your next message resets the count.\n- Moved current context usage, cache countdown, and blocked noise volume into a larger top card in the panel.\n\n### v1.5.3\n- **Project & chat titles on multi-window alerts**: Desktop popups and panel alerts show folder names (e.g., `work/agy-dart`) and short chat titles without exposing message text.\n- **\"Context Almost Full\" desktop alert**: Pops up once near the limit and resets after `/compact`.\n\n### v1.5.2\n- Faster file reads and chat startup; added code outlines for multi-thousand-line `.html` / `.astro` and `.dart` files; fixed Windows Python / PowerShell encoding garbling and paused panel refreshes while hidden.\n\n### v1.5.1\n- Filled in untranslated strings in Chinese UI mode; tuned post-edit file-limit suggestions.\n\n### v1.5.0\n- **Read actual model cache expiry time**: Reads the active model's real cache lifetime (such as 5m or 15m) from recent usage and carries it into new chats.\n- Added optional 1-minute cache-expiry desktop reminder and CLI keepalive cost simulation.\n\n### v1.4.0\n- **Hang detection & rescue summary**: Flags chats stuck spinning with zero output (ignoring long builds and laptop sleep), points to the stalled step in the panel, and prepares a one-click progress summary (modified files, last command, current step) to continue in a new chat.\n\n### v1.3.1\n- Allow immediate file re-reads right after `/compact`; skip dedup prompts on slices under 4 KB; preserve mid-log error lines in long failure outputs.\n\n### v1.3.0\n- **Tiered file-read limits**: Raised direct reads to 45 KB (800 lines) for normal code and 128 KB for `.patch` files while keeping noisy logs at 16 KB; second-try reads pass through so patch reviews and subagents don't stall.\n- Added `.patch` file outlines and kept context lines when trimming `git diff`.\n\n### v1.2.2\n- **Uninterrupted long tasks**: Removed mid-task `/compact` prompts and routed >60s builds, tests, and background servers straight to Antigravity's native background runner.\n- Blocked `.env` reads and fixed 42 Windows shell, isolation, and orphan-process issues.\n\n### v1.2.1\n- Automatic rollback on failed multi-file edits and 76 path/argument stability fixes.\n\n### v1.2.0\n- Unified settings in `~/.agy-dart/config.json`; added local panel request checks; **automatic structure, sample, and error extraction for huge JSON files**; added `gh`, `kubectl`, `terraform`, and `playwright` output trimming plus handoff summaries.\n\n### v1.1.0\n- **Automatic terminal output trimming**: Strips progress bars and repetitive noise from `git`, test, build, and install commands while saving full logs locally.\n- Unchanged-file duplicate-read protection, edit-fail loop notes, internal-URL SSRF blocking, log secret masking, and one-click panel cleanup.\n\n</details>\n\n---\n\n## Using with Other AI Tools (CLI)\n\n`node bin/agy-dart.mjs` installs for Antigravity by default and can also target other coding tools (saving a restore record in `~/.agy-dart/` so uninstalling cleanly puts your original config back):\n\n```bash\nnode bin/agy-dart.mjs install                        # Install for Antigravity (default)\nnode bin/agy-dart.mjs install --target dsh           # Install for DeepSeek Harness (optional --profile <name> or --mcp-only)\nnode bin/agy-dart.mjs install --target claude        # Install for Claude Code\nnode bin/agy-dart.mjs install --target codex         # Install for Codex\n```\n\nHandy CLI utilities:\n\n```bash\nnode bin/agy-dart.mjs dashboard                      # Open the live dashboard standalone in a browser\nnode bin/agy-dart.mjs audit safety                   # Check recent background quota-burn events\nnode bin/agy-dart.mjs audit skills                   # Audit startup context usage of installed Skills\nnode bin/agy-dart.mjs outline <file>                 # Print a file's function/class map with line numbers\nnode bin/agy-dart.mjs session <id>                   # Inspect one chat's token bill\nnode bin/agy-dart.mjs compare <before> <after>       # Compare token usage across two chats\n```\n\n---\n\n<details>\n<summary><strong>Developer Local Checks (for contributors)</strong></summary>\n\n```bash\nnpm test                                           # Run full test suite\nnpm run verify:pkg                                 # Verify installer file list\nnpm run prefix:budget                              # Estimate configured Antigravity startup and full-catalog token usage\nnpm run brief:check                                # Check that AI_REVIEW_BRIEF.md line/test counts are up to date\nnode scripts/cache-audit.mjs --workspace . --no-live\nnode bin/agy-dart.mjs audit skills --workspace .   # Check startup context usage and structure of installed Skills\nnpm run cache:simulate\n```\n\nAfter adding, removing, or editing modules or tests, keep these three places in sync so local checks stay green:\n- **Installer file list** (`scripts/install.mjs`): update `RUNTIME_FILES` (installed by default) or `DEVTOOLS_FILES` (`--with-devtools`) whenever files are added or removed, or `npm run verify:pkg` will fail.\n- **Test count check** (`tests/v1.2-hardening.test.mjs`): when the test count changes, update the hardcoded `computeBriefMetrics(ROOT).testCases` number to match `npm test`.\n- **Review brief** (`AI_REVIEW_BRIEF.md`): after changing tracked source files or test counts, run `node scripts/gen-review-brief.mjs --write` to refresh the numbers, then verify with `npm run brief:check`.\n\n</details>\n\n---\n\n## Credits & License\n\n[MIT License](LICENSE). Incorporates and adapts MIT-licensed code from [INK-Q/agy-fast](https://github.com/INK-Q/agy-fast) and [Domush/antigr",
-  "latestReleaseNotes": "## What's New in v1.9.3 (includes v1.9.0, v1.9.1 & v1.9.2)\n\n> Since `v1.8.2` was the previous GitHub Release, this release rolls up the full **v1.9.0** official Antigravity alignment, **v1.9.1** zero-regression slimming, **v1.9.2** red-team security & reliability hardening, and **v1.9.3** Catppuccin Mocha dark theme & section quick-jump ([PR #8](https://github.com/zou172866/Antigravity-agy-dart/pull/8), thanks `@Ansg2022`!) into one clean upgrade.\n\n### 简体中文\n\n#### v1.9.3 — Catppuccin Mocha 暗黑主题、卡片分层与顶栏锚点快跳\n- **Catppuccin Mocha 暗黑主题与首屏防白闪（感谢 `@Ansg2022` 贡献 [#8](https://github.com/zou172866/Antigravity-agy-dart/pull/8)）**：\n  - 右侧 Sidecar 面板新增完整的 Catppuccin Mocha 深色主题，默认自动跟随系统深浅色。\n  - 左键点击主题按钮即可在 Light 与 Mocha 深色间瞬时切换；右键点击或键盘 `Shift+Click` / `Shift+Enter` 恢复跟随系统。\n  - `<head>` 内嵌 `<script data-theme-init>` 防白闪（FOUC）脚本，暗黑模式下首次打开无刺眼白屏闪烁。\n- **卡片视觉分层与顶栏分节锚点快跳**：\n  - 统一优化卡片层次、边框与次级指示点对比度（非文本对比度 ≥3:1），观感更清晰。\n  - 顶栏新增吸顶分节快跳胶囊条与滚动高亮追踪（scroll-spy），补齐 `nearBottom` 与点击锁定的防抢跳保护、全宽度窄侧边栏零裁切折行（无头 Edge CDP 实测 `300px–820px` 全状态 0 溢出/0 重叠）及 `beforeunload` 资源清理。\n\n#### v1.9.2 — 红队复核安全与稳定性加固\n- **内联诊断卡片安全与体验加固**：\n  - 修复 `ctx_stats` 卡片点击「刷新」时重放初始 `reset: true` 的问题，强制只读刷新（`reset: false`），不再误清空当前会话数据。\n  - 修复 `ctx_doctor` 卡片 Safety Monitor 告警内容，正确展示真实 `diagnosis` 与处置建议（`recommendedAction`）。\n  - 加固 SEP-1865 协议与前端边界：校验 `event.source === window.parent`、宿主 CSS 变量白名单与 `background-color`（阻断 `url(...)` 与内部变量覆盖）、补齐 `ui/resource-teardown` 清理响应，并收严 `context/server.js` 的 `mimeTypes` 协商。\n- **`ConversationService` 回环边界与无上限历史 SQLite 加固**：\n  - 为 `localhost` 补齐 DNS 解析后回环 IP 校验（严格限定 `127.0.0.0/8` / `::1`）、独立墙钟总超时（防慢速滴水绕过）、HTTP 200 响应契约/ID 一致性校验，以及 Sidecar 发送路径共享 60 秒不支持接口退避。\n  - 修复 `conversations_fts` 超过 32 行时的归档漏判、独占锁下的共享截止时间与不污染负缓存、原子 CAS 清理过期租约（`deleteWatchdogLeaseIfUnchanged`）、扫描缓存 WAL 失效、索引感知最近会话查询及 `opendirSync` 流式目录遍历。\n- **读守卫、批量编辑恢复点、模拟器与跨宿主升级修复**：\n  - 大文件跨 2 MiB 探测边界不再误放行宽行读取；`apply_edits(verify)` 改传结构化验证结果，50 文件长路径触发 8.8 KB 截断时仍准确写入失败恢复点。\n  - `cache-simulator.js` 对齐 Gemini 4 的 2,050 token 尾部重算规则；DSH/Claude/Codex 升级同步清理 8 个退役文档/SVG；自更新备用清单补齐 `dsh/` 并排除退役 SVG；恢复 `fast/session-start.mjs` 单文件独立运行、统一 `truncateUtf8Safe` 孤立代理项处理并修正 `cache-audit` Markdown 总数明细。\n  - _看门狗策略说明：无档位后缀的 `gemini-4-carbon`/`neon` 刻意保留 600s 保护性高推理阈值以防长思考误报卡死，显式 `-low`/`-medium` 走常规阈值。_\n\n#### v1.9.1 — 零回退瘦身（Token / 安装体积 / 重复代码）\n- **开场规则与排错文档进一步瘦身（零减功能）**：默认首轮开场占用降至 **`~1,289` token**（全量目录 `1,885` token）；精简 `SKILL.md` 与 `error-playbook.md`，按需读取排错文档一次直省约 **3,278 token（-36%）**。\n- **安装目录更轻**：不再把 GitHub 展示用双语 README 与 6 张宣传图 SVG 复制到本机插件目录（`RUNTIME_FILES` 从 `72 → 64` 文件 / `-112 KB`，保留合规文件与 `assets/logo.svg`）。\n- **死代码清理与共享逻辑收口**：零新增文件合并 6 处钩子公共逻辑至 `hooks/compile-cache.mjs`，统一 5 处 `truncateUtf8Safe` 至 `context/lib/stable-json.js`（核心代码净减 `429` 行）。\n\n#### v1.9.0 — 官方规范深度对齐\n- **Gemini 4 95% 缓存折扣与分档计价**：更新 Carbon/Argon、Neon、Hydrogen 变体的 95% 缓存折扣、4,096 token 起步门槛与 2,050 token 增量规则，账本和成本估算更准、提高自动续温 ROI 门槛。\n- **交互式内联诊断卡片与轻量返回**：在 Antigravity `v2.34.0+` 桌面端运行 `ctx_stats` / `ctx_doctor` 时渲染自动跟随深浅色的内联诊断卡片，同时只给模型传极简摘要；`v2.35.1+` 支持 `sidecar://agy-dart/dashboard/` 一键直达右侧面板；CLI/IDE 端保持单行紧凑 JSON。\n- **无限历史对话不卡顿**：Watchdog 与 Sidecar 优先走本机回环 `ConversationService` API，老版本平滑退回带缓存和预算封顶的本地扫描。\n- **分段读更准、`/swarm` 协作隔离与低开销钩子**：支持 `.heic`/`.avif`/`.amr` 与 PDF 按页直放、精准隔离 `/swarm` 子工位、精简 `PostToolUse`、对齐 `310s` MCP 超时与 `cache-audit` v2。\n\n---\n\n### English\n\n#### v1.9.3 — Catppuccin Mocha Dark Theme, Card Hierarchy Polish & Section Quick-Jump\n- **Catppuccin Mocha dark theme & zero-flash startup (thanks `@Ansg2022` in [#8](https://github.com/zou172866/Antigravity-agy-dart/pull/8))**:\n  - Added a complete Catppuccin Mocha dark theme to the Sidecar dashboard with automatic OS theme detection.\n  - Left-click toggles smoothly between Light and Mocha dark; right-click or keyboard `Shift+Click` / `Shift+Enter` resets back to system auto mode.\n  - Added an inline `<script data-theme-init>` FOUC guard in `<head>` so dark mode renders immediately with zero white flash.\n- **Card hierarchy polish & sticky topbar section quick-jump**:\n  - Refined Sidecar card layering, borders, and muted indicator contrast (≥3:1 non-text contrast).\n  - Added a sticky topbar section quick-jump pill bar with active scroll-spy tracking, `nearBottom` & click-pinning jump protection, full narrow-sidebar wrapping (`300px–820px` verified across 40 states in headless Edge CDP with zero overflow/overlap), and `beforeunload` resource cleanup.\n\n#### v1.9.2 — Red-Team Security & Reliability Hardening\n- **MCP Apps diagnostics card safety & UX hardening**:\n  - Fixed `ctx_stats` Refresh button to remain strictly read-only (`reset: false`, never replaying an initial `reset: true`).\n  - Wired `ctx_doctor` Safety Monitor alerts to display actual `diagnosis` and `recommendedAction` text.\n  - Hardened SEP-1865 boundaries: enforced `event.source === window.parent`, strict host CSS variable allowlists + `background-color` (blocking `url(...)` / internal overrides), `ui/resource-teardown` timer/observer cleanup, and strict `mimeTypes` negotiation in `context/server.js`.\n- **Loopback `ConversationService` & unlimited-history SQLite hardening**:\n  - Added post-DNS loopback IP verification for `localhost` (`127.0.0.0/8` / `::1` only), hard wall-clock total request deadlines (preventing slow-drip hangs), strict HTTP 200 contract/ID validation, and shared 60s unsupported-endpoint backoff on Sidecar keepalive sends.\n  - Fixed `conversations_fts` archive detection past row 32, shared lock deadlines without negative-cache poisoning on transient `SQLITE_BUSY`, atomic CAS lease deletion (`deleteWatchdogLeaseIfUnchanged`), WAL-aware transcript scan invalidation, index-aware recent-ID SQL, and streaming `opendirSync` directory scans.\n- **Read-guard, batch-edit checkpoints, simulator & multi-host upgrade fixes**:\n  - Required exact full measurements before unlocking wide line ranges on >2 MiB files; passed structured `apply_edits(verify)` results directly so failure checkpoints persist even when 50-file outputs truncate at 8.8 KB.\n  - Aligned `cache-simulator.js` with Gemini 4's 2,050-token tail-reprocess rule, pruned retired README/SVG files on shared DSH/Claude/Codex upgrades, updated self-update fallback manifests (`dsh/` + `assets/logo.svg` only), restored standalone single-file `fast/session-start.mjs`, normalized lone UTF-16 surrogates consistently in `truncateUtf8Safe`, and aligned `cache-audit` Markdown totals.\n  - _Watchdog policy note: un-suffixed `gemini-4-carbon`/`neon` intentionally stay in the protective 600s high-reasoning tier to prevent false stall alerts during extended thinking; explicit `-low`/`-medium` suffixes remain on the standard tier._\n\n#### v1.9.1 — Zero-Regression Slimming\n- **Leaner Turn-0 & on-demand skill docs**: Default startup footprint trimmed to **`~1,289` tokens** (full catalog `1,885` tokens); `SKILL.md` + `error-playbook.md` tightened to save **~3,278 tokens (-36%)** on demand.\n- **Smaller local install footprint**: Pruned 8 GitHub-only README/SVG assets from local installs (`RUNTIME_FILES` `72 → 64` files / `-112 KB`, preserving compliance docs and `assets/logo.svg`).\n- **Dead-code & helper consolidation**: Deduplicated 6 hook boilerplate copies into `hooks/compile-cache.mjs` (zero new files) and unified 5 `truncateUtf8Safe` copies into `context/lib/stable-json.js` (`-429` core lines).\n\n#### v1.9.0 — Official Antigravity Alignment\n- **Gemini 4 95% cache & pricing model**: Updated savings math, per-variant pricing (Carbon/Argon, Neon, Hydrogen), 4,096-token minimum cacheable threshold, 2,050-token multi-turn delta rule, and higher keepalive ROI floor.\n- **Interactive MCP Apps inline cards**: `ctx_stats` and `ctx_doctor` render theme-aware inline cards with built-in Refresh on Antigravity `v2.34.0+` while returning compact text to the model; `sidecar://agy-dart/dashboard/` link on `v2.35.1+`; compact JSON on CLI/IDE hosts.\n- **Unlimited-history performance (`ConversationService` API)**: Watchdog and Sidecar query the local loopback `ConversationService` API first, falling back cleanly to bounded, cached SQLite/directory scans.\n- **Smarter read slicing, `/swarm` isolation & leaner hooks**: Accurate slice-byte measurement, `.heic`/`.avif`/`.amr` & PDF page-slice passthrough, `/",
+  "readmeMarkdown": "<div align=\"center\">\n\n[简体中文](README.zh-CN.md) · **English**\n\n<img src=\"assets/logo.svg\" alt=\"agy-dart logo\" width=\"80\" />\n\n# agy-dart\n\n**Google Antigravity plugin — Save tokens · Improve cache hits · Keep cache warm on demand · Catch silent background quota burn · Rescue stalled chats**\n\nZero extra dependencies · Works automatically in the background · Built-in right-sidebar dashboard\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-10b981.svg)](LICENSE)\n[![Node.js 22.16+ (22.x) or 24+](https://img.shields.io/badge/Node.js-22.16%2B_(22.x)_or_24%2B-38bdf8.svg)](package.json)\n[![Security Policy](https://img.shields.io/badge/Security-Policy-818cf8.svg)](SECURITY.md)\n[![Glama MCP](https://glama.ai/mcp/servers/zou172866/agy-dart/badges/score.svg)](https://glama.ai/mcp/servers/zou172866/agy-dart)\n[![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zou172866/repo-traffic-archive/main/badges/Antigravity-agy-dart.json)](https://github.com/zou172866/repo-traffic-archive)\n\n[How to Install](#how-to-install) · [Changelog](#changelog) · [Security](SECURITY.md) · [Third-Party Notices](THIRD_PARTY_NOTICES.md)\n\n</div>\n\n<p align=\"center\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/architecture-dark.svg\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"assets/architecture-light.svg\" />\n    <img alt=\"agy-dart architecture\" src=\"assets/architecture-dark.svg\" width=\"860\" />\n  </picture>\n</p>\n\n<p align=\"center\">\n  <img alt=\"Before vs With agy-dart comparison\" src=\"assets/demo-comparison.svg\" width=\"860\" />\n</p>\n\n---\n\n## What does this plugin do?\n\n`agy-dart` is a token-saving, cache-watching, and session-rescue plugin built for **Google Antigravity** (also supports DeepSeek Harness, Claude Code, and Codex via `--target`).\n\nOnce installed, it runs quietly in the background — **no new commands to memorize, just chat and code as usual**:\n\n### 1. Combine small steps into fewer turns\nWhen the AI needs to search several terms, it runs them in one batch; when it edits multiple files, it edits them together and runs checks in the same step instead of resending your entire chat history turn after turn.\n\n### 2. Block noisy output & read large files smartly\nIf a test run dumps 3,000 lines of logs, the plugin passes only the key failure lines to the AI (e.g., line 42 failed, the other 199 passed) and keeps the full log locally for lookup. On huge code files, it hands over a line-numbered outline first so the AI reads only the lines it needs.\n\n### 3. Monitor cache & keep it warm on demand\nThe plugin keeps the controllable start of each request steady and cuts down repeated reads of unchanged files; actual cache hit rates still depend on how Antigravity builds requests and how the backend caches them (if you use a dynamic rotating proxy, pinning a single exit node is a useful controlled check). Automatic warming and expiry desktop alerts start off; once enabled, the default limit is 1 warm-up per chat until your next message, and both the count and interval can be changed in the panel.\n\n### 4. Right-sidebar dashboard & crash/hang rescue\nSee at a glance how much context space is left, how many minutes until cache expiry, and how much noise has been blocked. With multiple project windows open, if a background chat runs low on context or gets stuck spinning with zero output, a desktop alert names that project and chat — click it to jump right there. If a chat stalls or hits the limit, copy a progress summary in one click and continue in a fresh chat.\n\n### 5. Catch silent background quota burn (Safety Monitor)\nAntigravity can occasionally re-review long chats in the background and quietly burn through your 5-hour quota or trigger 429 errors. The plugin watches local logs automatically (and keeps history even if a restart wipes the log): when everything is calm it stays collapsed to one quiet line; if a burn burst or quota cliff hits, the panel expands in plain language and gives you a one-click **Pack Progress & New Chat** button to stop the bleed.\n\n### Other built-in features\n1. **Keep your place after `/compact`**: Tracks modified files, latest test/build status, and saved reference IDs in the background so the AI picks right back up after compacting.\n2. **Local search for long docs & web pages**: Saves multi-thousand-word docs or web pages locally by section and pulls only matching snippets by keyword.\n3. **Filter huge logs & tables locally first**: On multi-MB logs, CSVs, or huge JSON dumps, the AI runs a quick local script to summarize (e.g., top 5 failing endpoints) and brings only the answer into chat; big JSON blobs automatically surface error rows.\n4. **Workspace map on new chats**: Gives the AI a compact folder layout, script list, and core-file overview as soon as a new chat starts.\n5. **Loop warnings**: Shows a UI-only note (never injected into model context) when the AI gets stuck in `edit → fail → revert → fail` cycles.\n6. **Secret masking & sensitive-file protection**: Masks API keys and tokens in logs or web pages, blocks accidental reads of `.env` files when configured, and stops untrusted Git configs from running external commands.\n7. **Keep tool replies under 8.8 KB**: Antigravity spills tool replies above ~10 KB into a temp file that costs an extra read turn; the plugin stays inside 8.8 KB and shifts leftover space from short passing checks to real error stack traces.\n8. **Usage breakdown, inline diagnostic cards & one-click updates**: Inspect how much context goes to file reads, terminal output, or subagents, view 15-turn cache trends, see interactive inline cards when running `ctx_stats` / `ctx_doctor` (with one-click jump pills to open the side panel on Antigravity `v2.35.1+`), update right from the panel top bar, or replay past chats via CLI to estimate cache hits and warming cost.\n9. **Plays nicely with your Skills + Skills bloat check**: Your Skills handle workflows while `agy-dart` quietly guards file reads, trims logs, and watches cache underneath; run `node bin/agy-dart.mjs audit skills` to see how much startup context each installed Skill uses.\n\n> Antigravity updates frequently — click **Star** at the top right to follow compatibility updates.\n\n---\n\n## How to Install\n\nRequires **Node.js 22.16+ (22.x) or Node.js 24+**. Zero third-party packages — the installer checks that Node's built-in SQLite search engine (FTS5 with trigram) is ready.\n\n### Option 1: One-line terminal install (no clone needed)\n\n**Windows (PowerShell):**\n\n```powershell\nirm https://raw.githubusercontent.com/zou172866/Antigravity-agy-dart/v1.9.4/install.ps1 | iex\n```\n\n**macOS / Linux:**\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/zou172866/Antigravity-agy-dart/v1.9.4/install.sh | sh\n```\n\n### Option 2: Let Antigravity install it\n\nSend this to Antigravity:\n\n```text\nClone tag v1.9.4 of https://github.com/zou172866/Antigravity-agy-dart.git to a temp folder, run `node scripts/install.mjs install` (add `--install-rg` on Windows if `rg` is missing), and confirm `doctor` passes.\n```\n\n### Option 3: Clone & install with custom flags\n\n```powershell\ngit clone --branch v1.9.4 --depth 1 https://github.com/zou172866/Antigravity-agy-dart.git\ncd Antigravity-agy-dart\n\n# Windows PowerShell (optional -InstallRg auto-installs ripgrep)\n.\\install.ps1 -InstallRg\n\n# macOS / Linux\n./install.sh\n```\n\n**Other commands:**\n\n```bash\nnode scripts/install.mjs install                        # Global install (auto-syncs GEMINI_HOME & T3 ACP if present)\nnode scripts/install.mjs install --project /repo/path   # Single-project install\nnode scripts/install.mjs doctor                         # Check install health\nnode scripts/install.mjs uninstall                      # Uninstall\n```\n\nRestart or reload Antigravity after installing and open a new chat. Your own `rules/*.local.md` files are preserved across upgrades. If you previously installed standalone `agy-fast` or `antigravity-plugin-context-mode`, disable the old ones in your plugin list.\n\nSaved document indexes and usage history live locally in `~/.agy-dart/context.db` and stay intact on uninstall. To clear the current chat's index before uninstalling, call `ctx_purge` (when the host omits a session ID, this clears unattributed data for the current workspace); pass `scope: \"all\"` to wipe all projects. Global uninstall also removes installer-tracked Gemini/T3 copies and lists any older untracked copies with a dedicated removal command instead of deleting blindly.\n\n---\n\n## Settings\n\nEveryday switches live right in the **agy-dart Context** side panel:\n\n- **Auto-Keepalive (off by default)**: Turn it on for the current chat in the panel, or click **Warm 1×** next to the countdown anytime for a single manual ping. Use **Global Warm** to set the default count and schedule (**Auto**, **Fixed 4 / 9 / 15 min**, or **Custom 1–60 min**). Turning warming off for a chat also silences its expiry and limit alerts.\n  > Note: Each warm-up asks the model for a short `OK` reply and uses input tokens (or the full conversation if the cache already expired).\n- **Desktop alerts (off by default)**: Cache expiry, stalled-chat alerts, and background quota burn alerts (**Burn Alert: OFF/ON**) all start off and can be toggled individually.\n- **One-click & automatic updates**: Click **Check Update** / **Update Now** in the top bar anytime, or toggle **Auto-Update: OFF/ON** (off by default) for silent same-major upgrades.\n- **Other panel controls**: Pause protection, clear old local data, and adjust file-size limits directly in the panel.\n\nPreset read limits & tool-loading modes via CLI:\n\n```bash\nnode scripts/install.mjs mode host-45k              # Default: direct read up to 45 KB code / 128 KB patches, block >16 KB noisy logs\nnode scripts/install.mjs mode balanced-16k          # Outline first above 16 KB\nnode scripts/install.mjs mode fast-32k              # Raise normal file limit to 32 KB\nnode scripts/install.mjs mode strict-8k             # Block above 8 KB\nnode scripts/install.mjs mode no-read-hook          # Never block file reads, only trim noisy terminal output\n\nnode scripts/install.mjs tool-loading fast-eager    # Default: 4 fast tools eager, 8 context tools lazy\nnode scripts/install.mjs tool-loading lazy          # All 12 tools lazy-loaded\nnode scripts/install.mjs tool-loading eager         # All 12 tools eager-loaded\n```\n\n<details>\n<summary>Troubleshooting: <code>ide-tools</code> duplicate <code>/required</code> schema error</summary>\n\nIf Antigravity fails during toolbox initialization with `building toolbox: tool \"mcp_ide-tools_mcp_agy-dart_fast_apply_edits\" advertises an invalid parameter schema ... at '/required': items at 1 and 2 are equal`, the host's `ide-tools` bridge is duplicating `toolSummary` in `/required`. Switch to lazy loading and restart Antigravity:\n\n```bash\nnode ~/.gemini/config/plugins/agy-dart/scripts/install.mjs tool-loading lazy\n```\n\n(Or remove `\"tools\"` / `\"eager\": true` under `mcpServers.fast` in `~/.gemini/config/plugins/agy-dart/mcp_config.json` and restart. See [skills/agy-dart/references/error-playbook.md](skills/agy-dart/references/error-playbook.md) for diagnostics.)\n\n</details>\n\n---\n\n## Changelog\n\n### v1.9.4\n- **Full v1.9.3 audit remediation (all 23 findings resolved — 2 P1, 18 P2, 3 P3)**:\n  - **Multi-host installer integrity & concurrency**: Codex installer rejects closed inline `mcp_servers = {}` / conflicting tables before writing; DSH uninstall preserves user-appended/prepended YAML list items and tracks multiple profiles so shared runtime is retained until all profiles are removed; `scripts/targets/index.mjs` upgrades `targets.lock` with token metadata, fresh-lock grace window, `EPERM` handling, and race-safe `.reclaim` stale-lock recovery.\n  - **Declarative packaging & atomic self-update**: Extracted `scripts/package-manifest.json` (`schemaVersion: 1`) as the single source of truth for `install.mjs`, `verify:pkg`, and `version-update.mjs`; pinned approved release asset URL & SHA-256 across auto-update cycles (never downgrading to source tarball); made secondary-host sync atomic with reverse rollback and user-file preservation; tightened legacy parser & zero-devtools fallback.\n  - **Protocol, logging, security & cache accuracy**: Enforced strict `<= 8,800 B` outer JSON-RPC wire cap on all `agy-dart_context` responses; preserved trailing root-cause errors in `cli-filter.mjs` overflow preview/FTS5/checkpoint; upgraded Safety Monitor incremental scanner to raw byte offsets (`committedOffset`) with split-UTF-8 safety and `parseStatus`; enforced shared wall-clock deadlines across multi-root history lookup and DNS validation (`validateFetchTarget`); added OS/toolchain child-process env allowlist + hard secret filtering (`execEnvAllowlist`); reduced Watchdog idle `config.json` stats (`1,440 → <= 40` / 40 ticks) via `withConfigSnapshot()`; unified keep-alive simulator endpoint scheduling and Gemini 4 2,050-token tail reprocessing (`$0.031854` / Carbon 120K ping).\n  - **Dashboard UX, accessibility & governance**: Invalidated pending read cache on cancelled/failed reads; fixed out-of-order search/inspect responses with shared request sequence; fixed MCP App card shrink height & teardown RAF cancel; raised Catppuccin Mocha placeholder contrast to WCAG AA (`#7f849c`); localized region `aria-label`s in Chinese; surfaced `config.json`/`env` cutoff override provenance in `/api/cutoff`, `/api/stats`, and UI badge; expanded `AI_REVIEW_BRIEF.md` to 55/55 full source coverage and updated `SECURITY.md` (`1.9.x` / `1.8.x`).\n\n### v1.9.3\n- **Catppuccin Mocha dark theme & zero-flash startup (thanks `@Ansg2022` in #8)**: Added a full Catppuccin Mocha dark theme to the Sidecar dashboard with automatic system-preference detection, left-click Light/Mocha toggle, right-click or `Shift+Click` / `Shift+Enter` reset back to system theme, and an inline `<script data-theme-init>` FOUC guard so dark mode loads with zero white flash.\n- **Card hierarchy polish & topbar section quick-jump**: Refined Sidecar card surfaces and borders for clear visual hierarchy, and added a sticky topbar section quick-jump pill bar with active scroll-spy tracking, bottom-pinning protection against accidental jumps, full narrow-sidebar wrapping (`300px–820px` verified in headless Edge), and `beforeunload` resource cleanup (`tests/dashboard-theme.test.mjs`).\n\n### v1.9.2\n- **MCP Apps diagnostics card safety & UX hardening**: Fixed `ctx_stats` Refresh button to stay strictly read-only (`reset: false`, never replaying `reset: true`), wired `ctx_doctor` Safety Monitor alerts to display real `diagnosis` + `recommendedAction` text, enforced `event.source === window.parent`, strict host CSS variable allowlist + `background-color` (blocking `url(...)` / internal overrides), `ui/resource-teardown` cleanup, and strict SEP-1865 `mimeTypes` negotiation in `context/server.js`.\n- **Loopback `ConversationService` & unlimited-history SQLite hardening**: Added loopback IP verification on `localhost` DNS lookups, a hard wall-clock total request deadline (preventing slow-drip bypass), strict HTTP 200 contract/ID validation, and shared 60s unsupported-endpoint backoff on Sidecar keepalive sends. Fixed `conversations_fts` archive detection past row 32, enforced shared lock deadlines without negative-cache poisoning on transient `SQLITE_BUSY`, added atomic CAS lease deletion (`deleteWatchdogLeaseIfUnchanged`), WAL-aware transcript scan invalidation, index-aware recent-ID SQL, and streaming `opendirSync` directory scans.\n- **Read-guard, batch-edit checkpoints, simulator & multi-host upgrade fixes**: Required exact full measurements before unlocking wide line ranges on >2 MiB files, passed structured `apply_edits(verify)` results directly so failure checkpoints persist even when 50-file outputs truncate at 8.8 KB, aligned `cache-simulator.js` with Gemini 4's 2,050-token tail-reprocess rule, pruned retired README/SVG files when upgrading shared DSH/Claude/Codex runtimes, updated self-update fallback manifests (`dsh/` + `assets/logo.svg` only), restored standalone single-file `fast/session-start.mjs`, normalized lone UTF-16 surrogates consistently in `truncateUtf8Safe`, and aligned `cache-audit` Markdown totals. _(Watchdog policy note: un-suffixed `gemini-4-carbon`/`neon` intentionally remain in the protective 600s high-reasoning tier to prevent false stall alerts during extended thinking; explicit `-low`/`-medium` suffixes stay on the standard tier.)_\n\n### v1.9.1\n- **Leaner startup prompt & on-demand skill docs (zero feature cuts)**: Trimmed `rules/AGENTS.md` and `agy-dart_context` tool descriptions to cut default Turn-0 startup overhead (`~1,344 → ~1,287` tokens; full catalog `1,956 → 1,883` tokens), and tightened `SKILL.md` + `error-playbook.md` to save **~3,278 tokens (-36%)** whenever troubleshooting docs are loaded on demand.\n- **Smaller installed footprint**: Stopped copying GitHub-only `README` files and 6 architecture/comparison SVGs into the local plugin install directory (`RUNTIME_FILES` slimmed from `72 → 64` files / `-112 KB`, while keeping all repo docs, `LICENSE`, `SECURITY.md`, `THIRD_PARTY_NOTICES.md`, and `assets/logo.svg` intact).\n- **Dead-code cleanup & shared helper consolidation**: Removed unreferenced internal functions/constants and unused dashboard CSS/i18n entries, consolidated 6 copies of hook stdin/session/path boilerplate into already-loaded `hooks/compile-cache.mjs` (zero extra files), and unified 5 copies of `truncateUtf8Safe` into the exact U+FFFD-preserving implementation in `context/lib/stable-json.js` (`-429` core lines, zero behavior drift).\n\n### v1.9.0\n- **Gemini 4 95% cache & pricing alignment**: Updated cache savings math, per-variant pricing (Carbon/Argon, Neon, Hydrogen), minimum cacheable threshold (4,096 tokens), and multi-turn delta checks (2,050 tokens) for Gemini 4 so cost and hit-rate estimates stay accurate without false cache-miss warnings; also recognized Carbon/Neon default high-reasoning tiers and raised the keepalive ROI floor.\n- **Interactive inline diagnostic cards & leaner MCP replies**: On Antigravity `v2.34.0+` UI hosts, `ctx_stats` and `ctx_doctor` now render a self-contained inline card right in chat (auto-following light/dark theme with a built-in Refresh button) while sending a compact summary to the model; CLI/IDE hosts stay zero-overhead with single-line compact JSON. Also added a one-click side-panel link (`sidecar://agy-dart/dashboard/`) on `v2.35.1+`.\n- **Stays fast with unlimited chat history (`ConversationService` API)**: Watchdog and the side panel now query Antigravity's local `ConversationService` API first (strict loopback-only) to check archived, subagent, and active-run states directly, falling back cleanly to bounded SQLite/directory scans with LRU caching so performance never degrades as history grows.\n- **Smarter file slicing, `/swarm` isolation & lower hook overhead**: Ranged reads now measure actual slice bytes before blocking and pass through `.heic`/`.avif`/`.amr`, PDF page slices, and official skill/rule/agent files automatically; `/swarm` workers are isolated cleanly from primary chats without resetting active windows; trimmed read-only tools from `PostToolUse`, wrote `fast` verification checkpoints directly, aligned MCP timeouts (`310s`) / protocol negotiation / built-in subagent eager configs, and upgraded `cache-audit` for `.agents/` layouts and eager-vs-lazy token budgets.\n\n### v1.8.2\n- **Single-file reads now skip background cloud checks completely (+ leaner startup prompt)**: When reading a single large file, the plugin hands over a free outline and sends the AI straight to Antigravity's built-in ranged file reader (zero background cloud reviews) instead of detouring through a plugin tool; multi-file reads, searches, edits, and checks still batch together, and the built-in rules were trimmed further to save tokens on Turn 1.\n- **Optional desktop alert for active quota burn & 2-step new-chat handoff**: Added an opt-in **Burn Alert: OFF/ON** toggle on the dashboard card (off by default, 15-minute cooldown) that pops up as soon as active background burn or 429 spikes start; added a plain-language quota-saver tip next to the Context bar for long chats; clicking **Pack Progress & New Chat** now copies your handoff brief automatically and shows a quick 2-step paste guide.\n- **Fixed occasional missing character counts in burn stats**: Heavy background reviews that straddle two dashboard refresh ticks now keep their full character count and trigger reason instead of occasionally recording `0`.\n\n### v1.8.1\n- **Plain-language Safety Monitor card**: Rewrote the background quota-burn card into clear, everyday wording — put a **\"What to do now\"** box at the top, formatted waits like `14m 15s`, made trigger labels readable, and renamed actions to **Pack Progress & New Chat** and **Copy Evidence (Redacted)**.\n- **Fixed narrow-sidebar layout & calmer status badges**: Fixed 3-line title wrapping, clipped badges, and repeated summary lines in narrow panels; softened past-5h bursts that have been quiet for the last 5 minutes from red to amber (`Past 5h · Calm`) and hid restart-log notes when no restart truncation happened.\n\n### v1.8.0\n- **Background quota-burn monitoring that survives restarts**: Watches local Antigravity Desktop and CLI logs automatically and saves per-minute history locally so restarting Antigravity never wipes the evidence. Stays collapsed to a single quiet line when healthy, and auto-expands with one-click new-chat handoff and redacted report copy if 429 spikes, heavy re-review bursts, or the 5-hour quota cliff appear (also available via `node bin/agy-dart.mjs audit safety`).\n- **Reading files outside the workspace no longer triggers heavy re-reviews**: Large files outside your active project still get a free outline, but now route to built-in ranged reading (zero cloud checks) instead of nudging external tools that could trigger giant background reviews; handoff briefs also remind you to break review loops when starting a fresh chat.\n- **Prevented crashes on affected Antigravity versions**: Turned off inline chat banners by default to avoid crashes in certain host versions, while keeping the side panel, cache countdown, hang detection, and desktop alerts fully working.\n- **Fixed occasional \"workspace root not found\" errors on Turn 1**: The plugin now remembers your active project folder automatically and updates as you switch windows (while still refusing ambiguous multi-window calls so it never edits the wrong repo).\n\n### v1.7.8\n- **Optional silent auto-updates (off by default)**: Added an **Auto-Update: OFF/ON** toggle in the panel top bar. When enabled, startup and 6-hour checks silently install verified same-major releases in the background, waiting if a cache warm-up is in flight, stopping retries on a failed version, and showing a one-time notice after reload.\n\n### v1.7.7\n- **DeepSeek Harness support (`--target dsh`)**: Install into DeepSeek Harness alongside Antigravity, Claude Code, and Codex with automatic read guards and log trimming, plus `node bin/agy-dart.mjs dashboard` to open the live monitor in a browser — zero impact or token overhead on Antigravity.\n- **Pause warming & alerts on archived chats**: Archived chats automatically stop background keepalive pings, manual warm-ups, and desktop alerts without losing state, and resume cleanly if unarchived.\n\n### v1.7.6\n- **One-click online update in the panel** (thanks to [@bestmulicc](https://github.com/bestmulicc), [#5](https://github.com/zou172866/Antigravity-agy-dart/pull/5)): The right panel now checks GitHub Releases on startup and lets you click **Check Update** / **Update Now** to upgrade in place without running terminal commands (startup checks can be turned off in config).\n- **Verified downloads, automatic rollback & preserved settings**: Verifies release package integrity before unpacking, rolls back automatically if a file is locked, reloads the panel cleanly, and keeps your local `rules/*.local.md`, tool-loading mode, and synced copies intact.\n\n### v1.7.5\n- **One-click manual `Warm 1×` button in the panel**: Added a manual warm-up button right next to the cache countdown. It works even when Auto-Keepalive is off and doesn't use up your automatic warm-up limit (with double-click protection and rollback if sending fails).\n- **Skip hopeless last-second warm-ups & unified countdown**: When only a few seconds are left and a warm-up ping won't arrive in time, the plugin skips it to avoid wasting tokens and falls back to a desktop alert instead. The panel, background monitor, and alerts now all share the same expiry countdown, and warming stops right away if the cache has already expired.\n\n### v1.7.4\n- **Warmer wording for \"Copy Handoff Prompt\"**: Updated the handoff prompt templates with a friendlier opening (`宝宝，` in Chinese / `Sweetie,` in English) and asked the AI to start its generated handoff summary the same way — still body-only, with no filler.\n\n### v1.7.3\n- **Custom Auto-Keepalive intervals**: Pick **Auto**, **Fixed 4 / 9 / 15 min**, or **Custom (1–60 min)** globally or per chat, with one-click reset back to **Global**. All existing safety guards (max count, skipping short chats, stopping after a cache miss, and skipping background subagents) stay on.\n- **Fixed false warnings on timeouts and partial test runs**: Timed-out commands no longer trigger \"repeated edit-fail\" alerts; passing an unrelated test or a single test case won't erase an earlier full-suite failure; background test errors stay visible even after editing other files; and if a failing check log gets cut off, the panel keeps flagging it until you re-run it.\n- **Cleaner handoff summaries & clearer cache-miss reasons**: Copy cleaner progress summaries before switching chats or compacting (with secrets auto-masked), and see more accurate reasons when the cache misses.\n\n### v1.7.2\n- **Lighter built-in skill docs & a Skills bloat check**: Moved sample scripts and troubleshooting notes into on-demand files so they don't eat startup context when unused; added `node bin/agy-dart.mjs audit skills` to check how much startup context each installed Skill uses and spot oversized main files.\n- **Leaner output from built-in helper agents**: The built-in coding (`dart-coder`) and review (`dart-reviewer`) subagents stay lightweight without carrying extra external tools or global rules, and now route quick checks through output trimming instead of dumping long terminal logs into the chat.\n\n### v1.7.1\n- **Fixed the panel's \"Blocked Noise\" counter staying at 0**: Bytes saved by sliced file reads, batched searches, and trimmed check outputs are now counted accurately in the panel, without mixing up windows or double-counting.\n- **Roll up subagent savings into the main chat**: Savings from saved long docs, batch lookups, and background subagents now roll up under the main conversation so panel totals stay accurate.\n- **Fixed missed log filtering on Windows / PowerShell**: Commands using flags like `npm --prefix`, `pnpm -C`, `yarn --cwd`, or `--` separators now trim noisy output properly on Windows and PowerShell too.\n\n### v1.7.0\n- **Hand the AI a file map when blocking a full large-file read**: When the AI tries to read a huge code file all at once for the first time, the block message now includes a line-numbered list of functions and classes so it can jump straight to the lines it needs without an extra turn.\n- **Unified CLI with Claude Code & Codex support**: Added `node bin/agy-dart.mjs` to install for Antigravity, Claude Code, or Codex, print file outlines, and compare token usage across chats; also shipped lightweight built-in coding/review subagents and stronger workspace & Node.js checks.\n\n<details>\n<summary>Show earlier releases (v1.1.0 – v1.6.0)</summary>\n\n### v1.6.0\n- **4 core tools preloaded directly, fixing occasional dropped multi-file edits**: Batch search, file outlines, multi-file edits, and quick checks now load directly instead of going through an extra layer that sometimes emptied multi-file edits; the other 8 large-log tools stay on-demand to save startup context.\n- **Fixed Auto-Keepalive stalls & skipped all background subagents**: The background panel now restarts cleanly after plugin updates so stale processes don't interfere; subagents spawned by `/boost`, browser tasks, or workflows — plus closed chats — never send keepalive pings or crowd the top status bar.\n- **Let subagents read freely & protect the plugin folder**: Background subagents can read large or repeated files without hitting red block messages, and any call missing a project path that lands inside the plugin's own install folder is blocked so the AI won't search or edit the plugin by mistake.\n- **One-line install without cloning**: Added single-line PowerShell and Shell commands so you don't have to clone the repo first.\n- **Other polish**: Unused output budget from short checks automatically shifts to long error traces; read-only Git queries block untrusted external commands; fixed Windows hang on exit; upgrades preserve your custom `rules/*.local.md` files; added a security policy and light/dark architecture diagrams.\n\n### v1.5.4\n- **Click alerts to jump to that chat**: Clicking a desktop popup or cross-window panel alert brings the matching project window to the front and opens that conversation; added a multi-window session switcher bar in the panel.\n- **Optional cache keepalive**: Sends a ping for primary chats shortly before expiry; the panel controls the per-chat limit, and your next message resets the count.\n- Moved current context usage, cache countdown, and blocked noise volume into a larger top card in the panel.\n\n### v1.5.3\n- **Project & chat titles on multi-window alerts**: Desktop popups and panel alerts show folder names (e.g., `work/agy-dart`) and short chat titles without exposing message text.\n- **\"Context Almost Full\" desktop alert**: Pops up once near the limit and resets after `/compact`.\n\n### v1.5.2\n- Faster file reads and chat startup; added code outlines for multi-thousand-line `.html` / `.astro` and `.dart` files; fixed Windows Python / PowerShell encoding garbling and paused panel refreshes while hidden.\n\n### v1.5.1\n- Filled in untranslated strings in Chinese UI mode; tuned post-edit file-limit suggestions.\n\n### v1.5.0\n- **Read actual model cache expiry time**: Reads the active model's real cache lifetime (such as 5m or 15m) from recent usage and carries it into new chats.\n- Added optional 1-minute cache-expiry desktop reminder and CLI keepalive cost simulation.\n\n### v1.4.0\n- **Hang detection & rescue summary**: Flags chats stuck spinning with zero output (ignoring long builds and laptop sleep), points to the stalled step in the panel, and prepares a one-click progress summary (modified files, last command, current step) to continue in a new chat.\n\n### v1.3.1\n- Allow immediate file re-reads right after `/compact`; skip dedup prompts on slices under 4 KB; preserve mid-log error lines in long failure outputs.\n\n### v1.3.0\n- **Tiered file-read limits**: Raised direct reads to 45 KB (800 lines) for normal code and 128 KB for `.patch` files while keeping noisy logs at 16 KB; second-try reads pass through so patch reviews and subagents don't stall.\n- Added `.patch` file outlines and kept context lines when trimming `git diff`.\n\n### v1.2.2\n- **Uninterrupted long tasks**: Removed mid-task `/compact` prompts and routed >60s builds, tests, and background servers straight to Antigravity's native background runner.\n- Blocked `.env` reads and fixed 42 Windows shell, isolation, and orphan-process issues.\n\n### v1.2.1\n- Automatic rollback on failed multi-file edits and 76 path/argument stability fixes.\n\n### v1.2.0\n- Unified settings in `~/.agy-dart/config.json`; added local panel request checks; **automatic structure, sample, and error extraction for huge JSON files**; added `gh`, `kubectl`, `terraform`, and `playwright` output trimming plus handoff summaries.\n\n### v1.1.0\n- **Automatic terminal output trimming**: Strips progress bars and repetitive noise from `git`, test, build, and install commands while saving full logs locally.\n- Unchanged-file duplicate-read protection, edit-fail loop notes, internal-URL SSRF blocking, log secret masking, and one-click panel cleanup.\n\n</details>\n\n---\n\n## Using with Other AI Tools (CLI)\n\n`node bin/agy-dart.mjs` installs for Antigravity by default and can also target other coding tools (saving a restore record in `~/.agy-dart/` so uninstalling cleanly puts your original config back):\n\n```bash\nnode bin/agy-dart.mjs install                        # Install for Antigravity (default)\nnode bin/agy-dart.mjs install --target dsh           # Install for DeepSeek Harness (optional --profile <name> or --mc",
+  "latestReleaseNotes": "## What's New in v1.9.4\n\n> This release resolves **all 23 findings** from the comprehensive `v1.9.3` security, packaging, performance, and UX audit (2 P1, 18 P2, 3 P3), backed by 21 new regression tests (**403/403 tests PASS**).\n\n### 简体中文\n\n#### 多宿主安装完整性与并发锁（`H1` / `H2` / `M07` / `M08`）\n- **Codex TOML 安全校验**：安装前自动拦截顶层封闭内联表 `mcp_servers = {}`、非表声明、`[[mcp_servers]]` 与冲突键，保留原配置不动并由 `doctor` 同步检验。\n- **DSH YAML 与多 Profile 保护**：卸载托管块后仅在剩余内容为空/纯注释时恢复 `[]`，完整保留用户追加或前插的扩展项；按 profile 独立登记安装收据，存在其余已注册 profile 时保留共享运行时与 skills。\n- **多宿主互斥锁加固**：`targets.lock` 升级为 JSON 元数据 + `token` 归属校验、新建宽限窗口（防误删刚创建的半截新锁）、`EPERM` 保护与并发安全 `.reclaim` 失效锁回收。\n\n#### 声明式打包清单与原子在线自更新（`M01` / `M06` / `M18`）\n- **单一声明式清单 `scripts/package-manifest.json`（`schemaVersion: 1`）**：统一供 `scripts/install.mjs`、`verify:pkg` 与在线自更新消费；收紧旧版字面量数组解析器（遇混合表达式直接拒绝而非产出残缺清单），并使 fallback 选择器显式剔除全部开发工具文件（0 字节泄漏）。\n- **自动更新摘要契约固定**：跨复查链路固定已批准版本的 `assetUrl`（保留路径大小写）与 `assetSha256`（十六进制忽略大小写），自动模式严禁回退源码 tarball。\n- **次宿主原子同步与回滚**：次宿主同步改用同盘 `stage/` + `backup/` 追踪替换与逆序回滚，退役文件清理严格限定于旧收据登记集合，成功与回滚均保护用户自有文件。\n\n#### 协议线长、日志根因、安全与缓存精度（`M02` / `M03` / `M04` / `M05` / `M09` / `M10` / `M11` / `M12` / `M13`）\n- **Context MCP 出站 `<= 8,800 B` 硬封顶**：`capSerializedJsonField` 纳入外层 JSON-RPC 双重转义估算，所有工具/错误/UI 响应经 `enforceToolCallWireBudget` 强制单行线长 `<= 8,800 B`。\n- **超大测试日志末尾根因保真**：`cli-filter.mjs` 溢出截断时将脱敏尾环与省略区间并入预览、FTS5 检索与检查点，`extractFailureExcerpt` 跳过 `ℹ` 汇总噪声并捕获末尾根因。\n- **Safety Monitor 原始字节增量续读**：改用 `committedOffset` 安全处理跨轮拆分行与多字节 UTF-8 字符，增加超长无换行行保护与 `parseStatus`/`recognizedLines` 可辨识状态。\n- **Watchdog 空闲配置零冗余 I/O**：`config.js` 新增可重入懒加载 `withConfigSnapshot()`，单次 `tick()` 共享 1 份配置快照（40 轮空闲配置 `fs.statSync` 由 `1,440` 降至 `<= 40`）且保持外部修改实时生效。\n- **共享截止与安全边界**：多根历史查找与 `validateFetchTarget` 每跳 DNS 查询均受共享墙钟截止约束（锁忙/超时不写负缓存，大表无时间索引交叉核对 `mtime`）；执行器落地 OS/工具链环境白名单 + 敏感凭据硬过滤（支持 `execEnvAllowlist` 并保留显式 `env: {}` 语义）。\n- **离线续温模拟器校准**：`1x` 与无限次策略共用事件驱动调度函数（修复 `1s`/`254s`/`270s` 间隔端点偏差），并接入单源 Gemini 4 2,050-token 尾部重算成本模型。\n\n#### 面板交互、无障碍与文档治理（`M14` / `M15` / `M16` / `M17` / `L01` / `L02` / `L03`）\n- 取消/失败读取自动失效待定读缓存，避免首次重试被误拦；搜索与查看来源共用递增序号防晚返回结果覆盖当前查询。\n- MCP Apps 内联卡片按 `#root` 内容盒测量并在 teardown 取消待执行 RAF；Catppuccin Mocha 输入框占位文字提升至 WCAG AA 对比度（`#7f849c`）；补齐中文区域 `aria-label` 与读阈值 `config.json`/`env` 覆盖来源徽标。\n- `AI_REVIEW_BRIEF.md` 扩至 55/55 全仓源文件自动覆盖与导言/基线自动同步；`SECURITY.md` 更新支持矩阵为 `1.9.x` / `1.8.x`。\n\n---\n\n### English\n\n#### Multi-Host Installer Safety & Concurrency (`H1`, `H2`, `M07`, `M08`)\n- **Codex TOML integrity**: Detects and rejects closed inline `mcp_servers = {}`, non-table declarations, `[[mcp_servers]]`, and conflicting keys before writing, leaving existing config untouched; `doctor` verifies round-trip integrity.\n- **DSH YAML & multi-profile tracking**: Restores `[]` on uninstall only when remaining content is empty/comment-only, preserving user-appended/prepended entries; tracks profiles independently in receipts so shared runtime stays intact until all profiles are removed.\n- **Race-safe `targets.lock`**: Upgraded lock files with JSON token metadata, fresh-lock grace window, `EPERM` handling, and serialized `.reclaim` stale-lock recovery.\n\n#### Declarative Packaging & Atomic Self-Update (`M01`, `M06`, `M18`)\n- **Single-source `scripts/package-manifest.json` (`schemaVersion: 1`)**: Shared by `scripts/install.mjs`, `verify:pkg`, and `version-update.mjs`; hardened legacy array-literal parser against mixed expressions and excluded all `DEVTOOLS_FILES` from fallback selection (0 leaked bytes).\n- **Pinned auto-update digest contract**: Preserves approved `assetUrl` (case-sensitive path) and `assetSha256` across verification and download; automatic mode never falls back to source tarballs.\n- **Atomic secondary-host sync**: Uses same-volume staging + backup reverse rollback and restricts retirement pruning strictly to previous sync receipts, protecting user-owned files on both success and rollback.\n\n#### Wire Budget, Logs, Security & Cache Accuracy (`M02`–`M05`, `M09`–`M13`)\n- **Strict `<= 8,800 B` JSON-RPC wire cap**: Accounts for outer JSON-RPC escaping across all `agy-dart_context` tool, error, and MCP App dual responses.\n- **Large test log root-cause preservation**: Merges redacted overflow tail + omission marker into `cli-filter.mjs` preview, FTS5 index, and checkpoints.\n- **Byte-offset Safety Monitor**: Tracks raw `committedOffset` safely across split lines and split UTF-8 bytes, skips oversized unbroken lines cleanly, and exposes `parseStatus`/`recognizedLines`.\n- **Single-snapshot Watchdog polling**: Adds re-entrant lazy `withConfigSnapshot()` so each `WatchdogMonitor.tick()` shares one config snapshot (`1,440 → <= 40` idle config `fs.statSync` calls per 40 ticks) while keeping external `config.json` edits live on the next tick.\n- **Deadlines & child-process env allowlist**: Shares wall-clock deadlines across multi-root history scans and per-hop DNS lookups (`validateFetchTarget`); restricts generic executor child env to OS/toolchain allowlist + `execEnvAllowlist` with hard secret filtering and explicit `env: {}` semantics.\n- **Keep-alive simulator alignment**: Unifies `1x` and `unlimited` event-driven scheduling across `1s`/`254s`/`255s`/`256s`/`270s`/`300s` endpoints and models Gemini 4's 2,050-token tail reprocessing (`$0.031854` per 120K Carbon ping).\n\n#### Dashboard UX, Accessibility & Governance (`M14`–`M17`, `L01`–`L03`)\n- Invalidates pending read-dedup entries on cancelled/failed reads; guards search and source inspection against out-of-order responses; shrinks MCP App card height accurately from `#root` and cancels pending RAF on teardown; raises Mocha placeholder contrast to WCAG AA (`#7f849c`); localizes landmark `aria-label`s in Chinese; surfaces `config.json`/`env` cutoff override provenance in `/api/cutoff`, `/api/stats`, and UI badge; expands `AI_REVIEW_BRIEF.md` to 55/55 full source coverage and updates `SECURITY.md` (`1.9.x` / `1.8.x`).\n\n### Verification\n- `npm test`: **403/403 PASS**\n- `npm run verify:pkg`: **PASS** (9 entrypoints, 53 reachable modules, 65 runtime / 7 devtools)\n- `npm run prefix:budget`: **PASS** (Tools Fingerprint `9c5b5b5b...` unchanged)\n- `npm run brief:check`, `agy plugin validate --strict .`, and isolated `npm run doctor`: **PASS**\n",
   "securityReport": {
     "riskTier": "high",
     "capabilities": [
@@ -126,9 +126,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "context/lib/security.js",
-        "line": 580,
+        "line": 607,
         "snippet": "base === \".npmrc\" ||",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/security.js#L580"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/security.js#L607"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -137,9 +137,9 @@
         "capability": "credential_access",
         "message": "References sensitive credential or key storage paths (~/.ssh, ~/.aws/credentials, ~/.gemini auth/secret files, ~/.kube/config, or .npmrc).",
         "file": "context/lib/security.js",
-        "line": 582,
+        "line": 609,
         "snippet": "base === \".netrc\" ||",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/security.js#L582"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/security.js#L609"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -150,7 +150,7 @@
         "file": "bin/agy-dart.mjs",
         "line": 31,
         "snippet": "const r=spawnSync(process.execPath,[path.join(src,\"sidecars/dashboard/server.mjs\"),...args],{stdio:\"inherit\",windowsHide:true});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/bin/agy-dart.mjs#L31"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/bin/agy-dart.mjs#L31"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -161,7 +161,7 @@
         "file": "bin/agy-dart.mjs",
         "line": 50,
         "snippet": "const r=spawnSync(process.execPath,[path.join(src,script),...pass],{stdio:\"inherit\",windowsHide:true});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/bin/agy-dart.mjs#L50"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/bin/agy-dart.mjs#L50"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -172,7 +172,7 @@
         "file": "context/lib/code-outline.js",
         "line": 366,
         "snippet": "const m = p.re.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L366"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L366"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -183,7 +183,7 @@
         "file": "context/lib/code-outline.js",
         "line": 387,
         "snippet": "const ma = multilineArrowStartRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L387"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L387"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -194,7 +194,7 @@
         "file": "context/lib/code-outline.js",
         "line": 407,
         "snippet": "const ms = testSuiteRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L407"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L407"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -205,7 +205,7 @@
         "file": "context/lib/code-outline.js",
         "line": 423,
         "snippet": "const mm = methodHeaderRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L423"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L423"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -216,7 +216,7 @@
         "file": "context/lib/code-outline.js",
         "line": 444,
         "snippet": "const mr = routeRegisterRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L444"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L444"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -227,7 +227,7 @@
         "file": "context/lib/code-outline.js",
         "line": 456,
         "snippet": "const mt = testCaseRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L456"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L456"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -238,7 +238,7 @@
         "file": "context/lib/code-outline.js",
         "line": 521,
         "snippet": "const m = re.exec(lines[i]);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L521"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L521"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -249,7 +249,7 @@
         "file": "context/lib/code-outline.js",
         "line": 572,
         "snippet": "const curIndent = (/^[ \\t]*/.exec(l)?.[0] ?? \"\").replace(/\\t/g, \" \").length;",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L572"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L572"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -260,7 +260,7 @@
         "file": "context/lib/code-outline.js",
         "line": 594,
         "snippet": "const m = /^@[A-Za-z_]\\w*/.exec(rest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L594"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L594"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -271,7 +271,7 @@
         "file": "context/lib/code-outline.js",
         "line": 703,
         "snippet": "const indentStr = /^[ \\t]*/.exec(line)?.[0] ?? \"\";",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L703"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L703"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -282,7 +282,7 @@
         "file": "context/lib/code-outline.js",
         "line": 709,
         "snippet": "let m = classNameRe.exec(rest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L709"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L709"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -293,7 +293,7 @@
         "file": "context/lib/code-outline.js",
         "line": 714,
         "snippet": "m = classRe.exec(rest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L714"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L714"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -304,7 +304,7 @@
         "file": "context/lib/code-outline.js",
         "line": 719,
         "snippet": "m = funcRe.exec(rest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L719"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L719"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -315,7 +315,7 @@
         "file": "context/lib/code-outline.js",
         "line": 724,
         "snippet": "m = signalRe.exec(rest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L724"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L724"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -326,7 +326,7 @@
         "file": "context/lib/code-outline.js",
         "line": 729,
         "snippet": "m = enumRe.exec(rest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L729"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L729"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -337,7 +337,7 @@
         "file": "context/lib/code-outline.js",
         "line": 796,
         "snippet": "const curIndent = (/^[ \\t]*/.exec(l)?.[0] ?? \"\").replace(/\\t/g, \" \").length;",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L796"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L796"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -348,7 +348,7 @@
         "file": "context/lib/code-outline.js",
         "line": 811,
         "snippet": "const commentIndent = (/^[ \\t]*/.exec(endLineStr)?.[0] ?? \"\").replace(",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L811"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L811"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -359,7 +359,7 @@
         "file": "context/lib/code-outline.js",
         "line": 849,
         "snippet": "const fm = funcRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L849"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L849"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -370,7 +370,7 @@
         "file": "context/lib/code-outline.js",
         "line": 862,
         "snippet": "const tm = typeRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L862"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L862"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -381,7 +381,7 @@
         "file": "context/lib/code-outline.js",
         "line": 881,
         "snippet": "const m = re.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L881"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L881"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -392,7 +392,7 @@
         "file": "context/lib/code-outline.js",
         "line": 932,
         "snippet": "const tm = typeRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L932"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L932"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -403,7 +403,7 @@
         "file": "context/lib/code-outline.js",
         "line": 944,
         "snippet": "const fm = kwFuncRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L944"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L944"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -414,7 +414,7 @@
         "file": "context/lib/code-outline.js",
         "line": 956,
         "snippet": "const cm = cMethodRe.exec(line);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L956"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L956"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -425,7 +425,7 @@
         "file": "context/lib/code-outline.js",
         "line": 977,
         "snippet": "const m = re.exec(lines[i]);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L977"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L977"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -436,7 +436,7 @@
         "file": "context/lib/code-outline.js",
         "line": 1044,
         "snippet": "const m = /^([ \\t]+)\"([^\"]+)\"\\s*:/.exec(lines[i]);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L1044"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L1044"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -447,7 +447,7 @@
         "file": "context/lib/code-outline.js",
         "line": 1073,
         "snippet": "const m = re.exec(lines[i]);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L1073"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L1073"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -458,7 +458,7 @@
         "file": "context/lib/code-outline.js",
         "line": 1130,
         "snippet": "const am = atRuleRe.exec(trimmed);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L1130"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L1130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -469,7 +469,7 @@
         "file": "context/lib/code-outline.js",
         "line": 1142,
         "snippet": "const tm = tokenBlockRe.exec(trimmed);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L1142"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L1142"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -480,7 +480,7 @@
         "file": "context/lib/code-outline.js",
         "line": 1780,
         "snippet": "const closeMatch = closeRe.exec(text);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L1780"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L1780"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -491,7 +491,7 @@
         "file": "context/lib/code-outline.js",
         "line": 1809,
         "snippet": "closeMatch = closeRe.exec(text);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/code-outline.js#L1809"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/code-outline.js#L1809"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -502,7 +502,7 @@
         "file": "context/lib/execution-receipts.js",
         "line": 43,
         "snippet": "const directMatch = FAST_SAVINGS_TOOL_RE.exec(bare);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/execution-receipts.js#L43"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/execution-receipts.js#L43"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -513,7 +513,7 @@
         "file": "context/lib/execution-receipts.js",
         "line": 62,
         "snippet": "const headerMatch = TIMESTAMP_HEADER_BLOCK_RE.exec(text);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/execution-receipts.js#L62"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/execution-receipts.js#L62"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -524,7 +524,7 @@
         "file": "context/lib/execution-receipts.js",
         "line": 68,
         "snippet": "const m = /^(Completed At|Created At):\\s*(.+)$/.exec(line.trim());",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/execution-receipts.js#L68"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/execution-receipts.js#L68"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -535,7 +535,7 @@
         "file": "context/lib/execution-receipts.js",
         "line": 91,
         "snippet": "const m = FAST_SAVINGS_TOOL_RE.exec(bare);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/execution-receipts.js#L91"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/execution-receipts.js#L91"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -546,7 +546,7 @@
         "file": "context/lib/execution-receipts.js",
         "line": 104,
         "snippet": "return /^(?:(?:Created At|Completed At):[^\\r\\n]*\\r?\\n)*\\s*\\{\\s*\"executionReceipt\"\\s*:\\s*\"([0-9a-f]{32})\"\\s*,/.exec(text)?.[1] ?? null;",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/execution-receipts.js#L104"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/execution-receipts.js#L104"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -555,9 +555,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "context/lib/executor.js",
-        "line": 269,
-        "snippet": "const child = spawn(cmd, args, { cwd: cwd || process.cwd(), env: { ...process.env, ...env }, detached: process.platform !== \"win32\", windowsHide: true, windowsVerbatimArguments: Bo",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/executor.js#L269"
+        "line": 402,
+        "snippet": "const child = spawn(cmd, args, { cwd: cwd || process.cwd(), env: spawnEnv, detached: process.platform !== \"win32\", windowsHide: true, windowsVerbatimArguments: Boolean(windowsVerba",
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/executor.js#L402"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -566,9 +566,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "context/lib/executor.js",
-        "line": 323,
+        "line": 456,
         "snippet": "const killer = spawn(taskkillBin, [\"/F\", \"/T\", \"/PID\", String(pid)], { stdio: \"ignore\", windowsHide: true });",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/executor.js#L323"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/executor.js#L456"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -579,7 +579,7 @@
         "file": "context/lib/handoff.js",
         "line": 431,
         "snippet": ": spawnSync(\"git\", fullArgs, { cwd: workDir, encoding: \"utf8\", timeout: timeoutMs, windowsHide: true, maxBuffer: 1024 * 1024, env: buildGitReadOnlyEnv(process.env) });",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/handoff.js#L431"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/handoff.js#L431"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -590,7 +590,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 128,
         "snippet": "const res = spawnSync(\"git\", SAFE_GIT_HEAD_ARGS, { cwd: workspaceDir, encoding: \"utf8\", timeout: timeoutMs, windowsHide: true });",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L128"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L128"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -601,7 +601,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 494,
         "snippet": "while ((m = scriptRe.exec(content)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L494"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L494"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -612,7 +612,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 509,
         "snippet": "while ((m = re.exec(cleaned)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L509"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L509"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -623,7 +623,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 525,
         "snippet": "while ((m = singleRe.exec(cleaned)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L525"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L525"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -634,7 +634,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 531,
         "snippet": "while ((m = blockRe.exec(cleaned)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L531"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L531"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -645,7 +645,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 535,
         "snippet": "while ((item = entryRe.exec(body)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L535"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L535"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -656,7 +656,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 548,
         "snippet": "while ((m = dartRe.exec(cleaned)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L548"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L548"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -667,7 +667,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 564,
         "snippet": "while ((m = javaRe.exec(cleaned)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L564"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L564"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -678,7 +678,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 575,
         "snippet": "while ((m = pyRe.exec(content)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L575"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L575"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -689,7 +689,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 597,
         "snippet": "while ((m = rsRe.exec(content)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L597"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L597"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -700,7 +700,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 626,
         "snippet": "const m = /^module\\s+(?:\"([^\"]+)\"|`([^`]+)`|(\\S+))/.exec(noComment);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L626"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L626"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -711,7 +711,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 813,
         "snippet": "const m = /^name\\s*:\\s*[\"']?([A-Za-z0-9_]+)[\"']?/m.exec(raw);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L813"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L813"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -722,7 +722,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 852,
         "snippet": "const pkgMatch = /^\\s*package\\s+([A-Za-z_][A-Za-z0-9_.]*)\\s*;/m.exec(cleaned);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L852"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L852"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -733,7 +733,7 @@
         "file": "context/lib/repo-skeleton.js",
         "line": 867,
         "snippet": "const rootMatch = /(?:^|\\/)(?:src\\/(?:main|test)\\/java|src\\/java|src|java)\\/(.+)\\.java$/i.exec(rel);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/repo-skeleton.js#L867"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/repo-skeleton.js#L867"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -744,7 +744,7 @@
         "file": "context/lib/safety-monitor-audit.js",
         "line": 153,
         "snippet": "while ((m = re.exec(rawLine)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/safety-monitor-audit.js#L153"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/safety-monitor-audit.js#L153"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -755,7 +755,7 @@
         "file": "context/lib/store.js",
         "line": 197,
         "snippet": "this.db.exec(\"BEGIN IMMEDIATE\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store.js#L197"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store.js#L197"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -766,7 +766,7 @@
         "file": "context/lib/store.js",
         "line": 200,
         "snippet": "this.db.exec(\"COMMIT\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store.js#L200"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store.js#L200"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -777,7 +777,7 @@
         "file": "context/lib/store.js",
         "line": 204,
         "snippet": "this.db.exec(\"ROLLBACK\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store.js#L204"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store.js#L204"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -788,7 +788,7 @@
         "file": "context/lib/store/checkpoints.js",
         "line": 988,
         "snippet": "this.db.exec(\"BEGIN IMMEDIATE;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/checkpoints.js#L988"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/checkpoints.js#L988"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -799,7 +799,7 @@
         "file": "context/lib/store/checkpoints.js",
         "line": 1052,
         "snippet": "this.db.exec(\"COMMIT;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/checkpoints.js#L1052"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/checkpoints.js#L1052"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -810,7 +810,7 @@
         "file": "context/lib/store/checkpoints.js",
         "line": 1056,
         "snippet": "try { this.db.exec(\"ROLLBACK;\"); } catch {}",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/checkpoints.js#L1056"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/checkpoints.js#L1056"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -821,7 +821,7 @@
         "file": "context/lib/store/checkpoints.js",
         "line": 1186,
         "snippet": "this.db.exec(\"BEGIN IMMEDIATE;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/checkpoints.js#L1186"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/checkpoints.js#L1186"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -832,7 +832,7 @@
         "file": "context/lib/store/checkpoints.js",
         "line": 1319,
         "snippet": "this.db.exec(\"COMMIT;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/checkpoints.js#L1319"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/checkpoints.js#L1319"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -843,7 +843,7 @@
         "file": "context/lib/store/checkpoints.js",
         "line": 1323,
         "snippet": "try { this.db.exec(\"ROLLBACK;\"); } catch {}",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/checkpoints.js#L1323"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/checkpoints.js#L1323"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -854,7 +854,7 @@
         "file": "context/lib/store/fts.js",
         "line": 167,
         "snippet": "const fenceMatch = line.length <= 1024 ? /^(\\s*)(`{3,}|~{3,})(.*)$/.exec(line) : null;",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/fts.js#L167"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/fts.js#L167"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -865,7 +865,7 @@
         "file": "context/lib/store/reads.js",
         "line": 39,
         "snippet": "this.db.exec(\"BEGIN IMMEDIATE\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/reads.js#L39"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/reads.js#L39"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -876,7 +876,7 @@
         "file": "context/lib/store/reads.js",
         "line": 60,
         "snippet": "this.db.exec(\"COMMIT\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/reads.js#L60"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/reads.js#L60"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -887,7 +887,7 @@
         "file": "context/lib/store/reads.js",
         "line": 66,
         "snippet": "this.db.exec(\"ROLLBACK\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/reads.js#L66"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/reads.js#L66"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -898,7 +898,7 @@
         "file": "context/lib/store/schema.js",
         "line": 117,
         "snippet": "this.db.exec(`PRAGMA busy_timeout = ${busyMs};`);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L117"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L117"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -909,7 +909,7 @@
         "file": "context/lib/store/schema.js",
         "line": 120,
         "snippet": "this.db.exec(\"PRAGMA journal_mode = WAL;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L120"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L120"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -920,7 +920,7 @@
         "file": "context/lib/store/schema.js",
         "line": 122,
         "snippet": "this.db.exec(\"PRAGMA synchronous = NORMAL;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L122"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L122"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -931,7 +931,7 @@
         "file": "context/lib/store/schema.js",
         "line": 161,
         "snippet": "this.db.exec(` CREATE TABLE IF NOT EXISTS meta ( key TEXT PRIMARY KEY, value TEXT NOT NULL ); CREATE TABLE IF NOT EXISTS sources ( id TEXT PRIMARY KEY, session_id TEXT NOT NULL, wo",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L161"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L161"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -942,7 +942,7 @@
         "file": "context/lib/store/schema.js",
         "line": 309,
         "snippet": "this.db.exec(colDef.sql);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L309"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L309"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -953,7 +953,7 @@
         "file": "context/lib/store/schema.js",
         "line": 315,
         "snippet": "this.db.exec(\"CREATE INDEX IF NOT EXISTS idx_sources_session_hash ON sources(session_id, content_hash);\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L315"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L315"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -964,7 +964,7 @@
         "file": "context/lib/store/schema.js",
         "line": 316,
         "snippet": "this.db.exec( \"CREATE INDEX IF NOT EXISTS idx_sources_origin_session ON sources(origin_session_id) WHERE origin_session_id IS NOT NULL;\" );",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L316"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L316"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -975,7 +975,7 @@
         "file": "context/lib/store/schema.js",
         "line": 329,
         "snippet": "this.db.exec(colDef.sql);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L329"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L329"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -986,7 +986,7 @@
         "file": "context/lib/store/schema.js",
         "line": 335,
         "snippet": "this.db.exec(\"CREATE UNIQUE INDEX IF NOT EXISTS idx_events_receipt ON events(execution_receipt) WHERE execution_receipt IS NOT NULL\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L335"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L335"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -997,7 +997,7 @@
         "file": "context/lib/store/schema.js",
         "line": 336,
         "snippet": "this.db.exec(\"CREATE INDEX IF NOT EXISTS idx_events_claim_fp ON events(claim_fingerprint) WHERE claim_fingerprint IS NOT NULL\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L336"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L336"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1008,7 +1008,7 @@
         "file": "context/lib/store/schema.js",
         "line": 348,
         "snippet": "this.db.exec(colDef.sql);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L348"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L348"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1019,7 +1019,7 @@
         "file": "context/lib/store/schema.js",
         "line": 365,
         "snippet": "this.db.exec(colDef.sql);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L365"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L365"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1030,7 +1030,7 @@
         "file": "context/lib/store/schema.js",
         "line": 376,
         "snippet": "this.db.exec(\"ALTER TABLE ghost_interceptions ADD COLUMN recall_closed INTEGER NOT NULL DEFAULT 0;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L376"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L376"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1041,7 +1041,7 @@
         "file": "context/lib/store/schema.js",
         "line": 385,
         "snippet": "this.db.exec(` CREATE VIRTUAL TABLE IF NOT EXISTS chunks USING fts5( source_id UNINDEXED, session_id UNINDEXED, worktree UNINDEXED, agent UNINDEXED, ord UNINDEXED, body, title, tok",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L385"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L385"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1052,7 +1052,7 @@
         "file": "context/lib/store/schema.js",
         "line": 414,
         "snippet": "this.db.exec(\"DELETE FROM outline_cache WHERE symbols_json = '[]';\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L414"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L414"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1063,7 +1063,7 @@
         "file": "context/lib/store/schema.js",
         "line": 415,
         "snippet": "this.db.exec(`PRAGMA user_version = ${CURRENT_SCHEMA_USER_VERSION};`);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/schema.js#L415"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/schema.js#L415"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1074,7 +1074,7 @@
         "file": "context/lib/store/settings-maintenance.js",
         "line": 183,
         "snippet": "sdb.exec(`PRAGMA busy_timeout = ${initTimeout};`);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L183"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L183"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1085,7 +1085,7 @@
         "file": "context/lib/store/settings-maintenance.js",
         "line": 231,
         "snippet": "sdb.exec(`PRAGMA busy_timeout = ${perQueryTimeout};`);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L231"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L231"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1096,7 +1096,7 @@
         "file": "context/lib/store/settings-maintenance.js",
         "line": 950,
         "snippet": "this.db.exec(` DELETE FROM chunks; DELETE FROM chunks_tri; DELETE FROM sources; DELETE FROM events; DELETE FROM file_reads; DELETE FROM file_snapshots; DELETE FROM repo_cache; DELE",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L950"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L950"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1107,7 +1107,7 @@
         "file": "context/lib/store/settings-maintenance.js",
         "line": 965,
         "snippet": "this.db.exec(\"VACUUM;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L965"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L965"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1116,9 +1116,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "context/lib/store/settings-maintenance.js",
-        "line": 3531,
+        "line": 3548,
         "snippet": "this.db.exec(\"PRAGMA wal_checkpoint(TRUNCATE);\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L3531"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L3548"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1127,9 +1127,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "context/lib/store/settings-maintenance.js",
-        "line": 3537,
+        "line": 3554,
         "snippet": "this.db.exec(\"VACUUM;\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L3537"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L3554"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1138,9 +1138,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "context/lib/store/settings-maintenance.js",
-        "line": 3538,
+        "line": 3555,
         "snippet": "this.db.exec(\"PRAGMA wal_checkpoint(TRUNCATE);\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/store/settings-maintenance.js#L3538"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/store/settings-maintenance.js#L3555"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1151,7 +1151,7 @@
         "file": "context/lib/watchdog-lease.js",
         "line": 1502,
         "snippet": "while ((m = re.exec(topLevel)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/watchdog-lease.js#L1502"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/watchdog-lease.js#L1502"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1162,7 +1162,18 @@
         "file": "context/lib/watchdog-lease.js",
         "line": 1738,
         "snippet": "db.exec(`PRAGMA busy_timeout = ${timeoutBudget};`);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/context/lib/watchdog-lease.js#L1738"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/watchdog-lease.js#L1738"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "context/lib/watchdog-lease.js",
+        "line": 1947,
+        "snippet": "db.exec(`PRAGMA busy_timeout = ${stepTimeout}`);",
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/context/lib/watchdog-lease.js#L1947"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1173,7 +1184,7 @@
         "file": "fast/benchmark.mjs",
         "line": 649,
         "snippet": "const m2 = isFastServer ? AGY_FAST_TOOL_RE.exec(toolName) : null;",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/fast/benchmark.mjs#L649"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/fast/benchmark.mjs#L649"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1184,7 +1195,7 @@
         "file": "fast/benchmark.mjs",
         "line": 652,
         "snippet": "const m = AGY_FAST_TOOL_RE.exec(name);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/fast/benchmark.mjs#L652"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/fast/benchmark.mjs#L652"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1195,7 +1206,7 @@
         "file": "fast/benchmark.mjs",
         "line": 692,
         "snippet": "const qualified = /^mcp__(.+?)__(.+)$/.exec(call.name ?? \"\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/fast/benchmark.mjs#L692"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/fast/benchmark.mjs#L692"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1206,22 +1217,27 @@
         "file": "fast/benchmark.mjs",
         "line": 693,
         "snippet": "const hostName = /^mcp_(agy[-_]dart_(?:fast|context)|agy-fast)_(.+)$/.exec(call.name ?? \"\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/fast/benchmark.mjs#L693"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "fast/benchmark.mjs",
-        "line": 730,
-        "snippet": "const header = /^Showing lines (\\d+)-(\\d+) of (\\d+)\\s*$/.exec(lines[i] ?? \"\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/a092614ac847973f770a22c36211f17777533410/fast/benchmark.mjs#L730"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-dart/blob/8c705dc93265c1233507403a5caeae77957478aa/fast/benchmark.mjs#L693"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.9.4",
+      "sha": "8c705dc93265c1233507403a5caeae77957478aa",
+      "scannedAt": "2026-11-28T00:25:11.093Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "1.9.3",
       "sha": "a092614ac847973f770a22c36211f17777533410",

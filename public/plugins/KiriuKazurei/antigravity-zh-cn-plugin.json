@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "KiriuKazurei/antigravity-zh-cn-plugin",
-  "sha": "2464d8d574c426c24dc1b7a410e71b173b5e281c",
+  "sha": "2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:15:18.373Z",
+  "scannedAt": "2026-11-28T00:25:48.385Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "antigravity-zh-cn",
@@ -56,7 +56,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 852,
         "snippet": "while ((tm = tagRe.exec(line)) !== null) {",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L852"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L852"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -67,7 +67,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 860,
         "snippet": "while ((lm = linkRe.exec(line)) !== null) {",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L860"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L860"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -78,7 +78,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1703,
         "snippet": "const child = child_process.spawn( \"powershell.exe\", [ \"-NoProfile\", \"-WindowStyle\", \"Hidden\", \"-Command\", `if (Get-Command wt.exe -ErrorAction SilentlyContinue) { Start-Process wt",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1703"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1703"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -89,7 +89,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1717,
         "snippet": "const child = child_process.spawn( \"powershell.exe\", [ \"-NoProfile\", \"-WindowStyle\", \"Hidden\", \"-Command\", `if (Get-Command wt.exe -ErrorAction SilentlyContinue) { Start-Process wt",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1717"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1717"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -100,7 +100,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1732,
         "snippet": "const child = child_process.spawn(\"open\", [\"-a\", \"Terminal\", resolvedDir], { detached: true, stdio: \"ignore\", });",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1732"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1732"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -111,7 +111,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1739,
         "snippet": "const child = child_process.spawn(\"x-terminal-emulator\", [], { cwd: resolvedDir, detached: true, stdio: \"ignore\", });",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1739"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1739"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -122,7 +122,7 @@
         "file": "scripts/plugin_host.py",
         "line": 180,
         "snippet": "out = subprocess.check_output( [ \"powershell\", \"-NoProfile\", \"-Command\", \"(Get-Process -Name Antigravity -ErrorAction SilentlyContinue | Select-Object -First 1).Path\", ], text=True",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L180"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L180"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -133,7 +133,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1014,
         "snippet": "proc = subprocess.run( [\"powershell\", \"-NoProfile\", \"-NonInteractive\", \"-EncodedCommand\", encoded], stdin=subprocess.DEVNULL, capture_output=True, timeout=15, creationflags=_win_no",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1014"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1014"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -144,7 +144,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1037,
         "snippet": "subprocess.Popen( cmd_args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=flags | CREATE_BREAKAWAY_FROM_JOB, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1037"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1037"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -155,7 +155,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1057,
         "snippet": "mid = subprocess.Popen( [bg_python, \"-c\", launcher_code], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=flags, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1057"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1057"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -166,7 +166,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1068,
         "snippet": "subprocess.Popen( cmd_args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, start_new_session=True, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1068"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1068"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -177,7 +177,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1155,
         "snippet": "rc = subprocess.run([\"pgrep\", \"-x\", \"Antigravity\"], capture_output=True).returncode",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1155"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1155"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -188,7 +188,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1157,
         "snippet": "rc = subprocess.run([\"pgrep\", \"-f\", \"antigravity\"], capture_output=True).returncode",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1157"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1157"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -199,7 +199,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1169,
         "snippet": "subprocess.run( [\"taskkill\", \"/IM\", \"Antigravity.exe\"], capture_output=True, timeout=5, creationflags=no_win, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1169"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1169"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -210,7 +210,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1181,
         "snippet": "subprocess.run( [\"taskkill\", \"/IM\", \"Antigravity.exe\", \"/F\", \"/T\"], capture_output=True, timeout=5, creationflags=no_win, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1181"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1181"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -221,7 +221,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1192,
         "snippet": "subprocess.run( [\"osascript\", \"-e\", 'tell application \"Antigravity\" to quit'], capture_output=True, timeout=5, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1192"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1192"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -232,7 +232,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1201,
         "snippet": "subprocess.run([\"pkill\", \"-TERM\", \"-x\", \"Antigravity\"], capture_output=True)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1201"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1201"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -243,7 +243,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1203,
         "snippet": "subprocess.run([\"pkill\", \"-TERM\", \"-f\", \"Antigravity\"], capture_output=True)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1203"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1203"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -254,7 +254,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1218,
         "snippet": "subprocess.Popen( [exe_path], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, creationflags=CREATE_NO_WINDOW | CREATE_NEW_PROCESS_GR",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1218"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1218"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -265,7 +265,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1228,
         "snippet": "subprocess.Popen([\"open\", app_bundle], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1228"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1228"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -276,7 +276,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1230,
         "snippet": "subprocess.Popen( [exe_path], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True, start_new_session=True, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1230"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1230"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -287,7 +287,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1269,
         "snippet": "subprocess.run( [\"osascript\", \"-e\", f'display dialog \"{safe_msg}\" with title \"{safe_title}\" buttons {{\"确定\"}} default button \"确定\"'], stdout=subprocess.DEVNULL, stderr=subprocess.DEV",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1269"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1269"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -298,7 +298,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1278,
         "snippet": "subprocess.run( [\"zenity\", f\"--{icon}\", f\"--title={title}\", f\"--text={message}\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1278"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1278"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -309,7 +309,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1285,
         "snippet": "subprocess.run( [\"notify-send\", str(title), str(message)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, )",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1285"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1285"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -320,7 +320,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 99,
         "snippet": "fs.writeFileSync(logPath, \"\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L99"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L99"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -331,7 +331,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 101,
         "snippet": "fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\\n`, \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L101"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L101"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -342,7 +342,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 667,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L667"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L667"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -353,7 +353,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 669,
         "snippet": "fs.unlinkSync(dst);",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L669"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L669"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -364,7 +364,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 734,
         "snippet": "fs.writeFileSync(path.join(vaultDir, \"欢迎使用 Antigravity 知识库.md\"), starter, \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L734"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L734"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -375,7 +375,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 736,
         "snippet": "fs.writeFileSync(markerPath, new Date().toISOString(), \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L736"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L736"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -386,7 +386,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1121,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1121"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1121"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -397,7 +397,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1123,
         "snippet": "fs.unlinkSync(dst);",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1123"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1123"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -408,7 +408,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1288,
         "snippet": "fs.writeFileSync(tmp, text, \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1288"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1288"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -419,7 +419,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1294,
         "snippet": "fs.unlinkSync(resolved.fullPath);",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1294"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1294"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -430,7 +430,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1302,
         "snippet": "fs.unlinkSync(tmp);",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1302"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1302"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -441,7 +441,7 @@
         "file": "scripts/pluginLoader.js",
         "line": 1680,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1680"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1680"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -452,7 +452,18 @@
         "file": "scripts/pluginLoader.js",
         "line": 1682,
         "snippet": "fs.unlinkSync(dst);",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L1682"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L1682"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pluginLoader.js",
+        "line": 2085,
+        "snippet": "fs.writeFileSync(dst, md, \"utf8\");",
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L2085"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -463,7 +474,7 @@
         "file": "scripts/plugin_host.py",
         "line": 33,
         "snippet": "with open(manifest_path, \"r\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L33"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L33"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -474,7 +485,7 @@
         "file": "scripts/plugin_host.py",
         "line": 135,
         "snippet": "with open(file_path, \"r\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L135"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L135"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -485,7 +496,7 @@
         "file": "scripts/plugin_host.py",
         "line": 146,
         "snippet": "with open(HEAL_LOG_PATH, \"w\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L146"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L146"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -496,7 +507,7 @@
         "file": "scripts/plugin_host.py",
         "line": 149,
         "snippet": "with open(HEAL_LOG_PATH, \"a\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L149"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L149"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -507,7 +518,7 @@
         "file": "scripts/plugin_host.py",
         "line": 246,
         "snippet": "with open(file_path, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L246"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L246"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -518,7 +529,7 @@
         "file": "scripts/plugin_host.py",
         "line": 256,
         "snippet": "with open(asar_path, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L256"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L256"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -529,7 +540,7 @@
         "file": "scripts/plugin_host.py",
         "line": 272,
         "snippet": "with open(asar_path, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L272"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L272"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -540,7 +551,7 @@
         "file": "scripts/plugin_host.py",
         "line": 278,
         "snippet": "with open(asar_path, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L278"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L278"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -551,7 +562,7 @@
         "file": "scripts/plugin_host.py",
         "line": 326,
         "snippet": "with open(tmp_path, \"wb\") as out_f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L326"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L326"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -562,7 +573,7 @@
         "file": "scripts/plugin_host.py",
         "line": 343,
         "snippet": "os.remove(dst_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L343"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L343"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -573,7 +584,7 @@
         "file": "scripts/plugin_host.py",
         "line": 401,
         "snippet": "with open(PLUGIN_LOADER_SRC, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L401"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L401"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -584,7 +595,7 @@
         "file": "scripts/plugin_host.py",
         "line": 418,
         "snippet": "with open(PLUGIN_LOADER_SRC, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L418"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L418"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -595,7 +606,7 @@
         "file": "scripts/plugin_host.py",
         "line": 592,
         "snippet": "with open(PLUGIN_LOADER_SRC, \"rb\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L592"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L592"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -606,7 +617,7 @@
         "file": "scripts/plugin_host.py",
         "line": 627,
         "snippet": "os.remove(tmp_dst)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L627"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L627"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -617,7 +628,7 @@
         "file": "scripts/plugin_host.py",
         "line": 701,
         "snippet": "with open(tmp_path, \"w\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L701"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L701"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -628,7 +639,7 @@
         "file": "scripts/plugin_host.py",
         "line": 707,
         "snippet": "os.remove(tmp_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L707"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L707"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -639,7 +650,7 @@
         "file": "scripts/plugin_host.py",
         "line": 812,
         "snippet": "os.remove(staged_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L812"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L812"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -650,7 +661,7 @@
         "file": "scripts/plugin_host.py",
         "line": 873,
         "snippet": "shutil.rmtree(legacy_dir, ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L873"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L873"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -661,7 +672,7 @@
         "file": "scripts/plugin_host.py",
         "line": 909,
         "snippet": "os.remove(staged_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L909"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L909"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -672,7 +683,7 @@
         "file": "scripts/plugin_host.py",
         "line": 985,
         "snippet": "os.remove(GLOBAL_EXIT_WATCHER_LOCK)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L985"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L985"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -683,7 +694,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1493,
         "snippet": "os.remove(staged_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1493"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1493"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -694,7 +705,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1505,
         "snippet": "os.remove(staged_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1505"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1505"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -705,7 +716,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1526,
         "snippet": "os.remove(staged_path)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1526"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1526"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -716,7 +727,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1561,
         "snippet": "os.remove(GLOBAL_EXIT_WATCHER_LOCK)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1561"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1561"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -727,7 +738,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1672,
         "snippet": "os.remove(notice_lock)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1672"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1672"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -738,7 +749,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1686,
         "snippet": "os.remove(notice_lock)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1686"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1686"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -749,7 +760,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1743,
         "snippet": "os.remove(notice_lock)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1743"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1743"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -760,7 +771,7 @@
         "file": "scripts/plugin_host.py",
         "line": 1760,
         "snippet": "os.remove(notice_lock)",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/plugin_host.py#L1760"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/plugin_host.py#L1760"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -771,7 +782,7 @@
         "file": "scripts/session_hook.py",
         "line": 24,
         "snippet": "with open(log_path, \"a\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/session_hook.py#L24"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/session_hook.py#L24"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -782,11 +793,22 @@
         "file": "scripts/pluginLoader.js",
         "line": 721,
         "snippet": "\"这是一个**直接存储在本地真实 `.md` 文件夹**中的轻量化知识库（默认路径：`~/.gemini/kb`），完全兼容 Obsidian、VS Code 与 Git。\",",
-        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2464d8d574c426c24dc1b7a410e71b173b5e281c/scripts/pluginLoader.js#L721"
+        "githubBlobUrl": "https://github.com/KiriuKazurei/antigravity-zh-cn-plugin/blob/2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253/scripts/pluginLoader.js#L721"
       }
     ]
   },
   "history": [
+    {
+      "version": "2.2.4",
+      "sha": "2b4f6493c02cf4db70390f44a3dbcdf4a6e0e253",
+      "scannedAt": "2026-11-28T00:25:48.385Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn"
+      ]
+    },
     {
       "version": "2.2.4",
       "sha": "2464d8d574c426c24dc1b7a410e71b173b5e281c",
