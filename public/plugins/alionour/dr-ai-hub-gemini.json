@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "alionour/dr-ai-hub-gemini",
+  "sha": "10f06d3595dc63077757b7d1b081b3e80f09d82d",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T12:13:40.547Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "dr-ai-hub",
+    "displayName": "Dr. AI Hub",
+    "version": "1.1.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "draihub",
+        "runtimeName": "dr-ai-hub_draihub",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://draihub.com/mcp"
+      },
+      {
+        "name": "account",
+        "runtimeName": "dr-ai-hub_account",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://draihub.com/mcp/account"
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "dr-ai-hub_account",
+      "dr-ai-hub_draihub"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Dr. AI Hub for Gemini and Antigravity\n\nFind doctors in Egypt by city and specialty, and read condition and medicine pages in Arabic and English, from [draihub.com](https://draihub.com).\n\nThis repository is both a **Gemini CLI extension** (`gemini-extension.json`) and an **Antigravity plugin** (`plugin.json` + `mcp_config.json`). Both connect to the Dr. AI Hub MCP server.\n\n- Public server (no sign-in): `https://draihub.com/mcp`\n- Account server (sign in with a Dr AI account, read only): `https://draihub.com/mcp/account`\n\n## Tools (all read only)\n- `search_doctors`, `get_doctor`: listed doctors by Egyptian city and specialty, with profile links. No phone numbers.\n- `list_specialties`, `list_cities`\n- `search_health_topics`, `get_health_topic`: condition and medicine pages, including Egyptian brand names.\n- `about_dr_ai_hub`\n- Signed in: `my_account`, `my_appointment_requests`, `my_saved_doctors`; doctors `requests_from_patients`, `my_doctor_listing`; clinic staff `my_clinics`, `clinic_day_schedule`, `clinic_numbers`.\n\n## Install\n- Antigravity: `agy plugin install https://github.com/alionour/dr-ai-hub-gemini`\n- Gemini CLI: `gemini extensions install https://github.com/alionour/dr-ai-hub-gemini`\n- Gemini app (gemini.google.com, where Google offers custom apps): Settings > Connected Apps > Add a custom app > `https://draihub.com/mcp`\n\n## Example prompts\n- \"Find a cardiologist in Cairo on Dr. AI Hub\"\n- \"What does Dr. AI Hub say about type 2 diabetes, and which doctor should I see?\"\n- \"ابحث عن دكتور أسنان في سوهاج\"\n\nHealth information is general, not a diagnosis. In an emergency in Egypt, call 123.\n\nPrivacy: https://draihub.com/en/health/privacy · Terms: https://draihub.com/en/health/terms · Support: support@draihub.com\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.1.0",
+      "sha": "10f06d3595dc63077757b7d1b081b3e80f09d82d",
+      "scannedAt": "2026-11-28T12:13:40.547Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

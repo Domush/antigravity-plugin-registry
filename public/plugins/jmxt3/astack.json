@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "jmxt3/astack",
-  "sha": "15364878246ddcae952acf3fc1ab81adbe7542df",
+  "sha": "b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-28T06:16:14.410Z",
+  "scannedAt": "2026-11-28T12:14:31.261Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "astack",
@@ -714,7 +714,7 @@
         "file": "skills/make-bot-ui/SKILL.md",
         "line": 26,
         "snippet": "1. Generate or copy a strong random sender key on the host (e.g., into `.env.local` with `0600` permissions or OS keychain / secret manager — gitignored and never tracked).",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/make-bot-ui/SKILL.md#L26"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/make-bot-ui/SKILL.md#L26"
       },
       {
         "id": "PROMPT_CREDENTIAL_EXFIL",
@@ -725,7 +725,7 @@
         "file": "skills/make-bot-ui/SKILL.md",
         "line": 28,
         "snippet": "3. The user must **never** paste the sender key or bearer token into chat. Instruct them to set the environment variable locally (e.g., `$env:BOT_UI_SENDER_KEY` or `.env.local`) or",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/make-bot-ui/SKILL.md#L28"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/make-bot-ui/SKILL.md#L28"
       },
       {
         "id": "PROMPT_PIPE_TO_SHELL",
@@ -736,7 +736,7 @@
         "file": "skills/make-bot-ui/SKILL.md",
         "line": 62,
         "snippet": "If Tailscale is not installed, install it using the platform's official installer (on Linux: `curl -fsSL https://tailscale.com/install.sh | sudo sh`; on Windows/macOS: direct the u",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/make-bot-ui/SKILL.md#L62"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/make-bot-ui/SKILL.md#L62"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -747,7 +747,7 @@
         "file": ".agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs",
         "line": 27,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"ignore\"], }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L27"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L27"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -758,7 +758,7 @@
         "file": ".agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs",
         "line": 138,
         "snippet": "while ((m = tokenRe.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L138"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/.agents/skills/sync-astack-surfaces/scripts/audit-surfaces.mjs#L138"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -769,7 +769,7 @@
         "file": "hooks.json",
         "line": 10,
         "snippet": "node ./scripts/hooks/receipt-ledger.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L10"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L10"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -780,7 +780,7 @@
         "file": "hooks.json",
         "line": 45,
         "snippet": "node ./scripts/hooks/irreversible-guard.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L45"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L45"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -791,7 +791,7 @@
         "file": "hooks.json",
         "line": 60,
         "snippet": "node ./scripts/hooks/secret-guard.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L60"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L60"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -802,7 +802,7 @@
         "file": "hooks.json",
         "line": 85,
         "snippet": "node ./scripts/hooks/evidence-gate.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L85"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L85"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -813,7 +813,7 @@
         "file": "hooks.json",
         "line": 100,
         "snippet": "node ./scripts/hooks/boundary-guard.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L100"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L100"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -824,7 +824,7 @@
         "file": "hooks.json",
         "line": 115,
         "snippet": "node ./scripts/hooks/round-limiter.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L115"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L115"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -835,7 +835,7 @@
         "file": "hooks.json",
         "line": 130,
         "snippet": "node ./scripts/hooks/trust-gate.mjs",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/hooks.json#L130"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/hooks.json#L130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -846,7 +846,7 @@
         "file": "scripts/eval/eval.test.mjs",
         "line": 140,
         "snippet": "const res = spawnSync(process.execPath, [evalCli, flag], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/eval/eval.test.mjs#L140"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/eval/eval.test.mjs#L140"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -857,7 +857,7 @@
         "file": "scripts/eval/eval.test.mjs",
         "line": 144,
         "snippet": "const jsonRun = spawnSync(process.execPath, [evalCli, \"--json\"], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/eval/eval.test.mjs#L144"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/eval/eval.test.mjs#L144"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -868,7 +868,7 @@
         "file": "scripts/eval/eval.test.mjs",
         "line": 148,
         "snippet": "const replayRun = spawnSync(process.execPath, [evalCli, \"--replay\", \"--json\"], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/eval/eval.test.mjs#L148"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/eval/eval.test.mjs#L148"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -879,7 +879,7 @@
         "file": "scripts/eval/incident-replay.mjs",
         "line": 90,
         "snippet": "const stdout = execFileSync( \"agy\", [ \"-p\", buildVerifierPrompt(diff), \"--output-format\", \"json\", \"--json-schema\", schemaPath, \"--print-timeout\", \"10m\", \"--sandbox\", \"--agent\", age",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/eval/incident-replay.mjs#L90"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/eval/incident-replay.mjs#L90"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -890,7 +890,7 @@
         "file": "scripts/eval/incident-replay.mjs",
         "line": 130,
         "snippet": "const stdout = execFileSync( \"agy\", [ \"--input-format\", \"stream-json\", \"--output-format\", \"stream-json\", \"--json-schema\", schemaPath, \"--print-timeout\", \"10m\", \"--sandbox\", \"--agen",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/eval/incident-replay.mjs#L130"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/eval/incident-replay.mjs#L130"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -901,7 +901,7 @@
         "file": "scripts/eval/risk-backtest.mjs",
         "line": 27,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/eval/risk-backtest.mjs#L27"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/eval/risk-backtest.mjs#L27"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -912,7 +912,7 @@
         "file": "scripts/trust/internal/dossier.mjs",
         "line": 48,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/trust/internal/dossier.mjs#L48"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/trust/internal/dossier.mjs#L48"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -923,7 +923,7 @@
         "file": "scripts/trust/internal/dossier.mjs",
         "line": 61,
         "snippet": "const res = spawnSync(\"git\", [\"patch-id\", \"--stable\"], { cwd, input: diffText, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/trust/internal/dossier.mjs#L61"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/trust/internal/dossier.mjs#L61"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -934,7 +934,7 @@
         "file": "scripts/trust/internal/ledger.mjs",
         "line": 861,
         "snippet": "status = execFileSync(\"git\", [\"status\", \"--porcelain\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/trust/internal/ledger.mjs#L861"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/trust/internal/ledger.mjs#L861"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -945,7 +945,7 @@
         "file": "scripts/trust/internal/policy.mjs",
         "line": 313,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/trust/internal/policy.mjs#L313"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/trust/internal/policy.mjs#L313"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -956,7 +956,7 @@
         "file": "scripts/trust/internal/policy.mjs",
         "line": 1703,
         "snippet": "while ((m = importRegex.exec(stripped)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/trust/internal/policy.mjs#L1703"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/trust/internal/policy.mjs#L1703"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -967,7 +967,7 @@
         "file": "scripts/trust/internal/pr-proof.mjs",
         "line": 141,
         "snippet": "const remote = execFileSync(\"git\", [\"remote\", \"get-url\", \"origin\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 3000, stdio: [\"ignore\", \"pipe\", \"pipe\"], }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/trust/internal/pr-proof.mjs#L141"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/trust/internal/pr-proof.mjs#L141"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -978,7 +978,7 @@
         "file": "scripts/upstream-watch.mjs",
         "line": 24,
         "snippet": "return execFileSync(\"git\", args, { encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/upstream-watch.mjs#L24"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/upstream-watch.mjs#L24"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -989,7 +989,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 128,
         "snippet": "while ((match = mdRegex.exec(withoutCode)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/validate-astack.mjs#L128"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/validate-astack.mjs#L128"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1000,7 +1000,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 132,
         "snippet": "while ((match = htmlRegex.exec(withoutCode)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/validate-astack.mjs#L132"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/validate-astack.mjs#L132"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1011,7 +1011,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 455,
         "snippet": "while ((m = slashTokenRe.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/validate-astack.mjs#L455"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/validate-astack.mjs#L455"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1022,7 +1022,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 563,
         "snippet": "while ((m = spec.regex.exec(content)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/validate-astack.mjs#L563"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/validate-astack.mjs#L563"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1033,7 +1033,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 1027,
         "snippet": "while ((principleMatch = PRINCIPLE_REF_REGEX.exec(sanitizedForLeakCheck)) !== null) {",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/validate-astack.mjs#L1027"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/validate-astack.mjs#L1027"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1044,7 +1044,7 @@
         "file": "scripts/validate-astack.mjs",
         "line": 1045,
         "snippet": "const stdout = execFileSync(\"agy\", [\"plugin\", \"validate\", \"--strict\", \"--json\", rootDir], { encoding: \"utf8\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/scripts/validate-astack.mjs#L1045"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/scripts/validate-astack.mjs#L1045"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1053,9 +1053,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/main.mjs",
-        "line": 97,
+        "line": 99,
         "snippet": "execFile(cmd, args, { encoding: \"utf8\", timeout: 4000 }, (err, stdout) => { if (err) { return resolve({ ok: false, payload: null, workspaceDir: \"\", emptyWorkspace: false }); } try ",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/main.mjs#L97"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/main.mjs#L99"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1064,9 +1064,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/astack_timeline/main.mjs",
-        "line": 373,
+        "line": 376,
         "snippet": "execFile( \"gh\", [\"pr\", \"list\", \"--state\", \"all\", \"--limit\", \"40\", \"--json\", \"number,title,state,url\"], { cwd: workspaceDir, encoding: \"utf8\", timeout: 4000 }, (err, stdout) => { if",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/main.mjs#L373"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/main.mjs#L376"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1077,7 +1077,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 23,
         "snippet": "const res = spawnSync(process.execPath, [MAIN_PATH, flag], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L23"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L23"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1088,7 +1088,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 421,
         "snippet": "const child = spawn(process.execPath, [MAIN_PATH, \"--port\", \"0\", \"--standalone\", \"--allow-fixture-ids\", \"--brain-dir\", brainDir], { env, stdio: [\"ignore\", \"pipe\", \"pipe\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L421"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L421"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1099,7 +1099,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 640,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L640"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L640"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1110,7 +1110,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 641,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L641"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L641"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1121,7 +1121,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 642,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L642"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L642"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1132,7 +1132,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 647,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L647"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L647"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1143,7 +1143,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 648,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L648"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L648"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1154,7 +1154,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 649,
         "snippet": "const headSha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: enrolledRepo, encoding: \"utf8\" }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L649"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L649"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1165,7 +1165,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 836,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L836"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L836"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1176,7 +1176,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 837,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L837"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L837"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1187,7 +1187,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 838,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L838"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L838"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1198,7 +1198,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 840,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L840"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L840"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1209,7 +1209,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 841,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: gitRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L841"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L841"
       },
       {
         "id": "CODE_JS_DYNAMIC_EXEC",
@@ -1220,7 +1220,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1237,
         "snippet": "vm.runInNewContext(catalogJs, sandbox, { filename: \"catalog.js\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1237"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1237"
       },
       {
         "id": "CODE_JS_DYNAMIC_EXEC",
@@ -1231,7 +1231,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1239,
         "snippet": "vm.runInNewContext(appJs, sandbox, { filename: \"app.js\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1239"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1239"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1242,7 +1242,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1449,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1449"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1449"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1253,7 +1253,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1450,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1450"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1450"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1264,7 +1264,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1451,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1451"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1451"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1275,7 +1275,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1456,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1456"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1456"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1286,7 +1286,7 @@
         "file": "sidecars/astack_timeline/server.test.mjs",
         "line": 1457,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: enrolledRepo, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L1457"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L1457"
       },
       {
         "id": "CODE_JS_DYNAMIC_EXEC",
@@ -1295,9 +1295,9 @@
         "capability": "dynamic_code_exec",
         "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
         "file": "sidecars/astack_timeline/server.test.mjs",
-        "line": 2112,
+        "line": 2140,
         "snippet": "vm.runInNewContext(railJs, sandbox, { filename: \"living-rail.js\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/server.test.mjs#L2112"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/server.test.mjs#L2140"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1308,7 +1308,7 @@
         "file": "sidecars/astack_timeline/timeline-engine.mjs",
         "line": 775,
         "snippet": "const out = execFileSync(\"git\", [\"log\", \"-n\", \"80\", \"--format=%s\", targetRef], { cwd: workspaceDir, encoding: \"utf8\", timeout: 1500, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline-engine.mjs#L775"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline-engine.mjs#L775"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1319,7 +1319,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2859,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2859"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2859"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1330,7 +1330,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2860,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@e.com\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2860"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2860"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1341,7 +1341,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2861,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"T\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2861"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2861"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1352,7 +1352,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2863,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2863"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2863"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1363,7 +1363,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2864,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2864"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2864"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1374,7 +1374,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2874,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2874"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2874"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1385,7 +1385,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2875,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"enroll\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2875"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2875"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1396,7 +1396,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2886,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2886"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2886"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1407,7 +1407,7 @@
         "file": "sidecars/astack_timeline/timeline.test.mjs",
         "line": 2887,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"raise ceiling\"], { cwd: workspaceDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/sidecars/astack_timeline/timeline.test.mjs#L2887"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/sidecars/astack_timeline/timeline.test.mjs#L2887"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1418,7 +1418,7 @@
         "file": "skills/astack-mode/scripts/check-plan.test.ts",
         "line": 59,
         "snippet": "const result = spawnSync(\"node\", [checker, file], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/check-plan.test.ts#L59"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/check-plan.test.ts#L59"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1429,7 +1429,7 @@
         "file": "skills/astack-mode/scripts/check-plan.test.ts",
         "line": 126,
         "snippet": "const help = spawnSync(\"node\", [checker, \"--help\"], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/check-plan.test.ts#L126"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/check-plan.test.ts#L126"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1440,7 +1440,7 @@
         "file": "skills/astack-mode/scripts/check-plan.test.ts",
         "line": 134,
         "snippet": "const jsonRes = spawnSync(\"node\", [checker, \"--json\", file], { encoding: \"utf8\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/check-plan.test.ts#L134"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/check-plan.test.ts#L134"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1451,7 +1451,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 252,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L252"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L252"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1462,7 +1462,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 253,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@t.com\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L253"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L253"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1473,7 +1473,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 254,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"Tester\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L254"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L254"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1484,7 +1484,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 269,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L269"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L269"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1495,7 +1495,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 270,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: dir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L270"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L270"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1506,7 +1506,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 271,
         "snippet": "const headSha = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: dir, encoding: \"utf8\" }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L271"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L271"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1517,7 +1517,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 521,
         "snippet": "execFileSync(\"git\", [\"init\", \"-b\", \"main\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L521"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L521"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1528,7 +1528,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 522,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.email\", \"t@t.com\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L522"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L522"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1539,7 +1539,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 523,
         "snippet": "execFileSync(\"git\", [\"config\", \"user.name\", \"Tester\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L523"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L523"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1550,7 +1550,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 525,
         "snippet": "execFileSync(\"git\", [\"add\", \".\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L525"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L525"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1561,7 +1561,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 526,
         "snippet": "execFileSync(\"git\", [\"commit\", \"-m\", \"init\"], { cwd: unregDir, stdio: \"ignore\" });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L526"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L526"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1572,7 +1572,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/cli.test.ts",
         "line": 782,
         "snippet": "execFileSync(\"git\", [\"remote\", \"add\", \"origin\", \"https://github.com/my-org/my-repo.git\"], { cwd: dir, stdio: \"ignore\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/cli.test.ts#L782"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/cli.test.ts#L782"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1583,7 +1583,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
         "line": 469,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/github.test.ts#L469"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/github.test.ts#L469"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1594,7 +1594,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
         "line": 499,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/github.test.ts#L499"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/github.test.ts#L499"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1605,7 +1605,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.test.ts",
         "line": 542,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", \"--input-type=module\", \"-e\", program], { encoding: \"utf8\", timeou",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/github.test.ts#L542"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/github.test.ts#L542"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1616,7 +1616,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.ts",
         "line": 70,
         "snippet": "? spawn( process.env.ComSpec ?? \"cmd.exe\", [ \"/d\", \"/s\", \"/c\", `\"${[resolved.file, ...argv.slice(1)].map(quoteWindowsBatchArg).join(\" \")}\"`, ], { stdio: [\"ignore\", \"pipe\", \"pipe\"],",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/github.ts#L70"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/github.ts#L70"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1627,7 +1627,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.ts",
         "line": 84,
         "snippet": ": spawn(resolved.file, argv.slice(1), { stdio: [\"ignore\", \"pipe\", \"pipe\"], ...(cwd ? { cwd } : {}), });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/github.ts#L84"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/github.ts#L84"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1638,7 +1638,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/github.ts",
         "line": 406,
         "snippet": "const match = pattern.exec(comment.body);",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/github.ts#L406"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/github.ts#L406"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1649,7 +1649,7 @@
         "file": "skills/astack-mode/scripts/watch-pr/watch-pr.mjs",
         "line": 11,
         "snippet": "const child = spawnSync( process.execPath, [\"--experimental-strip-types\", \"--disable-warning=ExperimentalWarning\", entry, ...process.argv.slice(2)], { stdio: \"inherit\" }, );",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/watch-pr/watch-pr.mjs#L11"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/watch-pr/watch-pr.mjs#L11"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1660,7 +1660,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.mjs",
         "line": 27,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\", stdio: [\"ignore\", \"pipe\", \"pipe\"], }).trimEnd();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/worktree-audit.mjs#L27"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/worktree-audit.mjs#L27"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1671,7 +1671,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.mjs",
         "line": 127,
         "snippet": "const raw = execFileSync( \"gh\", [\"pr\", \"list\", \"--author\", \"@me\", \"--state\", \"all\", \"--limit\", \"500\", \"--json\", \"number,state,headRefName\"], { cwd: repoDir, encoding: \"utf8\", stdio",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/worktree-audit.mjs#L127"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/worktree-audit.mjs#L127"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1682,7 +1682,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.test.mjs",
         "line": 13,
         "snippet": "return execFileSync(\"git\", args, { cwd, encoding: \"utf8\" }).trim();",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/worktree-audit.test.mjs#L13"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/worktree-audit.test.mjs#L13"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1693,7 +1693,7 @@
         "file": "skills/astack-mode/scripts/worktree-audit.test.mjs",
         "line": 94,
         "snippet": "const jsonOut = execFileSync(\"node\", [worktreeAuditCli, \"--base\", \"main\", \"--json\", repo], { encoding: \"utf8\", env: { ...process.env, ASTACK_TRANSCRIPTS_DIR: brainDir }, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/astack-mode/scripts/worktree-audit.test.mjs#L94"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/astack-mode/scripts/worktree-audit.test.mjs#L94"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1704,7 +1704,7 @@
         "file": "skills/audit-architecture/scripts/arch-audit.test.mjs",
         "line": 72,
         "snippet": "const strictRun = spawnSync(process.execPath, [cliPath, \"--cwd\", tmp, \"--strict\", \"--json\"], { encoding: \"utf8\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/audit-architecture/scripts/arch-audit.test.mjs#L72"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/audit-architecture/scripts/arch-audit.test.mjs#L72"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1715,7 +1715,7 @@
         "file": "skills/audit-architecture/scripts/arch-audit.test.mjs",
         "line": 94,
         "snippet": "const res = spawnSync(process.execPath, [cliPath, \"--cwd\", tmp, \"--strict\", \"--json\"], { encoding: \"utf8\", });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/audit-architecture/scripts/arch-audit.test.mjs#L94"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/audit-architecture/scripts/arch-audit.test.mjs#L94"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1726,7 +1726,7 @@
         "file": "skills/create-verification-skill/references/control-cli-template.mjs",
         "line": 119,
         "snippet": "const res = spawnSync(\"taskkill\", [\"/PID\", String(pid), \"/T\", \"/F\"], { stdio: \"ignore\", windowsHide: true, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/create-verification-skill/references/control-cli-template.mjs#L119"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/create-verification-skill/references/control-cli-template.mjs#L119"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1737,7 +1737,7 @@
         "file": "skills/create-verification-skill/references/control-cli-template.mjs",
         "line": 210,
         "snippet": "const child = spawn(flags.cmd, { shell: true, detached: process.platform !== \"win32\", stdio: \"ignore\", windowsHide: true, env: { ...process.env, PORT: String(port), VERIFY_PORT: St",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/create-verification-skill/references/control-cli-template.mjs#L210"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/create-verification-skill/references/control-cli-template.mjs#L210"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1748,7 +1748,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 64,
         "snippet": "return spawnSync(process.execPath, [...nodeArgs, validatorPath, ledgerPath], { encoding: \"utf8\", timeout, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L64"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L64"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1759,7 +1759,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 594,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, missingPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L594"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L594"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1770,7 +1770,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 628,
         "snippet": "const created = spawnSync(\"mkfifo\", [fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L628"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L628"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1781,7 +1781,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 631,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, fifoPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L631"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L631"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1792,7 +1792,7 @@
         "file": "skills/security-audit/scripts/validate-coverage-ledger.test.cjs",
         "line": 660,
         "snippet": "const result = spawnSync(process.execPath, [validatorPath, symlinkPath], { encoding: \"utf8\", timeout: CLI_TIMEOUT_MS, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L660"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/security-audit/scripts/validate-coverage-ledger.test.cjs#L660"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1803,11 +1803,28 @@
         "file": "skills/security-audit/scripts/validate-findings.test.cjs",
         "line": 105,
         "snippet": "return spawnSync(process.execPath, [...nodeArgs, validatorPath, findingsPath], { encoding: \"utf8\", timeout, });",
-        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/15364878246ddcae952acf3fc1ab81adbe7542df/skills/security-audit/scripts/validate-findings.test.cjs#L105"
+        "githubBlobUrl": "https://github.com/jmxt3/astack/blob/b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6/skills/security-audit/scripts/validate-findings.test.cjs#L105"
       }
     ]
   },
   "history": [
+    {
+      "version": "0.4.0",
+      "sha": "b3e4d014168bc87b5ae14c7378fa7c9cc9ebcaa6",
+      "scannedAt": "2026-11-28T12:14:31.261Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "credential_access",
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "0.4.0",
       "sha": "15364878246ddcae952acf3fc1ab81adbe7542df",

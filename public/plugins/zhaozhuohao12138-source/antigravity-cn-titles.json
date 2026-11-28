@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "id": "zhaozhuohao12138-source/antigravity-cn-titles",
+  "sha": "67899c1e21c99590265c099107b0c4ec4d2dc4f7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T12:15:14.612Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "auto-chinese-title",
+    "displayName": "自动中文任务标题",
+    "version": "1.2.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity 自动中文化插件（auto-chinese-title）\n\n让 Antigravity 桌面端的左侧任务标题与运行状态自动变成简体中文，Windows 端支持**免 Python 零依赖**开箱即用。\n\n## 功能说明\n1. **左侧任务名称自动改中文**（`Stop` 钩子 + `check_title.py` / `check_title.ps1`）\n   - 每轮对话结束后自动检查当前任务标题；若为空或纯英文，则提示 Agent 自动改为简短中文标题。\n   - 安装器会自动检测 Python 环境：有 Python 优先运行 `check_title.py`，**未安装 Python 时自动切换系统自带的 `check_title.ps1` 兜底**。\n2. **运行框摘要与步骤默认中文**（`rules/AGENTS.md`）\n   - 约束 Agent 在填写命令摘要、实时焦点状态、步骤清单和子代理角色时一律使用简体中文。\n3. **思考正文中文显示（联动说明）**\n   - 若希望折叠栏内的「思考过程（Thought）」正文也实时译成中文，需配合安装 **[Obsidian Prism](https://github.com/RMvdesi/obsidian-prism)** 插件并开启其思考转译功能（`thoughtTranslate`）。\n\n## 安装方法\n### 方法一：Windows 一键安装包（推荐，免环境零依赖）\n1. 前往右侧 **[Releases（发行版）](https://github.com/zhaozhuohao12138-source/antigravity-auto-chinese/releases)** 下载最新版 `Antigravity-Auto-Chinese-Installer.exe`。\n2. 双击运行后可查看当前安装状态、运行引擎与思考转译联动状态，点击 **「一键安装 / 更新」** 即可（支持在同一界面随时 **「一键卸载」**、打开插件目录或重置检测缓存）。\n3. **安全提示说明**：因开源打包的 `.exe` 未购买商业数字签名，首次运行若弹出 Windows 蓝色安全提示（SmartScreen“Windows 已保护你的电脑”），点击 **「更多信息 → 仍要运行」** 即可；安装器源码已在 [installer.py](./installer.py) 完整公开，可自行审查或重新打包。\n\n### 方法二：Git 命令安装\n- **Windows（PowerShell）**：\n  ```powershell\n  git clone https://github.com/zhaozhuohao12138-source/antigravity-auto-chinese.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\auto-chinese-title\"\n  ```\n- **macOS / Linux**：\n  ```bash\n  git clone https://github.com/zhaozhuohao12138-source/antigravity-auto-chinese.git ~/.gemini/config/plugins/auto-chinese-title\n  ```\n\n### 方法三：手动下载安装\n1. 点击仓库右上角绿色 **`Code`** → **`Download ZIP`** 并解压。\n2. 将文件夹改名为 `auto-chinese-title`，放入 `用户目录/.gemini/config/plugins/` 下。\n\n## 使用前提与管理\n- **Windows**：通过一键 `.exe` 安装可实现零依赖运行（无 Python 时自动使用 PowerShell 兜底脚本）。\n- **macOS / Linux**：需本机已安装 Python（若终端只有 `python3`，请把 `hooks.json` 中的 `python` 改为 `python3`）。\n- 放好后重启或新开对话即可自动生效，也可在 Antigravity 插件设置中随时关闭或卸载。\n",
+  "latestReleaseNotes": "支持左侧标题自动改中文 + 运行框状态默认中文",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "check_title.py",
+        "line": 38,
+        "snippet": "with urllib.request.urlopen(req, timeout=2) as resp:",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/check_title.py#L38"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "check_title.py",
+        "line": 52,
+        "snippet": "with open(pbtxt_path, \"r\", encoding=\"utf-8\", errors=\"replace\") as f:",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/check_title.py#L52"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "check_title.py",
+        "line": 75,
+        "snippet": "with open(tp, \"r\", encoding=\"utf-8\", errors=\"replace\") as f:",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/check_title.py#L75"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "check_title.py",
+        "line": 87,
+        "snippet": "with open(STATE_FILE, \"r\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/check_title.py#L87"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "check_title.py",
+        "line": 102,
+        "snippet": "with open(STATE_FILE, \"w\", encoding=\"utf-8\") as f:",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/check_title.py#L102"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "installer.py",
+        "line": 125,
+        "snippet": "(TARGET_DIR / \"hooks.json\").write_text(build_hooks_json(use_py), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/installer.py#L125"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "installer.py",
+        "line": 138,
+        "snippet": "shutil.rmtree(TARGET_DIR)",
+        "githubBlobUrl": "https://github.com/zhaozhuohao12138-source/antigravity-cn-titles/blob/67899c1e21c99590265c099107b0c4ec4d2dc4f7/installer.py#L138"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.2.0",
+      "sha": "67899c1e21c99590265c099107b0c4ec4d2dc4f7",
+      "scannedAt": "2026-11-28T12:15:14.612Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound"
+      ]
+    }
+  ]
+}

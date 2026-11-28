@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "Lynn-zy/antigravity-rail",
-  "sha": "edba13a6a4636f067dc7b8961bb3edd92ce7aa12",
+  "sha": "8257feca7971727ea4b09d1a590222a682a2422c",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:14:28.248Z",
+  "scannedAt": "2026-11-28T12:14:58.395Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "antigravity-rail",
     "displayName": "Antigravity Rail",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "minAppVersion": null,
     "mcpServers": [],
     "hooks": [
@@ -39,8 +39,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.svg\" width=\"72\" height=\"72\" alt=\"Antigravity Rail logo\">\n\n# Antigravity Rail\n\n**Stop Antigravity from going silent for 20 minutes, dumping 1,000-line writes, or reverting to English tool labels.**\n\nZero-dependency behavioral guardrails for [Antigravity](https://antigravity.google) — dynamic `AGENTS.md` rules paired with fail-open Hooks and one live side-pane UI.\n\n[![Version](https://img.shields.io/badge/version-3.0.0-2563EB?style=flat-square)](./CHANGELOG.md)\n[![Last Commit](https://img.shields.io/github/last-commit/Lynn-zy/antigravity-rail?style=flat-square&color=059669)](https://github.com/Lynn-zy/antigravity-rail/commits/main)\n[![Node.js](https://img.shields.io/badge/node-%3E%3D20%20%C2%B7%200%20deps-111827?style=flat-square)](./package.json)\n[![License: MIT](https://img.shields.io/badge/license-MIT-64748B?style=flat-square)](./LICENSE)\n\n**English** · [简体中文](./README.zh-CN.md)\n\n</div>\n\n---\n\n## See the Difference\n\n<table>\n  <thead>\n    <tr>\n      <th width=\"50%\">Without Antigravity Rail</th>\n      <th width=\"50%\">With Antigravity Rail</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td><img src=\"./assets/readme/before.png\" width=\"100%\" alt=\"Without Antigravity Rail: the agent works silently for 22 minutes with no opening reply, collapsed tool bursts, and pure-English tool summaries in a Chinese chat\"></td>\n      <td><img src=\"./assets/readme/after.png\" width=\"100%\" alt=\"With Antigravity Rail: the agent replies immediately in Chinese, writes Chinese tool summaries, reports progress between tool batches, and formats workspace files as clickable links\"></td>\n    </tr>\n    <tr>\n      <td>Silent for 22 minutes, no opening reply, collapsed tool calls, pure-English tool summaries in a Chinese conversation.</td>\n      <td>Immediate opening reply, localized tool summaries, mid-task progress updates, and clickable workspace file links.</td>\n    </tr>\n  </tbody>\n</table>\n\n## Why Not Just Static `AGENTS.md`?\n\nStatic instructions in `AGENTS.md` or `GEMINI.md` fade during long multi-step turns. Once the agent stops replying before tools, emits a 1,200-line file write, drops `file:///` links, or slips back to English `toolSummary` labels, static text cannot course-correct until you interrupt it manually.\n\nAntigravity Rail pairs dynamically rendered `rules/AGENTS.md` with three lightweight, **fail-open** runtime Hooks (`PostToolUse` and `PreInvocation`) and a **Sidecar UI**:\n\n| Capability | Static `AGENTS.md` | Antigravity Rail |\n| :--- | :--- | :--- |\n| Mid-conversation drift correction | None until you interrupt | Injects one targeted Hook reminder only when a violation happens |\n| Changing thresholds or toggling rules | Edit Markdown manually | Flip modules, Hooks, and presets live in the side pane |\n| Runtime footprint | Text only | Pure Node.js ESM (`>= 20`), 0 npm dependencies, never modifies `config.json` |\n\n**When you don't need it:** If you work exclusively in English on short single-turn prompts and rarely write files over 500 lines, a few static lines in your own `AGENTS.md` are enough.\n\n## Quick Install\n\nRequires **Node.js >= 20** and **Antigravity**. Zero npm packages are installed.\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/Lynn-zy/antigravity-rail.git\ncd antigravity-rail\n.\\scripts\\install.ps1\n```\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/Lynn-zy/antigravity-rail.git\ncd antigravity-rail\nbash ./scripts/install.sh\n```\n\nExpected output on a fresh install (`3/3 modules enabled: 500-line write preset / 6-call silent preset`):\n\n```text\n[antigravity-rail] 安装/更新完成：.../.gemini/config/plugins/antigravity-rail\n[antigravity-rail] 当前状态：3/3 模块已启用（写入 500 行档 / 静默 6 次档）\n```\n\nThen open **Antigravity Rail** from Antigravity's side pane to confirm it loaded (on first install, reload Antigravity if the plugin does not appear immediately). The installer copies runtime files into `~/.gemini/config/plugins/antigravity-rail` without modifying Antigravity's `config.json`. Re-running it to upgrade removes stale `.mjs` files, preserves `config/settings.json`, re-renders `rules/AGENTS.md`, and restarts any running Sidecar automatically via `config/sidecar.pid`.\n\n<details>\n<summary>Custom install directory or uninstall</summary>\n\n```powershell\n# Windows\n.\\scripts\\install.ps1 -TargetDir \"D:\\custom\\antigravity-rail\"\n.\\scripts\\install.ps1 -Uninstall\n```\n\n```bash\n# macOS / Linux\nbash ./scripts/install.sh --target \"/custom/path/antigravity-rail\"\nbash ./scripts/install.sh --uninstall\n```\n\nUninstalling stops the running Sidecar process (when `config/sidecar.pid` matches a live Node process) before deleting the plugin directory.\n\n</details>\n\n## Three Guardrail Modules\n\nEach module has two independent toggles in the side pane:\n\n- **Module toggle**: Turning it off removes that module's section from `rules/AGENTS.md` and pauses its Hook.\n- **Hook toggle**: Turning it off keeps the always-on `rules/AGENTS.md` instructions while disabling runtime reminder injection.\n\n### 1. Chunked Write Guard (`write-guard`)\n\nPrevents single `write_file` or full-file `edit_file` calls from streaming 1,000+ lines at once, which slows responses and risks mid-stream drops.\n\n- `PostToolUse` counts lines and UTF-8 bytes after the write saves to disk—never blocking writes. Failed tool calls and pure deletions (empty `Replacement`) are skipped.\n- Oversize writes queue per `conversationId` hash in `config/pending/` (30-minute TTL). The next `PreInvocation` injects one reminder (`[antigravity-rail:oversize-reminder]`) and removes the queue file.\n\n| Preset | Soft Target (`AGENTS.md`) | `write_file` Limit | `edit_file` Combined Limit (`Target + Replacement`) |\n| :--- | :---: | :---: | :---: |\n| `700` · Relaxed | ≤ 700 lines | 1100 lines / 64 KB | 1200 lines / 72 KB |\n| **`500` · Standard (default)** | **≤ 500 lines** | **800 lines / 48 KB** | **900 lines / 56 KB** |\n| `300` · Conservative | ≤ 300 lines | 500 lines / 28 KB | 600 lines / 36 KB |\n\n### 2. Reply-First & Progress Updates (`responsive-mode`)\n\nStops the agent from firing tools silently at the start of a turn or disappearing behind collapsed \"Exploring\" streaks, and keeps workspace file mentions clickable.\n\n- The first user message is never interrupted; compliant turns pass through silently.\n- **Next-turn rhythm check**: `PreInvocation` reads the previous turn in `transcript.jsonl`. If the agent ran tools with no opening text, or hit consecutive silent tool calls at the selected preset (`4 · Sensitive` / **`6 · Standard (default)`** / `10 · Relaxed`), it injects `<responsive-mode>` once.\n- **Same-turn file-link check**: Mid-turn, if the latest visible reply cites known workspace files (from prior `read_file` / `edit_file` / `write_file` calls or `file:///` links in the session) in plain backticks instead of `[filename](file:///...)`, it injects `<responsive-file-links>` once per turn.\n- Subagent sessions and background task events are skipped.\n\n### 3. User-Language Tool Summaries (`tool-locale`)\n\nKeeps `update_steps` titles (`title`), `update_focus` status messages (`focus`), and `run_command` summaries (`toolSummary`) in the user's language without patching any Antigravity binary.\n\n- `rules/AGENTS.md` covers all languages while allowing necessary code identifiers, paths, and CLI commands (such as `npm test` or `git status`).\n- `PreInvocation` detects 9 non-Latin script families: Japanese, Korean, Chinese, Cyrillic, Arabic, Thai, Devanagari, Hebrew, and Greek. For short Latin replies like `\"ok\"` or `\"continue\"`, it looks back up to 5 user turns.\n- If a pure-English summary appears in the current turn of a non-Latin chat, it injects `<tool-locale>` once before the next model call (max once per user turn). Latin-script chats and subagents stay silent.\n\n## Live Side-Pane Control\n\n**Dark Mode**\n\n<p align=\"center\">\n  <img src=\"./assets/readme/panel-showcase-dark.png\" width=\"100%\" alt=\"Antigravity Rail Sidecar panel in dark mode showing all three tabs: Write Guard, Responsive, and Tool Locale, with live toggles, presets, trigger counters, and recent trigger records\">\n</p>\n\n**Light Mode**\n\n<p align=\"center\">\n  <img src=\"./assets/readme/panel-showcase-light.png\" width=\"100%\" alt=\"Antigravity Rail Sidecar panel in light mode showing all three tabs: Write Guard, Responsive, and Tool Locale, with live toggles, presets, trigger counters, and recent trigger records\">\n</p>\n\n- **Theme & language**: Follows Antigravity's dark and light themes automatically and switches live between English and Chinese in the header.\n- **Trigger telemetry**: Tracks 4 cumulative counters (`Oversize`, `Write Hints`, `Reply Hints`, `Locale Hints`) plus the latest 3 timestamped triggers from `config/events.jsonl`, with one-click reset.\n- **Changelog & in-place updates**: Click the version pill to read local [`CHANGELOG.md`](./CHANGELOG.md). Click **Updates** to check GitHub releases/tags, verify the archive, and swap runtime files in-place with automatic rollback while keeping local settings and stats.\n\n> [!NOTE]\n> Toggling a module or changing a preset rewrites `rules/AGENTS.md`, which invalidates the prompt prefix cache on the next turn. Choose your settings before starting a new conversation.\n\n## Architecture & Safety Guarantees\n\n```mermaid\nflowchart LR\n  UI[\"Sidecar Panel UI (EN / 中文)\"] --> CFG[\"config/settings.json\"]\n  CFG -->|\"re-renders\"| RULES[\"rules/AGENTS.md\"]\n  CFG -->|\"live thresholds\"| WG[\"write-guard (PostToolUse / PreInvocation)\"]\n  CFG -->|\"live thresholds\"| RM[\"responsive-mode (PreInvocation)\"]\n  CFG -->|\"live toggles\"| TL[\"tool-locale (PreInvocation)\"]\n  WG -->|\"post-write queue\"| PEND[\"config/pending/ (30m TTL)\"]\n  WG --> LOG[\"config/events.jsonl\"]\n  RM --> LOG\n  TL --> LOG\n```\n\n- **Never blocks disk writes**: Oversize writes always complete; reminders arrive after the write on the next turn.\n- **Fail-open everywhere**: Malformed stdin, corrupted JSON, missing `transcript.jsonl`, or disk errors return `{}` so Antigravity continues normally.\n- **Single source of truth**: All thresholds, defaults, and `rules/AGENTS.md` templates live in [`scripts/config.mjs`](./scripts/config.mjs). Side-pane edits write atomically to `config/settings.json` and sync `rules/AGENTS.md`.\n- **Self-contained footprint**: Settings, pending queues, PID file, and event logs stay inside the plugin directory without touching host binaries or `config.json`.\n\n## Development & Status\n\n**Status**: Actively maintained (`v3.0.0`, 2026-11-27), used daily by the author. Bug reports and PRs are welcome via [GitHub Issues](https://github.com/Lynn-zy/antigravity-rail/issues); full release history is in [`CHANGELOG.md`](./CHANGELOG.md).\n\nRun the built-in Node test suite (**29** unit and CLI tests, zero dependencies):\n\n```bash\nnpm test\n```\n\nAfter editing presets or rule templates in [`scripts/config.mjs`](./scripts/config.mjs), resync the repository's default `rules/AGENTS.md` (do not commit generated `config/settings.json`):\n\n```bash\nnode -e \"import('./scripts/config.mjs').then(m => m.syncRulesFromSettings())\"\n```\n\n<details>\n<summary>Repository layout</summary>\n\n```text\n.\n├── plugin.json                     # Antigravity plugin manifest\n├── hooks.json                      # Independent Hook declarations (write-guard / responsive-mode / tool-locale)\n├── CHANGELOG.md                    # Release history rendered inside the Sidecar modal\n├── assets/\n│   ├── logo.svg                    # Plugin icon\n│   └── readme/                     # README screenshots (not copied into runtime install)\n├── rules/AGENTS.md                 # Dynamically rendered guardrail rules\n├── scripts/\n│   ├── config.mjs                  # Single source of truth for settings, presets, and AGENTS.md rendering\n│   ├── stats.mjs                   # Append-only trigger log (events.jsonl) and reset helper\n│   ├── transcript.mjs              # Tail-window transcript reader and fail-open Hook CLI wrapper\n│   ├── write-guard-core.mjs        # PostToolUse size checks and pending reminder queue\n│   ├── write-guard-hook.mjs        # write-guard Hook entrypoint\n│   ├── responsive-core.mjs         # Next-turn rhythm checks and same-turn file-link checks\n│   ├── responsive-hook.mjs         # responsive-mode Hook entrypoint\n│   ├── tool-locale-core.mjs        # 9-script non-Latin detection and same-turn summary checks\n│   ├── tool-locale-hook.mjs        # tool-locale Hook entrypoint\n│   ├── install.ps1                 # Windows installer, upgrader, and uninstaller\n│   ├── install.sh                  # macOS / Linux installer, upgrader, and uninstaller\n│   └── *.test.mjs                  # Node built-in test suite (29 tests)\n└── sidecars/panel/\n    ├── sidecar.json                # Sidecar panel declaration\n    ├── main.mjs                    # Local HTTP server and PID lifecycle for the Sidecar UI\n    ├── panel-logic.mjs             # State snapshots, settings updates, stats reset, changelog reader\n    ├── updater.mjs                 # Zero-dependency GitHub updater with verification and rollback\n    └── index.html                  # Three-tab bilingual Sidecar UI (auto dark/light theme)\n```\n\n</details>\n\n## License\n\n[MIT](./LICENSE)\n",
-  "latestReleaseNotes": "### Added\n- 合并 `responsive-mode` 与 `tool-locale` 能力，整体升级为三合一护栏插件 **Antigravity Rail**（插件 ID：`antigravity-rail`）。\n- 新增「先回话与途中汇报」模块（`responsive-mode`）：支持 `4 / 6 / 10` 次三档中途静默阈值、模块总开关、轮间节奏纠偏 Hook 与同轮已知工作区文件可点击链接（`file:///`）纠偏。\n- 新增「工具摘要语言匹配」模块（`tool-locale`）：覆盖 `update_steps` 步骤标题（`title`）、`update_focus` 状态（`focus`）与 `run_command` 摘要（`toolSummary`），自动识别 9 种非拉丁文字脚本并支持纯拉丁短回复回溯，提供同轮立即纠偏 Hook（每用户轮次最多一次，允许混排 `npm test` 等技术标识）。\n- 侧边栏面板升级为中英双语三标签布局（「分段写入 / 响应汇报 / 摘要语言」），每个模块提供独立的模块总开关（关闭时自动从 `rules/AGENTS.md` 移除对应章节）与 Hook 开关；底部统一展示四项累计触发统计（超限落盘、写入提醒、响应纠偏、摘要纠偏）及最近 3 条带时间戳触发记录，支持一键清零。\n- 安装与卸载脚本（`scripts/install.ps1`、`scripts/install.sh`）支持通过 `config/sidecar.pid` 在升级或卸载时自动重启/停止运行中的侧边栏 Sidecar 进程。\n\n### Changed\n- 统一配置持久化至 `config/settings.json`（`scripts/config.mjs`），Hook 入口拆分为 `write-guard-hook.mjs`、`responsive-hook.mjs`、`tool-locale-hook.mjs` 并共享 `scripts/transcript.mjs`。\n- 面板接口收口为 `POST /api/settings`，更新器与安装脚本同步切换至 `antigravity-rail` 并在安装前清理旧 `.mjs` 脚本残留。\n- 重写中英文 README，补充安装前后实拍对比、暗黑/明亮双模式真实侧边栏面板截图与 Mermaid 架构图。\n\n### Fixed\n- 修复面板点击「清零」后触发状态未及时刷新的问题，并确保新事件到达时自动收起残留提示。\n",
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.svg\" width=\"72\" height=\"72\" alt=\"Antigravity Rail 图标\">\n\n# Antigravity Rail\n\n**让 Antigravity 不再静默干活 20 分钟、单次狂写上千行，也不再把工具摘要回退成纯英文。**\n\n零第三方依赖的 [Antigravity](https://antigravity.google) 行为护栏插件，在同一个侧边栏面板中管理动态 `AGENTS.md` 常驻规则与非阻断 Hook。\n\n[![版本](https://img.shields.io/badge/version-3.0.0-2563EB?style=flat-square)](./CHANGELOG.md)\n[![最近提交](https://img.shields.io/github/last-commit/Lynn-zy/antigravity-rail?style=flat-square&color=059669)](https://github.com/Lynn-zy/antigravity-rail/commits/main)\n[![Node.js](https://img.shields.io/badge/node-%3E%3D20%20%C2%B7%200%20deps-111827?style=flat-square)](./package.json)\n[![协议: MIT](https://img.shields.io/badge/license-MIT-64748B?style=flat-square)](./LICENSE)\n\n[English](./README.zh-CN.md) · **简体中文**\n\n</div>\n\n---\n\n## 安装前后对比\n\n<table>\n  <thead>\n    <tr>\n      <th width=\"50%\">未安装 Antigravity Rail</th>\n      <th width=\"50%\">启用 Antigravity Rail 后</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td><img src=\"./assets/readme/before.png\" width=\"100%\" alt=\"未安装 Antigravity Rail：中文对话中 Agent 开场无回复，连续静默执行 22 分钟，工具摘要全为英文\"></td>\n      <td><img src=\"./assets/readme/after.png\" width=\"100%\" alt=\"启用 Antigravity Rail 后：Agent 立即先回话，工具摘要匹配中文，阶段性汇报进展，并把工作区文件格式化为可点击链接\"></td>\n    </tr>\n    <tr>\n      <td>开场无回复，连续静默执行 22 分钟，工具调用折叠且摘要全为纯英文。</td>\n      <td>接到任务先回话，工具摘要保持中文，阶段性汇报进展并附带可点击文件链接。</td>\n    </tr>\n  </tbody>\n</table>\n\n## 为什么不只写静态 `AGENTS.md`？\n\n写在 `AGENTS.md` 或 `GEMINI.md` 里的静态约束在长对话中容易失效。一旦模型忘记先回话、单次输出 1200 行文件、引用文件漏加 `file:///` 链接，或把 `toolSummary` 写回纯英文，纯文本规则无法在运行中途拉回行为，只能人工打断。切换规则或修改阈值也必须手改文件。\n\nAntigravity Rail 把动态生成的 `rules/AGENTS.md`、三个 `fail-open` 运行时 Hook（`PostToolUse` 与 `PreInvocation`）和侧边栏 Sidecar 面板组合在一起：\n\n| 维度 | 静态 `AGENTS.md` | Antigravity Rail |\n| :--- | :--- | :--- |\n| 长对话偏航纠偏 | 只能靠人工打断 | 仅在检测到违规时注入一次定向提醒，正常轮次静默放行 |\n| 开关与档位调整 | 手工编辑 Markdown | 在侧边栏实时切换模块开关、Hook 开关与阈值档位 |\n| 运行开销与侵入性 | 纯文本 | 纯 Node.js ESM（>= 20），0 个 npm 依赖，不改动宿主 `config.json` |\n\n**什么时候不需要安装**：如果你只用英文做短对话，且很少让模型单次写入超过 500 行的文件，直接在个人 `AGENTS.md` 里写几条静态规则就够了。\n\n## 快速安装\n\n需要本机已安装 **Node.js >= 20** 和 **Antigravity**，无需安装任何 npm 依赖。\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/Lynn-zy/antigravity-rail.git\ncd antigravity-rail\n.\\scripts\\install.ps1\n```\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/Lynn-zy/antigravity-rail.git\ncd antigravity-rail\nbash ./scripts/install.sh\n```\n\n首次安装成功时会输出：\n\n```text\n[antigravity-rail] 安装/更新完成：.../.gemini/config/plugins/antigravity-rail\n[antigravity-rail] 当前状态：3/3 模块已启用（写入 500 行档 / 静默 6 次档）\n```\n\n随后在 Antigravity 侧边栏中打开 **Antigravity Rail** 面板即可确认生效（首次安装若未立即出现，重载 Antigravity 即可）。安装脚本将运行时文件复制到 `~/.gemini/config/plugins/antigravity-rail`，不改动 Antigravity 的 `config.json`。再次运行脚本升级时，会清理旧 `.mjs` 残留，保留 `config/settings.json` 中的设置，按当前设置重渲染 `rules/AGENTS.md`，并通过 `config/sidecar.pid` 自动重启运行中的侧边栏 Sidecar。\n\n<details>\n<summary>自定义安装目录或卸载</summary>\n\n```powershell\n# Windows\n.\\scripts\\install.ps1 -TargetDir \"D:\\custom\\antigravity-rail\"\n.\\scripts\\install.ps1 -Uninstall\n```\n\n```bash\n# macOS / Linux\nbash ./scripts/install.sh --target \"/custom/path/antigravity-rail\"\nbash ./scripts/install.sh --uninstall\n```\n\n卸载前若检测到 `config/sidecar.pid` 对应的 Node 进程仍在运行，脚本会先停止 Sidecar，再删除安装目录。\n\n</details>\n\n## 三大护栏模块\n\n三个模块在侧边栏面板中都提供两个独立开关：\n\n- **模块总开关**：关闭后，插件从 `rules/AGENTS.md` 移除对应章节，同时停用该模块的 Hook。\n- **Hook 开关**：关闭后保留 `rules/AGENTS.md` 中的常驻规则，不再向模型上下文注入纠偏提醒。\n\n### 1. 分段写入（`write-guard`）\n\n避免模型在单次 `write_file` 或大范围覆盖式 `edit_file` 中一次输出上千行，拖慢流式输出或中途断流。\n\n- `PostToolUse` 在写入完成后统计行数与 UTF-8 字节数，不拦截落盘。失败的工具调用与纯删除（`Replacement` 为空）跳过统计。\n- 超出警戒线时，Hook 按 `conversationId` 哈希把记录写入 `config/pending/`（30 分钟过期）。下一次 `PreInvocation` 注入一次事后提醒（`[antigravity-rail:oversize-reminder]`），并立即删除该队列文件。\n\n| 档位 | 单次写入目标（`AGENTS.md`） | `write_file` 警戒线 | `edit_file` 合计警戒线（`Target + Replacement`） |\n| :--- | :---: | :---: | :---: |\n| `700` 行 · 宽松档 | ≤ 700 行 | 1100 行 / 64 KB | 1200 行 / 72 KB |\n| **`500` 行 · 标准档（默认）** | **≤ 500 行** | **800 行 / 48 KB** | **900 行 / 56 KB** |\n| `300` 行 · 稳妥档 | ≤ 300 行 | 500 行 / 28 KB | 600 行 / 36 KB |\n\n### 2. 先回话与途中汇报（`responsive-mode`）\n\n避免 Agent 接到任务不回话就直接调工具、中途连续静默被折叠成 Exploring，以及提及工作区文件时漏加可点击链接。\n\n- 会话首条用户消息不注入 Hook，遵守规则的多轮对话直接放行。\n- **轮首节奏检测**：新一轮开始时，`PreInvocation` 检查 `transcript.jsonl` 中的上一轮记录。如果上一轮开场无正文就直接调工具，或中途连续静默调工具达到设定档位（`4 次 · 敏感档` / **`6 次 · 标准档（默认）`** / `10 次 · 宽松档`），则注入一次 `<responsive-mode>` 提醒。\n- **轮中文件链接检测**：同一轮中途，如果最新可见回复把已知工作区文件写成了纯反引号而非 `[filename](file:///...)`，下一次调用前注入一次 `<responsive-file-links>` 提醒。已知文件来自本会话此前的 `read_file` / `edit_file` / `write_file` 参数或已出现的 `file:///` 链接。\n- 自动跳过子 Agent 会话和后台任务事件。\n\n### 3. 工具摘要语言匹配（`tool-locale`）\n\n不修改 Antigravity 二进制文件，让 `update_steps` 步骤标题（`title`）、`update_focus` 状态说明（`focus`）与 `run_command` 摘要（`toolSummary`）匹配用户当前语言。\n\n- `rules/AGENTS.md` 常驻规则覆盖所有语种，允许保留必要的代码标识符、文件路径或命令名（例如 `npm test`、`git status`）。\n- `PreInvocation` 自动识别 9 种非拉丁脚本（日文、韩文、中文、西里尔文、阿拉伯文、泰文、天城文、希伯来文、希腊文）。遇到 `\"ok\"`、`\"continue\"` 这类纯拉丁短回复时，最多向前查看 5 条用户消息来判断会话语言。\n- 非拉丁语系会话的本轮工具摘要出现纯英文短语时，下一次模型调用前注入一次 `<tool-locale>` 提醒，每用户轮次最多一次。英文、拉丁语系对话及子 Agent 会话不注入。\n\n## 侧边栏实时面板\n\n**暗黑模式**\n\n<p align=\"center\">\n  <img src=\"./assets/readme/panel-showcase-dark-zh.png\" width=\"100%\" alt=\"Antigravity Rail 侧边栏面板暗黑模式实拍截图，完整展示分段写入、响应汇报、摘要语言三个标签页的开关、档位卡片、四项累计统计与最近 3 条触发记录\">\n</p>\n\n**明亮模式**\n\n<p align=\"center\">\n  <img src=\"./assets/readme/panel-showcase-light-zh.png\" width=\"100%\" alt=\"Antigravity Rail 侧边栏面板明亮模式实拍截图，完整展示分段写入、响应汇报、摘要语言三个标签页的开关、档位卡片、四项累计统计与最近 3 条触发记录\">\n</p>\n\n- **主题与双语界面**：自动适配 Antigravity 暗色与浅色主题，顶栏支持实时切换中文与英文界面。\n- **触发统计**：底部展示四项累计计数（超限落盘、写入提醒、响应纠偏、摘要纠偏）及来自 `config/events.jsonl` 的最近 3 条带时间戳触发记录，支持一键清零。\n- **变更日志与原地更新**：点击顶栏版本号可查看本地 [`CHANGELOG.md`](./CHANGELOG.md)。点击「检查更新」可拉取 GitHub Releases 或 Tags，校验归档后原地替换运行时文件，失败时自动回滚，保留本地配置和统计日志。\n\n> [!NOTE]\n> 在对话中途切换模块总开关或档位会重写 `rules/AGENTS.md`，下一轮提示词前缀缓存会失效重算。建议在开启新对话前选好配置。\n\n## 工作原理与安全边界\n\n```mermaid\nflowchart LR\n  UI[\"侧边栏面板 UI (中 / EN)\"] --> CFG[\"config/settings.json\"]\n  CFG -->|\"重渲染\"| RULES[\"rules/AGENTS.md\"]\n  CFG -->|\"实时阈值\"| WG[\"write-guard (PostToolUse / PreInvocation)\"]\n  CFG -->|\"实时阈值\"| RM[\"responsive-mode (PreInvocation)\"]\n  CFG -->|\"实时开关\"| TL[\"tool-locale (PreInvocation)\"]\n  WG -->|\"超限队列\"| PEND[\"config/pending/ (30 分钟过期)\"]\n  WG --> LOG[\"config/events.jsonl\"]\n  RM --> LOG\n  TL --> LOG\n```\n\n- **不阻断写入**：超限写入始终允许完整落盘，只在下一轮注入一次事后提醒，不丢弃已生成内容。\n- **全程 fail-open**：任何 Hook 遇到非法 stdin、损坏 JSON、缺失 `transcript.jsonl` 或磁盘读写异常时，一律输出 `{}` 放行。\n- **单一配置源**：三模块档位、默认开关和 `rules/AGENTS.md` 模板集中在 [`scripts/config.mjs`](./scripts/config.mjs)。面板改动原子写入 `config/settings.json` 并同步重渲染 `rules/AGENTS.md`。\n- **目录自包含**：配置、待提醒队列、PID 文件和事件日志都留在插件目录内，不改动宿主二进制文件或 `config.json`。\n\n## 本地开发与项目状态\n\n**项目状态**：积极维护中（当前版本 `v3.0.0`，2026-11-27），作者日常主力使用。欢迎通过 [GitHub Issues](https://github.com/Lynn-zy/antigravity-rail/issues) 反馈问题或提交 PR，完整版本记录见 [`CHANGELOG.md`](./CHANGELOG.md)。\n\n运行 Node 内置测试套件（共 **29** 条单测与 CLI 集成测试，零外部依赖）：\n\n```bash\nnpm test\n```\n\n修改 [`scripts/config.mjs`](./scripts/config.mjs) 中的档位或常驻规则模板后，运行以下命令同步仓库默认 `rules/AGENTS.md`（不要将临时生成的 `config/settings.json` 提交入库）：\n\n```bash\nnode -e \"import('./scripts/config.mjs').then(m => m.syncRulesFromSettings())\"\n```\n\n<details>\n<summary>仓库目录结构</summary>\n\n```text\n.\n├── plugin.json                     # Antigravity 插件清单\n├── hooks.json                      # 三个独立 Hook 声明（write-guard / responsive-mode / tool-locale）\n├── CHANGELOG.md                    # 变更日志（侧边栏点击版本号弹窗渲染）\n├── assets/\n│   ├── logo.svg                    # 插件图标\n│   └── readme/                     # README 实拍与展板截图（不随安装脚本复制到运行目录）\n├── rules/AGENTS.md                 # 动态渲染的常驻规则（与侧边栏面板配置同步）\n├── scripts/\n│   ├── config.mjs                  # 统一三模块配置模型、档位预设与 AGENTS.md 渲染\n│   ├── stats.mjs                   # 四项触发事件日志（events.jsonl）与清零\n│   ├── transcript.mjs              # 公共会话记录窗口读取与 fail-open Hook CLI 入口\n│   ├── write-guard-core.mjs        # 分段写入落盘检测与事后提醒排队逻辑\n│   ├── write-guard-hook.mjs        # write-guard Hook 入口\n│   ├── responsive-core.mjs         # 轮首空开场/连续静默检测与轮中文件链接纠偏\n│   ├── responsive-hook.mjs         # responsive-mode Hook 入口\n│   ├── tool-locale-core.mjs        # 9 种非拉丁脚本自动识别与同轮摘要纠偏\n│   ├── tool-locale-hook.mjs        # tool-locale Hook 入口\n│   ├── install.ps1                 # Windows 安装、升级与卸载脚本\n│   ├── install.sh                  # macOS / Linux 安装、升级与卸载脚本\n│   └── *.test.mjs                  # Node 内置测试套件（共 29 条测试）\n└── sidecars/panel/\n    ├── sidecar.json                # 侧边栏 Sidecar 面板声明\n    ├── main.mjs                    # Sidecar 本地 HTTP 服务与 PID 生命周期管理\n    ├── panel-logic.mjs             # 面板状态查询、统一配置更新、统计清零与日志读取\n    ├── updater.mjs                 # 零依赖 GitHub 更新检测、校验与安全回滚替换\n    └── index.html                  # 三标签中英双语侧边栏面板页面（自适应宿主主题）\n```\n\n</details>\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "### Changed\n- 优化 `responsive-file-links` 文件链接 Hook 的注入提醒文案：明确仅对真实本地/工作区文件要求使用 `file:///` 可点击链接，提及远程、外部或泛指文件名时直接忽略该提醒，避免误导模型。\n- 互换中英文 README，仓库默认展示简体中文文档。\n",
   "securityReport": {
     "riskTier": "high",
     "capabilities": [
@@ -58,7 +58,7 @@
         "file": "hooks.json",
         "line": 10,
         "snippet": "node ./scripts/write-guard-hook.mjs post-tool-use",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/hooks.json#L10"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/hooks.json#L10"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -69,7 +69,7 @@
         "file": "scripts/responsive-core.test.mjs",
         "line": 220,
         "snippet": "const ok = spawnSync(process.execPath, [HOOK_ENTRY], { input: JSON.stringify({ hookEventName: 'PreInvocation', transcriptPath }), env, encoding: 'utf8', });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/responsive-core.test.mjs#L220"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/responsive-core.test.mjs#L220"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -80,7 +80,7 @@
         "file": "scripts/responsive-core.test.mjs",
         "line": 229,
         "snippet": "const bad = spawnSync(process.execPath, [HOOK_ENTRY], { input: 'not json', env, encoding: 'utf8', });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/responsive-core.test.mjs#L229"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/responsive-core.test.mjs#L229"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -91,7 +91,7 @@
         "file": "scripts/tool-locale-core.mjs",
         "line": 52,
         "snippet": "const matched = USER_REQUEST_RE.exec(rawContent);",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/tool-locale-core.mjs#L52"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/tool-locale-core.mjs#L52"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -102,7 +102,7 @@
         "file": "scripts/tool-locale-core.test.mjs",
         "line": 316,
         "snippet": "const ok = spawnSync(process.execPath, [HOOK_ENTRY], { input: JSON.stringify({ hookEventName: 'PreInvocation', transcriptPath }), env, encoding: 'utf8', });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/tool-locale-core.test.mjs#L316"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/tool-locale-core.test.mjs#L316"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -113,7 +113,7 @@
         "file": "scripts/tool-locale-core.test.mjs",
         "line": 325,
         "snippet": "const bad = spawnSync(process.execPath, [HOOK_ENTRY], { input: 'not json', env, encoding: 'utf8', });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/tool-locale-core.test.mjs#L325"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/tool-locale-core.test.mjs#L325"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -124,7 +124,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 70,
         "snippet": "execFileSync('tar', ['-czf', tarballPath, '-C', stagingParent, folderName], { windowsHide: true, });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L70"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L70"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -135,7 +135,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 362,
         "snippet": "holder = spawn(process.execPath, ['-e', 'console.log(\"locked\"); setTimeout(() => {}, 30000);'], { cwd: panelDir, stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true, });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L362"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L362"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -146,7 +146,7 @@
         "file": "scripts/write-guard.test.mjs",
         "line": 269,
         "snippet": "const bigRun = spawnSync(process.execPath, [HOOK_ENTRY, 'post-tool-use'], { input: JSON.stringify({ conversationId: 'conv-cli', toolCall: { name: 'write_file', args: { Path: '/tmp/",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard.test.mjs#L269"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard.test.mjs#L269"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -157,7 +157,7 @@
         "file": "scripts/write-guard.test.mjs",
         "line": 280,
         "snippet": "const preRun = spawnSync(process.execPath, [HOOK_ENTRY, 'pre-invocation'], { input: JSON.stringify({ conversationId: 'conv-cli' }), env, encoding: 'utf8', });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard.test.mjs#L280"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard.test.mjs#L280"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -168,7 +168,7 @@
         "file": "scripts/write-guard.test.mjs",
         "line": 292,
         "snippet": "const malformed = spawnSync(process.execPath, [HOOK_ENTRY, 'post-tool-use'], { input: '{invalid json', env, encoding: 'utf8', });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard.test.mjs#L292"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard.test.mjs#L292"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -179,7 +179,7 @@
         "file": "sidecars/panel/updater.mjs",
         "line": 71,
         "snippet": "const match = SEMVER_RE.exec(raw.trim());",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/updater.mjs#L71"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/updater.mjs#L71"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -190,7 +190,7 @@
         "file": "sidecars/panel/updater.mjs",
         "line": 108,
         "snippet": "const match = GITHUB_REPO_RE.exec(raw);",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/updater.mjs#L108"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/updater.mjs#L108"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -201,7 +201,7 @@
         "file": "scripts/config.mjs",
         "line": 262,
         "snippet": "fs.writeFileSync(tempPath, content, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/config.mjs#L262"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/config.mjs#L262"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -212,7 +212,7 @@
         "file": "scripts/panel.test.mjs",
         "line": 31,
         "snippet": "cleanup: () => fs.rmSync(tempDir, { recursive: true, force: true }),",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/panel.test.mjs#L31"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/panel.test.mjs#L31"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -223,7 +223,7 @@
         "file": "scripts/panel.test.mjs",
         "line": 147,
         "snippet": "fs.appendFileSync(ws.eventsPath, '{bad json\\n', 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/panel.test.mjs#L147"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/panel.test.mjs#L147"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -234,7 +234,7 @@
         "file": "scripts/responsive-core.test.mjs",
         "line": 63,
         "snippet": "fs.writeFileSync(p, `${lines.join('\\n')}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/responsive-core.test.mjs#L63"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/responsive-core.test.mjs#L63"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -245,7 +245,7 @@
         "file": "scripts/responsive-core.test.mjs",
         "line": 66,
         "snippet": "cleanup: () => fs.rmSync(dir, { recursive: true, force: true }),",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/responsive-core.test.mjs#L66"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/responsive-core.test.mjs#L66"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -256,7 +256,7 @@
         "file": "scripts/stats.mjs",
         "line": 45,
         "snippet": "fs.appendFileSync(eventsPath, `${JSON.stringify({ ts, type })}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/stats.mjs#L45"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/stats.mjs#L45"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -267,7 +267,7 @@
         "file": "scripts/stats.mjs",
         "line": 108,
         "snippet": "fs.rmSync(eventsPath, { force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/stats.mjs#L108"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/stats.mjs#L108"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -278,7 +278,7 @@
         "file": "scripts/tool-locale-core.test.mjs",
         "line": 53,
         "snippet": "fs.writeFileSync(p, `${lines.join('\\n')}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/tool-locale-core.test.mjs#L53"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/tool-locale-core.test.mjs#L53"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -289,7 +289,7 @@
         "file": "scripts/tool-locale-core.test.mjs",
         "line": 56,
         "snippet": "cleanup: () => fs.rmSync(dir, { recursive: true, force: true }),",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/tool-locale-core.test.mjs#L56"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/tool-locale-core.test.mjs#L56"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -300,7 +300,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 62,
         "snippet": "fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L62"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L62"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -311,7 +311,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 181,
         "snippet": "fs.rmSync(tempDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L181"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L181"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -322,7 +322,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 300,
         "snippet": "fs.rmSync(tempDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L300"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L300"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -333,7 +333,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 319,
         "snippet": "fs.writeFileSync(path.join(installedDir, 'config', 'events.jsonl'), '{\"type\":\"oversize\"}\\n', 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L319"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L319"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -344,7 +344,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 343,
         "snippet": "fs.rmSync(tempDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L343"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L343"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -355,7 +355,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 357,
         "snippet": "fs.writeFileSync(path.join(installedDir, 'sidecars', 'panel', 'obsolete.txt'), 'old', 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L357"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L357"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -366,7 +366,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 358,
         "snippet": "fs.writeFileSync(path.join(newSourceDir, 'sidecars', 'panel', 'added.txt'), 'new', 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L358"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L358"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -377,7 +377,7 @@
         "file": "scripts/updater.test.mjs",
         "line": 401,
         "snippet": "fs.rmSync(tempDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/updater.test.mjs#L401"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/updater.test.mjs#L401"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -388,7 +388,7 @@
         "file": "scripts/write-guard-core.mjs",
         "line": 86,
         "snippet": "fs.rmSync(filePath, { force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard-core.mjs#L86"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard-core.mjs#L86"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -399,7 +399,7 @@
         "file": "scripts/write-guard-core.mjs",
         "line": 172,
         "snippet": "fs.appendFileSync(pendingPath, `${JSON.stringify({ ...notice, ts: nowMs })}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard-core.mjs#L172"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard-core.mjs#L172"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -410,7 +410,7 @@
         "file": "scripts/write-guard-core.mjs",
         "line": 292,
         "snippet": "fs.rmSync(pendingPath, { force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard-core.mjs#L292"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard-core.mjs#L292"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -421,7 +421,7 @@
         "file": "scripts/write-guard.test.mjs",
         "line": 36,
         "snippet": "cleanup: () => fs.rmSync(tempDir, { recursive: true, force: true }),",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/scripts/write-guard.test.mjs#L36"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/scripts/write-guard.test.mjs#L36"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -432,7 +432,7 @@
         "file": "sidecars/panel/panel-logic.mjs",
         "line": 178,
         "snippet": "fs.writeFileSync(pidPath, `${JSON.stringify({ pid, startedAt })}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/panel-logic.mjs#L178"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/panel-logic.mjs#L178"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -443,7 +443,7 @@
         "file": "sidecars/panel/panel-logic.mjs",
         "line": 199,
         "snippet": "fs.rmSync(pidPath, { force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/panel-logic.mjs#L199"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/panel-logic.mjs#L199"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -454,7 +454,7 @@
         "file": "sidecars/panel/updater.mjs",
         "line": 401,
         "snippet": "fs.writeFileSync(destPath, Buffer.concat(chunks, downloadedBytes));",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/updater.mjs#L401"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/updater.mjs#L401"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -465,7 +465,7 @@
         "file": "sidecars/panel/updater.mjs",
         "line": 562,
         "snippet": "fs.rmSync(path.join(targetDir, relPath), { force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/updater.mjs#L562"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/updater.mjs#L562"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -476,7 +476,7 @@
         "file": "sidecars/panel/updater.mjs",
         "line": 574,
         "snippet": "fs.rmSync(path.join(targetDir, relPath), { force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/updater.mjs#L574"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/updater.mjs#L574"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -487,11 +487,22 @@
         "file": "sidecars/panel/updater.mjs",
         "line": 854,
         "snippet": "fs.rmSync(tempDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/edba13a6a4636f067dc7b8961bb3edd92ce7aa12/sidecars/panel/updater.mjs#L854"
+        "githubBlobUrl": "https://github.com/Lynn-zy/antigravity-rail/blob/8257feca7971727ea4b09d1a590222a682a2422c/sidecars/panel/updater.mjs#L854"
       }
     ]
   },
   "history": [
+    {
+      "version": "3.0.1",
+      "sha": "8257feca7971727ea4b09d1a590222a682a2422c",
+      "scannedAt": "2026-11-28T12:14:58.395Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "3.0.0",
       "sha": "edba13a6a4636f067dc7b8961bb3edd92ce7aa12",

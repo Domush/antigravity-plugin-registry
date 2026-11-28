@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "id": "OjbkPanghu233/codex-bridge",
+  "sha": "2f64fbaca4731f7f0c633ec388f8c35ced0151f7",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T12:14:03.449Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "codex-bridge",
+    "displayName": "Codex Bridge",
+    "version": "2.0.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "cli",
+        "runtimeName": "codex-bridge_cli",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "codex-orchestrator",
+        "slashCommand": "/codex-orchestrator",
+        "description": "Orchestrate and delegate coding, debugging, refactoring, and code review tasks to the local OpenAI Codex CLI through the codex-bridge MCP server. Use when the user asks to have Codex implement, analyze, or review code.",
+        "disableModelInvocation": false,
+        "file": "skills/codex-orchestrator/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "codex",
+        "description": "Asynchronous engineering subagent backed by the local OpenAI Codex CLI (via codex-bridge_cli MCP). Invoke proactively in parallel for multi-file coding, refactoring, hard debugging, second-opinion analysis, or independent code reviews while",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/codex.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/codex-orchestrator"
+    ],
+    "mcpServerNames": [
+      "codex-bridge_cli"
+    ],
+    "agentNames": [
+      "codex"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" alt=\"Codex Bridge Logo\" width=\"72\" height=\"72\" />\n\n# Codex Bridge\n\n**让 Antigravity 协同调度本地 OpenAI Codex CLI，并内置原生侧边栏实时监控面板**\n\n[![Antigravity Plugin](https://img.shields.io/badge/Antigravity-Plugin-5b7cfa?style=flat-square)](https://github.com/OjbkPanghu233/codex-bridge)\n[![MCP App](https://img.shields.io/badge/MCP-App%20%2B%20Server-8b5cf6?style=flat-square)](https://modelcontextprotocol.io/)\n[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-34d399?style=flat-square)](https://nodejs.org/)\n[![License: MIT](https://img.shields.io/badge/License-MIT-ec4899?style=flat-square)](LICENSE)\n\n</div>\n\n---\n\n## 如何使用\n\n### 1. 前置要求\n\n- **Antigravity**\n- **Node.js >= 20**\n- 已在本地安装并登录 **OpenAI Codex CLI**（`codex --version` 可正常运行）\n\n### 2. 安装插件\n\n仓库已内置打包好的面板产物 `ui/dist/monitor.html`，克隆到 Antigravity 插件目录即可开箱即用：\n\n**Windows (PowerShell)**\n```powershell\ngit clone https://github.com/OjbkPanghu233/codex-bridge.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-bridge\"\n```\n\n**macOS / Linux**\n```bash\ngit clone https://github.com/OjbkPanghu233/codex-bridge.git ~/.gemini/config/plugins/codex-bridge\n```\n\nAntigravity 会自动发现该目录并加载插件，无需手动注册。\n\n### 3. 日常使用\n\n- **自动协同与委派**：正常在对话中开发即可。内置规则会自动引导 Antigravity 在并行编码、独立 Code Review、疑难排查时拉起异步 `codex` 子代理，或直接调用 `codex_run` / `codex_reply` / `codex_review`。\n- **打开实时监控面板**：\n  - 点击右侧辅助面板的 **`+`** → **Codex Monitor**，或从 **Plugins** 菜单 / 左侧全局栏打开。\n  - 在对话中直接说 *\"打开 Codex Monitor\"* 也会自动呼出面板。\n- **监控与干预**：实时查看当前执行阶段、命令输出、改动文件（点击可在侧边栏直接打开）、Token 消耗与 `stderr` 日志，并支持两步确认一键中止运行中的任务。\n\n> 如需修改前端界面，在 `ui/` 目录下重新构建单文件产物即可：\n> ```bash\n> cd ui && npm install && npm run build\n> ```\n\n---\n\n## 实现原理\n\n### 整体架构\n\n```mermaid\nflowchart LR\n    AG[\"Antigravity<br/>Main Agent / codex Subagent\"]\n    MCP[\"MCP Server<br/>mcp/server.mjs\"]\n    CLI[\"OpenAI Codex CLI<br/>codex exec --json\"]\n    UI[\"Codex Monitor<br/>ui://codex-bridge/monitor.html\"]\n    DISK[(\"Run Logs<br/>${PLUGIN_DATA}/runs/*.jsonl\")]\n\n    AG -- \"codex_run / reply / review\" --> MCP\n    MCP -- \"stdin prompt & spawn\" --> CLI\n    CLI -- \"stdout JSONL / stderr\" --> MCP\n    MCP -- \"实时落盘\" --> DISK\n    UI -- \"codex_monitor_state / cancel\" --> MCP\n    MCP -- \"structuredContent 快照\" --> UI\n```\n\n### 核心模块\n\n| 模块 | 路径 | 实现说明 |\n| :--- | :--- | :--- |\n| **MCP 桥接与流式引擎** | `mcp/server.mjs` | 零外部依赖的 Node.js JSON-RPC 2.0 Stdio 服务。通过 `spawn` 拉起 `codex exec --json`（以及 `resume` / `review`），按行实时解析 JSONL 事件流并追加写入 `${PLUGIN_DATA}/runs/<run_id>.jsonl`，保证服务重启后仍可回溯历史。中止任务时在 Windows 上通过 `taskkill /T /F` 清理完整子进程树。 |\n| **原生 MCP App 面板** | `ui/src/` → `ui/dist/monitor.html` | 基于 `@modelcontextprotocol/ext-apps` 构建，由 `esbuild` 打包为单个自包含 HTML，通过 MCP 资源 `ui://codex-bridge/monitor.html` 挂载到 `aux_pane` 与 `global` 入口。UI 采用壳层一次挂载 + keyed DOM 增量协调，轮询刷新时保留展开状态与滚动位置，自动适配宿主明暗主题。 |\n| **子代理与协作规则** | `agents/codex.md`<br/>`rules/AGENTS.md`<br/>`skills/codex-orchestrator/` | 定义独立的异步 `codex` 子代理（默认 `flash` 模型）和全局协作规范，明确何时并行委派、如何复用 `thread_id` 续聊以及何时交由主 Agent 验收 `git diff`。 |\n\n### 目录结构\n\n```text\ncodex-bridge/\n├── plugin.json                        # 插件清单与元信息\n├── mcp_config.json                    # MCP 服务启动配置（注入 ${PLUGIN_DATA}）\n├── assets/logo.svg                    # 插件图标\n├── mcp/server.mjs                     # MCP Server + Codex JSONL 流式解析与持久化\n├── ui/\n│   ├── src/                           # Codex Monitor 面板源码（app.js / template.html）\n│   ├── build.mjs                      # esbuild 单文件内联打包脚本\n│   └── dist/monitor.html              # 预构建单文件产物（开箱即用）\n├── agents/codex.md                    # 异步 Codex 子代理定义\n├── rules/AGENTS.md                    # 主动协作规则\n└── skills/codex-orchestrator/SKILL.md # Codex 编排技能说明\n```\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "dynamic_code_exec",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "mcp/server.mjs",
+        "line": 766,
+        "snippet": "const killer = spawn(\"taskkill\", [\"/pid\", String(child.pid), \"/T\", \"/F\"], { windowsHide: true, stdio: \"ignore\", });",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L766"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "mcp/server.mjs",
+        "line": 840,
+        "snippet": "const child = spawn(launcher.command, [...launcher.prefixArgs, ...args], { cwd: cwd || process.cwd(), shell: launcher.shell, stdio: [\"pipe\", \"pipe\", \"pipe\"], windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L840"
+      },
+      {
+        "id": "CODE_JS_DYNAMIC_EXEC",
+        "severity": "high",
+        "layer": "code",
+        "capability": "dynamic_code_exec",
+        "message": "Dynamically executes runtime-constructed JavaScript (eval, Function, or vm).",
+        "file": "ui/build.mjs",
+        "line": 36,
+        "snippet": "new Function(safeJs);",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/ui/build.mjs#L36"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 79,
+        "snippet": "writeFileSync(filePath, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L79"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 88,
+        "snippet": "appendFileSync(filePath, `${JSON.stringify(obj)}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L88"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 116,
+        "snippet": "rmSync(getRunLogPath(oldRun.id), { force: true });",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L116"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 1559,
+        "snippet": "rmSync(getRunLogPath(targetId), { force: true });",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L1559"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "mcp/server.mjs",
+        "line": 1570,
+        "snippet": "rmSync(getRunLogPath(id), { force: true });",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/mcp/server.mjs#L1570"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "ui/build.mjs",
+        "line": 38,
+        "snippet": "writeFileSync(outPath, finalHtml, \"utf8\");",
+        "githubBlobUrl": "https://github.com/OjbkPanghu233/codex-bridge/blob/2f64fbaca4731f7f0c633ec388f8c35ced0151f7/ui/build.mjs#L38"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.0.0",
+      "sha": "2f64fbaca4731f7f0c633ec388f8c35ced0151f7",
+      "scannedAt": "2026-11-28T12:14:03.449Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

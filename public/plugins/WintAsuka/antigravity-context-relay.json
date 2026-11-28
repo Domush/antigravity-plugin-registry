@@ -1,0 +1,491 @@
+{
+  "schemaVersion": 1,
+  "id": "WintAsuka/antigravity-context-relay",
+  "sha": "fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T12:13:18.190Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "context-relay",
+    "displayName": "Context Relay — Auto Handoff & Token Monitor",
+    "version": "2.2.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "context-relay",
+        "runtimeName": "context-relay_context-relay",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/mcp/history-server.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [
+      {
+        "group": "context-relay",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "run_command|read_file|view_file",
+        "type": "command",
+        "command": "node ./hooks/guard-transcript.js",
+        "prompt": null,
+        "timeout": 10
+      }
+    ],
+    "skills": [
+      {
+        "name": "handoff",
+        "slashCommand": "/handoff",
+        "description": "Use when receiving `[AUTO_HANDOFF_TRIGGERED]` or `[AUTO_HANDOFF_ADVISORY]`, or when the user invokes `/handoff` (or asks to summarize and hand off to a new conversation). Generates a high-fidelity structured summary and runs the handoff scr",
+        "disableModelInvocation": false,
+        "file": "skills/handoff/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/handoff"
+    ],
+    "mcpServerNames": [
+      "context-relay_context-relay"
+    ],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "PreToolUse",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Context Relay\n\n<p align=\"left\">\n  <a href=\"README.zh-CN.md\"><img src=\"https://img.shields.io/badge/Docs-EN%20%7C%20%E4%B8%AD%E6%96%87-blue\" alt=\"EN / 中文\"></a>\n  <img src=\"https://img.shields.io/badge/Node-%3E%3D20-339933?logo=node.js&logoColor=white\" alt=\"Node >= 20\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-4c8df6\" alt=\"Zero Dependencies\">\n  <img src=\"https://img.shields.io/badge/License-MIT-81c995\" alt=\"MIT License\">\n</p>\n\n[中文文档](README.zh-CN.md)\n\n**Stop Antigravity long runs from getting wiped mid-task by opaque native compaction, forgetting early constraints, and busting your prefix cache.**\n\n> **Author's Recommended Workflow:**\n> On current Antigravity builds (512k native auto-compaction budget), enable **Auto-continue (`continue`)**, set the trigger zone to **80%–90%** to force a clean handoff before native compaction fires, turn on the **Codex-style seamless template (`codex-seamless`)**, and pair with **Context Mode** while delegating heavy execution work to **subagents** so your main thread stays focused across multi-million-token tasks.\n\nAntigravity Context Relay is a **pure-local** context monitor, customizable dual-watermark handoff controller, multi-template prompt manager, and transcript search/slice MCP plugin for **Google Antigravity** (Desktop, `antigravity-ide`, and CLI `antigravity-cli`) that keeps **2M–3M+ cumulative token** workflows on track across clean `<Title> (Part 2)` → `(Part 3)` continuation chains.\n\n## Side Panel Preview\n\n<table>\n  <tr>\n    <th align=\"center\">Context Monitor &amp; Dual Watermark</th>\n    <th align=\"center\">Chain History &amp; FTS5 Recall</th>\n  </tr>\n  <tr>\n    <td align=\"center\"><img src=\"assets/screenshot-monitor.png\" alt=\"Context Relay Monitor Side Panel (Gemini 4 Neon)\" width=\"380\"></td>\n    <td align=\"center\"><img src=\"assets/screenshot-history.png\" alt=\"Context Relay Chain History and FTS5 Search Side Panel\" width=\"380\"></td>\n  </tr>\n  <tr>\n    <th align=\"center\">Settings &amp; 3 One-Click Scenario Presets</th>\n    <th align=\"center\">Prompt Templates &amp; Chain Inheritance</th>\n  </tr>\n  <tr>\n    <td align=\"center\"><img src=\"assets/screenshot-settings.png\" alt=\"Context Relay Settings and Scenario Presets Side Panel\" width=\"380\"></td>\n    <td align=\"center\"><img src=\"assets/screenshot-templates.png\" alt=\"Context Relay Prompt Templates Editor Side Panel\" width=\"380\"></td>\n  </tr>\n</table>\n\n## Installation\n\n### Option 1: From GitHub Release Archive (No Git Required)\n\n1. Download and extract the latest `.zip` / `.tar.gz` archive from [GitHub Releases](https://github.com/WintAsuka/antigravity-context-relay/releases).\n2. Open a terminal inside the extracted folder and run:\n\n```bash\n# Install English edition into ~/.gemini/config/plugins/context-relay\nnode scripts/install.mjs\n\n# Or install Chinese edition (UI, rules, skills, prompt templates, and (续N) naming)\nnode scripts/install.mjs --lang zh\n```\n\n### Option 2: From Source (`git clone`)\n\n```bash\ngit clone https://github.com/WintAsuka/antigravity-context-relay.git\ncd antigravity-context-relay\n\n# Install English edition (default) or add --lang zh for Chinese\nnode scripts/install.mjs\n```\n\nUseful installer flags:\n- `--lang en|zh`: Select initial language (`en` by default).\n- `--link`: Create a Unix symlink instead of copying files (for local development).\n- `--uninstall`: Cleanly remove the installed plugin from `~/.gemini/config/plugins/context-relay` while keeping your `~/.gemini/context-relay/` history and config intact.\n\n> [!NOTE]\n> On Windows, Antigravity Desktop's Go plugin scanner may skip directory junctions created by `--link`. Use the default copy install (`node scripts/install.mjs`) for Windows Desktop.\n\n### Option 3: Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/WintAsuka/antigravity-context-relay\n```\n\nTo verify plugin manifests and runtime health offline before or after installation:\n\n```bash\nnode scripts/doctor.mjs --strict\n```\n\nRestart Antigravity Desktop, enable **Context Relay** in Customizations, and open **Context Relay** in the right side pane (`AUX_PANE`).\n\n## Why Context Relay (vs. Native Compaction)\n\n| Dimension | Antigravity Native Compaction | Antigravity Context Relay |\n|---|---|---|\n| **Handoff Threshold** | Hard-coded policy caps per model profile (often 128K / 256K / 512K) that frequently ignore custom overrides. | Fully user-controlled **Soft Advisory → Hard Takeover** zones (default `80% – 90%`) or single-point caps via side panel or `config.json`: `%` of `request_budget_tokens`, `%` of native window, fixed token range, and per-model overrides (`modelOverrides`). |\n| **Summary Prompt Freedom** | Locked internal prompt templates (some profiles delegate summarization to smaller models or inject self-limiting rules against re-reading files or running `git diff`). | 5 built-in scenario presets (including `codex-seamless`) + unlimited custom templates in `~/.gemini/context-relay/prompts/`, editable in the side panel, selectable via `/handoff <template>`, and inherited across `(Part N)` / `(续N)` chains. |\n| **History & Lineage Protection** | Evicts raw tool outputs from active history; repeated compactions cause `summary(summary)` drift until early decisions are lost. | Never mutates raw transcripts. Persists full lineage in `~/.gemini/context-relay/chains.json` and exposes `handoff_timeline`, `handoff_list_chain`, `handoff_search_chain`, `handoff_search`, and `handoff_slice` MCP tools (guarded by `PreToolUse`). |\n| **Prefix Cache & Cost Behavior** | Rewrites earlier prompt history in-place mid-session, invalidating prefix caches (`cache_read_tokens → 0`) and triggering blind re-read loops. | Keeps prefix append-only and cache-stable within each generation; rolls over cleanly at your chosen watermark with exact file/line maps and warm-cache lineage tracking. |\n| **Long-Horizon Relay** | Can stall mid-loop or drift off constraints after repeated inline checkpoints. | Detects crossings mid-task (`PreInvocation`) or at turn end (`Stop`), writes an anchored handoff packet, spawns `<Title> (Part N)` inheriting title/model/project/permissions, and dispatches the continuation prompt immediately. |\n\n## Key Features\n\n- **Zero External Dependencies**: Pure Node.js ESM (`>=20`, SQLite decoding via built-in `node:sqlite` on Node 22.5+, automatic `transcript.jsonl` fallback on older runtimes). No Python required, no `npm install`.\n- **3 One-Click Scenario Presets in Settings**: Switch workflows instantly at the top of the **Settings** tab without editing JSON:\n  - **Observer Only**: Threshold alerts and telemetry only (`mode: \"remind_only\"`), never auto-creates continuation sessions.\n  - **Seamless Relay**: Fast, compact continuation (`seamlessMode: true`, `codex-seamless` brief) while preserving `(Part N)` / `(续N)` lineage.\n  - **Structured + Auto-Archive**: Full structured handoff summary, automatic archiving of previous generations (`autoArchivePrevious: true`), and native compaction fallback (`handoffOnCompacted: true`).\n- **Live Context Monitor & Session Telemetry / Quota Card**:\n  - **100-dot 1% usage grid**, 14-category breakdown, checkpoint status, context file list, CLI-compatible `Copy as text`, live handoff watermark bar, lineage pill strip, and one-click `/handoff`.\n  - **2×2 Telemetry & Quota Card**: Session-wide **cumulative Prompt Cache hit rate** (`Σ cache_read / Σ (uncached + cache_write + cache_read) × 100%`) as the headline and totals alongside a 12-turn sparkline, latest + session-average TPS/TTFT with an estimated 5-minute cache warmth countdown, model quota bar with reset timer, and public-rate API cost/savings estimate.\n  - **Warm Handoff Lineage Metrics**: Records `seedTokens`, `modelInherited`, and `cacheWarmAtHandoff` per generation in `chains.json`, warns on model fallback (`cacheWarning`), and displays `~seed` and `Warm relay` badges in **Chain History**.\n- **Zero-Lag Dual-Watermark Detection (`PreInvocation` + `Stop`)**:\n  - `lib/context-report.mjs` counts newly completed `PLANNER_RESPONSE` and tool outputs after the latest `gen_metadata` snapshot for zero-lag tail accounting.\n  - **Soft Advisory → Hard Takeover** (default `80% – 90%`): Entering the soft zone nudges the agent once (without interrupting mid-step edits) to wrap up cleanly; crossing the hard threshold enforces takeover immediately via `PreInvocation` (mid-loop) or `Stop` (final reply). Set soft equal to hard for single-point triggering.\n- **5 Built-in Summary Templates & Chain Inheritance**:\n  - `default` (general anchored handoff), `coding-strict` (repo state, contracts, test outputs, dead ends), `research-writing` (research questions, outline, verified URLs), `creative-rp` (world rules, character states, plot threads), and `codex-seamless` (~400–1,000-word fast brief with anti-re-read anchors).\n  - Create, clone, edit, and delete unlimited custom templates in `~/.gemini/context-relay/prompts/`. Binding a template to a conversation (side panel or `/handoff <template>`) propagates automatically to `(Part 2)`, `(Part 3)`, …\n- **Lossless Cross-Generation Recall (MCP + `PreToolUse` Guard)**:\n  - Blocks unbounded full-file reads of `transcript*.jsonl` via `PreToolUse`.\n  - Exposes `handoff_timeline`, `handoff_list_chain`, `handoff_search_chain`, `handoff_search`, and `handoff_slice` via `mcp/history-server.mjs`, backed by an incremental SQLite FTS5 index (`lib/history-index.mjs`) and visual **Chain History** explorer.\n- **Isolated Subagent Relay (`subagentMode: \"codex_relay\"`)**: Subagents hand off through flat parent-mediated sibling relays in an isolated subagent sequence (`scripts/subagent-relay.mjs`) without cluttering your main chat list.\n- **Clean English / Chinese Isolation & One-Click Switch**: Separate static manifests (`locales/en/` vs `locales/zh/`), templates (`prompts/` vs `prompts/zh/`), and sidecar locales (`sidecars/handoff/locales/{en,zh}.json`). Toggle anytime with `ZH` / `EN` in the top bar or install with `--lang zh`.\n- **Decoupled State & Automatic Legacy Migration**: All user data lives in `~/.gemini/context-relay/` outside the plugin directory; existing `~/.gemini/auto-handoff/` data migrates non-destructively on first run. Supports `antigravity` (Desktop), `antigravity-cli`, and `antigravity-ide`.\n\n## Recommended Pairings\n\n- **Antigravity Desktop**: Combine **Context Mode** (stops huge command/file dumps in-session) + **Context Relay** (monitors real token budgets, cache hit rate, and hands off cleanly before native compaction amnesia).\n- **Antigravity CLI (`agy`)**: Can also be paired with **billion-context** (`bili antigravity`) for in-session incremental pruning, using Context Relay as the outer cross-session handoff layer.\n\n## Configuration (`~/.gemini/context-relay/config.json`)\n\nUser settings live in `~/.gemini/context-relay/config.json` and per-session trigger state lives in `~/.gemini/context-relay/state.json`. Edit them visually in the **Settings** tab or directly in JSON:\n\n| Field | Default | Description |\n|---|---|---|\n| `language` | `\"en\"` | `\"en\"` (`(Part N)` titles) or `\"zh\"` (`(续N)` titles) |\n| `mode` | `\"continue\"` | `\"continue\"` (auto-create continuation chat) or `\"remind_only\"` (notify only) |\n| `thresholdMode` | `\"budget_ratio\"` | `\"budget_ratio\"`, `\"limit_ratio\"`, or `\"fixed\"` |\n| `softBudgetRatio` | `0.8` | Soft advisory ratio (`0.1` – `1.0`, `<= budgetRatio`); set equal to `budgetRatio` for single-point triggering |\n| `budgetRatio` | `0.9` | Hard takeover ratio (`0.1` – `1.0`) in ratio modes |\n| `fixedSoftThresholdTokens` | `160000` | Soft advisory token threshold when `thresholdMode` is `\"fixed\"` |\n| `fixedThresholdTokens` | `200000` | Hard takeover token ceiling when `thresholdMode` is `\"fixed\"` |\n| `fallbackThresholdTokens` | `200000` | Fallback if neither budget nor limit can be resolved |\n| `minThresholdTokens` | `80000` | Minimum threshold floor for ratio-based budgets |\n| `retriggerDeltaTokens` | `30000` | Cooldown token delta before re-triggering hard takeover in the same session |\n| `handoffOnCompacted` | `false` | Trigger immediate handoff fallback if native compaction (`compacted=true`) is detected (disabled by default to avoid hijacking older pre-compacted threads) |\n| `seamlessMode` | `false` | Codex-style seamless mode (`codex-seamless` brief when global template is `default`, minimal UI callouts, keeps `(Part N)` / `(续N)` titles) |\n| `autoArchivePrevious` | `false` | Archive the previous conversation via `UpdateConversation` after continuation creation and chain persistence succeed |\n| `subagentMode` | `\"codex_relay\"` | `\"codex_relay\"` (flat parent-mediated sibling relay), `\"skip\"`, or `\"standard\"` |\n| `skipSubagents` | `false` | Legacy boolean kept synchronized with `subagentMode === \"skip\"` |\n| `modelOverrides` | `{}` | Map of model ID/name pattern -> number or `{ \"soft\": N, \"hard\": M }` |\n\nEnvironment overrides (backward-compatible with `AUTO_HANDOFF_*`):\n- `CONTEXT_RELAY_DISABLE=1`: Fail-open disable of Context Relay hook checks and transcript read blocks.\n- `CONTEXT_RELAY_SUBAGENT_MODE`: Override `subagentMode` (`codex_relay`, `skip`, or `standard`).\n- `CONTEXT_RELAY_DATA_DIR`: Override the user state directory (defaults to `~/.gemini/context-relay`).\n- `CONTEXT_RELAY_THRESHOLD` / `CONTEXT_RELAY_SOFT_THRESHOLD`: Force an explicit numeric threshold or `\"soft-hard\"` range (e.g., `\"120000-150000\"`).\n- `CONTEXT_RELAY_DRY_RUN=1`: Evaluate threshold without writing `state.json`.\n- `CONTEXT_RELAY_RECENT_USER_CHARS`: Character budget for verbatim recent user excerpts in seamless mode.\n\n## Privacy & Safety\n\n- **100% Local Execution & Zero External Telemetry**: All token decoding, FTS5 indexing, hook evaluation, and UI rendering run locally on your machine. Nothing is uploaded to external servers (the sidecar only queries Antigravity's local `127.0.0.1` Language Server when fetching model catalogs and quota).\n- **Never Modifies Host Global Config**: Installation and language switching only operate within `~/.gemini/config/plugins/context-relay` and `~/.gemini/context-relay/` — never overwriting Antigravity's global `~/.gemini/config/config.json`.\n- **Non-Destructive Transcript Policy**: Raw `transcript.jsonl` / `transcript_full.jsonl` files and Antigravity SQLite `.vscdb` / `.pb` databases are strictly read-only.\n- **Clean Uninstall & Auto-Redacted Diagnostics**: Remove cleanly anytime via `node scripts/install.mjs --uninstall`. When troubleshooting, `node scripts/doctor.mjs` automatically redacts home paths and tokens before output.\n\n## FAQ & Troubleshooting\n\n<details>\n<summary><strong>1. The side panel doesn't appear or stays Idle / Waiting for connection?</strong></summary>\n\n1. Confirm Antigravity was restarted after running `node scripts/install.mjs` and **Context Relay** is enabled in Customizations.\n2. On Windows Desktop, ensure you did **not** install with `--link` (use the copy install `node scripts/install.mjs`).\n3. Open or send at least one message in a conversation so Antigravity writes active conversation state, then run `node scripts/doctor.mjs` to inspect discovered directories and sidecar health.\n</details>\n\n<details>\n<summary><strong>2. I'm on Node 20 — why is live token breakdown or Prompt Cache data missing?</strong></summary>\n\nAntigravity stores live `gen_metadata` and step tables in SQLite. Built-in `node:sqlite` became available in **Node.js 22.5+**. On Node 20, Context Relay automatically falls back to estimating tokens from `transcript.jsonl` so handoffs still work, while fine-grained SQLite telemetry (14-category breakdown, Prompt Cache hit rate, and TTFT/TPS) requires **Node 22.5+** (or Antigravity's bundled runtime).\n</details>\n\n<details>\n<summary><strong>3. Does Context Relay conflict with <code>antigravity-plugin-context-mode</code>?</strong></summary>\n\nNo — they are designed to complement each other. **Context Mode** intercepts and compacts oversized tool outputs inside a single session, while **Context Relay** guards `PreToolUse` against unbounded `transcript*.jsonl` full reads and handles cross-session handoff when the overall conversation budget approaches your watermark.\n</details>\n\n<details>\n<summary><strong>4. How do I diagnose an issue or file a bug report quickly?</strong></summary>\n\nRun:\n```bash\nnode scripts/doctor.mjs\n```\n(Or `node scripts/doctor.mjs --strict` to verify plugin manifests.) The output is auto-redacted for home directories and sensitive values, ready to paste into the [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.yml).\n</details>\n\n## Testing & Contributing\n\n```bash\nnode tests/run-tests.mjs\nnode scripts/doctor.mjs --strict\n```\n\nFor contributors editing `locales/en/*`, run `npm run sync-locales` to keep root `plugin.json`, `rules/AGENTS.md`, and `skills/handoff/SKILL.md` byte-for-byte identical to `locales/en/*` (or `node scripts/sync-locales.mjs --check` to verify).\n\n## Credits & Attribution\n\n- The live context protobuf decoder (`lib/context-report.mjs`) and the Context Monitor panel layout (`sidecars/handoff/main.mjs`, `sidecars/handoff/handlers.mjs`, `sidecars/handoff/ui/*`) are ported to Node.js and adapted from **[antigravity-desktop-context](https://github.com/dimitr-io/antigravity-desktop-context)** by **Dimitrios Ioannidis** (MIT License).\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "### English Release Notes\n\n**Antigravity Context Relay v2.2.0** adds live session-wide Prompt Cache & model quota telemetry, warm-handoff lineage tracking, 3 one-click scenario presets in Settings, an offline diagnostic & strict manifest validator (`scripts/doctor.mjs`), and a full README + visual overhaul.\n\n#### Highlights\n\n- **Session-Wide Prompt Cache & Telemetry/Quota 2×2 Card**:\n  - Decodes live per-turn and cumulative prompt cache hit rates (`Σ cache_read / Σ (uncached + cache_write + cache_read) × 100%`), TTFT, streaming TPS, estimated 5-minute cache warmth TTL, model `quotaInfo` remaining fraction + reset countdown, and public API-equivalent cost/savings in `lib/context-report.mjs` and the Context Monitor side panel.\n  - Displays a 12-turn prompt cache trend sparkline with an `i` formula popover.\n- **Warm Handoff Lineage Metrics**:\n  - `scripts/handoff.mjs` and `lib/chains.mjs` now track `seedTokens`, `modelInherited`, and `cacheWarmAtHandoff` across every `(Part N)` / `(续N)` generation, emit `cacheWarning` on model fallback, and surface `~seed`, `Warm relay`, and `Model fallback · cold` badges in **Chain History**.\n- **3 One-Click Scenario Presets in Settings**:\n  - Quickly switch between **Observer Only**, **Seamless Relay**, and **Structured + Auto-Archive** directly at the top of the **Settings** tab.\n- **Safer New-User Default (`handoffOnCompacted: false`)**:\n  - Prevents unexpected mid-thread takeover when opening older already-compacted sessions (can still be enabled in Settings or via **Structured + Auto-Archive**).\n- **Offline Diagnostics & Strict Manifest Check**:\n  - Run `node scripts/doctor.mjs` for an auto-redacted diagnostic report ready for bug reports, or `node scripts/doctor.mjs --strict` to validate plugin manifests offline in alignment with `agy plugin validate --strict`.\n- **Docs, 4-Tab Screenshots & Community Assets**:\n  - Added full 4-tab static side panel screenshots (`Gemini 4 Neon`, 512k budget / 1M window), `1280×640` GitHub social preview (`assets/social-preview.png`), structured `.github/ISSUE_TEMPLATE/` forms, Release archive install steps, plus Privacy & Safety and FAQ sections in `README.md` / `README.zh-CN.md`.\n\n#### Quick Upgrade / Install\n\n```bash\ngit clone https://github.com/WintAsuka/antigravity-context-relay.git\ncd antigravity-context-relay\nnode scripts/install.mjs          # English (default)\n# or: node scripts/install.mjs --lang zh\nnode scripts/doctor.mjs --strict  # Verify installation & manifests\n```\n\n---\n\n### 中文发布说明（v2.2.0）\n\n**Antigravity Context Relay v2.2.0** 正式带来全会话 Prompt Cache 与模型配额遥测面板、热接力谱系指标、设置页三大一键场景预设、自动脱敏诊断与清单校验工具（`scripts/doctor.mjs`），以及全新的产品级文档与演示动图。\n\n#### 本次更新亮点\n\n- **全会话累计 Prompt Cache 与 2×2 遥测/配额卡片**：\n  - 在 `lib/context-report.mjs` 与侧边栏「上下文监控」中实时解析并展示**全会话累计缓存命中率**（`Σ cache_read / Σ (uncached + cache_write + cache_read) × 100%`）及最近 12 轮趋势柱状图、最新/均值 TPS 与首字延迟（TTFT）、5 分钟热窗倒计时估算、模型剩余配额与重置倒计时，以及公开 API 等效费用与缓存省钱估算。\n- **热接力谱系指标**：\n  - `scripts/handoff.mjs` 与 `lib/chains.mjs` 在每次换代时记录 `seedTokens`、`modelInherited` 与 `cacheWarmAtHandoff`；若发生模型回退会给出 `cacheWarning`，并在「历史链」面板展示 `~seed`、`Warm relay` 与冷启动回退徽章。\n- **设置页顶部 3 套一键场景预设**：\n  - 在侧边栏「交接设置」顶部一键切换 **仅观察提醒（Observer Only）**、**无感极速接力（Seamless Relay）** 与 **结构化归档（Structured + Auto-Archive）**。\n- **更稳妥的新用户默认配置（`handoffOnCompacted: false`）**：\n  - 默认关闭原生压缩即刻劫持，避免在打开已压缩过的历史旧会话时误触发（可在设置页或「结构化归档」预设中开启）。\n- **离线自检与严格清单校验工具**：\n  - 运行 `node scripts/doctor.mjs` 一键生成自动脱敏诊断报告（可直接粘贴至 GitHub Issue）；运行 `node scripts/doctor.mjs --strict` 进行对齐 `agy plugin validate --strict` 的离线清单校验。\n- **文档、4 页高清实拍与社区资产完善**：\n  - 换装 4 页静态高清侧边栏截图（`Gemini 4 Neon` 512k 预算 / 1M 窗口实景）、`1280×640` GitHub Social Preview（`assets/social-preview.png`）、标准化 Issue 模板（`.github/ISSUE_TEMPLATE/`），并在中英文 README 置顶推荐工作流与 Release 包安装说明，补全「隐私与安全承诺」与「常见问题排查（FAQ）」。\n\n#### 快速安装与升级\n\n```bash\ngit clone https://github.com/WintAsuka/antigravity-context-relay.git\ncd antigravity-context-relay\nnode scripts/install.mjs --lang zh   # 中文版（桌面端推荐）\nnode scripts/doctor.mjs --strict     # 校验清单与运行环境\n```\n",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"context-relay\" executes a shell command on PreToolUse (matcher: run_command|read_file|view_file).",
+        "file": "hooks.json",
+        "line": 23,
+        "snippet": "node ./hooks/guard-transcript.js",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/hooks.json#L23"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/chains.mjs",
+        "line": 462,
+        "snippet": "const prevMatch = SUBAGENT_RELAY_PREV_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/chains.mjs#L462"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/chains.mjs",
+        "line": 466,
+        "snippet": "const ownerMatch = SUBAGENT_RELAY_OWNER_RE.exec(text);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/chains.mjs#L466"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/chains.mjs",
+        "line": 488,
+        "snippet": "while ((match = re.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/chains.mjs#L488"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/digest.mjs",
+        "line": 159,
+        "snippet": "const markerMatch = DIGEST_MARKER_RE.exec(raw);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/digest.mjs#L159"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/digest.mjs",
+        "line": 173,
+        "snippet": "const headingMatch = DIGEST_HEADING_FALLBACK_RE.exec(raw);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/digest.mjs#L173"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 237,
+        "snippet": "db.exec(` PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL; PRAGMA busy_timeout = 5000; `);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L237"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 243,
+        "snippet": "db.exec(` DROP TABLE IF EXISTS docs_fts; DROP TABLE IF EXISTS docs; DROP TABLE IF EXISTS indexed_sources; `);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L243"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 249,
+        "snippet": "db.exec(` CREATE TABLE IF NOT EXISTS indexed_sources ( source_key TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, kind TEXT NOT NULL, file_path TEXT NOT NULL, mtime_ms REAL NOT NU",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L249"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 499,
+        "snippet": "db.exec(` DELETE FROM docs WHERE source_key LIKE '%:transcript' AND ( doc_kind = 'transcript_full' OR source_key IN ( SELECT source_key FROM indexed_sources WHERE source_key LIKE '",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L499"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 521,
+        "snippet": "db.exec(\"BEGIN IMMEDIATE\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L521"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 527,
+        "snippet": "db.exec(\"COMMIT\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L527"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 530,
+        "snippet": "db.exec(\"ROLLBACK\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L530"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 589,
+        "snippet": "db.exec(\"BEGIN IMMEDIATE\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L589"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 621,
+        "snippet": "db.exec(\"COMMIT\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L621"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 626,
+        "snippet": "db.exec(\"ROLLBACK\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L626"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/history-index.mjs",
+        "line": 671,
+        "snippet": "const m = regexObj.exec(raw);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/history-index.mjs#L671"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "mcp/history-server.mjs",
+        "line": 568,
+        "snippet": "while ((match = re.exec(text)) !== null) {",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/mcp/history-server.mjs#L568"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/file-lock.mjs",
+        "line": 24,
+        "snippet": "fs.writeFileSync(tmpPath, content, \"utf8\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/file-lock.mjs#L24"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/file-lock.mjs",
+        "line": 28,
+        "snippet": "if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/file-lock.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/file-lock.mjs",
+        "line": 32,
+        "snippet": "fs.writeFileSync(filePath, content, \"utf8\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/file-lock.mjs#L32"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/file-lock.mjs",
+        "line": 79,
+        "snippet": "fs.unlinkSync(lockPath);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/file-lock.mjs#L79"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/file-lock.mjs",
+        "line": 114,
+        "snippet": "fs.unlinkSync(lockPath);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/file-lock.mjs#L114"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/prompt-loader.mjs",
+        "line": 732,
+        "snippet": "if (fs.existsSync(filePath)) fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/prompt-loader.mjs#L732"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/prompt-loader.mjs",
+        "line": 793,
+        "snippet": "fs.unlinkSync(legacyCustomPath);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/prompt-loader.mjs#L793"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/prompt-loader.mjs",
+        "line": 815,
+        "snippet": "if (fs.existsSync(customFile)) fs.unlinkSync(customFile);",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/prompt-loader.mjs#L815"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/handoff.mjs",
+        "line": 566,
+        "snippet": "fs.writeFileSync(absSummaryPath, summaryContent + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/handoff.mjs#L566"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/handoff.mjs",
+        "line": 651,
+        "snippet": "fs.writeFileSync(digestPath, digestDoc, \"utf8\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/handoff.mjs#L651"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 104,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/install.mjs#L104"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 215,
+        "snippet": "fs.rmSync(legacyPluginDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/install.mjs#L215"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 238,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/install.mjs#L238"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install.mjs",
+        "line": 263,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/install.mjs#L263"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/subagent-relay.mjs",
+        "line": 186,
+        "snippet": "fs.writeFileSync(absSummaryPath, split.summaryContent + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/subagent-relay.mjs#L186"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/subagent-relay.mjs",
+        "line": 243,
+        "snippet": "fs.writeFileSync(digestPath, digestDoc, \"utf8\");",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/scripts/subagent-relay.mjs#L243"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/digest.mjs",
+        "line": 321,
+        "snippet": "* self-contained archive Markdown document under ~/.gemini/context-relay/digests/.",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/digest.mjs#L321"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/paths.mjs",
+        "line": 75,
+        "snippet": "* legacy `~/.gemini/auto-handoff/` into `~/.gemini/context-relay/`.",
+        "githubBlobUrl": "https://github.com/WintAsuka/antigravity-context-relay/blob/fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586/lib/paths.mjs#L75"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.2.0",
+      "sha": "fbdef69a4cbf7fe0e8f0a5c03eb9d14fb2e18586",
+      "scannedAt": "2026-11-28T12:13:18.190Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

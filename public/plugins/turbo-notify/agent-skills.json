@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "turbo-notify/agent-skills",
-  "sha": "1c0a627d01b93da3a99602b902866070cdbdfe76",
+  "sha": "d5fe328df09c7ccbb4575dc86064bc7daa7aa92f",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-28T00:24:55.416Z",
+  "scannedAt": "2026-11-28T12:14:34.259Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "turbo-notify",
@@ -102,7 +102,7 @@
         "file": "evals/attendant/harness.py",
         "line": 334,
         "snippet": "done = subprocess.run( [binary, \"--version\"], capture_output=True, text=True, timeout=30, check=False )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/harness.py#L334"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/harness.py#L334"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -113,7 +113,7 @@
         "file": "evals/attendant/harness.py",
         "line": 353,
         "snippet": "done = subprocess.run( [*child.argv, \"--output-format\", \"json\"], input=child.stdin, env=child.env, cwd=str(child.cwd), capture_output=True, text=True, timeout=timeout, check=False,",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/harness.py#L353"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/harness.py#L353"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -124,7 +124,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/runner.py",
         "line": 221,
         "snippet": "done = subprocess.run( # noqa: S603 child.argv, input=child.stdin, env=child.env, cwd=str(child.cwd), capture_output=True, text=True, timeout=timeout, check=False, )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/runner.py#L221"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/runner.py#L221"
       },
       {
         "id": "CODE_OBFUSCATED_ESCAPES",
@@ -135,7 +135,7 @@
         "file": "tests/unit/test_egress.py",
         "line": 126,
         "snippet": "\\uff15\\uff15\\uff11\\uff11\\uff19\\uff16\\uff16\\uff16\\uff16\\uff15\\uff15\\uff15\\uff15",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/tests/unit/test_egress.py#L126"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/tests/unit/test_egress.py#L126"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -146,7 +146,7 @@
         "file": "evals/attendant/report.py",
         "line": 437,
         "snippet": "(directory / \"summary.json\").write_text( json.dumps(summary, ensure_ascii=False, indent=2) + \"\\n\", encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L437"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/report.py#L437"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -157,7 +157,7 @@
         "file": "evals/attendant/report.py",
         "line": 440,
         "snippet": "(directory / \"review.txt\").write_text( review_sheet(cases, turns, reviews, refusals, offers), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L440"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/report.py#L440"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -168,7 +168,7 @@
         "file": "evals/attendant/report.py",
         "line": 443,
         "snippet": "(directory / \"replies.txt\").write_text( transcript(cases, turns, refusals, offers), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L443"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/report.py#L443"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -179,7 +179,7 @@
         "file": "evals/attendant/report.py",
         "line": 471,
         "snippet": "(directory / name).write_text(text, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/report.py#L471"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/report.py#L471"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -190,7 +190,7 @@
         "file": "evals/attendant/run.py",
         "line": 92,
         "snippet": "(out / name).write_text(\"\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/run.py#L92"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/run.py#L92"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -201,7 +201,7 @@
         "file": "evals/attendant/run.py",
         "line": 107,
         "snippet": "(out / \"meta.json\").write_text( json.dumps(meta, ensure_ascii=False, indent=2) + \"\\n\", encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/evals/attendant/run.py#L107"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/evals/attendant/run.py#L107"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -212,7 +212,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 533,
         "snippet": "path.write_text(\"\\n\".join(lines) + \"\\n\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L533"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/console.py#L533"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -223,7 +223,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 563,
         "snippet": "with open(inbox, \"a\", encoding=\"utf-8\") as handle:",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L563"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/console.py#L563"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -234,7 +234,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 577,
         "snippet": "target.write_text(f\"# {data['topic']}\\n\\n{body}\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L577"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/console.py#L577"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -245,7 +245,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/console.py",
         "line": 710,
         "snippet": "shutil.rmtree(directory)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/console.py#L710"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/console.py#L710"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -256,7 +256,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/ingest.py",
         "line": 107,
         "snippet": "tmp.write_text( \"\".join(json.dumps(r, sort_keys=True) + \"\\n\" for r in rows), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/ingest.py#L107"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/ingest.py#L107"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -267,7 +267,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/knowledge.py",
         "line": 60,
         "snippet": "target.write_text(text, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L60"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L60"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -278,7 +278,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/knowledge.py",
         "line": 67,
         "snippet": "index.write_text(\"\\n\".join(lines) + \"\\n\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L67"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/knowledge.py#L67"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -289,7 +289,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/llm_child.py",
         "line": 52,
         "snippet": "with urllib.request.urlopen(request, timeout=timeout) as response: # noqa: S310",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/llm_child.py#L52"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/llm_child.py#L52"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -300,7 +300,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/memory.py",
         "line": 229,
         "snippet": "path.write_text( f\"covers: {covers[0]}..{covers[1]}\\nwritten: {stamp}\\n---\\n{summary.strip()}\\n\", encoding=\"utf-8\", )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/memory.py#L229"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/memory.py#L229"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -311,7 +311,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/memory.py",
         "line": 331,
         "snippet": "tmp.write_text( \"\".join(json.dumps(r, sort_keys=True) + \"\\n\" for r in kept), encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/memory.py#L331"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/memory.py#L331"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -322,7 +322,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/profiles.py",
         "line": 104,
         "snippet": "config.write_text(json.dumps({\"mcpServers\": servers}), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/profiles.py#L104"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/profiles.py#L104"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -333,7 +333,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/runner.py",
         "line": 155,
         "snippet": "with urllib.request.urlopen(request, timeout=self._timeout) as response: # noqa: S310",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/runner.py#L155"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/runner.py#L155"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -344,7 +344,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/schema.py",
         "line": 46,
         "snippet": "shutil.rmtree(entry) if entry.is_dir() else entry.unlink()",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/schema.py#L46"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/schema.py#L46"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -355,7 +355,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/store.py",
         "line": 34,
         "snippet": "os.unlink(tmp)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/store.py#L34"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/store.py#L34"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -366,7 +366,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/store.py",
         "line": 148,
         "snippet": "os.unlink(self._path)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/store.py#L148"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/store.py#L148"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -377,7 +377,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/store.py",
         "line": 166,
         "snippet": "os.unlink(self._path)",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/store.py#L166"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/store.py#L166"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -388,7 +388,7 @@
         "file": "skills/virtual-attendant/scripts/tn_assist/version.py",
         "line": 62,
         "snippet": "with urllib.request.urlopen(LATEST_URL, timeout=timeout) as response: # noqa: S310",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/scripts/tn_assist/version.py#L62"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/scripts/tn_assist/version.py#L62"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -399,7 +399,7 @@
         "file": "tools/release.py",
         "line": 70,
         "snippet": "(ROOT / path).write_text( json.dumps(data, indent=2, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\" )",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/tools/release.py#L70"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/tools/release.py#L70"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -410,7 +410,7 @@
         "file": "tools/release.py",
         "line": 251,
         "snippet": "(ROOT / path).write_text(pattern.sub(rf\"\\g<1>{ver}\\g<3>\", text, count=1), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/tools/release.py#L251"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/tools/release.py#L251"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -421,11 +421,25 @@
         "file": "skills/virtual-attendant/SKILL.md",
         "line": 10,
         "snippet": "In this skill, **`tn_assist`** means `python3 <this skill's folder>/scripts/tn_assist`, run with `TN_ASSIST_BASE`, `TN_ASSIST_ORG` and `TN_ASSIST_NUMBER` exported (setup explains t",
-        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/1c0a627d01b93da3a99602b902866070cdbdfe76/skills/virtual-attendant/SKILL.md#L10"
+        "githubBlobUrl": "https://github.com/turbo-notify/agent-skills/blob/d5fe328df09c7ccbb4575dc86064bc7daa7aa92f/skills/virtual-attendant/SKILL.md#L10"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.5.18",
+      "sha": "d5fe328df09c7ccbb4575dc86064bc7daa7aa92f",
+      "scannedAt": "2026-11-28T12:14:34.259Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "network_external_mcp",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    },
     {
       "version": "1.5.18",
       "sha": "1c0a627d01b93da3a99602b902866070cdbdfe76",

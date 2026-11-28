@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "WSDyi/codex-executor",
-  "sha": "74c001b68fafb2b0c5bfc386731b0ad44d01748e",
+  "sha": "cb3958ebdaa1079c4b1d2c283c21af642044f2a0",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-28T00:25:04.307Z",
+  "scannedAt": "2026-11-28T12:14:41.551Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "codex-executor",
     "displayName": "Codex Executor",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -57,8 +57,8 @@
     ],
     "oauthProviders": []
   },
-  "readmeMarkdown": "# Codex Executor\n\nAn **Antigravity** plugin that turns **Antigravity** into the orchestrator (planning, architecture, design, copywriting, and verification) and **Codex CLI** into a strictly guarded, high-cache, minimal-output execution engine via MCP.\n\n> **Antigravity 负责总控（规划、架构、审美、文案与验收） · Codex 负责执行（严格按边界写代码、跑命令与验证）**\n\n---\n\n## Why Codex Executor?\n\n- **Clear division of labor**: Antigravity pre-decides design, copy, and architecture, then dispatches crisp imperative work orders to Codex—eliminating verbose GPT prose and unrequested freelancing.\n- **Minimal output overhead**: Enforces `model_reasoning_summary=\"none\"`, `hide_agent_reasoning=true`, zero pre-tool narration, and a 2-field JSON ACK (`{\"ok\": boolean, \"err\": string}`). All real file diffs, commands, and exit codes are captured directly by the MCP bridge from JSONL events and Git/filesystem snapshots.\n- **Lean prefix & persistent cache lanes**: Disables unused Codex Desktop plugins/UI features on worker runs to cut cold input tokens, and persists workspace cache lanes (`session_mode: \"auto\"`) keyed by exact prefix signature `(cwd, lane, model, reasoning_effort, sandbox, prompt_hash, schema_hash)` for high prompt-cache reuse across turns.\n- **Engine-level runtime guardrails**:\n  - **Destructive command blocker**: Real-time JSONL watchdog kills processes attempting unauthorized `git reset --hard`, `git clean -f`, `git push --force`, root deletes, sensitive dotfile edits, or remote pipe execution.\n  - **File-scope cage (`allowed_paths` / `forbidden_paths`)**: Real-time and post-run verification of all touched files, with automatic revert (`auto_revert_violations`) of unauthorized edits in Git repositories while preserving valid in-scope changes.\n  - **Runaway loop breaker**: Enforces `max_commands` and terminates identical failing command loops automatically.\n- **Parallel batch dispatch (`codex_batch_exec`)**: Runs up to 4 concurrent Codex workers on separate cache lanes with upfront disjoint-path validation and sibling Git delta isolation.\n- **Zero npm dependencies**: Pure Node.js ESM (`>=18`), instant startup, automatic Codex binary discovery (`CODEX_BIN`, `PATH`, and Windows Store `OpenAI.Codex` MSIX packages).\n\n---\n\n## Architecture\n\n```text\nAntigravity (Orchestrator: Plan · Design · Audit · User Chat)\n   │\n   │  MCP (Stdio JSON-RPC 2.0) — codex-worker\n   ▼\ncodex-executor/server/\n   ├── Runtime Guardrails (Command Watchdog · Scope Cage · Auto-Revert · Loop Breaker)\n   ├── Persistent Cache Lanes (lanes.json · Rollout Telemetry · Auto-Rotation)\n   └── Parallel Batch Scheduler (codex_batch_exec · Disjoint Path Check)\n   │\n   │  codex exec / codex exec resume (--json, --output-schema, lean flags)\n   ▼\nLocal Codex CLI (default: gpt-6.2-sol, reasoning_effort=max)\n```\n\n---\n\n## Prerequisites\n\n1. **Antigravity** (2.0 / IDE / CLI)\n2. **Node.js `>= 18`** available in `PATH`\n3. **Codex CLI** or **Codex Desktop** installed and configured (authentication/provider configured in `~/.codex/config.toml`)\n\n---\n\n## Installation\n\nClone this repository directly into your global Antigravity plugins directory:\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/WSDyi/codex-executor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-executor\"\n```\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/WSDyi/codex-executor.git ~/.gemini/config/plugins/codex-executor\n```\n\nAntigravity automatically discovers plugins placed under `~/.gemini/config/plugins/<name>/` (with `plugin.json`), loads `rules/AGENTS.md`, `skills/codex-orchestrator/SKILL.md`, and starts the `codex-worker` MCP server without requiring a manual build step.\n\n---\n\n## Configuration\n\nDefaults are configured in `mcp_config.json` under `mcpServers.codex-worker.env` and can be adjusted at any time:\n\n| Environment Variable | Default | Description |\n| :--- | :--- | :--- |\n| `CODEX_DEFAULT_MODEL` | `gpt-6.2-sol` | Default Codex model slug |\n| `CODEX_DEFAULT_REASONING_EFFORT` | `max` | Default reasoning effort (`low`, `medium`, `high`, `xhigh`, `max`) |\n| `CODEX_AUTO_ROTATE_TOKENS` | `175000` | Soft context token threshold before rotating a hot lane to a fresh thread |\n| `CODEX_LANE_IDLE_MINUTES` | `45` | Idle expiration window for cached workspace lanes |\n| `CODEX_DEFAULT_MAX_COMMANDS` | `80` | Default per-job shell command ceiling |\n| `CODEX_BIN` | *(auto-discovered)* | Optional explicit path to the `codex` executable |\n\n---\n\n## MCP Tools (`codex-worker`)\n\n| Tool | Purpose |\n| :--- | :--- |\n| `codex_exec` | Execute a guarded Work Order on a workspace cache lane (supports `allowed_paths`, `forbidden_paths`, `strict_guard`, `auto_revert_violations`, `profile`, `lane`, `session_mode`, and `async`) |\n| `codex_batch_exec` | Dispatch multiple independent Work Orders in parallel on separate cache lanes with upfront disjoint `allowed_paths` validation |\n| `codex_resume` | Send a follow-up or fix directive to an existing `thread_id` while preserving identical cache flags and guardrails |\n| `codex_job_status` | Inspect live command progress, `guard_audit`, `observed_evidence`, and `cache_metrics` (supports `wait_sec` long-polling) |\n| `codex_job_cancel` | Immediately terminate a running Codex worker process tree |\n| `codex_cache_manage` | List (`status`), reset (`reset`), or prune (`prune`) persistent workspace cache lanes |\n| `codex_health` | Check Codex binary discovery, CLI version, model catalog status, guardrail defaults, and active cache lanes |\n\n---\n\n## Testing\n\nRun the end-to-end integration test suite (unit guardrail tests + MCP handshake + live parallel batch & hot cache-lane reuse):\n\n```bash\nnpm test\n# or\nnode server/test-mcp.mjs\n```\n\n---\n\n## Repository Layout\n\n```text\ncodex-executor/\n├── plugin.json                         # Antigravity plugin manifest\n├── mcp_config.json                     # Stdio MCP server definition\n├── package.json                        # Zero-dependency ESM metadata & scripts\n├── assets/logo.svg                     # Plugin icon\n├── rules/AGENTS.md                     # Always-on orchestration rules\n├── skills/codex-orchestrator/SKILL.md  # Orchestration playbook\n├── prompts/\n│   ├── codex-worker.md                 # Minimal silent worker instructions\n│   └── worker-output-schema.json       # 2-field JSON ACK schema ({\"ok\",\"err\"})\n└── server/\n    ├── index.mjs                       # Zero-dependency MCP stdio server\n    ├── codex-runner.mjs                # Runner, runtime guardrails, cache lanes, batch scheduler\n    └── test-mcp.mjs                    # Unit & live integration test suite\n```\n\n---\n\n## License\n\n[MIT](./LICENSE)\n",
-  "latestReleaseNotes": "Initial public release of **Codex Executor** for Antigravity.\n\n### Highlights\n- **Clear Role Boundary**: Antigravity handles planning, architecture, design, copywriting, and verification; Codex CLI executes scoped engineering work via MCP (codex-worker).\n- **Minimal Output & Lean Prefix**: Enforces model_reasoning_summary=\"none\", hide_agent_reasoning=true, a 2-field {\"ok\",\"err\"} JSON ACK, and disables unused Codex Desktop plugins/skills on worker runs.\n- **Persistent Workspace Cache Lanes**: Automatically reuses warm Codex threads per (cwd, lane, model, reasoning_effort, sandbox) with rollout-based token metrics and soft context rotation.\n- **Engine-Level Runtime Guardrails**: Real-time destructive command blocking, \u0007llowed_paths/\forbidden_paths scope verification with automatic revert in Git repos, and runaway command/loop circuit breaking.\n- **Parallel Batch Execution**: codex_batch_exec runs up to 4 concurrent Codex workers on separate lanes with upfront disjoint-path validation and sibling Git delta isolation.",
+  "readmeMarkdown": "# Codex Executor\n\nAn **Antigravity** plugin that turns **Antigravity** into the orchestrator (planning, architecture, design, copywriting, and verification) and **Codex CLI** into a strictly guarded, high-cache, minimal-output execution engine via MCP.\n\n> **Antigravity 负责总控（规划、架构、审美、文案与验收） · Codex 负责执行（严格按边界写代码、跑命令与验证）**\n\n---\n\n## Why Codex Executor?\n\n- **Clear division of labor**: Antigravity pre-decides design, copy, and architecture, then dispatches crisp imperative work orders to Codex—eliminating verbose GPT prose and unrequested freelancing.\n- **Minimal output overhead**: Enforces `model_reasoning_summary=\"none\"`, `hide_agent_reasoning=true`, zero pre-tool narration, and a 2-field JSON ACK (`{\"ok\": boolean, \"err\": string}`). All real file diffs, commands, and exit codes are captured directly by the MCP bridge from JSONL events and Git/filesystem snapshots.\n- **Lean prefix & persistent cache lanes**: Disables unused Codex Desktop plugins/UI features on worker runs to cut cold input tokens, and persists workspace cache lanes (`session_mode: \"auto\"`) keyed by exact prefix signature `(cwd, lane, model, reasoning_effort, sandbox, prompt_hash, schema_hash)` for high prompt-cache reuse across turns.\n- **Engine-level runtime guardrails**:\n  - **Destructive command blocker**: Real-time JSONL watchdog kills processes attempting unauthorized `git reset --hard`, `git clean -f`, `git push --force`, root deletes, sensitive dotfile edits, system shutdown commands, or remote pipe execution, while avoiding false positives on code method calls such as `config.shutdown()`.\n  - **File-scope cage (`allowed_paths` / `forbidden_paths`)**: Real-time and post-run verification of touched files with automatic revert (`auto_revert_violations`), automatic isolation across overlapping concurrent lanes (`codex_batch_exec` and parallel `async: true` `codex_exec` runs), and filtering of transient lock/temp files (`~$*`, `ST_*.tmp`, `*.tmp`, `__pycache__`, `.DS_Store`).\n  - **Runaway loop breaker**: Enforces `max_commands` and terminates identical failing command loops automatically.\n- **Parallel batch dispatch (`codex_batch_exec`)**: Runs up to 4 concurrent Codex workers on separate cache lanes with upfront disjoint-path validation and sibling Git delta isolation.\n- **Zero npm dependencies**: Pure Node.js ESM (`>=18`), instant startup, automatic Codex binary discovery (`CODEX_BIN`, `PATH`, and Windows Store `OpenAI.Codex` MSIX packages).\n\n---\n\n## Architecture\n\n```text\nAntigravity (Orchestrator: Plan · Design · Audit · User Chat)\n   │\n   │  MCP (Stdio JSON-RPC 2.0) — codex-worker\n   ▼\ncodex-executor/server/\n   ├── Runtime Guardrails (Command Watchdog · Scope Cage · Auto-Revert · Loop Breaker)\n   ├── Persistent Cache Lanes (lanes.json · Rollout Telemetry · Auto-Rotation)\n   └── Parallel Batch Scheduler (codex_batch_exec · Disjoint Path Check)\n   │\n   │  codex exec / codex exec resume (--json, --output-schema, lean flags)\n   ▼\nLocal Codex CLI (default: gpt-6.2-sol, reasoning_effort=max)\n```\n\n---\n\n## Prerequisites\n\n1. **Antigravity** (2.0 / IDE / CLI)\n2. **Node.js `>= 18`** available in `PATH`\n3. **Codex CLI** or **Codex Desktop** installed and configured (authentication/provider configured in `~/.codex/config.toml`)\n\n---\n\n## Installation\n\nClone this repository directly into your global Antigravity plugins directory:\n\n### Windows (PowerShell)\n\n```powershell\ngit clone https://github.com/WSDyi/codex-executor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-executor\"\n```\n\n### macOS / Linux\n\n```bash\ngit clone https://github.com/WSDyi/codex-executor.git ~/.gemini/config/plugins/codex-executor\n```\n\nAntigravity automatically discovers plugins placed under `~/.gemini/config/plugins/<name>/` (with `plugin.json`), loads `rules/AGENTS.md`, `skills/codex-orchestrator/SKILL.md`, and starts the `codex-worker` MCP server without requiring a manual build step.\n\n---\n\n## Configuration\n\nDefaults are configured in `mcp_config.json` under `mcpServers.codex-worker.env` and can be adjusted at any time:\n\n| Environment Variable | Default | Description |\n| :--- | :--- | :--- |\n| `CODEX_DEFAULT_MODEL` | `gpt-6.2-sol` | Default Codex model slug |\n| `CODEX_DEFAULT_REASONING_EFFORT` | `max` | Default reasoning effort (`low`, `medium`, `high`, `xhigh`, `max`) |\n| `CODEX_AUTO_ROTATE_TOKENS` | `175000` | Soft context token threshold before rotating a hot lane to a fresh thread |\n| `CODEX_LANE_IDLE_MINUTES` | `45` | Idle expiration window for cached workspace lanes |\n| `CODEX_DEFAULT_MAX_COMMANDS` | `80` | Default per-job shell command ceiling |\n| `CODEX_BIN` | *(auto-discovered)* | Optional explicit path to the `codex` executable |\n\n---\n\n## MCP Tools (`codex-worker`)\n\n| Tool | Purpose |\n| :--- | :--- |\n| `codex_exec` | Execute a guarded Work Order on a workspace cache lane (supports `allowed_paths`, `forbidden_paths`, `strict_guard`, `auto_revert_violations`, `profile`, `lane`, `session_mode`, and `async`) |\n| `codex_batch_exec` | Dispatch multiple independent Work Orders in parallel on separate cache lanes with upfront disjoint `allowed_paths` validation |\n| `codex_resume` | Send a follow-up or fix directive to an existing `thread_id` while preserving identical cache flags and guardrails |\n| `codex_job_status` | Inspect live command progress, `guard_audit`, `observed_evidence`, and `cache_metrics` (supports `wait_sec` long-polling) |\n| `codex_job_cancel` | Immediately terminate a running Codex worker process tree |\n| `codex_cache_manage` | List (`status`), reset (`reset`), or prune (`prune`) persistent workspace cache lanes |\n| `codex_health` | Check Codex binary discovery, CLI version, model catalog status, guardrail defaults, and active cache lanes |\n\n---\n\n## Testing\n\nRun the end-to-end integration test suite (unit guardrail tests + MCP handshake + live parallel batch & hot cache-lane reuse):\n\n```bash\nnpm test\n# or\nnode server/test-mcp.mjs\n```\n\n---\n\n## Repository Layout\n\n```text\ncodex-executor/\n├── plugin.json                         # Antigravity plugin manifest\n├── mcp_config.json                     # Stdio MCP server definition\n├── package.json                        # Zero-dependency ESM metadata & scripts\n├── assets/logo.svg                     # Plugin icon\n├── rules/AGENTS.md                     # Always-on orchestration rules\n├── skills/codex-orchestrator/SKILL.md  # Orchestration playbook\n├── prompts/\n│   ├── codex-worker.md                 # Minimal silent worker instructions\n│   └── worker-output-schema.json       # 2-field JSON ACK schema ({\"ok\",\"err\"})\n└── server/\n    ├── index.mjs                       # Zero-dependency MCP stdio server\n    ├── codex-runner.mjs                # Runner, runtime guardrails, cache lanes, batch scheduler\n    └── test-mcp.mjs                    # Unit & live integration test suite\n```\n\n---\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "Maintenance release focusing on runtime guardrail accuracy and concurrent execution reliability.\n\n### Changes\n- **Concurrent sibling-lane isolation**: Automatically tracks all time-overlapping lanes sharing the same working directory (both codex_batch_exec and parallel codex_exec(async: true) calls) so sibling outputs are not flagged as scope violations or auto-reverted.\n- **Precise destructive command matching**: Tightened system_destructive_cmd to shell command boundaries, eliminating false positives on embedded code method calls such as config.shutdown() or server.shutdown().\n- **Transient lock & temp file filtering**: Ignores OS, Office, and runtime transient files (~$*, .~lock.*, ST_*.tmp, *.tmp, __pycache__, .DS_Store, Thumbs.db) during filesystem snapshots and scope audits.\n- **Long-job orchestration guidance**: Updated AGENTS.md, SKILL.md, and README.md with multi-turn lane splitting guidance for heavy compute workloads and explicit intermediate output directory scoping.",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -74,9 +74,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.mjs",
-        "line": 209,
+        "line": 227,
         "snippet": "execFileSync('taskkill', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore', windowsHide: true, timeout: 5000, });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L209"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L227"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -85,9 +85,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.mjs",
-        "line": 231,
+        "line": 249,
         "snippet": "const out = execFileSync(cmd, args, { encoding: 'utf8', windowsHide: true, timeout: opts.timeout ?? 8000, cwd: opts.cwd, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 2 * 1024 * 10",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L231"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L249"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -96,9 +96,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.mjs",
-        "line": 1494,
+        "line": 1568,
         "snippet": "const child = spawn(binary, args, { cwd: opts.cwd, env: { ...process.env }, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L1494"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L1568"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -107,31 +107,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/test-mcp.mjs",
-        "line": 15,
+        "line": 21,
         "snippet": "execFileSync('git', ['init'], { cwd: tempWorkDir, stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L15"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "server/test-mcp.mjs",
-        "line": 16,
-        "snippet": "execFileSync('git', ['config', 'user.email', 'test@local'], { cwd: tempWorkDir, stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L16"
-      },
-      {
-        "id": "CODE_JS_PROCESS_SPAWN",
-        "severity": "high",
-        "layer": "code",
-        "capability": "process_spawn",
-        "message": "Spawns an external OS process via node:child_process.",
-        "file": "server/test-mcp.mjs",
-        "line": 17,
-        "snippet": "execFileSync('git', ['config', 'user.name', 'Test'], { cwd: tempWorkDir, stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L17"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L21"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -141,8 +119,8 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/test-mcp.mjs",
         "line": 22,
-        "snippet": "execFileSync('git', ['add', '.'], { cwd: tempWorkDir, stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L22"
+        "snippet": "execFileSync('git', ['config', 'user.email', 'test@local'], { cwd: tempWorkDir, stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L22"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -152,8 +130,30 @@
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/test-mcp.mjs",
         "line": 23,
+        "snippet": "execFileSync('git', ['config', 'user.name', 'Test'], { cwd: tempWorkDir, stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/test-mcp.mjs",
+        "line": 28,
+        "snippet": "execFileSync('git', ['add', '.'], { cwd: tempWorkDir, stdio: 'ignore' });",
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/test-mcp.mjs",
+        "line": 29,
         "snippet": "execFileSync('git', ['commit', '-m', 'init'], { cwd: tempWorkDir, stdio: 'ignore' });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L23"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L29"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -162,9 +162,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/test-mcp.mjs",
-        "line": 38,
+        "line": 67,
         "snippet": "const child = spawn(process.execPath, [serverPath, `--data-dir=${tempDataDir}`], { stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L38"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L67"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -173,9 +173,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/test-mcp.mjs",
-        "line": 154,
+        "line": 234,
         "snippet": "execFileSync(process.execPath, ['-e', \"console.log(require('./src/a.js').a() + require('./src/b.js').b())\"], { cwd: tempWorkDir, encoding: 'utf8', }).trim(),",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L154"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L234"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -184,9 +184,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/codex-runner.mjs",
-        "line": 196,
+        "line": 214,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L196"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L214"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -195,9 +195,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/codex-runner.mjs",
-        "line": 200,
+        "line": 218,
         "snippet": "fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L200"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L218"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -206,9 +206,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/codex-runner.mjs",
-        "line": 1327,
+        "line": 1396,
         "snippet": "fs.rmSync(abs, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L1327"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L1396"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -217,9 +217,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/codex-runner.mjs",
-        "line": 1339,
+        "line": 1408,
         "snippet": "fs.rmSync(abs, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L1339"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L1408"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -228,9 +228,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/codex-runner.mjs",
-        "line": 1492,
+        "line": 1566,
         "snippet": "const logStream = fs.createWriteStream(logPath, { flags: 'a', encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L1492"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L1566"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -239,9 +239,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/codex-runner.mjs",
-        "line": 1568,
+        "line": 1642,
         "snippet": "fs.writeFileSync(metaPath, JSON.stringify(report, null, 2), 'utf8');",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/codex-runner.mjs#L1568"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/codex-runner.mjs#L1642"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -250,9 +250,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/test-mcp.mjs",
-        "line": 19,
+        "line": 25,
         "snippet": "fs.writeFileSync(path.join(tempWorkDir, 'src', 'a.js'), 'exports.a = () => 1;\\n');",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L19"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L25"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -261,9 +261,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/test-mcp.mjs",
-        "line": 20,
+        "line": 26,
         "snippet": "fs.writeFileSync(path.join(tempWorkDir, 'src', 'b.js'), 'exports.b = () => 2;\\n');",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L20"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L26"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -272,9 +272,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/test-mcp.mjs",
-        "line": 21,
+        "line": 27,
         "snippet": "fs.writeFileSync(path.join(tempWorkDir, 'SECRET.env'), 'DO_NOT_TOUCH=1\\n');",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L21"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L27"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -283,9 +283,20 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/test-mcp.mjs",
-        "line": 185,
+        "line": 168,
+        "snippet": "fs.writeFileSync(path.join(tempNonGitDir, '~$lock.pptx'), 'transient lock\\n');",
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L168"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/test-mcp.mjs",
+        "line": 262,
         "snippet": "fs.rmSync(tempDataDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L185"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L262"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -294,13 +305,35 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "server/test-mcp.mjs",
-        "line": 186,
+        "line": 263,
         "snippet": "fs.rmSync(tempWorkDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/74c001b68fafb2b0c5bfc386731b0ad44d01748e/server/test-mcp.mjs#L186"
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L263"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/test-mcp.mjs",
+        "line": 264,
+        "snippet": "fs.rmSync(tempNonGitDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/WSDyi/codex-executor/blob/cb3958ebdaa1079c4b1d2c283c21af642044f2a0/server/test-mcp.mjs#L264"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.0.1",
+      "sha": "cb3958ebdaa1079c4b1d2c283c21af642044f2a0",
+      "scannedAt": "2026-11-28T12:14:41.551Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.0.0",
       "sha": "74c001b68fafb2b0c5bfc386731b0ad44d01748e",

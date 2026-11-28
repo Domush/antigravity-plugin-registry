@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "aswadwk/tondok-antigravity",
+  "sha": "c35be30cb5eb8de36c3e814cf1595d643d729ac1",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T12:13:48.876Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "tondok",
+    "displayName": "Tondok",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "mcp",
+        "runtimeName": "tondok_mcp",
+        "transport": "http",
+        "command": null,
+        "args": [],
+        "url": "https://tondok.com/api/mcp"
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "tondok_mcp"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Tondok\n\nTondok is a social media scheduler for creators and agencies. This plugin connects Antigravity to your Tondok\nworkspaces so the agent can:\n\n- See your workspaces, connected social accounts, media library and posts.\n- Import a video or image from a link (direct, Dropbox or Google Drive), or upload a file from your computer, into\n  your media library.\n- Write posts for YouTube, TikTok, Instagram, Facebook and Threads at once, with per-platform options, and check\n  what still blocks publishing (aspect ratio, video length, missing YouTube title or TikTok privacy).\n- Schedule posts or publish now, then report the live links or errors per account.\n\n## Sign in\n\nAfter installing, open **Customizations → Installed → MCP Servers** and click **Authenticate** next to Tondok. Sign\nin to tondok.com, tick the workspaces Antigravity may use and pick its access level: read only, drafts and media, or\nfull (schedule and publish). You can revoke access at any time in Tondok under **Settings → AI access**.\n\nRequires a Tondok account with at least one connected social account. Create one at https://tondok.com.\n\n## Links\n\n- Documentation: https://docs.tondok.com/ai/clients/\n- Support: https://docs.tondok.com/help/\n- Privacy policy: https://tondok.com/privacy\n- Terms of service: https://tondok.com/terms\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "network_external_mcp"
+    ],
+    "findings": []
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "c35be30cb5eb8de36c3e814cf1595d643d729ac1",
+      "scannedAt": "2026-11-28T12:13:48.876Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    }
+  ]
+}

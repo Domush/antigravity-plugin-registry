@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "eatingDream-antigravity-plugins/remote-cast",
-  "sha": "2711347ed92c3f0826c1cc3cd3022477bfe2c93a",
+  "sha": "7767a3966fc6c7f52ba6165e741508079322e15a",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:13:57.553Z",
+  "scannedAt": "2026-11-28T12:13:46.570Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "chrome-stream-mcp",
     "displayName": "Remote Cast",
-    "version": "0.6.1",
+    "version": "0.7.0",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -53,8 +53,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" alt=\"Remote Cast\" width=\"80\" height=\"80\">\n\n# Remote Cast (`chrome-stream-mcp`)\n\n**Your Chrome, live inside Antigravity.**\n\nRemote Cast streams a Chrome tab into the side panel so you can watch and steer what an agent is doing — click, type, switch tabs. Use your everyday Chrome or a separate clean profile; quality adapts to your network.\n\n[Homepage](https://remotecast.eatingdream.dev) · **English** | [简体中文](README.zh-CN.md) · [Releases](https://github.com/eatingDream-antigravity-plugins/remote-cast/releases) · [AI Guide](docs/ai-guide.md) · [`llms.txt`](llms.txt)\n\n[![CI](https://github.com/eatingDream-antigravity-plugins/remote-cast/actions/workflows/ci.yml/badge.svg)](https://github.com/eatingDream-antigravity-plugins/remote-cast/actions/workflows/ci.yml)\n[![Release](assets/release-badge.svg)](https://github.com/eatingDream-antigravity-plugins/remote-cast/releases)\n![Built with Rust](https://img.shields.io/badge/built%20with-Rust-12151E?logo=rust&logoColor=white)\n[![License: MIT](https://img.shields.io/badge/license-MIT-2952CC)](LICENSE)\n![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-181C28)\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/remotecast-connected-dark.png\">\n  <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/images/remotecast-connected-light.png\">\n  <img src=\"docs/images/remotecast-connected-dark.png\" alt=\"Remote Cast live Chrome panel preview\" width=\"620\">\n</picture>\n\n</div>\n\n## Is It For You?\n\n- **Use Remote Cast** if you want to view, scroll, type, and switch tabs in your own Google Chrome (keeping existing logins and extensions) or a separate clean Chrome profile right inside Antigravity, even over a slow link.\n- **Skip it** if you only want an AI agent to browse or scrape autonomously — Antigravity's built-in `browser` subagent already handles general browsing without touching your Chrome.\n\n## Why Remote Cast\n\n- **My Chrome or Separate Chrome**: Attach to your everyday Chrome with logins intact, or open a separate Chrome with a clean profile and no permission prompt.\n- **Pause vs. Disconnect in the header**: Click **Pause** to stop streaming at 0 FPS while keeping Chrome connected (so Chrome doesn't ask you to Allow again); click **Disconnect** when you want to end the session.\n- **Stays in the background on macOS**: Clicking, switching tabs, and opening new tabs (`chrome://newtab`) never steal window focus away from Antigravity.\n- **Adapts to slow networks, sharpens when still**: Pick **Auto**, **Saver**, **Low**, **Balanced**, or **High**. While you scroll or type it stays responsive, then settles into a crisp still frame with zero wasted bytes when idle.\n- **Settings right in the panel**: Click **Settings** (`⚙`) to change language, default quality, default connect mode, background refresh, and idle pause — backed by a hot-reloading `settings.json`.\n- **Fast, lightweight native panel**: Single Rust binary with a zero-dependency panel (`<= 64 KiB`), dark-first zero-flicker loading, and instant EN / 中文 switching.\n\n## Quick Start\n\n### 1. Install (macOS & Linux)\n\n```sh\ncurl -fsSL https://raw.githubusercontent.com/eatingDream-antigravity-plugins/remote-cast/main/scripts/install.sh | sh\n```\n\n<sub>Verifies SHA-256 checksums, installs into <code>~/.gemini/config/plugins/chrome-stream-mcp</code>, and hot-reloads the MCP server automatically inside Antigravity (use <code>--reload</code> outside Antigravity or <code>--no-reload</code> to skip). Uninstall anytime with <code>--uninstall</code>.</sub>\n\n### 2. Connect Chrome\n\n- **My Chrome**: Open `chrome://inspect/#remote-debugging` in Chrome and turn on remote debugging, then click **Connect my Chrome** in Remote Cast and click **Allow** once in Chrome. Use **Pause** when stepping away.\n- **Separate Chrome**: Click **Open separate Chrome** for a fresh, isolated local profile (`0700` permissions on `127.0.0.1`) with no permission prompt. It picks a free local port automatically so it runs cleanly alongside your everyday Chrome.\n\n## For AI Agents\n\nMachine-readable tool schemas, `settings.json` keys, CLI diagnostics, and stdio setup:\n\n```sh\nnpx skills add eatingDream-antigravity-plugins/remote-cast\n```\n\n- **Agent Skill**: [`skills/chrome-stream/SKILL.md`](skills/chrome-stream/SKILL.md)\n- **Full AI & Configuration Guide**: [`docs/ai-guide.md`](docs/ai-guide.md)\n- **LLM Entry Index**: [`llms.txt`](llms.txt)\n\n## Safety & Privacy\n\n- **Loopback-only (`127.0.0.1` / `::1`)**: Rejects non-loopback endpoints and never exposes Chrome debugging ports to your LAN or the internet.\n- **Same-user local socket**: Uses a `0600` Unix socket, checks peer user ID, and verifies ownership and permissions on sockets, `settings.json` (`0600`), and the `0700` separate profile.\n- **Explicit connect & idle pause**: Opening the panel never auto-connects to Chrome; screen capture pauses automatically while idle (default 12 s) and resumes on your next click or key.\n- **Sanitized diagnostics**: `chrome-stream-mcp doctor --json` omits local paths and raw debugging WebSocket URLs by default.\n\n## Documentation\n\n- [AI Guide & Configuration Reference](docs/ai-guide.md) — MCP tools, `settings.json`, environment variables, CLI subcommands, build from source\n- [Agent Skill](skills/chrome-stream/SKILL.md) — On-demand agent workflow rules\n- [LLM Index](llms.txt) · [Contributor Guide](AGENTS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](SECURITY.md)\n\n## Antigravity Plugin Suite\n\nPart of the [Antigravity Plugins](https://github.com/eatingDream-antigravity-plugins) suite: [Context Radar](https://github.com/eatingDream-antigravity-plugins/context-radar) · [Clam Guard](https://github.com/eatingDream-antigravity-plugins/clam-guard) · **Remote Cast** · [Colab Deck](https://github.com/eatingDream-antigravity-plugins/colab-deck) · [Panel Kit](https://github.com/eatingDream-antigravity-plugins/panel-kit)\n\n## License\n\nLicensed under the [MIT License](LICENSE).\n",
-  "latestReleaseNotes": "## [0.6.1](https://github.com/eatingDream-antigravity-plugins/remote-cast/compare/v0.6.0...v0.6.1) (2026-11-27)\n\n\n### Bug Fixes\n\n* recycle stale idle relay daemons and fix standby error banner UI ([#36](https://github.com/eatingDream-antigravity-plugins/remote-cast/issues/36)) ([cb3ffc3](https://github.com/eatingDream-antigravity-plugins/remote-cast/commit/cb3ffc32ee022f74dcb2dac21eb9972e73a199cf))",
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" alt=\"Remote Cast\" width=\"80\" height=\"80\">\n\n# Remote Cast (`chrome-stream-mcp`)\n\n**Your Chrome, live inside Antigravity.**\n\nRemote Cast streams a Chrome tab into the side panel so you can watch and steer what an agent is doing — click, type, switch tabs. Use your everyday Chrome or a separate clean profile; quality adapts to your network.\n\n[Homepage](https://remotecast.eatingdream.dev) · **English** | [简体中文](README.zh-CN.md) · [Releases](https://github.com/eatingDream-antigravity-plugins/remote-cast/releases) · [AI Guide](docs/ai-guide.md) · [`llms.txt`](llms.txt)\n\n[![CI](https://github.com/eatingDream-antigravity-plugins/remote-cast/actions/workflows/ci.yml/badge.svg)](https://github.com/eatingDream-antigravity-plugins/remote-cast/actions/workflows/ci.yml)\n[![Release](assets/release-badge.svg)](https://github.com/eatingDream-antigravity-plugins/remote-cast/releases)\n![Built with Rust](https://img.shields.io/badge/built%20with-Rust-12151E?logo=rust&logoColor=white)\n[![License: MIT](https://img.shields.io/badge/license-MIT-2952CC)](LICENSE)\n![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-181C28)\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/remotecast-connected-dark.png\">\n  <source media=\"(prefers-color-scheme: light)\" srcset=\"docs/images/remotecast-connected-light.png\">\n  <img src=\"docs/images/remotecast-connected-dark.png\" alt=\"Remote Cast live Chrome panel preview\" width=\"620\">\n</picture>\n\n</div>\n\n## Is It For You?\n\n- **Use Remote Cast** if you want to view, scroll, type, and switch tabs in your own Google Chrome (keeping existing logins and extensions) or a separate clean Chrome profile right inside Antigravity, even over a slow link.\n- **Skip it** if you only want an AI agent to browse or scrape autonomously — Antigravity's built-in `browser` subagent already handles general browsing without touching your Chrome.\n\n## Why Remote Cast\n\n- **My Chrome or Separate Chrome**: Attach to your everyday Chrome with logins intact, or open a separate Chrome with a clean profile and no permission prompt.\n- **Standby-first Disconnect in the header**: Click **Pause** or **Standby** (`mode: \"standby\"`) to stop streaming at 0 FPS while keeping Chrome's Allow permission warm for instant 1-click **Resume Stream**; click **Revoke** (`mode: \"revoke\"`) when you explicitly want to sever the debugging session.\n- **Stays in the background on macOS**: Clicking, switching tabs, and opening new tabs (`chrome://newtab`) never steal window focus away from Antigravity.\n- **Adapts to slow networks, sharpens when still**: Pick **Auto**, **Saver**, **Low**, **Balanced**, or **High**. While you scroll or type it stays responsive, then settles into a crisp still frame with zero wasted bytes when idle.\n- **Settings right in the panel**: Click **Settings** (`⚙`) to change language, default quality, default connect mode, background refresh, and idle pause — backed by a hot-reloading `settings.json`.\n- **Fast, lightweight native panel**: Single Rust binary with a zero-dependency panel (`<= 64 KiB`), dark-first zero-flicker loading, and instant EN / 中文 switching.\n\n## Quick Start\n\n### 1. Install (macOS & Linux)\n\n```sh\ncurl -fsSL https://raw.githubusercontent.com/eatingDream-antigravity-plugins/remote-cast/main/scripts/install.sh | sh\n```\n\n<sub>Verifies SHA-256 checksums, installs into <code>~/.gemini/config/plugins/chrome-stream-mcp</code>, and hot-reloads the MCP server automatically inside Antigravity (use <code>--reload</code> outside Antigravity or <code>--no-reload</code> to skip). Uninstall anytime with <code>--uninstall</code>.</sub>\n\n### 2. Connect Chrome\n\n- **My Chrome**: Open `chrome://inspect/#remote-debugging` in Chrome and turn on remote debugging, then click **Connect my Chrome** in Remote Cast and click **Allow** once in Chrome. Use **Standby** or **Pause** when stepping away.\n- **Separate Chrome**: Click **Open separate Chrome** for a fresh, isolated local profile (`0700` permissions on `127.0.0.1`) with no permission prompt. It picks a free local port automatically so it runs cleanly alongside your everyday Chrome.\n\n## For AI Agents\n\nMachine-readable tool schemas, `settings.json` keys, CLI diagnostics, and stdio setup:\n\n```sh\nnpx skills add eatingDream-antigravity-plugins/remote-cast\n```\n\n- **Agent Skill**: [`skills/chrome-stream/SKILL.md`](skills/chrome-stream/SKILL.md)\n- **Full AI & Configuration Guide**: [`docs/ai-guide.md`](docs/ai-guide.md)\n- **LLM Entry Index**: [`llms.txt`](llms.txt)\n\n## Safety & Privacy\n\n- **Loopback-only (`127.0.0.1` / `::1`)**: Rejects non-loopback endpoints and never exposes Chrome debugging ports to your LAN or the internet.\n- **Same-user local socket**: Uses a `0600` Unix socket, checks peer user ID, and verifies ownership and permissions on sockets, `settings.json` (`0600`), and the `0700` separate profile.\n- **Explicit connect & idle pause**: Opening the panel never auto-connects to Chrome; screen capture pauses automatically while idle (default 12 s) and resumes on your next click or key.\n- **Sanitized diagnostics**: `chrome-stream-mcp doctor --json` omits local paths and raw debugging WebSocket URLs by default.\n\n## Documentation\n\n- [AI Guide & Configuration Reference](docs/ai-guide.md) — MCP tools, `settings.json`, environment variables, CLI subcommands, build from source\n- [Agent Skill](skills/chrome-stream/SKILL.md) — On-demand agent workflow rules\n- [LLM Index](llms.txt) · [Contributor Guide](AGENTS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](SECURITY.md)\n\n## Antigravity Plugin Suite\n\nPart of the [Antigravity Plugins](https://github.com/eatingDream-antigravity-plugins) suite: [Context Radar](https://github.com/eatingDream-antigravity-plugins/context-radar) · [Clam Guard](https://github.com/eatingDream-antigravity-plugins/clam-guard) · **Remote Cast** · [Colab Deck](https://github.com/eatingDream-antigravity-plugins/colab-deck) · [Panel Kit](https://github.com/eatingDream-antigravity-plugins/panel-kit)\n\n## License\n\nLicensed under the [MIT License](LICENSE).\n",
+  "latestReleaseNotes": "## [0.7.0](https://github.com/eatingDream-antigravity-plugins/remote-cast/compare/v0.6.2...v0.7.0) (2026-11-28)\n\n\n### Features\n\n* default disconnect to grant-preserving standby with explicit revoke ([#40](https://github.com/eatingDream-antigravity-plugins/remote-cast/issues/40)) ([6186400](https://github.com/eatingDream-antigravity-plugins/remote-cast/commit/618640037cdbdc06fa38dad049eeec47ed2416ce))",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -74,7 +74,7 @@
         "file": "panel/build.ts",
         "line": 43,
         "snippet": "const out = execFileSync( esbBin, [ tmpEntry, \"--bundle\", \"--minify\", \"--tree-shaking=true\", \"--charset=utf8\", \"--legal-comments=none\", \"--format=iife\", \"--platform=browser\", \"--ta",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L43"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L43"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -85,7 +85,7 @@
         "file": "panel/build.ts",
         "line": 64,
         "snippet": "const out = execFileSync( bunBin, [\"build\", tmpEntry, \"--bundle\", \"--minify\", \"--format=iife\", \"--target=browser\"], { encoding: \"utf8\", maxBuffer: 4 * 1024 * 1024, stdio: [\"ignore\"",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L64"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L64"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -96,7 +96,7 @@
         "file": "panel/build.ts",
         "line": 88,
         "snippet": "const out = execFileSync(bunBin, [\"build\", tmpCss, \"--minify\"], { encoding: \"utf8\", maxBuffer: 4 * 1024 * 1024, stdio: [\"ignore\", \"pipe\", \"ignore\"], });",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L88"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L88"
       },
       {
         "id": "CODE_JS_DYNAMIC_EXEC",
@@ -107,7 +107,7 @@
         "file": "panel/build.ts",
         "line": 199,
         "snippet": "new Function(jsCode);",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L199"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L199"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -118,7 +118,7 @@
         "file": "panel/build.ts",
         "line": 37,
         "snippet": "fs.writeFileSync(path.join(tmpDir, file), fs.readFileSync(path.join(__dirname, file), \"utf8\"), \"utf8\");",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L37"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L37"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -129,7 +129,7 @@
         "file": "panel/build.ts",
         "line": 76,
         "snippet": "if (tmpDir) try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch {}",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L76"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L76"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -140,7 +140,7 @@
         "file": "panel/build.ts",
         "line": 85,
         "snippet": "fs.writeFileSync(tmpCss, rawCss, \"utf8\");",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L85"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L85"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -151,7 +151,7 @@
         "file": "panel/build.ts",
         "line": 100,
         "snippet": "if (tmpDir) try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch {}",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L100"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L100"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -162,7 +162,7 @@
         "file": "panel/build.ts",
         "line": 220,
         "snippet": "fs.writeFileSync(tmpHtml, html, \"utf8\");",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/panel/build.ts#L220"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/panel/build.ts#L220"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -173,11 +173,24 @@
         "file": "AGENTS.md",
         "line": 31,
         "snippet": "- Run `./scripts/check_sanitized.sh` before every push (must exit 0).",
-        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/2711347ed92c3f0826c1cc3cd3022477bfe2c93a/AGENTS.md#L31"
+        "githubBlobUrl": "https://github.com/eatingDream-antigravity-plugins/remote-cast/blob/7767a3966fc6c7f52ba6165e741508079322e15a/AGENTS.md#L31"
       }
     ]
   },
   "history": [
+    {
+      "version": "0.7.0",
+      "sha": "7767a3966fc6c7f52ba6165e741508079322e15a",
+      "scannedAt": "2026-11-28T12:13:46.570Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "dynamic_code_exec",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    },
     {
       "version": "0.6.1",
       "sha": "2711347ed92c3f0826c1cc3cd3022477bfe2c93a",
