@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "tone-leh/agy-NOV",
-  "sha": "c5ed1f2e5cc21140767263d8a9511ea52769cfed",
+  "sha": "d09f99cd3146ca17e6b87f4267fd00c07dbdba17",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:12:58.647Z",
+  "scannedAt": "2026-11-28T06:15:57.186Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "agy-nov",
     "displayName": "agy-NOV",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "minAppVersion": "2.34.0",
     "mcpServers": [
       {
@@ -49,7 +49,7 @@
       {
         "name": "agy-nov",
         "slashCommand": "/agy-nov",
-        "description": "Open and manage agy-NOV (v1.2.0, full macOS / Windows / Linux native cross-platform compatibility), the 100% native 4-layer modular super-workbench for Google Antigravity 2.0 (Zero ASAR, Zero CDP, survives every client update). Organizes 13",
+        "description": "Open and manage agy-NOV (v1.2.1), the 100% native 4-layer modular super-workbench for Google Antigravity 2.0 (Zero ASAR, Zero CDP). Manage 13 toggleable modules, 5 presets, 47 canonical model tools, 6 official hooks, 4 zero-tax MCP context ",
         "disableModelInvocation": false,
         "file": "skills/agy-nov/SKILL.md"
       },
@@ -135,8 +135,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"./assets/logo.svg\" width=\"88\" height=\"88\" alt=\"agy-NOV Logo\" />\n  <h1>agy-NOV</h1>\n  <p><strong>The 100% Native Modular Super-Workbench for Google Antigravity 2.0.</strong></p>\n  <p><em>One plugin. Thirteen toggleable superpowers built on a clean 4-layer zero-cycle systems architecture with full macOS / Windows / Linux native cross-platform compatibility (3-OS × Node 20/22 CI + 3-OS real-process hook black-box testing), featuring an <strong>opt-in read-only scheduled audit Sidecar</strong> (<code>sidecars/audit-sidecar.mjs</code>, OFF by default) &amp; 11th CLI command <code>audit-once</code> (+0 model tools), <strong>Layer 1 shared loopback-only <code>ConversationService</code> Connect API collaboration</strong> (powering confirmation-gated Clean Fork <code>app_xray_fork_via_service</code> &amp; read-only Radar reconciliation <code>app_radar_reconcile_conversations</code>, +0 model tools), <strong>Antigravity Marketplace readiness alignment</strong> (10-key <code>plugin.json</code> with concise 148-char description + 18-asset &amp; 4-check Marketplace <code>doctor</code>), Spec DAG → <code>/run-workflow</code> Python &amp; <code>/swarm</code> <code>plan.json</code> native orchestration compilation (+0 model tools), <code>PreInvocation</code> local inbound secret hard gating (<code>terminationBehavior: \"terminate\"</code>), official 6th Lifecycle Hook <code>PostInvocation</code> zero-token turn receipts, 4 zero-injection-tax read-only MCP context resources (<code>agy-nov://context/{review,mem,turbo,xray}</code>), Antigravity 2.35 CLI <code>statusLine</code> stdin JSON fusion (11 composable segments incl. <code>model</code> &amp; <code>quota</code>), Antigravity CLI 100-tool budget gating (auto-hiding <code>app_*</code> tools when MCP UI extensions are absent so <code>full</code> stays strictly at 47 tools), live <code>roots/list</code> dynamic workspace tracking, cross-platform plugin-root relative hooks (<code>node dist/hook.cjs --event &lt;Event&gt;</code>), 4+1 domain IA &amp; 4-tier Settings Hub (with S4 Tool-Slot Idle Advisor), Ops 3.0, Mem 3.0, One-Click Clean Fork, 6 official on-demand Skills &amp; 2 read-only specialist subagents, native MCP Apps <code>file</code> viewer, Remote 2.5, Turbo 3.0, Guard 2.5, 6 official Hooks, 8-language full-component UI (755 core keys × 8 locales + full Spec export localization, 1,390.2 KB), minified backend bundles &amp; 11-command CLI (18-asset <code>doctor</code>). Zero ASAR, Zero CDP, strictly 47 canonical model tools with zero token tax when off.</em></p>\n\n  <p>\n    <strong>English</strong> ·\n    <a href=\"./docs/i18n/README.zh-CN.md\">简体中文</a> ·\n    <a href=\"./docs/i18n/README.zh-TW.md\">繁體中文</a> ·\n    <a href=\"./docs/i18n/README.ja.md\">日本語</a> ·\n    <a href=\"./docs/i18n/README.ko.md\">한국어</a> ·\n    <a href=\"./docs/i18n/README.es.md\">Español</a> ·\n    <a href=\"./docs/i18n/README.fr.md\">Français</a> ·\n    <a href=\"./docs/i18n/README.de.md\">Deutsch</a>\n  </p>\n\n  <p>\n    <a href=\"https://github.com/tone-leh/agy-NOV/releases/tag/v1.2.0\"><img src=\"https://img.shields.io/badge/Version-v1.2.0-0284c7?style=flat-square\" alt=\"Version: v1.2.0\" /></a>\n    <a href=\"https://github.com/tone-leh/agy-NOV/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/github/actions/workflow/status/tone-leh/agy-NOV/ci.yml?branch=main&style=flat-square&label=CI\" alt=\"CI Status\" /></a>\n    <a href=\"https://github.com/tone-leh/agy-NOV/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/badge/Platform-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-475569?style=flat-square\" alt=\"Platform: macOS · Windows · Linux\" /></a>\n    <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-3b82f6?style=flat-square\" alt=\"License: MIT\" /></a>\n    <a href=\"https://nodejs.org\"><img src=\"https://img.shields.io/badge/Node-%3E%3D20-16a34a?style=flat-square\" alt=\"Node >= 20\" /></a>\n    <a href=\"#architecture\"><img src=\"https://img.shields.io/badge/MCP%20Apps-SEP--1865-6366f1?style=flat-square\" alt=\"MCP Apps (SEP-1865)\" /></a>\n    <a href=\"#architecture\"><img src=\"https://img.shields.io/badge/Protocol-Zero%20ASAR%20%C2%B7%20Zero%20CDP-0ea5e9?style=flat-square\" alt=\"Zero ASAR · Zero CDP\" /></a>\n  </p>\n\n  <br />\n\n  <p><strong>Live Workbench Preview (v1.2.0 · 4+1 Domain IA)</strong></p>\n  <img src=\"./assets/demo-preview.gif\" alt=\"agy-NOV v1.2.0 Live Workbench Preview — Opt-In Read-Only Audit Sidecar & audit-once, Layer 1 Shared ConversationService Cross-Session Collaboration, Marketplace-Ready 18-Asset Doctor, 4-Layer Modular Architecture, Spec DAG Workflow Compiler, 4+1 Domain IA, Workflow Hub, 4-Tier Settings Hub, 8-Language Full-Component UI, Antigravity CLI 47-Tool Ceiling Gate, 6 Official Hooks incl. PreInvocation Inbound Secret Gate & PostInvocation Receipts, 4 Zero-Injection MCP Context Resources, Antigravity 2.35 CLI statusLine stdin JSON Fusion, Ops 3.0, Mem 3.0, One-Click Clean Fork, Native MCP Apps File Viewer & Remote 2.5\" width=\"100%\" />\n\n  <br />\n\n  <p>\n    <a href=\"#30-second-read-only-first-try\">30s First Try</a> ·\n    <a href=\"#why-agy-nov\">Why agy-NOV</a> ·\n    <a href=\"#whats-new-in-v120\">v1.2.0 Highlights</a> ·\n    <a href=\"#pick-your-setup-in-10-seconds\">Pick Your Setup</a> ·\n    <a href=\"#13-toggleable-superpowers\">13 Modules</a> ·\n    <a href=\"#41-domain-ia-4-tier-settings-hub-8-language-ui--zero-cdp-ecosystem\">4+1 IA &amp; 8-Language UI</a> ·\n    <a href=\"#architecture\">Architecture</a> ·\n    <a href=\"./sidecars/README.md\">Audit Sidecar</a> ·\n    <a href=\"./docs/ARCHITECTURE.md\">Architecture Doc</a> ·\n    <a href=\"./CONTRIBUTING.md\">Contributing</a> ·\n    <a href=\"#30-second-quick-start\">30s Quick Start</a> ·\n    <a href=\"#for-ai-agents-quick-reference\">For AI Agents</a>\n  </p>\n</div>\n\n> [!NOTE]\n> **Independent Open-Source Project:** `agy-NOV` (v1.2.0) is an independent, MIT-licensed community plugin built for Google Antigravity 2.0 across **macOS, Windows, and Linux**. It has no affiliation with, sponsorship from, or endorsement by Google LLC.\n\n---\n\n## 30-Second Read-Only First Try\n\nEvaluate `agy-NOV` on your current workspace with **zero file edits, zero config writes, and zero network traffic**:\n\n```bash\n# 1. Scan your repo read-only and preview a safe .agy-nov.json team preset scaffold (zero disk writes)\n# After `agy plugin install` (zero global install needed):\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs recommend --workspace=. --export-preset\n# Or if you linked `agy-nov` globally (`npm link` inside the plugin directory) or inside a cloned repo:\nagy-nov recommend --export-preset\n```\n\n2. Paste this **100% read-only first prompt** into Antigravity 2.0 once installed (also available inside the **L0 Workflow Hub** and the collapsible **30-Second Zero-Risk First Try** guide in **Settings Hub**):\n\n> *\"Open agy-NOV Context X-Ray in read-only mode to inspect my estimated offline USD spend, 5-hour burn-rate window, and prefix cache hit rate — then open Two-Stage Diff Review with `-w` whitespace-ignored and line risk hints without modifying any files.\"*\n\n---\n\n## Why agy-NOV?\n\nInstalling separate MCP servers and hook scripts for code review, secret scanning, Spec-driven plan reviews & workflow compilation, Stop-hook verification, Git worktrees, local data/document/OpenAPI debugging, Swarm & offline USD telemetry, confidence-governed progressive memory, token-saving log compression, session tracking, and static security/dedup/budget audits quickly turns a clean Antigravity workspace into a noisy stack of background daemons pushing against Antigravity's **100-tool MCP hard limit**.\n\n| Dimension | ❌ Plugin Sprawl (12–13 Separate Tools) | ✅ agy-NOV Super-Workbench |\n| :--- | :--- | :--- |\n| **Resident Processes** | 12–13 background Node/Python servers competing for RAM and startup time | **1 resident MCP server** (`dist/server.cjs`, minified `1,583.5 KB`) serving all enabled capabilities with live `roots/list` workspace tracking, **4 zero-injection-tax `agy-nov://context/*` resources**, & **1 opt-in OFF-by-default read-only Audit Sidecar** (`sidecars/audit-sidecar.mjs`, zero idle daemon) |\n| **Per-Turn Token & Tool Cap** | 70+ static tool schemas plus bulky resident `rules/AGENTS.md` files crowding the 100-tool limit | **Dynamic `tools/list`** (strictly **47** canonical model tools max across `v0.4`→`v1.2.0`, `0` token & tool-slot tax when off) + **CLI 47-tool ceiling gate** (auto-hiding `app_*`/`nov_app_*` on headless CLI clients without MCP UI extensions) + **SettingsHub S4 Tool-Slot Idle Advisor** + **6 on-demand Skills & 2 read-only subagents** with zero default resident `rules/AGENTS.md` bloat |\n| **Lifecycle Hook Storm** | Multiple forked hook scripts racing on every `SessionStart` / `PreToolUse` / `PostToolUse` / `PreInvocation` / `PostInvocation` / `Stop` | **1 unified 6-hook dispatcher** (`dist/hook.cjs`, minified `211.9 KB`) invoked via cross-platform plugin-root relative `node dist/hook.cjs --event <Event>`, with O(1) read-only short-circuiting, `PreInvocation` local inbound secret hard gating (`terminationBehavior: \"terminate\"`), `PostInvocation` zero-token turn receipts, official `Stop` `decision: \"continue\"`, and explicit `PreToolUse` `{ decision: \"allow\" }` |\n| **Upgrade Durability & OS Support** | Binary `app.asar` patches, POSIX-only shell assumptions, and DOM hooks break after updates or on Windows/Linux | **100% official native protocols** — Zero ASAR, Zero CDP, clean **4-layer zero-cycle architecture** ([`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)) with shared loopback-only `ConversationService` Connect API, official MCP Apps `file` viewer (with `antigravity-file://` host `resources/read`), Marketplace-ready 10-key manifest, and full **macOS / Windows / Linux** native compatibility (3-OS × Node 20/22 CI + 3-OS real-process hook black-box testing) |\n| **Workflow, Governance & UX** | Disconnected panels, stale/unverified memories, unvetted rules/hooks, cramped sidebars, English-only screens | **Opt-In Read-Only Audit Sidecar (`audit-once`)**, **Spec DAG → `/run-workflow` & `/swarm` Compiler**, **11-segment stdin-fused CLI `statusLine`**, **Ops 3.0** static security & dedup preview, **Mem 3.0** confidence/TTL hygiene, **One-Click Clean Fork** (+ `ConversationService` create), **Radar live host reconciliation**, **4+1 Domain IA** (`Hub` + 4 domains, adaptive `< 720px` / `>= 720px` nav with `global` degradation, `⌘K`), **4-tier Settings Hub**, **8-language full-component UI (24 components)**, **5 presets**, `.agy-nov.json` team presets, and **11 CLI commands** |\n\n### The 100% Native Switchboard Philosophy\n\n1. **Single Native Runtime + 4-Layer Architecture + Opt-In Sidecar & Zero-Bloat Playbooks:** 1 MCP server (`dist/server.cjs`, `1,583.5 KB`, exposing **4 zero-injection-tax `agy-nov://context/*` read-only resources**) + 1 unified **6-hook** lifecycle dispatcher (`dist/hook.cjs`, `211.9 KB`, covering `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, and `Stop` via plugin-root relative `node dist/hook.cjs --event <Event>`) + 1 self-contained 8-language dark/light UI (`dist/ui/app.html`, `~1.36 MiB` — measured **`1,390.2 KB`**, far below the 10 MiB resource cap, shipping **755 core dictionary keys × 8 locales** plus full key-symmetric localization for Spec workflow export across all **24 UI components**) + 1 modular **11-command CLI** (`dist/cli.cjs`, `190.0 KB`, including `audit-once` read-only health sweep, Antigravity 2.35 stdin JSON-fused 11-segment `statusline`, read-only `compile-spec`, preview-then-confirm `recommend --export-preset`, zero-split-brain `resolveNovDataDir()`, and Marketplace-ready `doctor` verifying all **18** core plugin assets + **4** Marketplace Readiness Checks) + 1 opt-in OFF-by-default read-only Audit Sidecar ([`sidecars/README.md`](./sidecars/README.md)) + **6 official on-demand Skills** (`agy-nov` + `/nov-spec`, `/nov-debug`, `/nov-review`, `/nov-handoff`, `/nov-workflow`) + **2 official read-only specialist subagents** (`agents/nov-blind-reviewer.md`, `agents/nov-security-auditor.md`), keeping zero default resident `rules/AGENTS.md` bloat across **macOS, Windows, and Linux**.\n2. **Zero Token & Tool-Slot Tax When Off (+ CLI 47-Tool Ceiling Gate):** Every module wraps its model tools in `RegisteredTool.enable()` / `.disable()` and pushes delta `tools/list_changed` notifications live. All **47 canonical model tool names** stay strictly unchanged from `v0.4` through `v1.2.0` (+0 tool-slot inflation); all Hub, Settings Hub (incl. S4 Tool-Slot Idle Advisor), Spec workflow compilation (`app_spec_compile_workflow`), Context Pack, Turn Rewind, Clean Fork (`app_xray_build_clean_fork_pack` & confirmation-gated `app_xray_fork_via_service`), Radar live host reconciliation (`app_radar_reconcile_conversations`), `.worktreeinclude` preview (`app_worktree_preview_include`), PR evidence summary (`app_verify_pr_summary`), Mem 3.0 hygiene summary & batch cleanup (`app_mem_get_hygiene_summary`, `app_mem_batch_hygiene`), and native `file` viewer (`app_nov_file_viewer`) controls run strictly as App-only tools (`visibility: ['app']`) with zero model-context overhead — and when a headless Antigravity CLI client connects without `capabilities.extensions[\"io.modelcontextprotocol/ui\"]`, the server hides every `app_*` / `nov_app_*` tool automatically so even `full` exposes strictly 47 tools.\n3. **Production-Grade Loop & 12 Local Offline Modules First:** Organized into **L0 Workflow Hub** (6-node pipeline bar + alert cards + One-Click Clean Fork + `Cmd/Ctrl+K` quick jump) and 4 clear domains — **Core Essentials** (`core`: Two-Stage `review`, **Guard 2.5**, `xray` 2.0 + Clean Fork), **Engineering Pipeline** (`pipeline`: **Spec 2.0 + Workflow Compiler**, `worktree` with read-only `.worktreeinclude`, `verify` with Worktree targeting & PR summary, **Turbo 3.0**, **Mem 3.0**), **On-Demand Toolbox** (`toolbox`: `radar` 4-lane Kanban + live host reconciliation, `studio`, `canvas`, **Ops 3.0**), and **Opt-In Connectivity** (`connectivity`: **Remote 2.5**). All 12 Tier-1 modules run 100% locally with zero external network calls, zero ASAR edits, and zero CDP hooks.\n4. **Zero-Port Dual-Star Feed & 1 Strictly Opt-In Remote Module (`Remote 2.5`):** Event-driven `<dataDir>/feed-snapshot.json` (`0600` atomic, `< 64 KiB`, O(n) redacted, enriched with `forceAskCount`, `permissionMode`, `snapshotCount`, and `latestSnapshotId`, zero mkdir/writes when `dataDir` is absent) enables zero-port read-only telemetry sharing with `agy-Sag`, while `remote` stays completely OFF by default — zero listening ports, zero background polling, zero disk writes, and zero outbound network requests until you explicitly enable it.\n\n---\n\n## What's New in v1.2.0\n\n`v1.2.0` introduces an **opt-in read-only scheduled Audit Sidecar & 11th CLI command `audit-once`**, unifies lightweight cross-session host collaboration on a **Layer 1 shared loopback-only `ConversationService` Connect API** (`app_xray_fork_via_service` + `app_radar_reconcile_conversations`), and aligns the plugin with **Antigravity Marketplace Readiness Certification** (`plugin.json` 148-char description + **18-asset** & **4-check** `doctor`) — preserving **+0 model tool bloat** (all **47** canonical model tools strictly unchanged from `v0.4`→`v1.2.0`, verified by **100 suites / 280 tests**; minified bundles: `dist/server.cjs` **`1,583.5 KB`**, `dist/hook.cjs` **`211.9 KB`**, `dist/cli.cjs` **`190.0 KB`**, `dist/ui/app.html` **`1,390.2 KB`** / `~1.36 MiB`):\n\n### 1. Opt-In Read-Only Audit Sidecar & 11th CLI Command `audit-once` (+0 Model Tools) (`server`, `cli`, `sidecars/`)\n- **Zero Idle Daemon by Default (`src/server/sidecar.ts`, `sidecars/audit-sidecar.mjs`, [`sidecars/README.md`](./sidecars/README.md)):** Stays completely OFF on install — zero background daemon, zero listening ports, zero directory creation, and zero disk writes until explicitly run manually, via Antigravity `/schedule`, or via OS schedulers (`cron`, `launchd`, Windows Task Scheduler).\n- **One-Shot Redacted Health Sweep (`audit-once` & `--once`):** Aggregates read-only Ops static security/rule scores, Mem stale-anchor and expired-unpinned counts, Verify dirty files/last status, Guard block counts, and active config posture via `agy-nov audit-once [--workspace=<dir>] [--json] [--write-report]` or `node sidecars/audit-sidecar.mjs --once`.\n- **Guarded Optional Report Persistence (`--write-report`):** Atomically persists `<= 64 KiB` `health-sweep.json` (mode `0600`, `O_CREAT | O_EXCL` temp file + atomic rename) strictly inside an existing safe non-symlink `dataDir`, refusing unsafe symlinks and stripping host absolute paths.\n\n### 2. Layer 1 Shared `ConversationService` Connect API Collaboration (+0 Model Tools) (`core`, `remote`, `xray`, `radar`)\n- **Shared Loopback-Only Client (`src/core/conversation-service.ts`):** Wraps Google Antigravity's official `product.v1.ConversationService` Connect API with strict anti-SSRF loopback validation (`127.0.0.1` / `localhost` / `[::1]` only), silent graceful degradation when unavailable, zero CSRF token echoing, and full outbound `<private>`/secret redaction — shared across `remote`, `xray`, and `radar`.\n- **Confirmation-Gated Clean Fork via Host Service (`xray` · `app_xray_fork_via_service`):** Supports dry-run Clean Fork preview and explicit `confirmCreate` direct creation of a clean new host conversation, gracefully falling back to `app.sendMessage` whenever `ConversationService` is unavailable.\n- **Zero-Write Live Host Board Reconciliation (`radar` · `app_radar_reconcile_conversations`):** Reconciles the local Radar board against live host `ListConversations` strictly read-only, surfacing idle ghost sessions alongside newly active host conversations with zero disk writes.\n\n### 3. Antigravity Marketplace Readiness Certification & 18-Asset `doctor` (`plugin.json`, `cli`)\n- **Official 10-Key Marketplace Manifest:** `plugin.json` keeps strictly the 10 officially allowed top-level keys with `description` condensed to **148 characters** (within the 60–200 recommended window), 3 validated non-empty `suggestedPrompts`, and the 128×128 transparent-background `assets/logo.svg`.\n- **Expanded 18-Asset & 4-Check `doctor`:** Verifies all **18 core plugin assets** (adding `sidecars/audit-sidecar.mjs` and `sidecars/README.md`) plus **4 Marketplace Readiness Checks** (concise 60–200 char `description`, 1–3 valid `suggestedPrompts`, relative regular `logo` asset inside plugin root, and zero `rules/AGENTS.md` always-on rule bloat).\n\n<details>\n<summary><strong>Built on the v1.1.0 4-Layer Architecture Refactor, Spec DAG Workflow Compiler, Deterministic Security 2.0 &amp; Antigravity 2.35 CLI <code>statusLine</code> Foundation</strong></summary>\n\n- **4-Layer Modular Systems Architecture Refactor (`v1.1.0`):** Extracted zero-module-import Layer 1 core kernel (`src/core/{fs-safe,process-safe,brain-paths,sanitize,module-contract}.ts`), decomposed 8 oversized monoliths (`ops/core.ts`, `verify/core.ts`, `studio/core.ts`, `turbo/core.ts`, `spec/core.ts`, `worktree/core.ts`, `cli.ts`, `SpecPanel.tsx`) with zero circular dependencies, published [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) and [`CONTRIBUTING.md`](./CONTRIBUTING.md), and enforced layer rules via `test/architecture-hygiene.test.ts`.\n- **Spec DAG → `/run-workflow` & `/swarm` Native Orchestration Compiler (`v1.1.0`):** Kahn topological wave compiler (`src/modules/spec/compiler.ts`) generating `/run-workflow` Python orchestration (`phase`/`parallel`/`agent`/`log` chaining `nov-blind-reviewer`, `nov-security-auditor`, and `Verify Gate`) and `/swarm` `plan.json` blueprints with cycle blocking, linear redaction, App-only `app_spec_compile_workflow` 8-language UI modal, read-only CLI `compile-spec`, and 6th official Skill `/nov-workflow`.\n- **Deterministic Security & Zero-Injection Context 2.0 (`v1.1.0`):** `PreInvocation` local inbound high-confidence secret hard gate (`terminationBehavior: \"terminate\"`, zero secret echo, Guard `blockInboundPromptSecrets`), official 6th Lifecycle Hook `PostInvocation` (O(1) short-circuit, zero-token `systemMessage: \"\"` + `metadata.user_markdown` turn receipts), and 4 zero-injection-tax read-only MCP context resources (`agy-nov://context/{review,mem,turbo,xray}`, `<= 32 KiB`, linear redacted, zero writes).\n- **Antigravity 2.35 CLI `statusLine` stdin JSON Fusion (`v1.1.0`):** Async bounded host stdin JSON telemetry reader (`model`, `context_window`, `cost`, `quota`, `subagents`, `workspace`, zero-delay TTY bypass, `120ms` timeout, `256 KiB` cap) expanding composable segments to **11** (adding `model` and `quota`).\n\n</details>\n\n<details>\n<summary><strong>Built on the v1.0.0–v1.0.2 Runtime Hardening, Cross-Platform &amp; Governance Foundation (CLI 47-Tool Gate, <code>roots/list</code> Sync, 3-OS Support, Ops 3.0, Mem 3.0 &amp; <code>.agy-nov.json</code> Scaffold)</strong></summary>\n\n- **Real-Host Runtime Hardening & Full 8-Language Parity (`v1.0.2`):** Official `Stop` `decision: \"continue\"` (`terminationReason` safe pass-through) & `PreToolUse` `{ decision: \"allow\" }`; cross-platform plugin-root relative `hooks.json` (`node dist/hook.cjs --event <Event>`) + 3-OS black-box hook tests; Antigravity CLI 47-tool ceiling gate auto-hiding `app_*` tools when `capabilities.extensions[\"io.modelcontextprotocol/ui\"]` is absent; live `roots/list` dynamic workspace sync & split-brain-free `resolveNovDataDir()`; `NovBridge` first-frame `ontoolresult` replay, real `antigravity-file://` host `resources/read`, and `global` capability degradation; 755 core dictionary keys × 8 locales across all 24 UI components; minified backend bundles; enriched `feed-snapshot.json` telemetry; Remote 2.5 same-origin PIN lockout DoS guard & bounded SSE heartbeats; Mem 3.0 batch `verify` anchor refresh; Auto-RTK non-ASCII/parenthesis path support; native `read_file` subagent alignment.\n- **Full macOS / Windows / Linux Cross-Platform Support (`v1.0.1`):** `canonicalRealpathSync` Windows 8.3 short-path expansion & case-insensitive boundary checks + Linux `/home`/`/var/run`/`/var/lock` system symlink allowlist; `atomicRenameSync` NTFS retry; Windows `shell: false` Node JS entry resolution for `npm`/`npx`/`pnpm`/`yarn`/`tsc`/`eslint`/`vitest`/`jest` (CVE-2024-27980-safe); PowerShell/`cmd` destructive rules in `guard`/`remote`; `taskkill /T /F` in `verify`; headless-Linux notification skipping in `radar`; 3-OS × Node 20/22 GitHub Actions CI matrix.\n- **Ops 3.0 Static Security Audit, Cross-Client Dedup Preview & Tool-Slot Idle Advisor (`v1.0.0`):** Pure read-only O(n) `ops_audit_workspace` scanner (`securityFindings` + `securityScore` 0–100 across `prompt-injection`, `broad-command-allow`, `risky-hook`, `mcp-unsafe-env` with zero secret echoing and zero false positives on compliant repos), read-only `.claude/`/`.cursor/rules/`/`.codex/` SHA-256 `migrationPreview`, and SettingsHub S4 8-language **Tool-Slot Idle Advisor**.\n- **Mem 3.0 Confidence/TTL Hygiene & Preview-Then-Confirm `.agy-nov.json` Scaffold (`v1.0.0`):** Confidence tiers (`verified`/`normal`/`tentative`), provenance (`manual`/`spec_archive`/`auto_capture`), `ttlDays` (1–365), `Stop`-hook `tentative` + 14-day TTL auto-capture, auto-filtering expired tentative memories in `SessionStart` L1 & default `mem_recall`, `MemPanel` batch Verify / Refresh TTL (+30d) / Prune (double confirm), and read-only default `recommend --export-preset` writing atomically only with explicit `--confirm` (`--force` for overwrites, symlink refusal, zero `remote`, allowlisted verify commands).\n\n</details>\n\n<details>\n<summary><strong>Built on the Complete v0.7–v0.9 Native Foundation (Pipeline Loop, Clean Fork, On-Demand Playbooks &amp; Subagents, Native <code>file</code> Viewer, Remote 2.5, Turbo 3.0, Guard 2.5 &amp; Spec 2.0)</strong></summary>\n\n- **End-to-End Engineering Pipeline Loop (`Spec → Worktree → Two-Stage Review → Verify → Mem` + Radar Kanban):** Safe read-only `.worktreeinclude` allowlist (`app_worktree_preview_include` + `applyInclude`, rejecting `.env*`/private keys/symlinks into `skippedSensitive` with zero auto-RCE scripts), Worktree branch switching + Two-Stage Review (Stage 1 active Spec compliance checklist + Stage 2 code quality `file:line` annotations), Worktree-targeted Verify (`worktreePath`) + redacted PR delivery summary (`app_verify_pr_summary`), and approval-first 4-lane Radar Kanban.\n- **One-Click Clean Fork Anti-Context-Rot (`xray` + `HubPanel`):** Read-only `app_xray_build_clean_fork_pack` (`<= 12 KB` linear-redacted Handoff + unblocked Spec `ready` tasks + Mem core code anchors) launching a clean same-project background session via official `app.sendMessage({ _meta: { \"com.google.antigravity/message\": { target: \"new\" } } })`, with graceful pill/copy fallback on `global` surfaces.\n- **Official On-Demand Skills & Read-Only Specialist Subagents:** Entry skill `agy-nov` + `/nov-spec`, `/nov-workflow`, `/nov-debug`, `/nov-review`, `/nov-handoff` + read-only `nov-blind-reviewer` and `nov-security-auditor` (native `read_file` only, `subagent: true, mainAgent: false`, 0 MCP tool slots, 0 default resident `rules/AGENTS.md` bloat).\n- **Native MCP Apps `file` Viewer (`app_nov_file_viewer`) & Remote 2.5:** Hidden-from-model native previews for `.sqlite`/`.sqlite3`/`.db`/`.csv`/`.tsv`/`.svg`/`.openapi.yaml`/`.openapi.yml` (usable even when `studio`/`canvas` stay off, with `realpath` containment, SVG XSS sanitization & `antigravity-file://` host `resources/read`) plus Remote 2.5 pure-DOM structured risk approval cards (`HIGH`/`MED`/`LOW`, affected file count, redacted command summary, latest Verify status).\n- **Turbo 3.0, Guard 2.5, Spec 2.0 & 4+1 IA:** Opt-in Auto-RTK `PreToolUse.overwrite` proxy (`autoRtk: false` default) + offline locked dependency contracts + O(n) cross-file symbol references + redacted Context Pack; Guard 2.5 turn-grouped snapshot rewind & 3-tier `permissionMode` (`readonly-audit`/`balanced-dev`/`strict-gate` via `force_ask`); Spec 2.0 Plannotator inline review bench & Brownfield `delta` specs; L0 Workflow Hub, adaptive `< 720px` / `>= 720px` nav, `⌘K` palette, 4-tier Settings Hub, and zero-token `PreInvocation` visual receipts.\n\n</details>\n\n---\n\n## Pick Your Setup in 10 Seconds\n\nStart lean and expand whenever a workflow demands it. Run `recommend` for an automatic read-only suggestion for your repo (or `recommend --export-preset` to preview a safe single-file **`.agy-nov.json`** team preset scaffold with zero disk writes), or pick a preset below — every preset updates active model tools, hook dispatch, and navigation live from **Settings Hub (S1)**, **Hub**, or one CLI command.\n\n| Preset | Persona | Enabled Modules | Model Tools* | Isolation Profile |\n| :--- | :--- | :--- | :---: | :--- |\n| **`minimal`** | *Minimalist Safety Net* — Guard 2.5 secret shield, `PreInvocation` inbound secret gate, turn-grouped rewind & 3-tier permission modes | `guard` (1) | **6** | 100% Offline |\n| **`core`** *(Default)* | *Daily Driver* — Core Essentials (Two-Stage `review`, **Guard 2.5** inbound secret gate, turn rewind & permission modes, `xray` 2.0 + **One-Click Clean Fork**) out of the box | `review`, `guard`, `xray` (3) | **12** | 100% Offline |\n| **`power`** | *High-Velocity Engineer* — Core + End-to-End Engineering Pipeline (**Spec 2.0 + Workflow Compiler**, **Worktree** `.worktreeinclude`, **Verify** Worktree checks & PR Evidence, **Radar** 4-lane Kanban) + **Turbo 3.0** & **Ops 3.0** static security audit, cross-client dedup preview & Budget Doctor | `core` + `turbo`, `radar`, `verify`, `worktree`, `spec`, `ops` (9) | **32** | 100% Offline |\n| **`local-all`** | *All-Local Studio* — every offline capability including **Mem 3.0** confidence/TTL hygiene & progressive disclosure, Spec 2.0 archive-to-Mem, Clean Fork code anchors, Workspace Studio (with OpenAPI parser) & Visual Canvas | All 12 offline native modules | **43** | 100% Offline |\n| **`full`** | *Away-From-Desk Commander* — full studio plus opt-in **Remote 2.5** structured risk approval cards, read-only PWA live stream, safe tunnel guide & IM approvals | All 13 native modules (incl. opt-in `remote`) | **47** | Opt-in Network |\n\n<sub>*Exact model tool count = `2` always-on entry tools (`nov_open`, `nov_status`) + sum of enabled module tools (`review` 2 + `guard` 4 + `xray` 4 + `turbo` 3 + `radar` 2 + `verify` 4 + `worktree` 4 + `spec` 4 + `studio` 4 + `canvas` 4 + `mem` 3 + `ops` 3 + `remote` 4 = 47; all 47 canonical model tool names remain strictly unchanged across `v0.4`→`v1.2.0`, while Hub / Settings Hub incl. S4 Tool-Slot Idle Advisor / Spec Workflow Compiler (`app_spec_compile_workflow`) / Context Pack / Turn Rewind / Clean Fork (`app_xray_build_clean_fork_pack` & `app_xray_fork_via_service`) / Radar live host reconciliation (`app_radar_reconcile_conversations`) / `.worktreeinclude` preview / PR summary / Mem 3.0 hygiene controls / native `file` viewer actions are strictly App-only and auto-hidden on headless CLI clients without MCP UI extensions).</sub>\n\n```bash\n# Run directly after `agy plugin install` (zero global install needed):\n# Scan your repo read-only & preview a safe .agy-nov.json team preset scaffold (zero writes)\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs recommend --workspace=. --export-preset\n# Write .agy-nov.json atomically only after explicit confirmation (--force required to overwrite)\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs recommend --workspace=. --export-preset --confirm\n# Switch presets anytime from your terminal (or use `agy-nov preset power` after optional `npm link`)\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs preset power\n```\n\n> [!TIP]\n> **Optional Single-File Team Preset (`.agy-nov.json`):** Drop a single optional `.agy-nov.json` in your repository root — or preview one safely with `recommend --export-preset` and write atomically only via explicit `--confirm` (refusing overwrites without `--force` and hard-rejecting symlinks, with immediate self-validation). When loaded, `agy-NOV` keeps `.agy-nov.json` **strictly read-only** (never auto-creates clutter directories in user repos), enforces a `64 KiB` cap, `realpath` containment, prototype-pollution defense, and a 23-executable static allowlist with zero auto-execution, and **never silently enables `remote`**.\n\n---\n\n## 13 Toggleable Superpowers\n\n### Tier 1 — 12 Local Offline Native Modules (100% Offline · Domains `core` / `pipeline` / `toolbox`)\n\nZero external network calls, zero CDP, zero ASAR patching. Built strictly on Google Antigravity 2.0's official MCP Apps (`aux_pane` + `global` + `file` viewer), **4 read-only MCP context resources** (`agy-nov://context/*`), **6 Lifecycle Hooks**, **6 Skills**, and **2 Read-Only Subagents** specifications.\n\n| Module | Domain | Default | Model Tools | Hooks | Core Superpower |\n| :--- | :---: | :---: | :---: | :--- | :--- |\n| **Diff Review** (`review`) *(Two-Stage)* | `core` | **ON** | 2 | `PostToolUse`, `Stop` | PR-grade working-tree, staged, commit & **registered Worktree branch** diff viewer + read-only MCP resource `agy-nov://context/review`; auto-loads active Spec acceptance items read-only for **Two-Stage Review** (**Stage 1** Spec compliance checklist + **Stage 2** code quality `file:line` annotations), pure-React syntax highlighting (zero `dangerouslySetInnerHTML`), ignore-whitespace (`-w`) toggle, and zero-ReDoS deterministic line risk hints |\n| **Guard & Snapshots** (`guard`) *(2.5)* | `core` | **ON** | 4 | `PreToolUse`, `PreInvocation`, `PostInvocation` | **Guard 2.5** blocks `.env`/SSH/credential leaks and destructive commands pre-execution (explicit `{ decision: \"allow\" }` on pass-through), enforces **`PreInvocation` local inbound high-confidence secret hard gating** (`terminationBehavior: \"terminate\"`, zero secret echo, configurable via `blockInboundPromptSecrets`), emits **`PostInvocation` zero-token turn receipts** summarizing Guard blocks, groups zero-Git pre-edit snapshots by session & turn (`turnKey`, reverting multi-edit files to **before their first edit** in that turn) with multi-file turn diff preview, All-or-Nothing preflight, `pre-rewind` backup, and 1-click turn rewind; 3 protocol-level `permissionMode` tiers (`readonly-audit`, `balanced-dev`, `strict-gate` via `force_ask`) synced to `feed-snapshot.json` |\n| **Context X-Ray** (`xray`) *(Clean Fork)* | `core` | **ON** | 4 | `PostToolUse`, `Stop` | **One-Click Clean Fork** (`app_xray_build_clean_fork_pack` in `XrayPanel` & `HubPanel`, `<= 12 KB` linear-redacted pack combining Handoff + unblocked Spec `ready` tasks + Mem code anchors, plus confirmation-gated **`app_xray_fork_via_service`** creating a clean new conversation via Layer 1 shared loopback-only `ConversationService` Connect API with dry-run preview & graceful `app.sendMessage` `target",
-  "latestReleaseNotes": "## Highlights\n\n### 1. Opt-In Read-Only Audit Sidecar & 11th CLI Command `audit-once` (+0 Model Tools)\n- Added `src/server/sidecar.ts`, `sidecars/audit-sidecar.mjs`, and [`sidecars/README.md`](sidecars/README.md) for scheduled or on-demand read-only workspace health sweeps aggregating Ops security/rule scores, Mem anchor drift & unpinned expiration, Verify dirty/status state, and Guard deny counts.\n- **Strictly OFF by default**: zero idle daemon, zero listening ports, zero directory creation, and zero disk writes unless explicitly invoked with `--write-report` against an existing non-symlink directory (`0600`, `<= 64 KiB` atomic `health-sweep.json`).\n- Hardened `sidecars/audit-sidecar.mjs` with `shell: false`, layered `lstatSync` + `realpathSync` containment verification for both `dist/` and `dist/cli.cjs`, and cross-platform host path stripping (POSIX + Windows backslash/forward-slash).\n\n### 2. Layer 1 Loopback `ConversationService` Bridge (+0 Model Tools)\n- Extracted shared Connect HTTP+JSON client `src/core/conversation-service.ts` strictly restricted to loopback addresses (`127.0.0.1`, `localhost`, `[::1]`), with `redirect: \"error\"` blocking cross-origin 3xx SSRF & CSRF header leakage, control-character rejection, outbound `<private>`/secret redaction, zero `csrfToken` echo, and graceful offline degradation.\n- **X-Ray Clean Fork via Service**: `app_xray_fork_via_service` (app-only, default read-only dry-run preview; `confirmCreate: true` creates a fresh conversation via `ConversationService/CreateConversation` with automatic fallback to `sendMessage`).\n- **Radar Read-Only Reconciliation**: `app_radar_reconcile_conversations` (app-only, read-only) compares local Radar board sessions against live host `ListConversations` state to highlight drifted-to-idle and host-only running sessions.\n\n### 3. Antigravity Marketplace Readiness\n- Refined `plugin.json` to strictly 10 official allowed top-level keys with a concise **148-character** description, 3 actionable `suggestedPrompts`, transparent 128×128 `assets/logo.svg`, and zero always-on `rules/AGENTS.md`.\n- Extended `agy-nov doctor` to check all **18 core assets** plus **4 Marketplace Readiness Checks**.\n\n## Verification\n- **Local Full Suite**: 100 suites / 280 tests passed; independent read-only red-team audit `PASS`.\n- **3-OS Real CI Matrix**: [Run 46045837939](https://github.com/tone-leh/agy-NOV/actions/runs/46045837939) — **6/6 passed** (`macos-latest`, `ubuntu-latest`, `windows-latest` × Node 20 / 22).\n- **Canonical Tool Ceiling**: Strictly preserved at **47 model tools** (+0 bloat).\n- **Bundles**: `dist/server.cjs` (1,583.5 KB) · `dist/hook.cjs` (211.9 KB) · `dist/cli.cjs` (190.0 KB) · `dist/ui/app.html` (1,390.2 KB).",
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"./assets/logo.svg\" width=\"88\" height=\"88\" alt=\"agy-NOV Logo\" />\n  <h1>agy-NOV</h1>\n  <p><strong>The 100% Native Modular Super-Workbench for Google Antigravity 2.0.</strong></p>\n  <p><em>One plugin. Thirteen toggleable superpowers built on a clean 4-layer zero-cycle systems architecture (verified via TypeScript AST &amp; Layer 2 horizontal cross-module allowlist) with full macOS / Windows / Linux native cross-platform compatibility (3-OS × Node 20/22 CI + 3-OS real-process hook black-box testing), featuring <strong>immediate dual-star <code>feed-snapshot.json</code> refresh &amp; accurate aggregation</strong> (<code>PreToolUse</code> <code>deny</code>/<code>force_ask</code>/<code>ask</code> &amp; CLI mutators, <code>createdAt</code>-ordered <code>latestSnapshotId</code>, real-deny <code>GUARD_BLOCKED</code>, latest-timestamp <code>verify</code> summary), <strong>disabled-module hard gating &amp; <code>PostToolUse</code> O(1) short-circuit</strong> (<code>cfg.modules.mem</code> gate in <code>archiveSpecToMemory</code> &amp; <code>cfg.modules.{mem,verify,guard}</code> Sidecar gating), an <strong>opt-in read-only scheduled audit Sidecar</strong> (<code>sidecars/audit-sidecar.mjs</code>, OFF by default) &amp; 11th CLI command <code>audit-once</code> (+0 model tools), <strong>Layer 1 shared loopback-only <code>ConversationService</code> Connect API collaboration</strong> (powering confirmation-gated Clean Fork <code>app_xray_fork_via_service</code> &amp; read-only Radar reconciliation <code>app_radar_reconcile_conversations</code>, +0 model tools), <strong>Antigravity Marketplace readiness alignment</strong> (10-key <code>plugin.json</code> with concise 148-char description + 18-asset &amp; 4-check Marketplace <code>doctor</code>), Spec DAG → <code>/run-workflow</code> Python &amp; <code>/swarm</code> <code>plan.json</code> native orchestration compilation (+0 model tools), <code>PreInvocation</code> local inbound secret hard gating (<code>terminationBehavior: \"terminate\"</code>), official 6th Lifecycle Hook <code>PostInvocation</code> zero-token turn receipts, 4 zero-injection-tax read-only MCP context resources (<code>agy-nov://context/{review,mem,turbo,xray}</code>), Antigravity 2.35 CLI <code>statusLine</code> stdin JSON fusion (11 composable segments incl. <code>model</code> &amp; <code>quota</code>), Antigravity CLI 100-tool budget gating (auto-hiding <code>app_*</code> tools when MCP UI extensions are absent so <code>full</code> stays strictly at 47 tools), live <code>roots/list</code> dynamic workspace tracking, cross-platform plugin-root relative hooks (<code>node dist/hook.cjs --event &lt;Event&gt;</code>), 4+1 domain IA &amp; 4-tier Settings Hub (with S4 Tool-Slot Idle Advisor), Ops 3.0, Mem 3.0, One-Click Clean Fork, 6 official on-demand Skills (slimmed <code>9.5 KB</code> entry Skill) &amp; 2 read-only specialist subagents, native MCP Apps <code>file</code> viewer, Remote 2.5, Turbo 3.0, Guard 2.5, 6 official Hooks, 8-language full-component UI (755 core keys × 8 locales + full Spec export localization, 1,390.2 KB), minified backend bundles &amp; 11-command CLI (18-asset <code>doctor</code>). Zero ASAR, Zero CDP, strictly 47 canonical model tools with zero token tax when off.</em></p>\n\n  <p>\n    <strong>English</strong> ·\n    <a href=\"./docs/i18n/README.zh-CN.md\">简体中文</a> ·\n    <a href=\"./docs/i18n/README.zh-TW.md\">繁體中文</a> ·\n    <a href=\"./docs/i18n/README.ja.md\">日本語</a> ·\n    <a href=\"./docs/i18n/README.ko.md\">한국어</a> ·\n    <a href=\"./docs/i18n/README.es.md\">Español</a> ·\n    <a href=\"./docs/i18n/README.fr.md\">Français</a> ·\n    <a href=\"./docs/i18n/README.de.md\">Deutsch</a>\n  </p>\n\n  <p>\n    <a href=\"https://github.com/tone-leh/agy-NOV/releases/tag/v1.2.1\"><img src=\"https://img.shields.io/badge/Version-v1.2.1-0284c7?style=flat-square\" alt=\"Version: v1.2.1\" /></a>\n    <a href=\"https://github.com/tone-leh/agy-NOV/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/github/actions/workflow/status/tone-leh/agy-NOV/ci.yml?branch=main&style=flat-square&label=CI\" alt=\"CI Status\" /></a>\n    <a href=\"https://github.com/tone-leh/agy-NOV/actions/workflows/ci.yml\"><img src=\"https://img.shields.io/badge/Platform-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-475569?style=flat-square\" alt=\"Platform: macOS · Windows · Linux\" /></a>\n    <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-3b82f6?style=flat-square\" alt=\"License: MIT\" /></a>\n    <a href=\"https://nodejs.org\"><img src=\"https://img.shields.io/badge/Node-%3E%3D20-16a34a?style=flat-square\" alt=\"Node >= 20\" /></a>\n    <a href=\"#architecture\"><img src=\"https://img.shields.io/badge/MCP%20Apps-SEP--1865-6366f1?style=flat-square\" alt=\"MCP Apps (SEP-1865)\" /></a>\n    <a href=\"#architecture\"><img src=\"https://img.shields.io/badge/Protocol-Zero%20ASAR%20%C2%B7%20Zero%20CDP-0ea5e9?style=flat-square\" alt=\"Zero ASAR · Zero CDP\" /></a>\n  </p>\n\n  <br />\n\n  <p><strong>Live Workbench Preview (v1.2.1 · 4+1 Domain IA)</strong></p>\n  <img src=\"./assets/demo-preview.gif\" alt=\"agy-NOV v1.2.1 Live Workbench Preview — Immediate Dual-Star Snapshot Refresh, Disabled-Module Hard Gating, AST Architecture Guard, Slimmed 9.5 KB Entry Skill, Opt-In Read-Only Audit Sidecar & audit-once, Layer 1 Shared ConversationService Cross-Session Collaboration, Marketplace-Ready 18-Asset Doctor, 4-Layer Modular Architecture, Spec DAG Workflow Compiler, 4+1 Domain IA, Workflow Hub, 4-Tier Settings Hub, 8-Language Full-Component UI, Antigravity CLI 47-Tool Ceiling Gate, 6 Official Hooks incl. PreInvocation Inbound Secret Gate & PostInvocation Receipts, 4 Zero-Injection MCP Context Resources, Antigravity 2.35 CLI statusLine stdin JSON Fusion, Ops 3.0, Mem 3.0, One-Click Clean Fork, Native MCP Apps File Viewer & Remote 2.5\" width=\"100%\" />\n\n  <br />\n\n  <p>\n    <a href=\"#30-second-read-only-first-try\">30s First Try</a> ·\n    <a href=\"#why-agy-nov\">Why agy-NOV</a> ·\n    <a href=\"#whats-new-in-v121\">v1.2.1 Highlights</a> ·\n    <a href=\"#pick-your-setup-in-10-seconds\">Pick Your Setup</a> ·\n    <a href=\"#13-toggleable-superpowers\">13 Modules</a> ·\n    <a href=\"#41-domain-ia-4-tier-settings-hub-8-language-ui--zero-cdp-ecosystem\">4+1 IA &amp; 8-Language UI</a> ·\n    <a href=\"#architecture\">Architecture</a> ·\n    <a href=\"./sidecars/README.md\">Audit Sidecar</a> ·\n    <a href=\"./docs/ARCHITECTURE.md\">Architecture Doc</a> ·\n    <a href=\"./CONTRIBUTING.md\">Contributing</a> ·\n    <a href=\"#30-second-quick-start\">30s Quick Start</a> ·\n    <a href=\"#for-ai-agents-quick-reference\">For AI Agents</a>\n  </p>\n</div>\n\n> [!NOTE]\n> **Independent Open-Source Project:** `agy-NOV` (v1.2.1) is an independent, MIT-licensed community plugin built for Google Antigravity 2.0 across **macOS, Windows, and Linux**. It has no affiliation with, sponsorship from, or endorsement by Google LLC.\n\n---\n\n## 30-Second Read-Only First Try\n\nEvaluate `agy-NOV` on your current workspace with **zero file edits, zero config writes, and zero network traffic**:\n\n```bash\n# 1. Scan your repo read-only and preview a safe .agy-nov.json team preset scaffold (zero disk writes)\n# After `agy plugin install` (zero global install needed):\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs recommend --workspace=. --export-preset\n# Or if you linked `agy-nov` globally (`npm link` inside the plugin directory) or inside a cloned repo:\nagy-nov recommend --export-preset\n```\n\n2. Paste this **100% read-only first prompt** into Antigravity 2.0 once installed (also available inside the **L0 Workflow Hub** and the collapsible **30-Second Zero-Risk First Try** guide in **Settings Hub**):\n\n> *\"Open agy-NOV Context X-Ray in read-only mode to inspect my estimated offline USD spend, 5-hour burn-rate window, and prefix cache hit rate — then open Two-Stage Diff Review with `-w` whitespace-ignored and line risk hints without modifying any files.\"*\n\n---\n\n## Why agy-NOV?\n\nInstalling separate MCP servers and hook scripts for code review, secret scanning, Spec-driven plan reviews & workflow compilation, Stop-hook verification, Git worktrees, local data/document/OpenAPI debugging, Swarm & offline USD telemetry, confidence-governed progressive memory, token-saving log compression, session tracking, and static security/dedup/budget audits quickly turns a clean Antigravity workspace into a noisy stack of background daemons pushing against Antigravity's **100-tool MCP hard limit**.\n\n| Dimension | ❌ Plugin Sprawl (12–13 Separate Tools) | ✅ agy-NOV Super-Workbench |\n| :--- | :--- | :--- |\n| **Resident Processes** | 12–13 background Node/Python servers competing for RAM and startup time | **1 resident MCP server** (`dist/server.cjs`, minified `1,584.5 KB` / `~1.55 MiB`) serving all enabled capabilities with live `roots/list` workspace tracking, **4 zero-injection-tax `agy-nov://context/*` resources**, & **1 opt-in OFF-by-default module-gated read-only Audit Sidecar** (`sidecars/audit-sidecar.mjs`, zero idle daemon) |\n| **Per-Turn Token & Tool Cap** | 70+ static tool schemas plus bulky resident `rules/AGENTS.md` files crowding the 100-tool limit | **Dynamic `tools/list`** (strictly **47** canonical model tools max across `v0.4`→`v1.2.1`, `0` token & tool-slot tax when off) + **CLI 47-tool ceiling gate** (auto-hiding `app_*`/`nov_app_*` on headless CLI clients without MCP UI extensions) + **SettingsHub S4 Tool-Slot Idle Advisor** + **6 on-demand Skills (slimmed `9.5 KB` entry Skill) & 2 read-only subagents** with zero default resident `rules/AGENTS.md` bloat |\n| **Lifecycle Hook Storm** | Multiple forked hook scripts racing on every `SessionStart` / `PreToolUse` / `PostToolUse` / `PreInvocation` / `PostInvocation` / `Stop` | **1 unified 6-hook dispatcher** (`dist/hook.cjs`, minified `212.8 KB`) invoked via cross-platform plugin-root relative `node dist/hook.cjs --event <Event>`, with O(1) read-only short-circuiting (including all-disabled `PostToolUse`), immediate `PreToolUse` `feed-snapshot.json` refresh before `deny`/`force_ask`/`ask`, `PreInvocation` local inbound secret hard gating (`terminationBehavior: \"terminate\"`), `PostInvocation` zero-token turn receipts, official `Stop` `decision: \"continue\"`, and explicit `PreToolUse` `{ decision: \"allow\" }` |\n| **Upgrade Durability & OS Support** | Binary `app.asar` patches, POSIX-only shell assumptions, and DOM hooks break after updates or on Windows/Linux | **100% official native protocols** — Zero ASAR, Zero CDP, clean **4-layer zero-cycle architecture** ([`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md), enforced via TypeScript AST & Layer 2 cross-module allowlist) with shared loopback-only `ConversationService` Connect API, official MCP Apps `file` viewer (with `antigravity-file://` host `resources/read`), Marketplace-ready 10-key manifest, and full **macOS / Windows / Linux** native compatibility (3-OS × Node 20/22 CI + 3-OS real-process hook black-box testing) |\n| **Workflow, Governance & UX** | Disconnected panels, stale/unverified memories, unvetted rules/hooks, cramped sidebars, English-only screens | **Opt-In Module-Gated Read-Only Audit Sidecar (`audit-once`)**, **Spec DAG → `/run-workflow` & `/swarm` Compiler**, **11-segment stdin-fused CLI `statusLine`**, **Ops 3.0** static security & dedup preview, **Mem 3.0** confidence/TTL hygiene, **One-Click Clean Fork** (+ `ConversationService` create), **Radar live host reconciliation**, **4+1 Domain IA** (`Hub` + 4 domains, adaptive `< 720px` / `>= 720px` nav with `global` degradation, `⌘K`), **4-tier Settings Hub**, **8-language full-component UI (24 components)**, **5 presets**, `.agy-nov.json` team presets, and **11 CLI commands** |\n\n### The 100% Native Switchboard Philosophy\n\n1. **Single Native Runtime + 4-Layer Architecture + Opt-In Sidecar & Zero-Bloat Playbooks:** 1 MCP server (`dist/server.cjs`, `1,584.5 KB` / `~1.55 MiB`, exposing **4 zero-injection-tax `agy-nov://context/*` read-only resources**) + 1 unified **6-hook** lifecycle dispatcher (`dist/hook.cjs`, `212.8 KB`, covering `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, and `Stop` via plugin-root relative `node dist/hook.cjs --event <Event>`) + 1 self-contained 8-language dark/light UI (`dist/ui/app.html`, `~1.36 MiB` — measured **`1,390.2 KB`**, far below the 10 MiB resource cap, shipping **755 core dictionary keys × 8 locales** plus full key-symmetric localization for Spec workflow export across all **24 UI components**) + 1 modular **11-command CLI** (`dist/cli.cjs`, `201.2 KB`, including module-gated `audit-once` read-only health sweep, Antigravity 2.35 stdin JSON-fused 11-segment `statusline`, read-only `compile-spec`, preview-then-confirm `recommend --export-preset`, zero-split-brain `resolveNovDataDir()`, immediate `feed-snapshot.json` sync on config mutators, and Marketplace-ready `doctor` verifying all **18** core plugin assets + **4** Marketplace Readiness Checks) + 1 opt-in OFF-by-default read-only Audit Sidecar ([`sidecars/README.md`](./sidecars/README.md)) + **6 official on-demand Skills** (`skills/agy-nov/SKILL.md` slimmed to **`9.5 KB`** + `/nov-spec`, `/nov-debug`, `/nov-review`, `/nov-handoff`, `/nov-workflow`) + **2 official read-only specialist subagents** (`agents/nov-blind-reviewer.md`, `agents/nov-security-auditor.md`), keeping zero default resident `rules/AGENTS.md` bloat across **macOS, Windows, and Linux**.\n2. **Zero Token & Tool-Slot Tax When Off (+ CLI 47-Tool Ceiling Gate):** Every module wraps its model tools in `RegisteredTool.enable()` / `.disable()` and pushes delta `tools/list_changed` notifications live. All **47 canonical model tool names** stay strictly unchanged from `v0.4` through `v1.2.1` (+0 tool-slot inflation); all Hub, Settings Hub (incl. S4 Tool-Slot Idle Advisor), Spec workflow compilation (`app_spec_compile_workflow`), Context Pack, Turn Rewind, Clean Fork (`app_xray_build_clean_fork_pack` & confirmation-gated `app_xray_fork_via_service`), Radar live host reconciliation (`app_radar_reconcile_conversations`), `.worktreeinclude` preview (`app_worktree_preview_include`), PR evidence summary (`app_verify_pr_summary`), Mem 3.0 hygiene summary & batch cleanup (`app_mem_get_hygiene_summary`, `app_mem_batch_hygiene`), and native `file` viewer (`app_nov_file_viewer`) controls run strictly as App-only tools (`visibility: ['app']`) with zero model-context overhead — and when a headless Antigravity CLI client connects without `capabilities.extensions[\"io.modelcontextprotocol/ui\"]`, the server hides every `app_*` / `nov_app_*` tool automatically so even `full` exposes strictly 47 tools.\n3. **Production-Grade Loop & 12 Local Offline Modules First:** Organized into **L0 Workflow Hub** (6-node pipeline bar + alert cards + One-Click Clean Fork + `Cmd/Ctrl+K` quick jump) and 4 clear domains — **Core Essentials** (`core`: Two-Stage `review`, **Guard 2.5**, `xray` 2.0 + Clean Fork), **Engineering Pipeline** (`pipeline`: **Spec 2.0 + Workflow Compiler**, `worktree` with read-only `.worktreeinclude`, `verify` with Worktree targeting & PR summary, **Turbo 3.0**, **Mem 3.0**), **On-Demand Toolbox** (`toolbox`: `radar` 4-lane Kanban + live host reconciliation, `studio`, `canvas`, **Ops 3.0**), and **Opt-In Connectivity** (`connectivity`: **Remote 2.5**). All 12 Tier-1 modules run 100% locally with zero external network calls, zero ASAR edits, and zero CDP hooks.\n4. **Zero-Port Dual-Star Feed & 1 Strictly Opt-In Remote Module (`Remote 2.5`):** Event-driven `<dataDir>/feed-snapshot.json` (`0600` atomic, `< 64 KiB`, O(n) redacted, refreshed immediately before `PreToolUse` `deny`/`force_ask`/`ask` decisions and after CLI `enable`/`disable`/`preset`/`locale` updates, with `createdAt`-ordered `latestSnapshotId`, real-deny `GUARD_BLOCKED` reasons, latest-timestamp `verify` summary unified with `remote/hook.ts`, plus `forceAskCount`, `permissionMode`, and `snapshotCount`, zero mkdir/writes when `dataDir` is absent) enables zero-port read-only telemetry sharing with `agy-Sag`, while `remote` stays completely OFF by default — zero listening ports, zero background polling, zero disk writes, and zero outbound network requests until you explicitly enable it.\n\n---\n\n## What's New in v1.2.1\n\n`v1.2.1` hardens **dual-star snapshot consistency & accuracy**, enforces **disabled-module hard gating & `PostToolUse` O(1) short-circuiting**, upgrades **architecture gatekeeping to TypeScript AST parsing**, and slims the entry Skill `skills/agy-nov/SKILL.md` down to **`9.5 KB`** — preserving **+0 model tool bloat** (all **47** canonical model tools strictly unchanged from `v0.4`→`v1.2.1`, verified by **101 suites / 286 tests** across the 3-OS CI matrix; measured minified bundles: `dist/server.cjs` **`1,584.5 KB`** / `~1.55 MiB`, `dist/hook.cjs` **`212.8 KB`**, `dist/cli.cjs` **`201.2 KB`**, `dist/ui/app.html` **`1,390.2 KB`** / `~1.36 MiB`, `skills/agy-nov/SKILL.md` **`9.5 KB`**):\n\n### 1. Immediate Dual-Star Snapshot Refresh & Accurate Aggregation (`hooks`, `cli`, `core`, `remote`)\n- **Immediate `PreToolUse` & CLI Snapshot Sync:** `PreToolUse` refreshes `<dataDir>/feed-snapshot.json` immediately before `guard`, `spec`, or `remote` returns `deny`, `force_ask`, or `ask`, and CLI mutators (`enable`, `disable`, `preset`, `locale`) synchronously refresh an existing `feed-snapshot.json` right after writing `config.json` (preserving zero-mkdir/zero-write isolation whenever `dataDir` is absent).\n- **Accurate Snapshot, Alert & Verify Telemetry:** Fixed `latestSnapshotId` resolution in `src/core/feed.ts` by sorting snapshots by `createdAt` to pick the newest entry, bound `GUARD_BLOCKED` alert reasons strictly to genuine `deny` / `blocked` events, and unified `verify` summary selection across `src/core/feed.ts` and `src/modules/remote/hook.ts` to consistently select the latest timestamp.\n\n### 2. Disabled-Module Hard Gating & `PostToolUse` O(1) Short-Circuit (`spec`, `mem`, `server`, `hooks`)\n- **Live `spec -> mem` Archival Hard Gate:** `archiveSpecToMemory` checks live `cfg.modules.mem` before persisting — when `mem` is turned off, archival refuses writes cleanly with zero directory creation.\n- **Module-Gated Audit Sidecar & `PostToolUse` O(1) Short-Circuit:** Read-only Audit Sidecar sweeps (`src/server/sidecar.ts`) gate Mem, Verify, and Guard checks on `cfg.modules.{mem,verify,guard}` to eliminate false positives from historical files left by disabled modules, and `PostToolUse` short-circuits in O(1) when all participating modules are off.\n\n### 3. TypeScript AST Architecture Guard & Slimmed `9.5 KB` Entry Skill (`test`, `skills/`, `docs/`)\n- **AST-Level Layer Governance:** Upgraded `test/architecture-hygiene.test.ts` to TypeScript AST import parsing with an explicit Layer 2 horizontal cross-module import allowlist, accompanied by `test/v121-consistency-hardening.test.ts` raising automated verification to **101 suites / 286 tests**.\n- **Slimmed Entry Skill & Synchronized Contracts:** Condensed `skills/agy-nov/SKILL.md` from ~30 KB down to **`9.5 KB`** (clearing `ops.large-instruction-file` warnings) and updated [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) and [`docs/DUAL-STAR-CONTRACT.md`](./docs/DUAL-STAR-CONTRACT.md) to `v1.2.1`.\n\n<details>\n<summary><strong>Built on the v1.2.0 Opt-In Read-Only Audit Sidecar, Layer 1 Shared <code>ConversationService</code> &amp; Marketplace Readiness Foundation</strong></summary>\n\n- **Opt-In Read-Only Audit Sidecar & 11th CLI Command `audit-once` (`v1.2.0`):** Zero-daemon read-only health sweep (`src/server/sidecar.ts`, `sidecars/audit-sidecar.mjs`, [`sidecars/README.md`](./sidecars/README.md)) staying completely OFF by default until invoked manually, via Antigravity `/schedule`, or via OS schedulers (`cron`, `launchd`, Windows Task Scheduler); aggregates redacted Ops/Mem/Verify/Guard telemetry with guarded `--write-report` atomic `<= 64 KiB` `0600` `health-sweep.json` persistence strictly inside an existing safe non-symlink `dataDir`.\n- **Layer 1 Shared Loopback-Only `ConversationService` Connect API Collaboration (`v1.2.0`):** Shared anti-SSRF loopback client (`src/core/conversation-service.ts`, `127.0.0.1` / `localhost` / `[::1]` only, silent degradation, zero CSRF echo, full outbound redaction) powering confirmation-gated `app_xray_fork_via_service` (dry-run + `confirmCreate`, `app.sendMessage` fallback) and zero-write `app_radar_reconcile_conversations` (surfacing idle ghost & newly active host sessions) with +0 model tools.\n- **Antigravity Marketplace Readiness Certification & 18-Asset `doctor` (`v1.2.0`):** Strictly 10 official top-level keys in `plugin.json` (148-char `description`, 3 validated `suggestedPrompts`, 128×128 transparent-background `assets/logo.svg`) backed by 18-asset & 4-check Marketplace Readiness verification in `agy-nov doctor`.\n\n</details>\n\n<details>\n<summary><strong>Built on the v1.1.0 4-Layer Architecture Refactor, Spec DAG Workflow Compiler, Deterministic Security 2.0 &amp; Antigravity 2.35 CLI <code>statusLine</code> Foundation</strong></summary>\n\n- **4-Layer Modular Systems Architecture Refactor (`v1.1.0`):** Extracted zero-module-import Layer 1 core kernel (`src/core/{fs-safe,process-safe,brain-paths,sanitize,module-contract}.ts`), decomposed 8 oversized monoliths (`ops/core.ts`, `verify/core.ts`, `studio/core.ts`, `turbo/core.ts`, `spec/core.ts`, `worktree/core.ts`, `cli.ts`, `SpecPanel.tsx`) with zero circular dependencies, published [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) and [`CONTRIBUTING.md`](./CONTRIBUTING.md), and enforced layer rules via `test/architecture-hygiene.test.ts`.\n- **Spec DAG → `/run-workflow` & `/swarm` Native Orchestration Compiler (`v1.1.0`):** Kahn topological wave compiler (`src/modules/spec/compiler.ts`) generating `/run-workflow` Python orchestration (`phase`/`parallel`/`agent`/`log` chaining `nov-blind-reviewer`, `nov-security-auditor`, and `Verify Gate`) and `/swarm` `plan.json` blueprints with cycle blocking, linear redaction, App-only `app_spec_compile_workflow` 8-language UI modal, read-only CLI `compile-spec`, and 6th official Skill `/nov-workflow`.\n- **Deterministic Security & Zero-Injection Context 2.0 (`v1.1.0`):** `PreInvocation` local inbound high-confidence secret hard gate (`terminationBehavior: \"terminate\"`, zero secret echo, Guard `blockInboundPromptSecrets`), official 6th Lifecycle Hook `PostInvocation` (O(1) short-circuit, zero-token `systemMessage: \"\"` + `metadata.user_markdown` turn receipts), and 4 zero-injection-tax read-only MCP context resources (`agy-nov://context/{review,mem,turbo,xray}`, `<= 32 KiB`, linear redacted, zero writes).\n- **Antigravity 2.35 CLI `statusLine` stdin JSON Fusion (`v1.1.0`):** Async bounded host stdin JSON telemetry reader (`model`, `context_window`, `cost`, `quota`, `subagents`, `workspace`, zero-delay TTY bypass, `120ms` timeout, `256 KiB` cap) expanding composable segments to **11** (adding `model` and `quota`).\n\n</details>\n\n<details>\n<summary><strong>Built on the v1.0.0–v1.0.2 Runtime Hardening, Cross-Platform &amp; Governance Foundation (CLI 47-Tool Gate, <code>roots/list</code> Sync, 3-OS Support, Ops 3.0, Mem 3.0 &amp; <code>.agy-nov.json</code> Scaffold)</strong></summary>\n\n- **Real-Host Runtime Hardening & Full 8-Language Parity (`v1.0.2`):** Official `Stop` `decision: \"continue\"` (`terminationReason` safe pass-through) & `PreToolUse` `{ decision: \"allow\" }`; cross-platform plugin-root relative `hooks.json` (`node dist/hook.cjs --event <Event>`) + 3-OS black-box hook tests; Antigravity CLI 47-tool ceiling gate auto-hiding `app_*` tools when `capabilities.extensions[\"io.modelcontextprotocol/ui\"]` is absent; live `roots/list` dynamic workspace sync & split-brain-free `resolveNovDataDir()`; `NovBridge` first-frame `ontoolresult` replay, real `antigravity-file://` host `resources/read`, and `global` capability degradation; 755 core dictionary keys × 8 locales across all 24 UI components; minified backend bundles; enriched `feed-snapshot.json` telemetry; Remote 2.5 same-origin PIN lockout DoS guard & bounded SSE heartbeats; Mem 3.0 batch `verify` anchor refresh; Auto-RTK non-ASCII/parenthesis path support; native `read_file` subagent alignment.\n- **Full macOS / Windows / Linux Cross-Platform Support (`v1.0.1`):** `canonicalRealpathSync` Windows 8.3 short-path expansion & case-insensitive boundary checks + Linux `/home`/`/var/run`/`/var/lock` system symlink allowlist; `atomicRenameSync` NTFS retry; Windows `shell: false` Node JS entry resolution for `npm`/`npx`/`pnpm`/`yarn`/`tsc`/`eslint`/`vitest`/`jest` (CVE-2024-27980-safe); PowerShell/`cmd` destructive rules in `guard`/`remote`; `taskkill /T /F` in `verify`; headless-Linux notification skipping in `radar`; 3-OS × Node 20/22 GitHub Actions CI matrix.\n- **Ops 3.0 Static Security Audit, Cross-Client Dedup Preview & Tool-Slot Idle Advisor (`v1.0.0`):** Pure read-only O(n) `ops_audit_workspace` scanner (`securityFindings` + `securityScore` 0–100 across `prompt-injection`, `broad-command-allow`, `risky-hook`, `mcp-unsafe-env` with zero secret echoing and zero false positives on compliant repos), read-only `.claude/`/`.cursor/rules/`/`.codex/` SHA-256 `migrationPreview`, and SettingsHub S4 8-language **Tool-Slot Idle Advisor**.\n- **Mem 3.0 Confidence/TTL Hygiene & Preview-Then-Confirm `.agy-nov.json` Scaffold (`v1.0.0`):** Confidence tiers (`verified`/`normal`/`tentative`), provenance (`manual`/`spec_archive`/`auto_capture`), `ttlDays` (1–365), `Stop`-hook `tentative` + 14-day TTL auto-capture, auto-filtering expired tentative memories in `SessionStart` L1 & default `mem_recall`, `MemPanel` batch Verify / Refresh TTL (+30d) / Prune (double confirm), and read-only default `recommend --export-preset` writing atomically only with explicit `--confirm` (`--force` for overwrites, symlink refusal, zero `remote`, allowlisted verify commands).\n\n</details>\n\n<details>\n<summary><strong>Built on the Complete v0.7–v0.9 Native Foundation (Pipeline Loop, Clean Fork, On-Demand Playbooks &amp; Subagents, Native <code>file</code> Viewer, Remote 2.5, Turbo 3.0, Guard 2.5 &amp; Spec 2.0)</strong></summary>\n\n- **End-to-End Engineering Pipeline Loop (`Spec → Worktree → Two-Stage Review → Verify → Mem` + Radar Kanban):** Safe read-only `.worktreeinclude` allowlist (`app_worktree_preview_include` + `applyInclude`, rejecting `.env*`/private keys/symlinks into `skippedSensitive` with zero auto-RCE scripts), Worktree branch switching + Two-Stage Review (Stage 1 active Spec compliance checklist + Stage 2 code quality `file:line` annotations), Worktree-targeted Verify (`worktreePath`) + redacted PR delivery summary (`app_verify_pr_summary`), and approval-first 4-lane Radar Kanban.\n- **One-Click Clean Fork Anti-Context-Rot (`xray` + `HubPanel`):** Read-only `app_xray_build_clean_fork_pack` (`<= 12 KB` linear-redacted Handoff + unblocked Spec `ready` tasks + Mem core code anchors) launching a clean same-project background session via official `app.sendMessage({ _meta: { \"com.google.antigravity/message\": { target: \"new\" } } })`, with graceful pill/copy fallback on `global` surfaces.\n- **Official On-Demand Skills & Read-Only Specialist Subagents:** Entry skill `agy-nov` + `/nov-spec`, `/nov-workflow`, `/nov-debug`, `/nov-review`, `/nov-handoff` + read-only `nov-blind-reviewer` and `nov-security-auditor` (native `read_file` only, `subagent: true, mainAgent: false`, 0 MCP tool slots, 0 default resident `rules/AGENTS.md` bloat).\n- **Native MCP Apps `file` Viewer (`app_nov_file_viewer`) & Remote 2.5:** Hidden-from-model native previews for `.sqlite`/`.sqlite3`/`.db`/`.csv`/`.tsv`/`.svg`/`.openapi.yaml`/`.openapi.yml` (usable even when `studio`/`canvas` stay off, with `realpath` containment, SVG XSS sanitization & `antigravity-file://` host `resources/read`) plus Remote 2.5 pure-DOM structured risk approval cards (`HIGH`/`MED`/`LOW`, affected file count, redacted command summary, latest Verify status).\n- **Turbo 3.0, Guard 2.5, Spec 2.0 & 4+1 IA:** Opt-in Auto-RTK `PreToolUse.overwrite` proxy (`autoRtk: false` default) + offline locked dependency contracts + O(n) cross-file symbol references + redacted Context Pack; Guard 2.5 turn-grouped snapshot rewind & 3-tier `permissionMode` (`readonly-audit`/`balanced-dev`/`strict-gate` via `force_ask`); Spec 2.0 Plannotator inline review bench & Brownfield `delta` specs; L0 Workflow Hub, adaptive `< 720px` / `>= 720px` nav, `⌘K` palette, 4-tier Settings Hub, and zero-token `PreInvocation` visual receipts.\n\n</details>\n\n---\n\n## Pick Your Setup in 10 Seconds\n\nStart lean and expand whenever a workflow demands it. Run `recommend` for an automatic read-only suggestion for your repo (or `recommend --export-preset` to preview a safe single-file **`.agy-nov.json`** team preset scaffold with zero disk writes), or pick a preset below — every preset updates active model tools, hook dispatch, and navigation live from **Settings Hub (S1)**, **Hub**, or one CLI command.\n\n| Preset | Persona | Enabled Modules | Model Tools* | Isolation Profile |\n| :--- | :--- | :--- | :---: | :--- |\n| **`minimal`** | *Minimalist Safety Net* — Guard 2.5 secret shield, `PreInvocation` inbound secret gate, turn-grouped rewind & 3-tier permission modes | `guard` (1) | **6** | 100% Offline |\n| **`core`** *(Default)* | *Daily Driver* — Core Essentials (Two-Stage `review`, **Guard 2.5** inbound secret gate, turn rewind & permission modes, `xray` 2.0 + **One-Click Clean Fork**) out of the box | `review`, `guard`, `xray` (3) | **12** | 100% Offline |\n| **`power`** | *High-Velocity Engineer* — Core + End-to-End Engineering Pipeline (**Spec 2.0 + Workflow Compiler**, **Worktree** `.worktreeinclude`, **Verify** Worktree checks & PR Evidence, **Radar** 4-lane Kanban) + **Turbo 3.0** & **Ops 3.0** static security audit, cross-client dedup preview & Budget Doctor | `core` + `turbo`, `radar`, `verify`, `worktree`, `spec`, `ops` (9) | **32** | 100% Offline |\n| **`local-all`** | *All-Local Studio* — every offline capability including **Mem 3.0** confidence/TTL hygiene & progressive disclosure, Spec 2.0 archive-to-Mem, Clean Fork code anchors, Workspace Studio (with OpenAPI parser) & Visual Canvas | All 12 offline native modules | **43** | 100% Offline |\n| **`full`** | *Away-From-Desk Commander* — full studio plus opt-in **Remote 2.5** structured risk approval cards, read-only PWA live stream, safe tunnel guide & IM approvals | All 13 native modules (incl. opt-in `remote`) | **47** | Opt-in Network |\n\n<sub>*Exact model tool count = `2` always-on entry tools (`nov_open`, `nov_status`) + sum of enabled module tools (`review` 2 + `guard` 4 + `xray` 4 + `turbo` 3 + `radar` 2 + `verify` 4 + `worktree` 4 + `spec` 4 + `studio` 4 + `canvas` 4 + `mem` 3 + `ops` 3 + `remote` 4 = 47; all 47 canonical model tool names remain strictly unchanged across `v0.4`→`v1.2.1`, while Hub / Settings Hub incl. S4 Tool-Slot Idle Advisor / Spec Workflow Compiler (`app_spec_compile_workflow`) / Context Pack / Turn Rewind / Clean Fork (`app_xray_build_clean_fork_pack` & `app_xray_fork_via_service`) / Radar live host reconciliation (`app_radar_reconcile_conversations`) / `.worktreeinclude` preview / PR summary / Mem 3.0 hygiene controls / native `file` viewer actions are strictly App-only and auto-hidden on headless CLI clients without MCP UI extensions).</sub>\n\n```bash\n# Run directly after `agy plugin install` (zero global install needed):\n# Scan your repo read-only & preview a safe .agy-nov.json team preset scaffold (zero writes)\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs recommend --workspace=. --export-preset\n# Write .agy-nov.json atomically only after explicit confirmation (--force required to overwrite)\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs recommend --workspace=. --export-preset --confirm\n# Switch presets anytime from your terminal (or use `agy-nov preset power` after optional `npm link`)\nnode ~/.gemini/config/plugins/agy-nov/dist/cli.cjs preset power\n```\n\n> [!TIP]\n> **Optional Single-File Team Preset (`.agy-nov.json`):** Drop a single optional `.agy-nov.json` in your repository root — or preview one safely with `recommend --export-preset` and write atomically only via explicit `--confirm` (refusing overwrites without `--force` and hard-rejecting symlinks, with immediate self-validation). When loaded, `agy-NOV` keeps `.agy-nov.json` **strictly read-only** (never auto-creates clutter directories in user repos), enforces a `64 KiB` cap, `realpath` containment, prototype-pollution defense, and a 23-executable static allowlist with zero auto-execution, and **never silently enables `remote`**.\n\n---\n\n## 13 Toggleable Superpowers\n\n### Tier 1 — 12 Local Offline Native Modules (100% Offline · Domains `core` / `pipeline` / `toolbox`)\n\nZero external network calls, zero CDP, zero ASAR patching. Built strictly on Google Antigravity 2.0's officia",
+  "latestReleaseNotes": "## Highlights\n\n### Dual-Star `feed-snapshot.json` Real-Time Consistency\n- **Immediate `PreToolUse` Refresh**: Guard, Spec, and Remote now refresh `feed-snapshot.json` immediately before returning `deny`, `force_ask`, or `ask` (strictly zero-write / zero-mkdir when `dataDir` is absent or symlinked).\n- **CLI Mutation Sync**: `agy-nov enable`, `disable`, `preset`, and `locale` now refresh an existing non-symlink `feed-snapshot.json` immediately after persisting `config.json`.\n- **Accurate Guard & Verify Summaries**: `latestSnapshotId` now selects the newest snapshot via `createdAt ?? timestamp` (with whitespace/empty-string fallback); `GUARD_BLOCKED` alerts always cite the latest `deny`/`blocked` reason; Verify evidence ordering is aligned across `feed.ts`, `remote/hook.ts`, and `sidecar.ts`.\n\n### Disabled-Module Hard Gates & O(1) Short-Circuits\n- **`spec -> mem` Live Gate**: `archiveSpecToMemory` verifies `cfg.modules.mem` at runtime and refuses disk writes (zero directory creation) when `mem` is disabled.\n- **Sidecar Module Gating**: `runReadOnlyHealthSweep` (`sidecars/audit-sidecar.mjs` / `agy-nov audit-once`) gates `mem`, `verify`, and `guard` reads by active config toggles to prevent stale historical false positives.\n- **`PostToolUse` O(1) Short-Circuit**: Added top-level zero-I/O return when all 5 listener modules (`review`, `xray`, `radar`, `verify`, `turbo`) are OFF.\n\n### Architecture Hygiene & Skill Slimming\n- **TypeScript AST Boundary Guard**: Upgraded `test/architecture-hygiene.test.ts` to full TypeScript AST import scanning (`ScriptKind.TS`/`TSX`, dynamic `import()`, `import()` types, `import =`) with an explicit Layer 2 cross-module allowlist.\n- **Entry Skill Slimmed**: Trimmed `skills/agy-nov/SKILL.md` from ~30 KB to **9.5 KB** while retaining all 47 canonical model tools and 11 CLI commands, clearing `ops.large-instruction-file` warnings.\n- **Updated Contracts**: Synced `docs/ARCHITECTURE.md`, `docs/DUAL-STAR-CONTRACT.md`, and all 8 localized READMEs to `v1.2.1`.\n\n## Verified Metrics\n- **Architecture**: 100% Zero ASAR / Zero CDP · 13 native modules · 5 presets · **47 canonical model tools (+0)** · 6 Hooks · 11 CLI commands · 6 Skills · 2 read-only subagents\n- **Bundles**: `dist/server.cjs` (1,584.5 KB) · `dist/hook.cjs` (212.8 KB) · `dist/cli.cjs` (201.2 KB) · `dist/ui/app.html` (1,390.2 KB, well under 10 MiB)\n- **CI Verification**: **101 suites / 286 tests** passing across macOS / Windows / Linux × Node 20 / 22 ([CI Run 46107875098](https://github.com/tone-leh/agy-NOV/actions/runs/46107875098))",
   "securityReport": {
     "riskTier": "high",
     "capabilities": [
@@ -158,9 +158,9 @@
         "capability": "credential_access",
         "message": "Prompt combines sensitive credential paths/secrets with exfiltration or outbound transfer directives.",
         "file": "skills/agy-nov/SKILL.md",
-        "line": 55,
-        "snippet": "- **Guard 2.5** (`guard_status`, `guard_list_snapshots`, `guard_create_checkpoint`, `guard_scan_secrets` · default ON, 4 tools · hooks: `PreToolUse`, `PreInvocation`, `PostInvocati",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/skills/agy-nov/SKILL.md#L55"
+        "line": 30,
+        "snippet": "- `guard` (`guard_status`, `guard_list_snapshots`, `guard_create_checkpoint`, `guard_scan_secrets` · hooks: `PreToolUse`, `PreInvocation`, `PostInvocation`): `.env`/key shield, com",
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/skills/agy-nov/SKILL.md#L30"
       },
       {
         "id": "PROMPT_CREDENTIAL_EXFIL",
@@ -171,7 +171,7 @@
         "file": "skills/nov-debug/SKILL.md",
         "line": 31,
         "snippet": "4. Never read or echo `.env`, SSH keys, or credential files; run `guard_scan_secrets` if the failure involves config loading or logging paths.",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/skills/nov-debug/SKILL.md#L31"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/skills/nov-debug/SKILL.md#L31"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -182,7 +182,7 @@
         "file": "src/core/sanitize.ts",
         "line": 354,
         "snippet": "base === 'id_rsa' ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/sanitize.ts#L354"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/sanitize.ts#L354"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -193,7 +193,7 @@
         "file": "src/core/sanitize.ts",
         "line": 355,
         "snippet": "base === 'id_ed25519' ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/sanitize.ts#L355"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/sanitize.ts#L355"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -204,7 +204,7 @@
         "file": "src/core/sanitize.ts",
         "line": 358,
         "snippet": "base === '.netrc' ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/sanitize.ts#L358"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/sanitize.ts#L358"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -215,7 +215,7 @@
         "file": "src/core/sanitize.ts",
         "line": 359,
         "snippet": "base === '.npmrc' ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/sanitize.ts#L359"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/sanitize.ts#L359"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -226,7 +226,7 @@
         "file": "src/core/team-config.ts",
         "line": 1071,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/team-config.ts#L1071"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/team-config.ts#L1071"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -237,7 +237,7 @@
         "file": "src/core/team-config.ts",
         "line": 1072,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/team-config.ts#L1072"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/team-config.ts#L1072"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -248,7 +248,7 @@
         "file": "src/core/team-config.ts",
         "line": 1074,
         "snippet": "'id_rsa',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/team-config.ts#L1074"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/team-config.ts#L1074"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -259,7 +259,7 @@
         "file": "src/core/team-config.ts",
         "line": 1075,
         "snippet": "'id_ed25519',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/team-config.ts#L1075"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/team-config.ts#L1075"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -270,7 +270,7 @@
         "file": "src/core/team-config.ts",
         "line": 1100,
         "snippet": "base.startsWith('id_rsa.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/team-config.ts#L1100"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/team-config.ts#L1100"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -281,7 +281,7 @@
         "file": "src/core/team-config.ts",
         "line": 1101,
         "snippet": "base.startsWith('id_ed25519.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/team-config.ts#L1101"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/team-config.ts#L1101"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -292,7 +292,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 140,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L140"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L140"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -303,7 +303,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 141,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L141"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L141"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -314,7 +314,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 143,
         "snippet": "'id_rsa',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L143"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L143"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -325,7 +325,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 144,
         "snippet": "'id_ed25519',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L144"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L144"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -336,7 +336,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 155,
         "snippet": "'id_rsa',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L155"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L155"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -347,7 +347,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 156,
         "snippet": "'id_ed25519',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L156"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L156"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -358,7 +358,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 159,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L159"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L159"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -369,7 +369,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 160,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L160"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L160"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -380,7 +380,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 12,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L12"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L12"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -391,7 +391,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 13,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L13"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L13"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -402,7 +402,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 15,
         "snippet": "'id_rsa',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L15"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L15"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -413,7 +413,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 16,
         "snippet": "'id_ed25519',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L16"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L16"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -424,7 +424,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 64,
         "snippet": "lower.startsWith('id_rsa.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L64"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L64"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -435,7 +435,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 65,
         "snippet": "lower.startsWith('id_ed25519.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L65"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L65"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -446,7 +446,7 @@
         "file": "src/modules/studio/sources.ts",
         "line": 59,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/sources.ts#L59"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/sources.ts#L59"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -457,7 +457,7 @@
         "file": "src/modules/studio/sources.ts",
         "line": 60,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/sources.ts#L60"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/sources.ts#L60"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -468,7 +468,7 @@
         "file": "src/modules/studio/sources.ts",
         "line": 62,
         "snippet": "'id_rsa',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/sources.ts#L62"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/sources.ts#L62"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -479,7 +479,7 @@
         "file": "src/modules/studio/sources.ts",
         "line": 63,
         "snippet": "'id_ed25519',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/sources.ts#L63"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/sources.ts#L63"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -490,7 +490,7 @@
         "file": "src/modules/studio/sources.ts",
         "line": 305,
         "snippet": "lowerBase.startsWith('id_rsa.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/sources.ts#L305"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/sources.ts#L305"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -501,7 +501,7 @@
         "file": "src/modules/studio/sources.ts",
         "line": 306,
         "snippet": "lowerBase.startsWith('id_ed25519.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/sources.ts#L306"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/sources.ts#L306"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -512,7 +512,7 @@
         "file": "src/modules/turbo/search.ts",
         "line": 91,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/turbo/search.ts#L91"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/turbo/search.ts#L91"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -523,7 +523,7 @@
         "file": "src/modules/turbo/search.ts",
         "line": 92,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/turbo/search.ts#L92"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/turbo/search.ts#L92"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -534,7 +534,7 @@
         "file": "src/modules/turbo/search.ts",
         "line": 94,
         "snippet": "'id_rsa',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/turbo/search.ts#L94"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/turbo/search.ts#L94"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -545,7 +545,7 @@
         "file": "src/modules/turbo/search.ts",
         "line": 95,
         "snippet": "'id_ed25519',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/turbo/search.ts#L95"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/turbo/search.ts#L95"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -556,7 +556,7 @@
         "file": "src/modules/turbo/search.ts",
         "line": 327,
         "snippet": "lowerBase.startsWith('id_rsa.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/turbo/search.ts#L327"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/turbo/search.ts#L327"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -567,7 +567,7 @@
         "file": "src/modules/turbo/search.ts",
         "line": 328,
         "snippet": "lowerBase.startsWith('id_ed25519.') ||",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/turbo/search.ts#L328"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/turbo/search.ts#L328"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -578,7 +578,7 @@
         "file": "src/modules/worktree/include.ts",
         "line": 24,
         "snippet": "'.npmrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/worktree/include.ts#L24"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/worktree/include.ts#L24"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -589,7 +589,7 @@
         "file": "src/modules/worktree/include.ts",
         "line": 26,
         "snippet": "'.netrc',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/worktree/include.ts#L26"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/worktree/include.ts#L26"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -600,7 +600,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 145,
         "snippet": "ruleEnvDesc: 'Blocks reads and exfiltration of .env, *.pem, ~/.ssh, and ~/.aws/credentials.',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L145"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L145"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -611,7 +611,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 220,
         "snippet": "ruleEnvDesc: '拦截读取或外泄 .env、*.pem、~/.ssh 与 ~/.aws/credentials。',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L220"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L220"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -622,7 +622,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 294,
         "snippet": "ruleEnvDesc: '攔截讀取或外洩 .env、*.pem、~/.ssh 與 ~/.aws/credentials。',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L294"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L294"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -633,7 +633,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 368,
         "snippet": "ruleEnvDesc: '.env、*.pem、~/.ssh、~/.aws/credentials の読み取りや流出を遮断します。',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L368"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L368"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -644,7 +644,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 442,
         "snippet": "ruleEnvDesc: '.env, *.pem, ~/.ssh, ~/.aws/credentials 읽기 및 유출을 차단합니다.',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L442"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L442"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -655,7 +655,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 516,
         "snippet": "ruleEnvDesc: 'Bloquea lectura o fuga de .env, *.pem, ~/.ssh y ~/.aws/credentials.',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L516"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L516"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -666,7 +666,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 590,
         "snippet": "ruleEnvDesc: 'Bloque la lecture ou fuite de .env, *.pem, ~/.ssh et ~/.aws/credentials.',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L590"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L590"
       },
       {
         "id": "CODE_CREDENTIAL_PATH",
@@ -677,7 +677,7 @@
         "file": "ui/src/modules/guard/GuardPanel.tsx",
         "line": 664,
         "snippet": "ruleEnvDesc: 'Blockiert Zugriff oder Abfluss von .env, *.pem, ~/.ssh und ~/.aws/credentials.',",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/ui/src/modules/guard/GuardPanel.tsx#L664"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/ui/src/modules/guard/GuardPanel.tsx#L664"
       },
       {
         "id": "CODE_OBFUSCATED_ESCAPES",
@@ -686,9 +686,9 @@
         "capability": "contains_minified",
         "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
         "file": "dist/cli.cjs",
-        "line": 48,
+        "line": 50,
         "snippet": "\\u95EE\\u9898\\u3001\\u590D\\u73B0\\u6761\\u4EF6\\u4E0E\\u6700\\u5C0F\\u4FEE\\u590D\\u65B9\\u6848\\uFF0C\\u5E76\\u6307\\u51FA\\u7F3A\\u5931\\u7684\\u5355\\u5143\\u",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/dist/cli.cjs#L48"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/dist/cli.cjs#L50"
       },
       {
         "id": "CODE_OBFUSCATED_ESCAPES",
@@ -699,7 +699,7 @@
         "file": "dist/server.cjs",
         "line": 63,
         "snippet": "\\u041D\\u0435\\u0440\\u0430\\u0441\\u043F\\u0430\\u0437\\u043D\\u0430\\u043D\\u044B",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/dist/server.cjs#L63"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/dist/server.cjs#L63"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -710,7 +710,7 @@
         "file": "hooks.json",
         "line": 16,
         "snippet": "node dist/hook.cjs --event PreToolUse",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/hooks.json#L16"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/hooks.json#L16"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -721,7 +721,7 @@
         "file": "hooks.json",
         "line": 28,
         "snippet": "node dist/hook.cjs --event PostToolUse",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/hooks.json#L28"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/hooks.json#L28"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -732,7 +732,7 @@
         "file": "scripts/run-tests.mjs",
         "line": 22,
         "snippet": "const res = spawnSync( process.execPath, ['--import', 'tsx', '--test', ...extraArgs, ...testFiles], { cwd: rootDir, stdio: 'inherit', shell: false, }, );",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/scripts/run-tests.mjs#L22"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/scripts/run-tests.mjs#L22"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -743,7 +743,7 @@
         "file": "sidecars/audit-sidecar.mjs",
         "line": 159,
         "snippet": "const child = spawnSync( process.execPath, [realCliBundle, 'audit-once', '--json', ...parsed.forwarded], { shell: false, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], window",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/sidecars/audit-sidecar.mjs#L159"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/sidecars/audit-sidecar.mjs#L159"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -754,7 +754,7 @@
         "file": "src/core/conversation-service.ts",
         "line": 106,
         "snippet": "const localhostMatch = LOOPBACK_LOCALHOST_RE.exec(trimmed);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/conversation-service.ts#L106"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/conversation-service.ts#L106"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -765,7 +765,7 @@
         "file": "src/core/conversation-service.ts",
         "line": 111,
         "snippet": "const ipv4Match = LOOPBACK_IPV4_RE.exec(trimmed);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/conversation-service.ts#L111"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/conversation-service.ts#L111"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -776,7 +776,7 @@
         "file": "src/core/conversation-service.ts",
         "line": 116,
         "snippet": "const ipv6Match = LOOPBACK_IPV6_RE.exec(trimmed);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/core/conversation-service.ts#L116"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/core/conversation-service.ts#L116"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -787,7 +787,7 @@
         "file": "src/modules/guard/policy.ts",
         "line": 715,
         "snippet": "while ((match = pat.regex.exec(lineText)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/guard/policy.ts#L715"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/guard/policy.ts#L715"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -798,7 +798,7 @@
         "file": "src/modules/ops/paths.ts",
         "line": 134,
         "snippet": "while ((match = ENV_VAR_GLOBAL_RE.exec(value)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/paths.ts#L134"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/paths.ts#L134"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -809,7 +809,7 @@
         "file": "src/modules/ops/prompts.ts",
         "line": 166,
         "snippet": "while ((match = VARIABLE_TOKEN_RE.exec(body)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/prompts.ts#L166"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/prompts.ts#L166"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -820,7 +820,7 @@
         "file": "src/modules/ops/security-audit.ts",
         "line": 388,
         "snippet": "while ((m = cmdLineRe.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/ops/security-audit.ts#L388"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/ops/security-audit.ts#L388"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -831,7 +831,7 @@
         "file": "src/modules/radar/core.ts",
         "line": 630,
         "snippet": "const child = execFile( invocation.command, invocation.args, { timeout: 3000, windowsHide: true }, () => { // Ignore notification errors silently }, );",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/radar/core.ts#L630"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/radar/core.ts#L630"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -842,7 +842,7 @@
         "file": "src/modules/remote/gateway.ts",
         "line": 489,
         "snippet": "const m = /^\\[[^\\]]+\\](?::(\\d+))?$/.exec(hostValue);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/remote/gateway.ts#L489"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/remote/gateway.ts#L489"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -853,7 +853,7 @@
         "file": "src/modules/remote/live-stream.ts",
         "line": 837,
         "snippet": "execFile( command, args, { shell: false, timeout: timeoutMs, maxBuffer: 64 * 1024, windowsHide: true, }, (err, stdout, stderr) => { if (err) { const code = (err as NodeJS.ErrnoExce",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/remote/live-stream.ts#L837"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/remote/live-stream.ts#L837"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -864,7 +864,7 @@
         "file": "src/modules/review/diff-parser.ts",
         "line": 138,
         "snippet": "const secretAssign = HARDCODED_SECRET_ASSIGN_RE.exec(sample);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/review/diff-parser.ts#L138"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/review/diff-parser.ts#L138"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -875,7 +875,7 @@
         "file": "src/modules/review/diff-parser.ts",
         "line": 478,
         "snippet": "const hunkMatch = HUNK_HEADER_RE.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/review/diff-parser.ts#L478"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/review/diff-parser.ts#L478"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -886,7 +886,7 @@
         "file": "src/modules/review/git-diff.ts",
         "line": 117,
         "snippet": "const stdout = execFileSync('git', ['-c', 'core.quotepath=false', ...args], { cwd, encoding: 'utf8', shell: false, windowsHide: true, maxBuffer, timeout: 10_000, stdio: ['ignore', ",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/review/git-diff.ts#L117"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/review/git-diff.ts#L117"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -897,7 +897,7 @@
         "file": "src/modules/spec/compiler.ts",
         "line": 254,
         "snippet": "while ((match = FILE_HINT_PATH_RE.exec(corpus)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/spec/compiler.ts#L254"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/spec/compiler.ts#L254"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -908,7 +908,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 317,
         "snippet": "const topKey = /^\\s{1,2}\"([^\"]+)\"\\s*:/.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L317"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L317"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -919,7 +919,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 322,
         "snippet": "const pathKey = /^\\s{3,6}\"(\\/[^\"]+)\"\\s*:/.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L322"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L322"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -930,7 +930,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 339,
         "snippet": "const m = /^(#{1,6})\\s+(.+?)\\s*#*$/.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L339"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L339"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -941,7 +941,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 352,
         "snippet": "const top = /^([A-Za-z0-9_.-]+)\\s*:/.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L352"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L352"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -952,7 +952,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 359,
         "snippet": "const ep = /^\\s{2}('\\/[^']+'|\"\\/[^\"]+\"|\\/[^\\s:]+)\\s*:/.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L359"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L359"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -963,7 +963,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 371,
         "snippet": "const titleMatch = /<title[^>]*>([^<]+)<\\/title>/i.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L371"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L371"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -974,7 +974,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 375,
         "snippet": "const hMatch = /<h([1-6])\\b[^>]*>([\\s\\S]*?)<\\/h\\1>/i.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L375"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L375"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -985,7 +985,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 389,
         "snippet": "const tMatch = /<title[^>]*>([^<]+)<\\/title>/i.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L389"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L389"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -996,7 +996,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 393,
         "snippet": "const gMatch = /<(?:svg|g|symbol)\\b[^>]*\\bid=[\"']([^\"']+)[\"']/i.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L393"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L393"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1007,7 +1007,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 404,
         "snippet": "const tagMatch = /^(\\s*)<([A-Za-z_][A-Za-z0-9_.:-]*)\\b(?![/?!])/.exec(line);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L404"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L404"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1018,7 +1018,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 448,
         "snippet": "const titleMatch = /<dc:title[^>]*>([\\s\\S]*?)<\\/dc:title>/i.exec(coreXml);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L448"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L448"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1029,7 +1029,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 449,
         "snippet": "const creatorMatch = /<dc:creator[^>]*>([\\s\\S]*?)<\\/dc:creator>/i.exec(coreXml);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L449"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L449"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1040,7 +1040,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 462,
         "snippet": "while ((paraMatch = paraRe.exec(docXml)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L462"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L462"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1051,7 +1051,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 473,
         "snippet": "while ((tMatch = textRe.exec(normalizedP)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L473"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L473"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1062,7 +1062,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 488,
         "snippet": "const styleMatch = /<w:pStyle\\b[^>]*w:val=[\"']([^\"']+)[\"']/i.exec(pBody);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L488"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L488"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1073,7 +1073,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 491,
         "snippet": "const headingNum = /^Heading([1-6])$/i.exec(styleVal);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L491"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L491"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1084,7 +1084,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 538,
         "snippet": "const lettersMatch = /^([A-Za-z]+)/.exec(cellRef);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L538"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L538"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1095,7 +1095,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 552,
         "snippet": "while ((siMatch = siRe.exec(xml)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L552"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L552"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1106,7 +1106,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 557,
         "snippet": "while ((tMatch = tRe.exec(body)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L557"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L557"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1117,7 +1117,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 574,
         "snippet": "while ((m = relRe.exec(relsXml)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L574"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L574"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1128,7 +1128,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 576,
         "snippet": "const idM = /\\bId=[\"']([^\"']+)[\"']/.exec(attrs);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L576"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L576"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1139,7 +1139,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 577,
         "snippet": "const targetM = /\\bTarget=[\"']([^\"']+)[\"']/.exec(attrs);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L577"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L577"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1150,7 +1150,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 596,
         "snippet": "while ((m = sheetRe.exec(wbXml)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L596"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L596"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1161,7 +1161,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 598,
         "snippet": "const nameM = /\\bname=[\"']([^\"']+)[\"']/.exec(attrs);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L598"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L598"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1172,7 +1172,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 599,
         "snippet": "const ridM = /\\br:id=[\"']([^\"']+)[\"']/.exec(attrs);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L599"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L599"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1183,7 +1183,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 637,
         "snippet": "while ((rowMatch = rowRe.exec(sheetXml)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L637"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L637"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1194,7 +1194,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 647,
         "snippet": "while ((cellMatch = cellRe.exec(rowBody)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L647"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L647"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1205,7 +1205,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 650,
         "snippet": "const refM = /\\br=[\"']([^\"']+)[\"']/.exec(attrs);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L650"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L650"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1216,7 +1216,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 651,
         "snippet": "const typeM = /\\bt=[\"']([^\"']+)[\"']/.exec(attrs);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L651"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L651"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1227,7 +1227,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 663,
         "snippet": "const vM = /<v[^>]*>([\\s\\S]*?)<\\/v>/.exec(inner);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L663"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L663"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1238,7 +1238,7 @@
         "file": "src/modules/studio/documents.ts",
         "line": 670,
         "snippet": "while ((tM = tRe.exec(inner)) !== null) {",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L670"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L670"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -1249,11 +1249,28 @@
         "file": "src/modules/studio/documents.ts",
         "line": 675,
         "snippet": "const vM = /<v[^>]*>([\\s\\S]*?)<\\/v>/.exec(inner);",
-        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/c5ed1f2e5cc21140767263d8a9511ea52769cfed/src/modules/studio/documents.ts#L675"
+        "githubBlobUrl": "https://github.com/tone-leh/agy-NOV/blob/d09f99cd3146ca17e6b87f4267fd00c07dbdba17/src/modules/studio/documents.ts#L675"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.2.1",
+      "sha": "d09f99cd3146ca17e6b87f4267fd00c07dbdba17",
+      "scannedAt": "2026-11-28T06:15:57.186Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "credential_access",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "1.2.0",
       "sha": "c5ed1f2e5cc21140767263d8a9511ea52769cfed",

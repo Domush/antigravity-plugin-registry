@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-28T00:30:31.895Z",
+  "generatedAt": "2026-11-28T06:20:51.132Z",
   "crawlerVersion": "1.0.1",
   "scannerVersion": "1.2.0",
-  "totalPlugins": 295,
+  "totalPlugins": 301,
   "marketplaceClient": {
     "latestVersion": "1.0.4",
     "minSupportedVersion": "1.0.0",
@@ -58,7 +58,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T20:55:42Z"
+        "pushedAt": "2026-11-28T00:42:33Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -126,7 +126,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T20:40:52Z"
+        "pushedAt": "2026-11-28T00:42:37Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -194,7 +194,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:49Z"
+        "pushedAt": "2026-11-28T00:42:41Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -215,6 +215,77 @@
         }
       },
       "detailPath": "plugins/A16Nights/antigravity-azure-drop.json"
+    },
+    {
+      "id": "A16Nights/antigravity-azure-lens",
+      "name": "苍蓝星瞳——多账号 Gemini 网页副脑",
+      "pluginName": "azure-lens",
+      "summary": "苍蓝星瞳——多账号 Gemini 网页副脑（Azure Lens · Beta 测试版）：零第三方依赖，1:1 原生侧栏 Gemini 对话体验（双态窄轨侧栏、+ 级联工具、宽窄屏文件/引用预览、免跳转内部弹窗、右下角挂件避让），双标签页物理隔离、多账号独立 Profile 自动检测与 2x 高清头像缓存，并支持 Antigravity MCP 静默上传文件与 Deep Research 深度调研。",
+      "author": {
+        "login": "A16Nights",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/104626775?v=4",
+        "url": "https://github.com/A16Nights"
+      },
+      "repoUrl": "https://github.com/A16Nights/antigravity-azure-lens",
+      "license": "MIT",
+      "version": "0.1.0",
+      "minAppVersion": "2.34.0",
+      "release": {
+        "ref": "main",
+        "sha": "d97a3e02d4bbe744a1bd4e23b24727a7161260fd",
+        "tarballUrl": "https://api.github.com/repos/A16Nights/antigravity-azure-lens/tarball/d97a3e02d4bbe744a1bd4e23b24727a7161260fd",
+        "contentTreeSha256": "6b656678daa65584f5f0fafa66f68f17dbfec3d54518371b868c4ef385c628d8",
+        "archiveBytes": 195119,
+        "publishedAt": "2026-11-28T00:46:05Z"
+      },
+      "surface": {
+        "hasSidebarUi": true,
+        "uiSlots": [
+          "file",
+          "global"
+        ],
+        "components": [
+          "mcp_stdio",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "antigravity",
+        "azure-suite",
+        "beta",
+        "gemini",
+        "mcp",
+        "multi-account",
+        "sidecar"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 1,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T00:46:04Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T06:16:36.600Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "network_outbound",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 7,
+          "medium": 22,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/A16Nights/antigravity-azure-lens.json"
     },
     {
       "id": "A16Nights/antigravity-azure-orbit",
@@ -263,7 +334,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:12Z"
+        "pushedAt": "2026-11-28T00:43:03Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -331,7 +402,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:37Z"
+        "pushedAt": "2026-11-28T00:42:45Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -401,7 +472,7 @@
         "stars": 2,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:44Z"
+        "pushedAt": "2026-11-28T00:42:48Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -471,7 +542,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:07Z"
+        "pushedAt": "2026-11-28T00:43:06Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -541,7 +612,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:23Z"
+        "pushedAt": "2026-11-28T00:42:52Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -611,7 +682,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:28Z"
+        "pushedAt": "2026-11-28T00:42:55Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -678,10 +749,10 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 2,
+        "stars": 4,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:16:32Z"
+        "pushedAt": "2026-11-28T00:42:59Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -1777,8 +1848,8 @@
       "stats": {
         "stars": 1,
         "forks": 0,
-        "openIssues": 0,
-        "pushedAt": "2026-11-27T09:51:36Z"
+        "openIssues": 1,
+        "pushedAt": "2026-11-28T04:53:08Z"
       },
       "security": {
         "riskTier": "high",
@@ -1813,15 +1884,15 @@
       },
       "repoUrl": "https://github.com/Aloira-ai/antigravity-zh-plugin",
       "license": "NOASSERTION",
-      "version": "1.3.2",
+      "version": "1.3.3",
       "minAppVersion": null,
       "release": {
-        "ref": "v1.3.2",
-        "sha": "93bf9bc334c43f75ab73d6e4d61d7b7675f3279d",
-        "tarballUrl": "https://api.github.com/repos/Aloira-ai/antigravity-zh-plugin/tarball/93bf9bc334c43f75ab73d6e4d61d7b7675f3279d",
-        "contentTreeSha256": "61265b69acb5d3a432795c74d02ec3d2fac7f6c2e54a48dc38d769a5084f1a25",
-        "archiveBytes": 131427,
-        "publishedAt": "2026-11-26T02:11:17Z"
+        "ref": "v1.3.3",
+        "sha": "46312c7e95700699a6ae63a4b51dbdb3fd68a9d8",
+        "tarballUrl": "https://api.github.com/repos/Aloira-ai/antigravity-zh-plugin/tarball/46312c7e95700699a6ae63a4b51dbdb3fd68a9d8",
+        "contentTreeSha256": "584460fbb7a0a3042a3a1dde3b9ca4eaf5726ebe9333b90890bf643671adae32",
+        "archiveBytes": 142788,
+        "publishedAt": "2026-11-28T01:46:58Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -1844,12 +1915,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T02:11:13Z"
+        "pushedAt": "2026-11-28T01:46:55Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:18:03.417Z",
+        "scannedAt": "2026-11-28T06:16:25.530Z",
         "capabilities": [
           "fs_write_workspace",
           "prompt_mentions_shell"
@@ -3770,7 +3841,7 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-14T10:14:01Z"
+        "pushedAt": "2026-11-28T05:34:36Z"
       },
       "security": {
         "riskTier": "high",
@@ -4506,6 +4577,69 @@
       "detailPath": "plugins/ciasteczkox10/antigravity-discord-rpc.json"
     },
     {
+      "id": "ckg2/agy-self-evolve",
+      "name": "Self-Evolve: Adaptive Memory & Skill Synthesizer",
+      "pluginName": "agy-self-evolve",
+      "summary": "Zero-daemon, git-clean self-evolving memory and skill synthesizer for Google Antigravity. Passively learns coding preferences, recurring workflows, and CLI fixes, hydrating rules, skills, tools, or staged safety hooks upon approval.",
+      "author": {
+        "login": "ckg2",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/291433890?v=4",
+        "url": "https://github.com/ckg2"
+      },
+      "repoUrl": "https://github.com/ckg2/agy-self-evolve",
+      "license": "MIT",
+      "version": "2.0.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "main",
+        "sha": "9186008d1534c8eb11f76748d6184b5410ea65de",
+        "tarballUrl": "https://api.github.com/repos/ckg2/agy-self-evolve/tarball/9186008d1534c8eb11f76748d6184b5410ea65de",
+        "contentTreeSha256": "8d5ce01705223b5ad7fe3968c4f0eaf9cfc34dc8fd72792e5976e6eb998a49bd",
+        "archiveBytes": 53173,
+        "publishedAt": "2026-11-28T01:15:29Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "rules",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "agent-memory",
+        "ai-agent",
+        "google-antigravity",
+        "self-evolving",
+        "skills"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T01:16:05Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T06:16:27.518Z",
+        "capabilities": [
+          "fs_write_workspace",
+          "runs_shell_hooks"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 1,
+          "medium": 19,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/ckg2/agy-self-evolve.json"
+    },
+    {
       "id": "Commit-Or-Die-Studio/agy-git-graph",
       "name": "AGY Git Graph",
       "pluginName": "agy-git-graph",
@@ -4822,7 +4956,7 @@
       "stats": {
         "stars": 5,
         "forks": 1,
-        "openIssues": 0,
+        "openIssues": 1,
         "pushedAt": "2026-11-27T16:02:49Z"
       },
       "security": {
@@ -6174,7 +6308,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 151,
+        "stars": 152,
         "forks": 10,
         "openIssues": 0,
         "pushedAt": "2026-11-27T12:08:18Z"
@@ -6529,6 +6663,132 @@
       "detailPath": "plugins/eatingDream-antigravity-plugins/remote-cast.json"
     },
     {
+      "id": "Echoqili/agent-guard",
+      "name": "Agent Guard",
+      "pluginName": "agent-guard",
+      "summary": "Zero-dependency safety net for Google Antigravity: blocks catastrophic shell commands, gates destructive git/SQL/publish ops, snapshots every turn to git refs, and rolls back cleanly.",
+      "author": {
+        "login": "Echoqili",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/96407888?v=4",
+        "url": "https://github.com/Echoqili"
+      },
+      "repoUrl": "https://github.com/Echoqili/agent-guard",
+      "license": "MIT",
+      "version": "0.1.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v0.1.0",
+        "sha": "89db349169a54f6cf9d4c9eed887ce26449e8dd3",
+        "tarballUrl": "https://api.github.com/repos/Echoqili/agent-guard/tarball/89db349169a54f6cf9d4c9eed887ce26449e8dd3",
+        "contentTreeSha256": "3dd306c00753231a71a38930122099aa3253d0b4b76527501c0e88881b00563a",
+        "archiveBytes": 13735,
+        "publishedAt": "2026-11-27T16:00:55Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "ai-agent",
+        "git-checkpoint",
+        "google-antigravity",
+        "safety"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T02:34:20Z"
+      },
+      "security": {
+        "riskTier": "high",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T06:16:20.745Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "process_spawn",
+          "prompt_mentions_shell",
+          "runs_shell_hooks"
+        ],
+        "findingCounts": {
+          "critical": 1,
+          "high": 4,
+          "medium": 9,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/Echoqili/agent-guard.json"
+    },
+    {
+      "id": "Echoqili/agy-doctor",
+      "name": "AGY Doctor",
+      "pluginName": "agy-doctor",
+      "summary": "One-command cross-platform diagnostics for Google Antigravity: catches overwritten localization, git worktreeConfig crashes, proxy/network mismatches, shell profile noise, and broken plugin manifests.",
+      "author": {
+        "login": "Echoqili",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/96407888?v=4",
+        "url": "https://github.com/Echoqili"
+      },
+      "repoUrl": "https://github.com/Echoqili/agy-doctor",
+      "license": "MIT",
+      "version": "0.1.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v0.1.0",
+        "sha": "808fbd393099524cff90ea0f39eeda4c25321902",
+        "tarballUrl": "https://api.github.com/repos/Echoqili/agy-doctor/tarball/808fbd393099524cff90ea0f39eeda4c25321902",
+        "contentTreeSha256": "0eafaae2cf2b7585df4730d8ba7721a4e4cd8f50698e69bde0e17be96f4ea3ce",
+        "archiveBytes": 14083,
+        "publishedAt": "2026-11-27T16:01:08Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "hooks",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "diagnostics",
+        "google-antigravity",
+        "health-check",
+        "proxy"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T02:34:24Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T06:16:18.921Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "network_outbound",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 2,
+          "medium": 2,
+          "low": 1
+        }
+      },
+      "detailPath": "plugins/Echoqili/agy-doctor.json"
+    },
+    {
       "id": "eosglyph/agy-claude-studio",
       "name": "Claude Studio",
       "pluginName": "agy-claude-studio",
@@ -6573,10 +6833,10 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 6,
+        "stars": 7,
         "forks": 1,
         "openIssues": 2,
-        "pushedAt": "2026-11-28T00:11:43Z"
+        "pushedAt": "2026-11-28T05:55:57Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -6746,15 +7006,15 @@
       },
       "repoUrl": "https://github.com/factdock/factdock-mcp",
       "license": "MIT",
-      "version": "1.5.0",
+      "version": "1.5.2",
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "d9f9fe1d57a9fd78036b8845b097bd272d6348a3",
-        "tarballUrl": "https://api.github.com/repos/factdock/factdock-mcp/tarball/d9f9fe1d57a9fd78036b8845b097bd272d6348a3",
-        "contentTreeSha256": "38ceb0ac006860dc4118ccf073a21941e2f3cfc0718754af868a52e01ee9c9fa",
-        "archiveBytes": 593239,
-        "publishedAt": "2026-11-26T15:02:33Z"
+        "sha": "ea77b9939150c18577a2b452db179354bfebb0a9",
+        "tarballUrl": "https://api.github.com/repos/factdock/factdock-mcp/tarball/ea77b9939150c18577a2b452db179354bfebb0a9",
+        "contentTreeSha256": "8f3511a43f4468fe5333128098c5d86e8f700e67b3aa293a646737cae623afac",
+        "archiveBytes": 593352,
+        "publishedAt": "2026-11-28T01:55:25Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -6776,12 +7036,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-26T15:02:41Z"
+        "pushedAt": "2026-11-28T01:55:31Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:16:35.811Z",
+        "scannedAt": "2026-11-28T06:16:22.773Z",
         "capabilities": [
           "network_external_mcp",
           "network_outbound"
@@ -8960,6 +9220,75 @@
       "detailPath": "plugins/heywalter/antigravity-context-monitor.json"
     },
     {
+      "id": "hhelibeb/pi-plugin-antigravity",
+      "name": "Pi Coding Agent",
+      "pluginName": "pi",
+      "summary": "Delegate coding, review, and research tasks from Antigravity to your local Pi coding agent through a bundled runner with background jobs and least-privilege tool allowlists.",
+      "author": {
+        "login": "hhelibeb",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/16676760?v=4",
+        "url": "https://github.com/hhelibeb"
+      },
+      "repoUrl": "https://github.com/hhelibeb/pi-plugin-antigravity",
+      "license": "MIT",
+      "version": "0.1.0",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v0.1.0",
+        "sha": "7e1b425436aeffb382971cdb778cda68df9245b2",
+        "tarballUrl": "https://api.github.com/repos/hhelibeb/pi-plugin-antigravity/tarball/7e1b425436aeffb382971cdb778cda68df9245b2",
+        "contentTreeSha256": "cb58756282255a2698bf210d1aa5e8d74689666fca2e8430890ae1e5486cfb88",
+        "archiveBytes": 69079,
+        "publishedAt": "2026-11-28T02:12:04Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "agents",
+          "skills"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "pi",
+        "subagent",
+        "delegation",
+        "code-review",
+        "coding-agent",
+        "agent-skills",
+        "agy",
+        "antigravity",
+        "antigravity-skills",
+        "google-antigravity"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T05:49:31Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T06:15:45.814Z",
+        "capabilities": [
+          "accesses_gemini_dir",
+          "fs_write_workspace",
+          "process_spawn",
+          "prompt_mentions_shell"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 13,
+          "medium": 15,
+          "low": 5
+        }
+      },
+      "detailPath": "plugins/hhelibeb/pi-plugin-antigravity.json"
+    },
+    {
       "id": "hiveteams/hive-antigravity-plugin",
       "name": "Hive",
       "pluginName": "hive",
@@ -9099,7 +9428,7 @@
       "id": "hongyanmo/agy-beautify",
       "name": "AGY Beautify",
       "pluginName": "agy-beautify",
-      "summary": "All-in-one Antigravity beautification & productivity suite: real-time Liquid Glass/Frosted/Solid & Light/Dark Quick Studio with native titlebar overlay sync, built-in No-TUN Proxy Bridge (auto-inject system HTTP proxy without TUN mode), liv",
+      "summary": "All-in-one Antigravity beautification & productivity suite: real-time Liquid Glass/Frosted/Solid & Light/Dark Quick Studio with native titlebar overlay sync, zero-dependency in-pane Office document preview (Word .docx / Excel .xlsx / PowerP",
       "author": {
         "login": "hongyanmo",
         "avatarUrl": "https://avatars.githubusercontent.com/u/99788131?v=4",
@@ -9107,15 +9436,15 @@
       },
       "repoUrl": "https://github.com/hongyanmo/agy-beautify",
       "license": "MIT",
-      "version": "1.6.1",
+      "version": "1.7.0",
       "minAppVersion": null,
       "release": {
-        "ref": "v1.6.1",
-        "sha": "c632373f7ce2c5fd96f56b5542e37827c99ae0a9",
-        "tarballUrl": "https://api.github.com/repos/hongyanmo/agy-beautify/tarball/c632373f7ce2c5fd96f56b5542e37827c99ae0a9",
-        "contentTreeSha256": "60dfb08d0c33b46047f58ef40c02b4cb7306539df1db6eadc98810fbfc00ba55",
-        "archiveBytes": 4894469,
-        "publishedAt": "2026-11-27T08:55:28Z"
+        "ref": "v1.7.0",
+        "sha": "724a51c8c36e5b045731903d56625995db938bb6",
+        "tarballUrl": "https://api.github.com/repos/hongyanmo/agy-beautify/tarball/724a51c8c36e5b045731903d56625995db938bb6",
+        "contentTreeSha256": "bf31e6673a61254f707e8a26e3d7b0f5acec2dd234f6a4fc54ae055aacd65a2e",
+        "archiveBytes": 4928970,
+        "publishedAt": "2026-11-28T02:41:45Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -9135,15 +9464,15 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 25,
+        "stars": 39,
         "forks": 0,
-        "openIssues": 0,
-        "pushedAt": "2026-11-27T08:55:26Z"
+        "openIssues": 1,
+        "pushedAt": "2026-11-28T02:41:42Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:15:08.889Z",
+        "scannedAt": "2026-11-28T06:16:17.041Z",
         "capabilities": [
           "accesses_gemini_dir",
           "dynamic_code_exec",
@@ -9153,8 +9482,8 @@
         ],
         "findingCounts": {
           "critical": 0,
-          "high": 20,
-          "medium": 38,
+          "high": 24,
+          "medium": 50,
           "low": 1
         }
       },
@@ -10063,11 +10392,11 @@
       "minAppVersion": "2.34.0",
       "release": {
         "ref": "main",
-        "sha": "cd403d45637246ad1c9868ace382cae01d4912c7",
-        "tarballUrl": "https://api.github.com/repos/jmxt3/astack/tarball/cd403d45637246ad1c9868ace382cae01d4912c7",
-        "contentTreeSha256": "8a5f56427e013475e0fa2b8a80fbc6edc424f86e2ffcae8856a1b5f9a3d51ec0",
-        "archiveBytes": 4304997,
-        "publishedAt": "2026-11-27T21:22:25Z"
+        "sha": "15364878246ddcae952acf3fc1ab81adbe7542df",
+        "tarballUrl": "https://api.github.com/repos/jmxt3/astack/tarball/15364878246ddcae952acf3fc1ab81adbe7542df",
+        "contentTreeSha256": "0e44212a98e544abecfd39525a162e4b4f8c19e05a55e78cecd5cca396dd5f60",
+        "archiveBytes": 4311334,
+        "publishedAt": "2026-11-28T03:18:34Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -10099,13 +10428,13 @@
       "stats": {
         "stars": 2,
         "forks": 0,
-        "openIssues": 0,
-        "pushedAt": "2026-11-27T21:22:25Z"
+        "openIssues": 2,
+        "pushedAt": "2026-11-28T04:39:36Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-28T00:24:32.599Z",
+        "scannedAt": "2026-11-28T06:16:14.410Z",
         "capabilities": [
           "accesses_gemini_dir",
           "credential_access",
@@ -10435,7 +10764,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 78,
+        "stars": 79,
         "forks": 9,
         "openIssues": 6,
         "pushedAt": "2026-11-27T08:29:35Z"
@@ -11977,7 +12306,7 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 1,
-        "pushedAt": "2026-11-28T00:17:47Z"
+        "pushedAt": "2026-11-28T05:12:47Z"
       },
       "security": {
         "riskTier": "high",
@@ -12604,7 +12933,7 @@
       "id": "mumo-chat/mumo-antigravity",
       "name": "mumo",
       "pluginName": "mumo",
-      "summary": "Bring Claude, GPT, Muse, Kimi & more into Antigravity. Run a multi-model panel with cross-model reactions, or ask one model for a second opinion.",
+      "summary": "Bring Claude, GPT, Muse, Kimi & more into Antigravity. Run a multi-model panel with cross-model reactions, or ask one model for a second opinion. US & Canada only.",
       "author": {
         "login": "mumo-chat",
         "avatarUrl": "https://avatars.githubusercontent.com/u/265327683?v=4",
@@ -12612,15 +12941,15 @@
       },
       "repoUrl": "https://github.com/mumo-chat/mumo-antigravity",
       "license": "MIT",
-      "version": "0.9.2",
+      "version": "0.9.4",
       "minAppVersion": null,
       "release": {
-        "ref": "v0.9.2",
-        "sha": "01c8e61274c9738daa5ee14ab25a77ebd6dedf6e",
-        "tarballUrl": "https://api.github.com/repos/mumo-chat/mumo-antigravity/tarball/01c8e61274c9738daa5ee14ab25a77ebd6dedf6e",
-        "contentTreeSha256": "af5bf899131ba9fbf10470b21f92574c6a23c705e4befc4d61837a3b3846d061",
-        "archiveBytes": 39360,
-        "publishedAt": "2026-11-24T20:36:56Z"
+        "ref": "v0.9.4",
+        "sha": "7d9935d5c0ea1e95782bd0fd5fdb5228c26770a4",
+        "tarballUrl": "https://api.github.com/repos/mumo-chat/mumo-antigravity/tarball/7d9935d5c0ea1e95782bd0fd5fdb5228c26770a4",
+        "contentTreeSha256": "f5a87b999cc450737f906df6d3a04085f7d41bbcea3d96ffae6feda85b680c55",
+        "archiveBytes": 39609,
+        "publishedAt": "2026-11-28T06:11:39Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -12648,12 +12977,12 @@
         "stars": 1,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-24T20:36:55Z"
+        "pushedAt": "2026-11-28T06:11:17Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:19:24.256Z",
+        "scannedAt": "2026-11-28T06:15:43.214Z",
         "capabilities": [
           "network_external_mcp"
         ],
@@ -15033,8 +15362,8 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 99,
-        "forks": 9,
+        "stars": 101,
+        "forks": 10,
         "openIssues": 0,
         "pushedAt": "2026-11-27T15:02:19Z"
       },
@@ -15375,6 +15704,72 @@
         }
       },
       "detailPath": "plugins/ShahilRoy/idea-to-reality.json"
+    },
+    {
+      "id": "shenjiecode/pi-for-antigravity",
+      "name": "Pi for Antigravity",
+      "pluginName": "pi-for-antigravity",
+      "summary": "Delegate execution-heavy work and optional independent read-only code review to your local pi CLI.",
+      "author": {
+        "login": "shenjiecode",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/34057084?v=4",
+        "url": "https://github.com/shenjiecode"
+      },
+      "repoUrl": "https://github.com/shenjiecode/pi-for-antigravity",
+      "license": "MIT",
+      "version": "0.2.10",
+      "minAppVersion": null,
+      "release": {
+        "ref": "v0.2.10",
+        "sha": "2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8",
+        "tarballUrl": "https://api.github.com/repos/shenjiecode/pi-for-antigravity/tarball/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8",
+        "contentTreeSha256": "566cf23d7f9a78f26bd2e5e583bc2c204be78d88ccb4c05a6fcd2ed2e4fbfd37",
+        "archiveBytes": 218958,
+        "publishedAt": "2026-11-28T06:14:12Z"
+      },
+      "surface": {
+        "hasSidebarUi": false,
+        "uiSlots": [],
+        "components": [
+          "mcp_stdio",
+          "rules"
+        ]
+      },
+      "categories": [],
+      "tags": [
+        "pi",
+        "mcp",
+        "code-review",
+        "delegation",
+        "coding-agent",
+        "antigravity",
+        "mcp-server",
+        "typescript"
+      ],
+      "requiresCredentials": false,
+      "stats": {
+        "stars": 0,
+        "forks": 0,
+        "openIssues": 0,
+        "pushedAt": "2026-11-28T06:12:34Z"
+      },
+      "security": {
+        "riskTier": "elevated",
+        "scannerVersion": "1.2.0",
+        "scannedAt": "2026-11-28T06:15:59.131Z",
+        "capabilities": [
+          "fs_write_workspace",
+          "mcp_local_exec",
+          "process_spawn"
+        ],
+        "findingCounts": {
+          "critical": 0,
+          "high": 8,
+          "medium": 21,
+          "low": 0
+        }
+      },
+      "detailPath": "plugins/shenjiecode/pi-for-antigravity.json"
     },
     {
       "id": "shipstatic/antigravity",
@@ -16451,15 +16846,15 @@
       },
       "repoUrl": "https://github.com/tone-leh/agy-NOV",
       "license": "MIT",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.2.0",
-        "sha": "c5ed1f2e5cc21140767263d8a9511ea52769cfed",
-        "tarballUrl": "https://api.github.com/repos/tone-leh/agy-NOV/tarball/c5ed1f2e5cc21140767263d8a9511ea52769cfed",
-        "contentTreeSha256": "65b3424528f04e0dc595b993c41bd68cbd33d915799195f36577e8fd88d8ab9e",
-        "archiveBytes": 3185430,
-        "publishedAt": "2026-11-27T18:00:27Z"
+        "ref": "v1.2.1",
+        "sha": "d09f99cd3146ca17e6b87f4267fd00c07dbdba17",
+        "tarballUrl": "https://api.github.com/repos/tone-leh/agy-NOV/tarball/d09f99cd3146ca17e6b87f4267fd00c07dbdba17",
+        "contentTreeSha256": "5cc6f982a25b117443f0e6d29e5a645d88c45bce468178c14e7ccf01cb4eef81",
+        "archiveBytes": 3196665,
+        "publishedAt": "2026-11-28T04:32:44Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -16492,12 +16887,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T18:00:24Z"
+        "pushedAt": "2026-11-28T04:32:42Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:12:58.647Z",
+        "scannedAt": "2026-11-28T06:15:57.186Z",
         "capabilities": [
           "accesses_gemini_dir",
           "contains_minified",
@@ -16997,11 +17392,11 @@
       "minAppVersion": null,
       "release": {
         "ref": "main",
-        "sha": "6dda0beddc9b9f4472495b449c853d3cd67978c0",
-        "tarballUrl": "https://api.github.com/repos/vinhthang/antigravity-attention-guard-plugin/tarball/6dda0beddc9b9f4472495b449c853d3cd67978c0",
-        "contentTreeSha256": "8894e73288942e6c721350928b9a75f3d2fd58b5f9d9189c146c6d6cf63411c0",
-        "archiveBytes": 206743,
-        "publishedAt": "2026-11-25T18:40:09Z"
+        "sha": "b8941a64616fc28f22dac4142f34cd673a4c17a8",
+        "tarballUrl": "https://api.github.com/repos/vinhthang/antigravity-attention-guard-plugin/tarball/b8941a64616fc28f22dac4142f34cd673a4c17a8",
+        "contentTreeSha256": "949d5efdb1d923fd948c4204648890511d4fd2d467a08bf4b69e9e0819ab32f9",
+        "archiveBytes": 207469,
+        "publishedAt": "2026-11-28T04:52:36Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -17030,12 +17425,12 @@
         "stars": 0,
         "forks": 0,
         "openIssues": 0,
-        "pushedAt": "2026-11-25T18:40:13Z"
+        "pushedAt": "2026-11-28T04:52:40Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-27T18:18:18.195Z",
+        "scannedAt": "2026-11-28T06:15:51.557Z",
         "capabilities": [
           "accesses_gemini_dir",
           "credential_access",
@@ -17047,8 +17442,8 @@
         "findingCounts": {
           "critical": 1,
           "high": 7,
-          "medium": 22,
-          "low": 18
+          "medium": 21,
+          "low": 19
         }
       },
       "detailPath": "plugins/vinhthang/antigravity-attention-guard-plugin.json"
@@ -17300,7 +17695,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 3,
+        "stars": 4,
         "forks": 4,
         "openIssues": 7,
         "pushedAt": "2026-08-31T14:59:27Z"
@@ -17740,7 +18135,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 4,
+        "stars": 5,
         "forks": 0,
         "openIssues": 5,
         "pushedAt": "2026-11-23T14:45:54Z"
@@ -17774,15 +18169,15 @@
       },
       "repoUrl": "https://github.com/WhiteBr1ck/agy-powertools",
       "license": "MIT",
-      "version": "2.16.14",
+      "version": "2.17.0",
       "minAppVersion": null,
       "release": {
-        "ref": "v2.16.14",
-        "sha": "d3fc71bb3dcd5c49f4470b70c8c4f21177673257",
-        "tarballUrl": "https://api.github.com/repos/WhiteBr1ck/agy-powertools/tarball/d3fc71bb3dcd5c49f4470b70c8c4f21177673257",
-        "contentTreeSha256": "c65bfb0d8f207a9f7d33eed03897d8bcd169891c70d8a2adef1e1eb19922f9e8",
-        "archiveBytes": 5721906,
-        "publishedAt": "2026-11-27T19:35:41Z"
+        "ref": "v2.17.0",
+        "sha": "6e2354be42b33dd1a7e3f2b1ff1373d48224ee29",
+        "tarballUrl": "https://api.github.com/repos/WhiteBr1ck/agy-powertools/tarball/6e2354be42b33dd1a7e3f2b1ff1373d48224ee29",
+        "contentTreeSha256": "6427e09fe1a781c0e7cdee2499c18fe6eda10de407dcacea6a086b7be1e252da",
+        "archiveBytes": 5886657,
+        "publishedAt": "2026-11-28T01:03:17Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -17802,15 +18197,15 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 1898,
+        "stars": 1994,
         "forks": 81,
-        "openIssues": 11,
-        "pushedAt": "2026-11-27T19:35:35Z"
+        "openIssues": 15,
+        "pushedAt": "2026-11-28T01:03:10Z"
       },
       "security": {
         "riskTier": "elevated",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-28T00:25:20.377Z",
+        "scannedAt": "2026-11-28T06:16:34.124Z",
         "capabilities": [
           "accesses_gemini_dir",
           "contains_minified",
@@ -17820,9 +18215,9 @@
         ],
         "findingCounts": {
           "critical": 0,
-          "high": 20,
-          "medium": 73,
-          "low": 4
+          "high": 36,
+          "medium": 64,
+          "low": 0
         }
       },
       "detailPath": "plugins/WhiteBr1ck/agy-powertools.json"
@@ -18654,7 +19049,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 1,
+        "stars": 2,
         "forks": 0,
         "openIssues": 0,
         "pushedAt": "2026-11-27T12:19:59Z"
@@ -19007,10 +19402,10 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 639,
-        "forks": 56,
-        "openIssues": 8,
-        "pushedAt": "2026-11-27T14:48:12Z"
+        "stars": 648,
+        "forks": 58,
+        "openIssues": 10,
+        "pushedAt": "2026-11-28T05:43:58Z"
       },
       "security": {
         "riskTier": "elevated",
@@ -19132,7 +19527,7 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 129,
+        "stars": 130,
         "forks": 3,
         "openIssues": 0,
         "pushedAt": "2026-11-27T17:08:17Z"
@@ -19362,7 +19757,7 @@
       "id": "zou172866/Antigravity-agy-cmd",
       "name": "agy-cmd (自动路由与防停机面板)",
       "pluginName": "agy-cmd",
-      "summary": "Antigravity 桌面端/IDE 高阶能力自动路由插件（v2.8.0）：多智能体与 Swarm 隔离调度、Plan Mode 硬拦截、交付测试门禁、Stop 防停机自动续跑、右侧边栏面板与 SHA-256 在线自更新。",
+      "summary": "Antigravity 桌面端/IDE 高阶能力自动路由插件（v2.8.1）：多智能体与 Swarm 隔离调度、Plan Mode 硬拦截、交付测试门禁、Stop 防停机自动续跑、右侧边栏面板与 SHA-256 在线自更新。",
       "author": {
         "login": "zou172866",
         "avatarUrl": "https://avatars.githubusercontent.com/u/295114258?v=4",
@@ -19370,15 +19765,15 @@
       },
       "repoUrl": "https://github.com/zou172866/Antigravity-agy-cmd",
       "license": "UNKNOWN",
-      "version": "2.8.0",
+      "version": "2.8.1",
       "minAppVersion": null,
       "release": {
-        "ref": "v2.8.0",
-        "sha": "1a4572506bb80b4c937c72025caf49f5aaf0f7b6",
-        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-cmd/tarball/1a4572506bb80b4c937c72025caf49f5aaf0f7b6",
-        "contentTreeSha256": "33be2c1f8bd3895ce8fd61ddc61a515ad13d5aaca2e12490f1b0b8bb9476b7d4",
-        "archiveBytes": 313182,
-        "publishedAt": "2026-11-27T19:54:45Z"
+        "ref": "v2.8.1",
+        "sha": "5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb",
+        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-cmd/tarball/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb",
+        "contentTreeSha256": "72e19585508066da3a6864e45f98c6d3ab8e20c0fd6ff81e0b01a68ebd7d2321",
+        "archiveBytes": 324325,
+        "publishedAt": "2026-11-28T03:37:36Z"
       },
       "surface": {
         "hasSidebarUi": false,
@@ -19408,12 +19803,12 @@
         "stars": 72,
         "forks": 1,
         "openIssues": 0,
-        "pushedAt": "2026-11-27T19:54:39Z"
+        "pushedAt": "2026-11-28T03:37:11Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-28T00:25:13.919Z",
+        "scannedAt": "2026-11-28T06:16:10.007Z",
         "capabilities": [
           "accesses_gemini_dir",
           "fs_write_workspace",
@@ -19425,7 +19820,7 @@
         "findingCounts": {
           "critical": 0,
           "high": 19,
-          "medium": 41,
+          "medium": 37,
           "low": 3
         }
       },
@@ -19443,15 +19838,15 @@
       },
       "repoUrl": "https://github.com/zou172866/Antigravity-agy-dart",
       "license": "MIT",
-      "version": "1.9.4",
+      "version": "1.10.0",
       "minAppVersion": "2.34.0",
       "release": {
-        "ref": "v1.9.4",
-        "sha": "8c705dc93265c1233507403a5caeae77957478aa",
-        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-dart/tarball/8c705dc93265c1233507403a5caeae77957478aa",
-        "contentTreeSha256": "1f885719e8b08296b59fe5a199718a459f567afd95ffdff32994e42d13c1d40c",
-        "archiveBytes": 1611928,
-        "publishedAt": "2026-11-27T19:57:15Z"
+        "ref": "v1.10.0",
+        "sha": "8679fd6cdf87eb7536fb1024aee5278064f85b6e",
+        "tarballUrl": "https://api.github.com/repos/zou172866/Antigravity-agy-dart/tarball/8679fd6cdf87eb7536fb1024aee5278064f85b6e",
+        "contentTreeSha256": "feed1b7e21cb31fd76f09b61e5aa0ba7134b30dbcba7ef0cb0573675db92e856",
+        "archiveBytes": 1633416,
+        "publishedAt": "2026-11-28T04:00:51Z"
       },
       "surface": {
         "hasSidebarUi": true,
@@ -19482,15 +19877,15 @@
       ],
       "requiresCredentials": false,
       "stats": {
-        "stars": 235,
+        "stars": 241,
         "forks": 11,
         "openIssues": 4,
-        "pushedAt": "2026-11-27T19:57:09Z"
+        "pushedAt": "2026-11-28T04:00:45Z"
       },
       "security": {
         "riskTier": "high",
         "scannerVersion": "1.2.0",
-        "scannedAt": "2026-11-28T00:25:11.093Z",
+        "scannedAt": "2026-11-28T06:16:05.216Z",
         "capabilities": [
           "accesses_gemini_dir",
           "credential_access",

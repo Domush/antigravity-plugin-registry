@@ -1,0 +1,421 @@
+{
+  "schemaVersion": 1,
+  "id": "A16Nights/antigravity-azure-lens",
+  "sha": "d97a3e02d4bbe744a1bd4e23b24727a7161260fd",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T06:16:36.600Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "azure-lens",
+    "displayName": "苍蓝星瞳——多账号 Gemini 网页副脑",
+    "version": "0.1.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "azure-lens",
+        "runtimeName": "azure-lens_azure-lens",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "./mcp-server.mjs"
+        ],
+        "url": null
+      },
+      {
+        "name": "azure-lens-nav",
+        "runtimeName": "azure-lens_azure-lens-nav",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "./mcp-nav.mjs"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "azure-lens",
+        "slashCommand": "/azure-lens",
+        "description": "苍蓝星瞳（Azure Lens）— 多账号 Gemini 网页副脑插件。为每个 Google 账号分配独立浏览器 Profile，通过后台 CDP 自动向 gemini.google.com 派发联网调研、Deep Research 或本地文件审阅任务，并回收完整 Markdown 结论。当需要查资料、看本地文档/代码/图片出分析结论，或管理多账号 Gemini 槽位时使用。",
+        "disableModelInvocation": false,
+        "file": "skills/azure-lens/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/azure-lens"
+    ],
+    "mcpServerNames": [
+      "azure-lens_azure-lens",
+      "azure-lens_azure-lens-nav"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<p>🌐 &nbsp; <strong>简体中文</strong> &nbsp;·&nbsp; <a href=\"README.en.md\">English</a></p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/hero-dark.svg\">\n  <img src=\"assets/readme/hero-light.svg\" alt=\"苍蓝星瞳——多账号 Gemini 网页副脑 · Azure Lens\" width=\"100%\">\n</picture>\n\n<p>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-lens/releases\"><img src=\"https://img.shields.io/github/v/release/A16Nights/antigravity-azure-lens?include_prereleases&style=flat-square&label=Beta&color=6366f1&labelColor=1e293b\" alt=\"Release\"></a>\n  <a href=\"https://github.com/A16Nights/antigravity-azure-lens/stargazers\"><img src=\"https://img.shields.io/github/stars/A16Nights/antigravity-azure-lens?style=flat-square&label=Stars&color=f59e0b&labelColor=1e293b\" alt=\"Stars\"></a>\n  <img src=\"https://img.shields.io/badge/Google_Antigravity-Native_Plugin-3b82f6?style=flat-square&labelColor=1e293b\" alt=\"Antigravity\">\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22.0.0-10b981?style=flat-square&labelColor=1e293b\" alt=\"Node.js\">\n  <img src=\"https://img.shields.io/badge/Dependencies-Zero-06b6d4?style=flat-square&labelColor=1e293b\" alt=\"Zero Deps\">\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-6366f1?style=flat-square&labelColor=1e293b\" alt=\"License\"></a>\n</p>\n\n<p>\n  <strong>苍蓝星瞳——多账号 Gemini 网页副脑（v0.1.0 测试版）· 1:1 原生侧栏 Gemini 界面 · 双标签物理隔离 · 免跳转内部弹窗 · 多账号自动检测 · MCP 副脑调研</strong>\n</p>\n\n<p>\n  <a href=\"#features\">✨ 功能全景</a> &nbsp;·&nbsp; <a href=\"#architecture\">🧩 工作原理</a> &nbsp;·&nbsp; <a href=\"#mcp-tools\">🔌 MCP 工具</a> &nbsp;·&nbsp; <a href=\"#installation\">🚀 快速安装</a> &nbsp;·&nbsp; <a href=\"#storage\">📂 数据存储</a> &nbsp;·&nbsp; <a href=\"#azure-suite\">🌌 苍蓝全家桶</a>\n</p>\n\n</div>\n\n> [!WARNING]\n> **测试版说明（v0.1.0 Beta）**：苍蓝星瞳目前处于**早期公开测试阶段**，由于依赖 Gemini 网页端实时 DOM 结构与多账号环境适配，**可能会有很多功能尚未真正实现、表现不完整或暂时无法使用**。如果你在体验中遇到任何异常、页面错位、按钮无响应或功能建议，非常欢迎直接提交 [GitHub Issue](https://github.com/A16Nights/antigravity-azure-lens/issues) 反馈！\n>\n> 本插件严格遵守合规底线，**绝不绕过 Google 登录、二次验证或人机安全挑战**；遇到登录或安全验证时将温和提示用户在真实可见浏览器窗口中手动完成。\n\n**苍蓝星瞳——多账号 Gemini 网页副脑**（Azure Lens）是面向 **Google Antigravity 2.35+** 的零第三方依赖原生侧栏与 MCP 副脑插件。它为每个 Google 账号分配物理隔离的真实 Chrome/Edge 浏览器 Profile 与独立 CDP 端口，在 Antigravity 侧栏中 **1:1 复刻原生 Material Design 3 Gemini 对话体验**，并实现 **Live / Worker 双标签页物理隔离**——让你在前台流畅直聊的同时，Antigravity 主脑也能在独立后台标签页静默上传本机代码/文档/PDF/图片，借助不同 Google 账号的 Gemini 订阅额度完成联网调研、Deep Research 深度研究与跨视角审阅。\n\n<table>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>✨ 1:1 原生双态 Gemini 侧栏与宽窄屏预览</h4>\n完整复刻 Google Material Design 3 质感、官方极光四色星芒、56px 极简图标窄轨 / 260px 展开侧栏、<code>+</code> 级联工具菜单与蓝紫个性化开关；点击附件或内联引用胶囊时，宽屏右侧并排分栏、窄屏全屏覆层预览。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>📦 全功能免跳转内部弹窗</h4>\n库、已安排、学生、Gem 管理器、用量限额（实时 PRO/Ultra 百分比进度条与重置时间）、个性化记忆开关、给 Gemini 的指令、公开链接管理与快捷切号，全部经独立后台标签页静默同步并在内部原生弹窗完成。\n</td>\n</tr>\n<tr>\n<td width=\"50%\" valign=\"top\">\n<h4>👤 多账号物理隔离 &amp; 登录后自动检测</h4>\n每个槽位独立 Profile 与端口，支持与 Antigravity 登录不同 Google 账号互不串号；槽位名可留空自动读取真实 Google 账号名、Pro 徽章与零 CORS 2x 高清头像；支持纯净 <code>--app</code> 独立窗（默认开启）与隐形后台无感重连。\n</td>\n<td width=\"50%\" valign=\"top\">\n<h4>🔀 双标签物理隔离 &amp; 6 项 MCP 副脑工具</h4>\n侧栏直聊（Live）与 Antigravity MCP 后台任务（Worker）分走两个独立标签页互不抢页；支持静默上传最多 10 个本机文件、Deep Research、以及可选开启的限流自动切号重试与 <code>lens_batch_ask</code> 多账号并发调研。\n</td>\n</tr>\n</table>\n\n<h2 id=\"features\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-features-dark.svg\">\n  <img src=\"assets/readme/sec-features-light.svg\" alt=\"功能全景\" width=\"100%\">\n</picture>\n</h2>\n\n### 1. 1:1 原生 Material Design 3 对话界面与宽窄屏自适应\n- **双态原生侧栏与官方三分组设置**：展开时为 `260px` 完整导航栏（搜索、发起新对话、库、已安排、学生、更多 → 自定义/视频、笔记本、全部 + 状态过滤、对话 `⋮` 管理：分享公开链接/固定/重命名/标记未读/删除、底部头像与三分组完整设置菜单含「主题 › / 帮助 ›」级联子菜单）；收起时切换为 `56px` 极简图标窄轨；全宽适配自由延展。\n- **官方「对话 / 任务」模式与「临时对话」**：新对话输入框正下方 1:1 复刻官方「对话 / 任务」分段切换（选「任务」自动切深蓝紫光晕背景与任务执行模型列表，已有对话自动隐藏），右上角配备官方「临时对话」快捷按钮。\n- **原版 `+` 级联工具栏与输入体验**：单列圆角卡片 + 悬停防抖透明连接桥展开二级菜单（`更多上传选项`：`导入代码 / Google 相册 / 笔记本`；`更多工具`：`Deep Research / 学习辅导 / 个性化智能服务 (Labs)` 蓝紫开关）；支持桌面文件直接拖拽上传、`Ctrl+V` 无损贴图、一键「共享屏幕」截屏、`Ctrl+Shift+D` 中文语音输入、模型与低/中/高思考等级一键切换。\n- **对话内全量操作与宽窄屏文件预览**：用户提问支持「复制提示」与「行内修改并流式重发」；模型回复支持 LaTeX 数学公式、代码块复制、横向滚动表格（「导出到 Google 表格」+ 复制）、内联引用胶囊 + 悬停卡片、底栏 5 项完整操作（赞/踩/重做/复制/`⋮` 分支对话·听回复·导出文档·导出 Gmail·显示思考步骤）与悬浮回底按钮；点开附件/图片/内联引用时宽屏右侧并排分栏、窄屏全屏覆层预览。\n- **右下角挂件避让与纯净窗**：对话顶栏提供一键 **`避让挂件`** 开关（默认关闭，开启后底部输入坞右侧平滑向左缩进默认 `185px` 且可微调，兼容右下角桌面/猫娘挂件）以及 **`纯净窗`** 开关（`--app` 无地址栏原生独立窗，默认开启）。\n\n### 2. 免跳转内部模态弹窗（0 外部浏览器打扰）\n- 点击侧栏与设置中的 **库、已安排、学生、Gem 管理器、用量限额、个性化智能服务、给 Gemini 的指令、你的公开链接、新建笔记本、将记忆导入 Gemini、快捷切号**，全部通过后台独立 Worker 标签页静默抓取（内置 60s 缓存防高频触发）并在苍蓝星瞳内部原生弹窗呈现与操作（支持直切 Gem、开关记忆、新增指令、复制/删除公开链接）。\n\n### 3. 多账号物理隔离、自动检测与无感重连\n- 每个账号槽位使用独立的 `--user-data-dir` Profile 与 CDP 端口，支持为不同槽位单独配置代理、备注与自定义别名（留空自动采用 Google 真实账号名）。\n- 打开登录窗完成登录后自动后台检测就绪状态（即使登完顺手关窗也会隐形终检一次），通过 CDP `Page.captureScreenshot` 零 CORS 裁剪 2x 高清真实头像永久本地缓存；关闭可见浏览器后，侧栏发消息或同步会自动通过 `--headless=new` 隐形后台无感恢复连接。\n\n### 4. 首次 5 步交互式新手引导与苍蓝统一视觉\n- 内置苍蓝套件通用 5 步交互式首次新手引导（`? 指南`），支持点击「定位到界面」脉冲高亮对应真实控件，已读状态持久化到 `~/.gemini/azure-onboarding.json`，同时完全兼容苍蓝主题色调中心与顶栏右侧统一按钮排布。\n\n<h2 id=\"architecture\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-arch-dark.svg\">\n  <img src=\"assets/readme/sec-arch-light.svg\" alt=\"工作原理与架构\" width=\"100%\">\n</picture>\n</h2>\n\n```mermaid\nflowchart LR\n  UI[\"苍蓝星瞳 1:1 原生侧栏<br/>Sidecar + 内部弹窗\"] <-->|\"SSE 流式 / 同步 CDP\"| LIVE[\"独立 Profile 托管浏览器<br/>Live 标签页（前台直聊）\"]\n  AGY[\"Antigravity 主脑<br/>MCP (lens_ask / lens_batch_ask)\"] <-->|\"后台静默派单 / 抓取内部弹窗\"| WORKER[\"同一浏览器内<br/>Worker 独立标签页（物理隔离）\"]\n  LIVE --- PROF[\"按槽位物理隔离 Profile<br/>--headless=new 无感后台 / --app 纯净窗\"]\n  WORKER --- PROF\n```\n\n<h2 id=\"mcp-tools\">🔌 MCP 工具清单</h2>\n\n| 工具名 | 作用 |\n| --- | --- |\n| `lens_ask` | 向指定 Google 账号槽位派发联网调研、Deep Research 或本机文件（最多 10 个）审阅任务，回收完整 Markdown 结论与续聊链接 |\n| `lens_batch_ask` | 多账号并行派发多个调研子任务（需在引擎设置中手动开启，默认关闭，最多 6 并发） |\n| `lens_accounts` | 列出所有账号槽位状态、邮箱、模型与浏览器运行状态，支持切换激活槽位或新增槽位 |\n| `lens_open_login` | 为指定槽位打开可见真实浏览器窗口（支持纯净 `--app` 模式）供人工手动登录或过安全验证 |\n| `lens_history` | 读取最近派单历史记录 |\n| `lens_stop_browser` | 关闭指定槽位或全部托管浏览器释放内存 |\n\n<h2 id=\"installation\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-install-dark.svg\">\n  <img src=\"assets/readme/sec-install-light.svg\" alt=\"快速安装与上手\" width=\"100%\">\n</picture>\n</h2>\n\n> **前置要求**：**Node.js >= 22.0.0**（零第三方 npm 运行时依赖，纯 Node.js 原生 ESM 实现），本机已安装 Chrome / Edge / Brave 任一 Chromium 浏览器。\n\n### 方式一 · 一句话让 Antigravity 帮你自动安装（推荐）\n\n直接把下面这句话发给 Antigravity 即可自动完成克隆与核验：\n\n> 帮我把 `https://github.com/A16Nights/antigravity-azure-lens.git` 克隆到本机 Antigravity 全局插件目录，目录名设为 `azure-lens`，检查目录无误后告诉我，我再按 `Ctrl+R` 重载生效。\n\n### 方式二 · 命令行手动克隆\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/A16Nights/antigravity-azure-lens.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\azure-lens\"\n\n# macOS / Linux\ngit clone https://github.com/A16Nights/antigravity-azure-lens.git ~/.gemini/config/plugins/azure-lens\n```\n\n重启或重载 Antigravity（`Ctrl+R`），在 **Plugins** 面板启用 **苍蓝星瞳——多账号 Gemini 网页副脑**，在左侧栏打开后进入「账号槽位」点「打开登录窗」完成首次 Google 登录即可畅用。\n\n<h2 id=\"storage\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-storage-dark.svg\">\n  <img src=\"assets/readme/sec-storage-light.svg\" alt=\"数据与配置存储\" width=\"100%\">\n</picture>\n</h2>\n\n<details open>\n<summary><strong>点击展开查看本机数据目录与苍蓝套件共享配置路径</strong></summary>\n\n<br>\n\n- **槽位配置、代理、缓存头像与派单历史**：`~/.gemini/azure-lens/config.json`、`history.json`、`runtime.json`\n- **各账号物理隔离浏览器 Profile**：`~/.gemini/azure-lens/profiles/<slot-id>/`\n- **首次新手引导已读状态**：`~/.gemini/azure-onboarding.json`\n- **苍蓝套件左侧栏显示配置**：`~/.gemini/azure-sidebar-nav.json`\n- **苍蓝套件共享主题配置**：`~/.gemini/azure-theme.json`\n\n</details>\n\n<h2 id=\"azure-suite\">\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/readme/sec-suite-dark.svg\">\n  <img src=\"assets/readme/sec-suite-light.svg\" alt=\"苍蓝套件全家桶\" width=\"100%\">\n</picture>\n</h2>\n\n**苍蓝套件（Azure Suite）** 11 款插件共享统一的 **Neko Glass 毛玻璃界面**、跨插件同步的 **苍蓝主题色调中心**（`~/.gemini/azure-theme.json`）以及可自由开关的 **左侧栏快捷入口**（`~/.gemini/azure-sidebar-nav.json`）：\n\n| 插件 | 仓库 | 核心能力 |\n| --- | --- | --- |\n| ✦ **苍蓝协奏台——外部模型调度与省流** | [antigravity-external-orchestrator](https://github.com/A16Nights/antigravity-external-orchestrator) | 多渠道外部模型协同调度、自定义调度角色、容灾断路器与全链路实时监控 |\n| 🪐 **苍蓝星轨——原生菜单外接模型挂载** | [antigravity-azure-orbit](https://github.com/A16Nights/antigravity-azure-orbit) | 将外部大模型直接挂载进 Antigravity 左下角原生模型下拉菜单担任主脑 |\n| 🧭 **苍蓝罗盘——Agent 预设与上下文监控** | [antigravity-azure-compass](https://github.com/A16Nights/antigravity-azure-compass) | Agent 工作模式预设中心、上下文水位监测与自动 /compact、苍蓝套件左侧栏总控 |\n| 🏛️ **苍蓝回廊——会话与工作区管理** | [antigravity-azure-corridor](https://github.com/A16Nights/antigravity-azure-corridor) | 纯官方原生会话与工作区同步、FTS5 全文检索、自选快捷标签栏、跨工作区转移续聊、官方模型选择与交互式新手引导 |\n| 🌌 **蓝汐——认知图谱长期记忆** | [antigravity-lanxi-memory](https://github.com/A16Nights/antigravity-lanxi-memory) | 五层纯 Markdown 真源记忆、CJK FTS5、潮汐遗忘曲线与交互式潮汐星海图谱 |\n| 💎 **苍蓝魂匣——人设卡与分层记忆** | [antigravity-soul-md](https://github.com/A16Nights/antigravity-soul-md) | 多人设卡热切换、工作区专属绑定、外接模型智能防掉线锚点与分层文件记忆 |\n| 💭 **思语中文——外接模型中文思考切换** | [antigravity-think-zh](https://github.com/A16Nights/antigravity-think-zh) | 内部思考语言简体中文 / 英文双档热切换、双通道防漂移与实时注入预览 |\n| 🔮 **苍蓝棱镜——思维链观测与实时翻译** | [antigravity-azure-prism](https://github.com/A16Nights/antigravity-azure-prism) | 原生 MCP App 思维链实时观测、免密钥零 Token 机翻与外部模型双通道译文 |\n| 🪄 **苍蓝魔杖——Windows 桌面与网页操控** | [antigravity-azure-wand](https://github.com/A16Nights/antigravity-azure-wand) | Windows 桌面与网页低打扰操控台、独立输入 15 状态 AI 光标、套装画廊混搭与外部光标导入 |\n| 🍃 **苍蓝流笺——拖拽发图与原生文件标签** | [antigravity-azure-drop](https://github.com/A16Nights/antigravity-azure-drop) | 零 `app.asar` 侵入、拖拽与粘贴插入原生文件标签、无损 PNG 截图落盘、图片缩略图灯箱与顶栏面包屑右键菜单 |\n| 🔭 **苍蓝星瞳——多账号 Gemini 网页副脑** &nbsp;`Beta` &nbsp;`✦ 当前仓库` | [antigravity-azure-lens](https://github.com/A16Nights/antigravity-azure-lens) | 1:1 原生双态 Gemini 侧栏、双标签物理隔离、多账号独立 Profile 自动检测、免跳转内部弹窗与 MCP 静默调研审阅 |\n\n---\n\n<div align=\"center\">\n\n📄 Released under the <a href=\"./LICENSE\"><strong>MIT License</strong></a> · Crafted for <strong>Google Antigravity</strong>\n\n</div>\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 82,
+        "snippet": "const slotMatch = /^slot-([0-9]+)$/.exec(activeId);",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L82"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 213,
+        "snippet": "spawn(\"rundll32.exe\", [\"url.dll,FileProtocolHandler\", href], { detached: true, stdio: \"ignore\", windowsHide: true }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L213"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 219,
+        "snippet": "spawn(\"open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L219"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/azure-theme.mjs",
+        "line": 221,
+        "snippet": "spawn(\"xdg-open\", [href], { detached: true, stdio: \"ignore\" }).unref();",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L221"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "lib/browser-manager.mjs",
+        "line": 181,
+        "snippet": "const child = spawn(exe, args, { detached: true, stdio: \"ignore\", windowsHide: !shouldShow });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/browser-manager.mjs#L181"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/lens/server.mjs",
+        "line": 55,
+        "snippet": "execFile(\"powershell.exe\", [\"-NoProfile\", \"-Command\", ps], { windowsHide: true, timeout: 15000 }, (err) => { if (err) { reject(err); return; } resolve(destPath); });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/server.mjs#L55"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/lens/server.mjs",
+        "line": 76,
+        "snippet": "execFile(\"powershell.exe\", [\"-NoProfile\", \"-STA\", \"-Command\", ps], { windowsHide: true, timeout: 120000 }, (err, stdout) => { if (err) { reject(err); return; } const files = String",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/server.mjs#L76"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 232,
+        "snippet": "await fetch(apiUrl(), { method: \"POST\", headers: apiHeaders(true), body: JSON.stringify({ action: shouldDismiss ? \"dismiss\" : \"reset\", guideVersion }) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-onboarding-ui.js#L232"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/azure-onboarding-ui.js",
+        "line": 309,
+        "snippet": "const r = await fetch(apiUrl({ v: guideVersion }), { headers: apiHeaders(false) });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-onboarding-ui.js#L309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-onboarding.mjs",
+        "line": 26,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-onboarding.mjs#L26"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-theme.mjs",
+        "line": 125,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(clean, null, 2) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L125"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/azure-theme.mjs",
+        "line": 128,
+        "snippet": "try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L128"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/browser-manager.mjs",
+        "line": 55,
+        "snippet": "const res = await fetch(url, { signal: ac.signal });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/browser-manager.mjs#L55"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/browser-manager.mjs",
+        "line": 249,
+        "snippet": "const r = await fetch(`http://127.0.0.1:${port}/json/new?${encoded}`, { method: \"PUT\" });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/browser-manager.mjs#L249"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/browser-manager.mjs",
+        "line": 254,
+        "snippet": "const r = await fetch(`http://127.0.0.1:${port}/json/new?${encoded}`);",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/browser-manager.mjs#L254"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/cdp-client.mjs",
+        "line": 28,
+        "snippet": "const ws = new WebSocket(this.wsUrl);",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/cdp-client.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/chat-actions.mjs",
+        "line": 663,
+        "snippet": "fs.writeFileSync(outPath, Buffer.from(m[2], \"base64\"));",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/chat-actions.mjs#L663"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/chat-bridge.mjs",
+        "line": 865,
+        "snippet": "const res = await fetch(parsed.href, { headers: { ...(cookieHdr ? { Cookie: cookieHdr } : {}), \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, l",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/chat-bridge.mjs#L865"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/lens-store.mjs",
+        "line": 39,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/lens-store.mjs#L39"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/lens-store.mjs",
+        "line": 303,
+        "snippet": "fs.rmSync(dir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/lens-store.mjs#L303"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/sidebar-nav.mjs",
+        "line": 140,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(payload, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/sidebar-nav.mjs#L140"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "lib/sidebar-nav.mjs",
+        "line": 184,
+        "snippet": "fs.writeFileSync(file, JSON.stringify(payload, null, 2), \"utf8\");",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/sidebar-nav.mjs#L184"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "lib/sidebar-nav.mjs",
+        "line": 233,
+        "snippet": "const req = https.request( { hostname: \"127.0.0.1\", port: Number(hub.httpsPort), path: \"/exa.language_server_pb.LanguageServerService/RefreshMcpServers\", method: \"POST\", rejectUnau",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/sidebar-nav.mjs#L233"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/lens/app.js",
+        "line": 104,
+        "snippet": "const res = await fetch(url, { ...opts, headers });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/app.js#L104"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/lens/chat-view.js",
+        "line": 56,
+        "snippet": "const res = await fetch(path, { ...opts, headers, body });",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/chat-view.js#L56"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/lens/chat-view.js",
+        "line": 493,
+        "snippet": "const res = await fetch(\"/api/chat/send\", { method: \"POST\", headers: authHeaders(true), body: JSON.stringify({ account: currentAccount, prompt, files, tool: activeTool, mode: activ",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/chat-view.js#L493"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/lens/chat-view.js",
+        "line": 540,
+        "snippet": "const res = await fetch(\"/api/chat/edit-message\", { method: \"POST\", headers: authHeaders(true), body: JSON.stringify({ account: currentAccount, userIndex, newText }), signal: abort",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/chat-view.js#L540"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/lens/chat-view.js",
+        "line": 569,
+        "snippet": "const res = await fetch(\"/api/chat/regenerate\", { method: \"POST\", headers: authHeaders(true), body: JSON.stringify({ account: currentAccount, modelIndex }), signal: abortCtrl.signa",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/chat-view.js#L569"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/lens/server.mjs",
+        "line": 415,
+        "snippet": "fs.writeFileSync(filePath, Buffer.from(b64, \"base64\"));",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/sidecars/lens/server.mjs#L415"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "lib/azure-theme.mjs",
+        "line": 3,
+        "snippet": "* 配置文件路径：~/.gemini/azure-theme.json",
+        "githubBlobUrl": "https://github.com/A16Nights/antigravity-azure-lens/blob/d97a3e02d4bbe744a1bd4e23b24727a7161260fd/lib/azure-theme.mjs#L3"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "d97a3e02d4bbe744a1bd4e23b24727a7161260fd",
+      "scannedAt": "2026-11-28T06:16:36.600Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

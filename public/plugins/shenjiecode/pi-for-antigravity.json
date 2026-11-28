@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "id": "shenjiecode/pi-for-antigravity",
+  "sha": "2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T06:15:59.131Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "pi-for-antigravity",
+    "displayName": "Pi for Antigravity",
+    "version": "0.2.10",
+    "minAppVersion": null,
+    "mcpServers": [
+      {
+        "name": "pi",
+        "runtimeName": "pi-for-antigravity_pi",
+        "transport": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "pi-for-antigravity@0.2.10"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "pi-for-antigravity_pi"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.png\" alt=\"Pi for Antigravity logo\" width=\"112\" height=\"112\">\n  <h1>Pi for Antigravity</h1>\n  <p>Unofficial Antigravity App / CLI plugin and local stdio MCP bridging Antigravity to your existing local <code>pi</code> CLI.</p>\n  <p>\n    <a href=\"https://www.npmjs.com/package/pi-for-antigravity\"><img src=\"https://img.shields.io/npm/v/pi-for-antigravity\" alt=\"npm version\"></a>\n    <a href=\"https://github.com/shenjiecode/pi-for-antigravity/actions/workflows/test.yml\"><img src=\"https://github.com/shenjiecode/pi-for-antigravity/actions/workflows/test.yml/badge.svg\" alt=\"Tests\"></a>\n    <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-blue.svg\" alt=\"License: MIT\"></a>\n  </p>\n  <p><a href=\"README.md\">English</a> · <a href=\"zh.md\">简体中文</a></p>\n</div>\n\nOffload multi-turn repo scans, multi-file edits, and test loops to faster or cheaper local `pi` models—trading a little latency to keep your main Antigravity model's context clean and save quota.\n\n- **`execute`** — delegate broad codebase search, multi-file edits/refactors, tests, and log analysis to `pi`.\n- **`review`** — optional, fresh, read-only code review of working-tree changes against a Git baseline (default `HEAD`) plus untracked files.\n\nThe main agent keeps planning, coordination, native tools/Browser, and final judgment.\n\n```text\nAntigravity → local stdio MCP → local pi CLI → your configured model provider\n```\n\n## Requirements\n\n- **Node.js >= 22.19**\n- A working, authenticated local **`pi`** CLI (tested with `pi 1.5.2`). Verify `pi --version` and a normal prompt before installing.\n- **Git** for Git-based reviews (on Windows, Git for Windows also provides Git Bash for `pi`).\n\n## Install\n\n### Option 1: npm one-liner (Recommended — Antigravity App & CLI)\n\n```bash\nnpx -y pi-for-antigravity install\n```\n\nInstalls a self-contained copy (`server.cjs`) pinned to your local Node executable into `~/.gemini/config/plugins/pi-for-antigravity/` (Windows: `%USERPROFILE%\\.gemini\\config\\plugins\\pi-for-antigravity\\`) for fast startup and offline use. Supports `--config /abs/path/config.json` and `--target /abs/path/plugin-dir`.\n\n### Option 2: Official Antigravity CLI (`agy`)\n\n```bash\nagy plugin install https://github.com/shenjiecode/pi-for-antigravity\n```\n\nInstalls directly from GitHub and launches the MCP server via `npx -y pi-for-antigravity@<version>`.\n\n### Option 3: GitHub Release ZIP (offline / no npm)\n\nDownload `pi-for-antigravity-<version>.zip` from [Releases](https://github.com/shenjiecode/pi-for-antigravity/releases), extract it, enter `pi-for-antigravity/`, and run:\n\n```bash\nnode ./install.cjs\n```\n\nRestart Antigravity App and check **Customizations → Installed**. Update by re-running the installer; personal config is preserved. Disable or uninstall via **Customizations → Installed** or `agy plugin disable|uninstall pi-for-antigravity`.\n\n## Configuration\n\nIn plugin mode, configuration and state live in the host-provided `PLUGIN_DATA` directory:\n\n- `${PLUGIN_DATA}/config.json` — auto-created on first MCP start from `config.example.json`; it works out of the box with your local `pi` default model.\n- `${PLUGIN_DATA}/state/` — session metadata and per-run logs (old runs >7d/50 and inactive sessions >30d/100 are pruned automatically).\n\nFind the active config path in MCP initialization instructions, startup stderr, or the `config_path` tool result field.\n\nPer role, `provider`, `model`, and `thinking` are optional: omit them (as `config.example.json` does) to run with your local `pi` default model. Setting `provider` also requires `model`. The snippet below is an explicit per-role override example:\n\n```json\n{\n  \"pi\": { \"command\": \"pi\" },\n  \"stateDir\": \"./state\",\n  \"roles\": {\n    \"executor\": {\n      \"provider\": \"zai-coding-cn\",\n      \"model\": \"glm-5.3-flash\",\n      \"thinking\": \"high\"\n    },\n    \"reviewer\": {\n      \"enabled\": true,\n      \"provider\": \"zai-coding-cn\",\n      \"model\": \"glm-5.4\",\n      \"thinking\": \"high\"\n    }\n  }\n}\n```\n\n- `pi.command`: command name, native executable, or `.js`/`.mjs`/`.cjs` entry. `pi.agentDir` optionally overrides `PI_CODING_AGENT_DIR`.\n- `roles.<name>`: optional `provider`, `model`, `thinking` (`off` | `minimal` | `low` | `medium` | `high` | `xhigh` | `max`), and `prompt`. Set `\"reviewer\": { \"enabled\": false }` and reconnect MCP to hide `review`.\n- New calls reload config; resumed executor sessions keep their saved settings.\n- Config precedence: `--config` → `PI_FOR_ANTIGRAVITY_CONFIG` → `${PLUGIN_DATA}/config.json` → standalone default (`~/.config/pi-for-antigravity/config.json` on Linux/macOS; `%APPDATA%\\pi-for-antigravity\\config.json` on Windows; XDG overrides supported). Relative paths resolve from the config file's directory.\n- **Windows `pi` lookup**: checks `PATH`, `%USERPROFILE%\\.pi\\agent\\bin`, `%APPDATA%\\npm`, and Node's directory. Managed `pi-launcher.js` and npm `pi.cmd` shims launch their JS entry directly under Node without `cmd.exe`.\n\n## Tools & scope\n\n| Tool | Args | Behavior |\n| --- | --- | --- |\n| `execute` | `prompt`, absolute `cwd`, optional `session_id` | Full builtin tools; concurrent sessions share `cwd` (same session rejects overlap). |\n| `review` | `prompt`, absolute `cwd`, optional `base_ref` | Fresh context; read-only tools (`read,grep,find,ls`); includes diff summary and untracked files. |\n\n- Both roles run `pi --print --no-extensions --no-mcp --no-skills --no-prompt-templates --no-themes` for an isolated runtime (provider-extension-only models are unsupported).\n- Long results truncate at 24,000 chars inline; full text is saved at `output_path`.\n- Antigravity registers the server as `pi-for-antigravity_pi` with eager loading and host background execution. In headless `agy`, allow tools explicitly via `--settings '{\"permissions\":{\"allow\":[\"mcp(pi-for-antigravity_pi/review)\"]}}'`.\n- Scope limits: no bundled `pi`/SDK, no credential/account management, no workflow/retry loops, and no remote/WSL bridge.\n\n## Standalone MCP & development\n\nOther stdio MCP clients can launch `npx -y pi-for-antigravity --config /abs/path/config.json` directly.\n\n```bash\nnpm ci\nnpm run check          # version sync + TypeScript check\nnpm test               # offline test suite\nnpm run validate:agy   # validate repo root and bundled plugin via agy CLI\nnpm run package:plugin # build portable ZIP + SHA-256\nnpm run test:live -- --config /abs/path/config.json  # calls real models\n```\n\nSee [design](docs/design.md), [verification](docs/verification.md), [releasing](docs/releasing.md), and [contributing](CONTRIBUTING.md). Licensed under [MIT](LICENSE).\n",
+  "latestReleaseNotes": "**Full Changelog**: https://github.com/shenjiecode/pi-for-antigravity/compare/v0.2.9...v0.2.10",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/check-pi.mjs",
+        "line": 13,
+        "snippet": "const result = spawnSync(launch.command, [...launch.args, ...args], { encoding: \"utf8\", timeout: 30000, windowsHide: true, env: { ...process.env, PI_OFFLINE: \"1\" }, });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/check-pi.mjs#L13"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install-agy.mjs",
+        "line": 10,
+        "snippet": "const result = spawnSync(command, args, { stdio: \"inherit\", windowsHide: true });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/install-agy.mjs#L10"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/smoke.mjs",
+        "line": 15,
+        "snippet": "function git(...args) { const r = spawnSync(\"git\", args, { cwd, encoding: \"utf8\" }); assert.equal(r.status, 0, r.stderr); }",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/smoke.mjs#L15"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/smoke.mjs",
+        "line": 36,
+        "snippet": "assert.equal(spawnSync(process.execPath, [\"check.mjs\"], { cwd, encoding: \"utf8\" }).status, 0);",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/smoke.mjs#L36"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/install.ts",
+        "line": 65,
+        "snippet": "const probe = spawnSync(invocation.command, [...invocation.args, \"--version\"], { encoding: \"utf8\", timeout: 15000, windowsHide: true });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/install.ts#L65"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/process.ts",
+        "line": 26,
+        "snippet": "const child = spawn(join(process.env.SystemRoot || \"C:\\\\Windows\", \"System32\", \"taskkill.exe\"), [\"/F\", \"/T\", \"/PID\", String(pid)], { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/process.ts#L26"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/process.ts",
+        "line": 31,
+        "snippet": "const ps = spawnSync(\"ps\", [\"-eo\", \"pid=,ppid=\"], { encoding: \"utf8\", timeout: 2000, maxBuffer: 8 * 1024 * 1024 });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/process.ts#L31"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "src/process.ts",
+        "line": 81,
+        "snippet": "const child = spawn(command, args, { cwd: options.cwd, env: options.env || process.env, shell: false, detached: process.platform !== \"win32\", stdio: [\"pipe\", stdout.fd, stderr.fd],",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/process.ts#L81"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-plugin.mjs",
+        "line": 10,
+        "snippet": "await rm(output, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/build-plugin.mjs#L10"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-plugin.mjs",
+        "line": 19,
+        "snippet": "await writeFile(join(output, \"mcp_config.json\"), JSON.stringify(mcp, null, 2) + \"\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/build-plugin.mjs#L19"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/build-plugin.mjs",
+        "line": 40,
+        "snippet": "await writeFile(join(output, \"THIRD_PARTY_NOTICES.txt\"), notices.join(\"\\n\\n\"));",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/build-plugin.mjs#L40"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install-agy.mjs",
+        "line": 26,
+        "snippet": "} finally { await rm(temporary, { recursive: true, force: true }); }",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/install-agy.mjs#L26"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-plugin.mjs",
+        "line": 21,
+        "snippet": "await writeFile(output, bytes);",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/package-plugin.mjs#L21"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/package-plugin.mjs",
+        "line": 23,
+        "snippet": "await writeFile(output + \".sha256\", checksum + \" \" + output.split(/[\\\\/]/).at(-1) + \"\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/package-plugin.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/smoke.mjs",
+        "line": 17,
+        "snippet": "await writeFile(join(cwd, \"README.md\"), \"# Temporary MCP smoke-test fixture\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/smoke.mjs#L17"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/smoke.mjs",
+        "line": 41,
+        "snippet": "await writeFile(join(cwd, \"sum.mjs\"), \"export function add(a, b) { return a - b; }\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/smoke.mjs#L41"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync-version.mjs",
+        "line": 12,
+        "snippet": "await writeFile(pluginPath, JSON.stringify(plugin, null, 2) + \"\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/sync-version.mjs#L12"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync-version.mjs",
+        "line": 19,
+        "snippet": "await writeFile(mcpPath, JSON.stringify(mcp, null, 2) + \"\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/sync-version.mjs#L19"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/sync-version.mjs",
+        "line": 21,
+        "snippet": "await writeFile(join(root, \"src/version.ts\"), `export const VERSION = \"${version}\";\\n`);",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/scripts/sync-version.mjs#L21"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config.ts",
+        "line": 94,
+        "snippet": "await writeFile(temporary, JSON.stringify(value, null, 2) + \"\\n\", { flag: \"wx\", mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/config.ts#L94"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/config.ts",
+        "line": 97,
+        "snippet": "} finally { await rm(temporary, { force: true }); }",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/config.ts#L97"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/install.ts",
+        "line": 45,
+        "snippet": "await writeFile(mcpPath, JSON.stringify(mcp, null, 2) + \"\\n\");",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/install.ts#L45"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/install.ts",
+        "line": 51,
+        "snippet": "await rm(backup, { recursive: true, force: true }).catch(error =>",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/install.ts#L51"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/install.ts",
+        "line": 54,
+        "snippet": "} finally { await rm(stage, { recursive: true, force: true }); }",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/install.ts#L54"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/review.ts",
+        "line": 38,
+        "snippet": "await writeFile(material, \"# Review context\\nNo Git diff is available. Review the files requested in the task.\\n\" + (probe.error || probe.stderr), { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/review.ts#L38"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/review.ts",
+        "line": 67,
+        "snippet": "await writeFile(material, text, { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/review.ts#L67"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/runner.ts",
+        "line": 112,
+        "snippet": "await writeFile(outputPath, text, { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/runner.ts#L112"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/sessions.ts",
+        "line": 14,
+        "snippet": "await writeFile(join(root, session.id, \"session.json\"), JSON.stringify(session, null, 2) + \"\\n\", { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/sessions.ts#L14"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "src/sessions.ts",
+        "line": 90,
+        "snippet": "await rm(join(root, item.name), { recursive: true, force: true }).catch(() => {});",
+        "githubBlobUrl": "https://github.com/shenjiecode/pi-for-antigravity/blob/2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8/src/sessions.ts#L90"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.2.10",
+      "sha": "2cb9e5bfabaf7d447582fbb49786d847e6c5bdf8",
+      "scannedAt": "2026-11-28T06:15:59.131Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}

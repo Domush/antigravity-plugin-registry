@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "zou172866/Antigravity-agy-cmd",
-  "sha": "1a4572506bb80b4c937c72025caf49f5aaf0f7b6",
+  "sha": "5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-28T00:25:13.919Z",
+  "scannedAt": "2026-11-28T06:16:10.007Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "agy-cmd",
     "displayName": "agy-cmd (自动路由与防停机面板)",
-    "version": "2.8.0",
+    "version": "2.8.1",
     "minAppVersion": null,
     "mcpServers": [],
     "hooks": [
@@ -72,8 +72,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n[简体中文](README.zh-CN.md) · **English**\n\n<img src=\"assets/logo.svg\" alt=\"agy-cmd logo\" width=\"80\" />\n\n# agy-cmd\n\n**Guardrail & auto-router plugin for Google Antigravity Desktop / IDE: never stop on failing tests · fresh-perspective recovery · free-tier safe · no skipped approvals**\n\n[![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zou172866/repo-traffic-archive/main/badges/Antigravity-agy-cmd.json)](https://github.com/zou172866/Antigravity-agy-cmd)\n\n[Quick Install](#quick-install) · [Features](#features) · [CLI Management](#cli-management)\n\n</div>\n\n---\n\n## Why agy-cmd?\n\nTests are still failing, yet the agent politely announces \"all done.\"\nA free account hits a paid-only slash command and crashes mid-task.\nRead-only Plan Mode blocks writing the plan file, so the agent tries to skip approval and edit code anyway.\nThree patch attempts make the same bug worse, yet it keeps guessing in circles.\n\n**`agy-cmd` puts guardrails around Google Antigravity Desktop / IDE.** Install once and let it watch silently in the background:\n\n- **Scope-aware routing**: small edits run straight through, bigger changes ask for a plan first, and batch or multi-module tasks match native workflows automatically.\n- **Stop-hook auto-retry**: when tests or build checks fail after an edit, the hook blocks early stop and keeps the agent fixing until green or the retry cap hits.\n- **Fresh-perspective recovery**: repeated failures stop blind edits immediately. Free accounts dispatch a read-only investigator; Pro / Ultra accounts can auto-dispatch Boost subagents.\n- **Hard approval guard**: when read-only Plan Mode blocks writing a plan file, the hook forces an inline plan in chat and blocks `exit_plan_mode` until you approve.\n- **Free-tier protection**: paid-only commands stay off by default, and work runs sequentially in the main session to protect weekly quota.\n- **Live Sidecar panel**: adjust retry caps, test gates, account tier, and SHA-256 self-updates anytime from the right-hand panel.\n\n## Quick Install\n\nRequires **Google Antigravity Desktop**, **Node.js 20+**, and **Python 3.8+**.\n\nRun the pinned one-line installer for your OS (downloads the official release ZIP and verifies its `SHA256SUMS.txt` digest before unpacking), then restart or reload your Antigravity window.\n\n**Windows (PowerShell):**\n\n```powershell\nirm https://raw.githubusercontent.com/zou172866/Antigravity-agy-cmd/v2.8.0/install.ps1 | iex\n```\n\n**macOS / Linux:**\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/zou172866/Antigravity-agy-cmd/v2.8.0/install.sh | sh\n```\n\n### Other Install Options\n\n- **Offline stable ZIP (with SHA-256 verification)**: download the official ZIP and `SHA256SUMS.txt` from [GitHub Releases](https://github.com/zou172866/Antigravity-agy-cmd/releases/latest):\n  - Verify and install directly: `.\\install.ps1 --archive .\\agy-cmd-v2.8.0.zip --checksums .\\SHA256SUMS.txt` (Windows) or `sh ./install.sh --archive ./agy-cmd-v2.8.0.zip --checksums ./SHA256SUMS.txt` (macOS / Linux).\n  - Or extract and run `.\\install.ps1` (Windows) / `sh ./install.sh` (macOS / Linux) inside the unpacked folder.\n- **Manual Git clone** (a `.git` checkout inside `plugins/agy-cmd` disables Sidecar self-update to protect your working tree; update with `git pull` or use the one-line installer above):\n\n```powershell\ngit clone https://github.com/zou172866/Antigravity-agy-cmd \"$HOME\\.gemini\\config\\plugins\\agy-cmd\"\npython \"$HOME\\.gemini\\config\\plugins\\agy-cmd\\skills\\agy-cmd\\scripts\\setup_auto_router.py\" --install\n```\n\nOn Linux / macOS / SSH hosts without a `python` symlink, replace `python` with `python3`. If installed via `agy plugin install` or Marketplace (`installedFrom`), update through Antigravity's plugin manager.\n\n- **Standalone text rules only** (routing rules without Stop auto-retry or the Sidecar panel):\n\n```bash\nnpx -y skills add zou172866/Antigravity-agy-cmd -g --all\npython ~/.agents/skills/agy-cmd/scripts/setup_auto_router.py --install --standalone\n```\n\n## First Two Settings to Check\n\nOut of the box, `agy-cmd` enables **Free-Tier Protection** and sets **Auto-Retry to 3 attempts**. Open the right-hand **agy-cmd Auto-Router** panel (or click `sidecar://agy-cmd/panel/` in chat) and confirm two settings:\n\n1. **Auto-retry limit**: choose **Off (0)**, **Fixed count (1–50)**, or **Unlimited**.\n2. **Account tier**: Google AI Pro / Ultra subscribers can switch to **Pro / Ultra** to enable automatic Boost dispatch on hard debugging tasks (such as deadlocks, race conditions, or memory leaks) and repeated failures. **Use Boost after plan approval** stays off by default. Turn it on if you also want clicking **Approve** or replying \"implement the plan\" to show `[agy-cmd → 计划获批，自动 Boost]` and dispatch `DeepCoder` / `DeepInvestigator` once (falling back to regular tools on invocation error, with deduplication across background-task wakeups).\n\n## Features\n\n### 1. Small tasks straight through, big changes planned first\n\n- **1–2 files, explanations, or local lookups**: responds directly with zero banners or popups.\n- **Ambiguous requests**: asks focused multiple-choice questions on blocking gaps (batching independent questions) before writing code.\n- **3+ files or higher-risk edits**: drafts a plan and waits for your approval. In read-only Plan Mode, it writes the plan inline and blocks silent bypasses. Approved multi-module plans can continue with `/swarm execute our plan` in the App; paid users who opt into post-approval Boost get a single Boost dispatch while keeping `Stop` auto-retry state intact across background wakeups.\n- **Focused side tasks & batch checks**: a self-contained investigation (such as tracing a call chain or checking a page) can go to one subagent. Checks across 5+ similar items run in batches by default; on paid tiers in the App, `/run-workflow` can fan out and collect structured results.\n- **Independent lanes & multi-day work**: non-colliding multi-module edits, multi-lens reviews, or Best-of-N comparisons fit `/swarm` in the App (6 ready-to-copy templates, Gemini 4 model pairing, and a pre-launch checklist). Tightly coupled edits stay in the main session / Orchestrator, single hard failures fit `/boost`, and multi-day milestone migrations fit `/teamwork`. Active `/swarm` sessions and workers (including forked workers) are isolated by hooks so board collaboration and prompt prefix caching stay intact. [Command matrix](skills/agy-cmd/references/desktop-commands-matrix.md) · [Multi-agent & Swarm playbooks](skills/agy-cmd/references/multi-agent-playbooks.md)\n- **Live web pages & interactive visuals**: launches the built-in browser or interactive UI renderer automatically.\n\n### 2. Never stop while tests are failing\n\nWhen you ask the agent to change code or fix a bug and verification fails, the `Stop` hook sends it back to investigate and fix until checks pass or your retry cap runs out.\n\nFor stricter enforcement, enable **Delivery Test Gate (run full tests before delivery)** in the panel (off by default, available on all tiers). Whenever a turn makes substantive source edits:\n\n- **Custom verification command or detected project tests**: the full check suite (single commands or `&&` chains like `npm run typecheck && npm test`) must pass *after* the final edit before delivery. Missing checks trigger a reminder; failing checks loop within your retry budget.\n- **No project tests and no custom command**: delivery is allowed conservatively without touching repo test setup, and the agent explicitly discloses missing test coverage at the end.\n- **One-turn bypass**: add `skip tests` or `这次跳过测试` in your prompt to skip the gate for that turn.\n\nIn free mode, implementing an approved plan with source edits and a missed project check can also trigger one check reminder within your existing retry budget. Documentation edits, cancellations, and pending approvals never trigger it.\n\nThe hook lets the agent stop right away when:\n\n- You only asked a question or ran read-only inspection (e.g., \"why did this fail?\" or \"run tests to see\").\n- The agent just presented a plan and is waiting for approval.\n- The agent stopped to ask for missing information.\n- You manually clicked Stop.\n\nTo override the retry budget for a single turn, include `这次最多重试 5 次`, `这次一直重试`, or `这次不用重试` in your prompt.\n\n### 3. Free-tier safety & stuck-loop recovery\n\n- **Plan and quota**: Google restricts `/boost` and `/teamwork` to paid tiers, while `/swarm` and `/run-workflow` are open on all App tiers. In free mode, `agy-cmd` runs sequentially by default to conserve weekly quota; you can still invoke the latter two explicitly in supported App sessions. In the IDE or unknown hosts, routing stays safely in the main session. [Boost and plan comparison](https://antigravity.google/docs/boost/) · [Dynamic Workflows](https://antigravity.google/docs/dynamic-workflows/)\n- **Optional independent review**: free users can enable a post-plan review in the panel (off by default). After editing and running checks, the main agent hands changed paths, key diffs, and test evidence to a read-only `cmd-verifier`; if that role is unavailable, the main agent reports that the review was skipped.\n- **Stuck-loop circuit breaker**: on free plans (or with Boost off), 3 consecutive command failures or 2 edit-fail cycles pause blind edits and switch to read-only root-cause diagnosis. With paid Boost enabled, explicit hard debugging tasks, 3 consecutive command failures, or 3 edit-fail cycles (leaving Orchestrator's native 2-failure planner hand-back room to self-heal) dispatch `DeepInvestigator` / `DeepCoder` while the main session verifies the fix.\n\nHooks and installers are verified locally; live free-tier reviewer dispatch in the App and IDE remains to be verified on real accounts. [Routing research](docs/research/multi-agent-routing-best-practices.md) · [Free-tier proposal](docs/proposals/free-tier-v2.3.md)\n\n### 4. Sidecar panel & verified self-updates\n\n- **Instant controls**: change retry caps, trigger scope, test gates, and plan tier in the right-hand **agy-cmd** panel with immediate effect.\n- **SHA-256 self-updates**: click **Check Update** in the panel header to pull GitHub Releases and update in place with SHA-256 verification and automatic rollback on failure. Startup auto-check is on by default and can be disabled in the panel, via `--auto-update-check off`, or via `AGY_CMD_DISABLE_AUTO_UPDATE_CHECK=1`. Silent auto-install is **off by default**; when turned on, it only installs same-major releases with verified SHA-256 digests and trips a per-version circuit breaker on failure.\n- **Restrained Star prompt**: click `★ Star` in the header anytime. After 3 successful auto-retry saves, a single dismissible reminder appears once and never returns once resolved.\n- **Chat commands**: ask directly in chat to set auto-retry to 5, enable Boost, or compare built-in Antigravity desktop slash commands.\n\n## CLI Management\n\nYou can inspect and configure `agy-cmd` from the terminal as well:\n\n```bash\n# Inspect plugin, panel, hook, and retry status\npython skills/agy-cmd/scripts/setup_auto_router.py --status\n\n# Configure auto-retry limit (off / 1..50 / infinite)\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-retry off\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-retry 5\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-retry infinite\n\n# Switch account tier and toggle post-plan Boost / fallbacks\npython skills/agy-cmd/scripts/setup_auto_router.py --plan-tier free\npython skills/agy-cmd/scripts/setup_auto_router.py --plan-tier paid --boost on\npython skills/agy-cmd/scripts/setup_auto_router.py --boost-after-plan-approval on\npython skills/agy-cmd/scripts/setup_auto_router.py --free-fallback on --plan-fallback on\n\n# Reset cumulative auto-retry statistics without altering tier or Boost\npython skills/agy-cmd/scripts/setup_auto_router.py --reset-stats\n\n# Toggle Delivery Test Gate (off by default) and optionally configure a custom command\npython skills/agy-cmd/scripts/setup_auto_router.py --delivery-test-gate on\npython skills/agy-cmd/scripts/setup_auto_router.py --delivery-test-cmd \"npm run typecheck && npm test\"\npython skills/agy-cmd/scripts/setup_auto_router.py --delivery-test-gate off\n\n# Enable one independent review after implementing an approved plan in free mode\npython skills/agy-cmd/scripts/setup_auto_router.py --free-plan-review on\n\n# Toggle automatic GitHub Releases check on panel open (on by default)\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-check off\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-check on\n\n# Opt in to silent same-major + SHA-256 auto-updates (off by default)\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-install on\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-install off\n\n# Verify plugin bundle integrity and local sync\npython skills/agy-cmd/scripts/setup_auto_router.py --sync-check\n\n# Disable / remove plugin\npython skills/agy-cmd/scripts/setup_auto_router.py --remove\n```\n\nRun the test suite and strict plugin validation:\n\n```bash\nnpm test\npython3 -m unittest discover -s test -p \"test_*.py\" -v\nagy plugin validate --strict .\n```\n",
-  "latestReleaseNotes": "## 更新内容\n\n本版全面完成针对 `v2.7.5` 外部技术审阅报告的 **全部 P1（批次 A / B / C）与 P2 收口重构**，重点补齐复杂命令链与多语言测试账本、严格锁与会话并发安全、断电/崩溃可恢复自更新、验签固定标签首装、三态轨迹适配器与分层停止诊断，以及三层解耦的检测内核；**零改动 `agents/cmd-verifier.md` frontmatter**，存量 `v2.x` 用户可直接一键在线升级：\n\n### 一、P1 批次 A：多段命令链、多语言账本、严格自定义检查与 Swarm 退出契约\n- **简单 `&&` 命令链与目录切换记账（`hooks/lib/plan-verification.mjs`）**：解除单段限制，支持同包/跨包 `&&` 链与前置/中段 `cd` 目录切换（原始段上限 32）；仅在可信终态成功时按实际目录规范入账，短路失败或后台运行绝不误记绿测。\n- **同根多语言验证义务隔离（`hooks/lib/plan-verification.mjs`、`hooks/lib/detector.mjs`）**：同目录含 `package.json` + `pytest.ini` 等多套测试框架时按义务键独立记录编辑水位与验证命令，`partialEvidence` 与 `staleGateFailure` 同步适配。\n- **自定义验证命令严格校验（JS 与 Python CLI 同源）**：最多 8 执行段，拒绝空段、超段、未闭合引号、纯 `cd`、不安全 `cd` 及管道/子壳语法；配置读取遇到磁盘非法值不再静默回退自动探测，在 `PreInvocation`、`Stop`、面板与 `--status` 明确提示「需修正」。\n- **Swarm 协调器退出契约与「恢复普通会话」**：自动识别 `<swarm_ended>` 与 `swarm(kill|status)` 零存活 worker 收尾；同步提供对话口令与面板按钮（`POST /api/resume-normal-session`）配合水印防止旧轨迹重激活。\n- **免费/付费派工门禁与 `/teamwork` 表面能力检查**：统一免费与付费派工门禁条件，分离 `boostDetected` 与 `boostAlerted` 修复静默转可见漏报；付费 `/teamwork` 迁移分支补齐 `planTier=paid` + `App` 表面 + 宿主能力校验。\n\n### 二、P1 批次 B：CLI 契约对齐、严格锁、并发安全、崩溃恢复与验签首装\n- **CLI 参数补齐与套餐语义修复（`skills/agy-cmd/scripts/setup_auto_router.py`）**：补齐 `--boost-after-plan-approval`、`--free-fallback`、`--plan-fallback`、`--reset-stats`；修复 `paid + boostEnabled=false` 重复设置 `--plan-tier paid` 时意外重开 Boost 的跨端漂移，补齐 `load_settings` 布尔归一化。\n- **严格设置锁与原子写（`hooks/lib/settings.mjs`、`setup_auto_router.py`）**：统一 `{ pid, token, ts }` 锁协议，超时绝不无锁强写（JS 返回 HTTP `503` / `SETTINGS_LOCK_TIMEOUT`；Python 返回退出码 `3`），移除 Windows 原位覆写退路；遥测与状态读取维持 fail-open。\n- **会话状态并发串行化（`hooks/lib/state.mjs`、各 Hook 入口）**：新增可重入 `withSessionLock` 与单调递增 `rev`，串行化 `appendEvents`/`readEvents` 压实/`clearEvents`/`writeState` 与多 Hook 并发写入。\n- **可崩溃恢复的统一安装/自更新事务（`sidecars/panel/version-update.mjs`、`server.mjs`、`hooks.json`、`setup_auto_router.py`）**：落地持久化 `schemaVersion: 2` `.update-in-progress` 标记与 `.agy-cmd-update-*/journal.json` 日志；Sidecar 启动、更新检查与 Python `--install` 均可幂等恢复中断安装；`hooks.json` 5 入口在更新期间返回中性响应避免读到半替换脚本；Python 与 JS 共用同一事务语义并保留固定 Node 路径及 `.local.md`。\n- **会话边界与最小数据留存**：移除 `resolveConversationId` 的 `\"default\"` 兜底，改由 `transcriptPath`/`artifactDirectoryPath` 派生活动键或空键跳过跨轮落盘；移除明文 `lastUserInput` 持久化，改为 SHA-256 哈希与非敏感信号并自动清理历史遗留明文字段。\n- **验签固定标签远程首装与 Python 3.8+ 兼容（`install.ps1`、`install.sh`）**：移除 `git clone` 与可变 `main` 压缩包拉取，改为固定 SemVer Release Tag + 强制 `SHA256SUMS.txt` 校验与防 Zip-Slip 解压，支持 `--archive` + `--checksums`/`--sha256` 离线安装；补齐 Python 3.8+ 语法兼容与版本守卫。\n\n### 三、P1 批次 C：三态轨迹适配器、Worker 正向证据、分层停止诊断与升级矩阵\n- **三态轨迹适配器与本地聚合诊断（`hooks/lib/transcript.mjs`、`hooks/lib/diagnostics.mjs`）**：区分 `confirmed` / `not_applicable` / `unknown` 状态，`unknown` 状态绝不自动批准计划或将挂起回执记绿；新增隐私安全的本地聚合计数（`diagnostics.json`）。\n- **抗滚动 Worker 正向身份绑定**：新增 `resolveWorkerTranscriptIdentity` 与代次绑定索引（`worker-identities.json`），跨 320 KiB 轨迹滚动仍稳定识别子智能体/Worker，回卷自动失效且不写孤儿会话文件。\n- **Stop 放行结果分层与面板可视（`hooks/lib/detector.mjs`、`sidecars/panel/index.html`）**：输出结构化 `verificationStatus`（`passed` / `not_run` / `failed` / `user_exempt` / `insufficient_evidence`）与 `exitReason`，写入 `lastStopOutcome` 并在面板展示。\n- **资产验签可视化与老版本升级矩阵（U1）**：更新前后展示待验/已验资产名与 SHA-256 摘要，并补充 `v2.2.0 → v2.8.0 → v2.9.0` 离线升级回归矩阵。\n\n### 四、P2 收口与架构减法\n- **检测核心三层解耦**：无损拆分为 `hooks/lib/detector-facts.mjs`、`hooks/lib/detector-ledger.mjs` 与 `hooks/lib/detector.mjs`，公共导出与行为 100% 兼容。\n- **单一版本号真源与跨端共享夹具（M1）**：新增 `scripts/sync-version.mjs`（`npm run version:check` / `version:sync`）同步校验全部 8 处版本锚点，并建立 `test/fixtures/parity-samples.json` 供 Node 与 Python 双向验证。\n- **常驻规则瘦身与独立页 Nonce CSP**：按「澄清 → 审批 → 执行轨」精简常驻规则并保持 `rules/AGENTS.md` 与 `setup_auto_router.py` 逐字节一致；Standalone HTTP 面板响应启用逐请求随机 Nonce CSP。\n\n### 验收与兼容性\n- 全量 **`110` 项 Node 单测** + **`19` 项 Python 单测** + `npm run version:check`（8/8 一致）+ `--sync-check --json`（零漂移）+ `agy plugin validate --strict`（0 告警）+ `git diff --check` 全过。\n- 通过三项实包冒烟验收：\n  1. 真实 **`v2.7.6 → v2.8.0` 离线 SHA-256 自更新与防篡改实测**（由 `v2.7.6` 自身自更新器执行：篡改包报 `integrity` 拒装；正式包升级后全部受管文件与新模块无损导入、无残留标记）；\n  2. 真实 **`install.ps1 --archive ... --checksums ...`** 隔离目录离线验签安装实测；\n  3. 正式发布包 **`agy-cmd-v2.8.0.zip` 解压目录内** 全量 `110` Node + `19` Python 单测通过。\n\n## 安装与升级\n\n- **已安装用户**：在右侧边栏「agy-cmd 自动路由」面板点击右上角 **检查更新 → 立即更新**（支持 SHA-256 校验与崩溃自动恢复；已开启自动静默更新的用户将在下次检查时自动升级至 `v2.8.0`）。\n- **固定标签一键首装（含 SHA-256 校验）**：\n  - Windows PowerShell：`irm https://raw.githubusercontent.com/zou172866/Antigravity-agy-cmd/v2.8.0/install.ps1 | iex`\n  - macOS / Linux：`curl -fsSL https://raw.githubusercontent.com/zou172866/Antigravity-agy-cmd/v2.8.0/install.sh | sh`\n- **离线压缩包安装**：下载下方 `agy-cmd-v2.8.0.zip` 与 `SHA256SUMS.txt`：\n  - Windows：`.\\install.ps1 --archive .\\agy-cmd-v2.8.0.zip --checksums .\\SHA256SUMS.txt`\n  - macOS / Linux：`sh ./install.sh --archive ./agy-cmd-v2.8.0.zip --checksums ./SHA256SUMS.txt`\n",
+  "readmeMarkdown": "<div align=\"center\">\n\n[简体中文](README.zh-CN.md) · **English**\n\n<img src=\"assets/logo.svg\" alt=\"agy-cmd logo\" width=\"80\" />\n\n# agy-cmd\n\n**Guardrail & auto-router plugin for Google Antigravity Desktop / IDE: never stop on failing tests · fresh-perspective recovery · free-tier safe · no skipped approvals**\n\n[![Clones](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zou172866/repo-traffic-archive/main/badges/Antigravity-agy-cmd.json)](https://github.com/zou172866/Antigravity-agy-cmd)\n\n[Quick Install](#quick-install) · [Features](#features) · [CLI Management](#cli-management)\n\n</div>\n\n---\n\n## Why agy-cmd?\n\nTests are still failing, yet the agent politely announces \"all done.\"\nA free account hits a paid-only slash command and crashes mid-task.\nRead-only Plan Mode blocks writing the plan file, so the agent tries to skip approval and edit code anyway.\nThree patch attempts make the same bug worse, yet it keeps guessing in circles.\n\n**`agy-cmd` puts guardrails around Google Antigravity Desktop / IDE.** Install once and let it watch silently in the background:\n\n- **Scope-aware routing**: small edits run straight through, bigger changes ask for a plan first, and batch or multi-module tasks match native workflows automatically.\n- **Stop-hook auto-retry**: when tests or build checks fail after an edit, the hook blocks early stop and keeps the agent fixing until green or the retry cap hits.\n- **Fresh-perspective recovery**: repeated failures stop blind edits immediately. Free accounts dispatch a read-only investigator; Pro / Ultra accounts can auto-dispatch Boost subagents.\n- **Hard approval guard**: when read-only Plan Mode blocks writing a plan file, the hook forces an inline plan in chat and blocks `exit_plan_mode` until you approve.\n- **Free-tier protection**: paid-only commands stay off by default, and work runs sequentially in the main session to protect weekly quota.\n- **Live Sidecar panel**: adjust retry caps, test gates, account tier, and SHA-256 self-updates anytime from the right-hand panel.\n\n## Quick Install\n\nRequires **Google Antigravity Desktop**, **Node.js 20+**, and **Python 3.8+**.\n\nRun the pinned one-line installer for your OS (downloads the official release ZIP and verifies its `SHA256SUMS.txt` digest before unpacking), then restart or reload your Antigravity window.\n\n**Windows (PowerShell):**\n\n```powershell\nirm https://raw.githubusercontent.com/zou172866/Antigravity-agy-cmd/v2.8.1/install.ps1 | iex\n```\n\n**macOS / Linux:**\n\n```bash\ncurl -fsSL https://raw.githubusercontent.com/zou172866/Antigravity-agy-cmd/v2.8.1/install.sh | sh\n```\n\n### Other Install Options\n\n- **Offline stable ZIP (with SHA-256 verification)**: download the official ZIP and `SHA256SUMS.txt` from [GitHub Releases](https://github.com/zou172866/Antigravity-agy-cmd/releases/latest):\n  - Verify and install directly: `.\\install.ps1 --archive .\\agy-cmd-v2.8.1.zip --checksums .\\SHA256SUMS.txt` (Windows) or `sh ./install.sh --archive ./agy-cmd-v2.8.1.zip --checksums ./SHA256SUMS.txt` (macOS / Linux).\n  - Or extract and run `.\\install.ps1` (Windows) / `sh ./install.sh` (macOS / Linux) inside the unpacked folder.\n- **Manual Git clone** (a `.git` checkout inside `plugins/agy-cmd` disables Sidecar self-update to protect your working tree; update with `git pull` or use the one-line installer above):\n\n```powershell\ngit clone https://github.com/zou172866/Antigravity-agy-cmd \"$HOME\\.gemini\\config\\plugins\\agy-cmd\"\npython \"$HOME\\.gemini\\config\\plugins\\agy-cmd\\skills\\agy-cmd\\scripts\\setup_auto_router.py\" --install\n```\n\nOn Linux / macOS / SSH hosts without a `python` symlink, replace `python` with `python3`. If installed via `agy plugin install` or Marketplace (`installedFrom`), update through Antigravity's plugin manager.\n\n- **Standalone text rules only** (routing rules without Stop auto-retry or the Sidecar panel):\n\n```bash\nnpx -y skills add zou172866/Antigravity-agy-cmd -g --all\npython ~/.agents/skills/agy-cmd/scripts/setup_auto_router.py --install --standalone\n```\n\n## First Two Settings to Check\n\nOut of the box, `agy-cmd` enables **Free-Tier Protection** and sets **Auto-Retry to 3 attempts**. Open the right-hand **agy-cmd Auto-Router** panel (or click `sidecar://agy-cmd/panel/` in chat) and confirm two settings:\n\n1. **Auto-retry limit**: choose **Off (0)**, **Fixed count (1–50)**, or **Unlimited**.\n2. **Account tier**: Google AI Pro / Ultra subscribers can switch to **Pro / Ultra** to enable automatic Boost dispatch on hard debugging tasks (such as deadlocks, race conditions, or memory leaks) and repeated failures. **Use Boost after plan approval** stays off by default. Turn it on if you also want clicking **Approve** or replying \"implement the plan\" to show `[agy-cmd → 计划获批，自动 Boost]` and dispatch `DeepCoder` / `DeepInvestigator` once (falling back to regular tools on invocation error, with deduplication across background-task wakeups).\n\n## Features\n\n### 1. Small tasks straight through, big changes planned first\n\n- **1–2 files, explanations, or local lookups**: responds directly with zero banners or popups.\n- **Ambiguous requests**: asks focused multiple-choice questions on blocking gaps (batching independent questions) before writing code.\n- **3+ files or higher-risk edits**: drafts a plan and waits for your approval. In read-only Plan Mode, it writes the plan inline and blocks silent bypasses. Approved multi-module plans can continue with `/swarm execute our plan` in the App; paid users who opt into post-approval Boost get a single Boost dispatch while keeping `Stop` auto-retry state intact across background wakeups.\n- **Focused side tasks & batch checks**: a self-contained investigation (such as tracing a call chain or checking a page) can go to one subagent. Checks across 5+ similar items run in batches by default; on paid tiers in the App, `/run-workflow` can fan out and collect structured results.\n- **Independent lanes & multi-day work**: non-colliding multi-module edits, multi-lens reviews, or Best-of-N comparisons fit `/swarm` in the App (6 ready-to-copy templates, Gemini 4 model pairing, and a pre-launch checklist). Tightly coupled edits stay in the main session / Orchestrator, single hard failures fit `/boost`, and multi-day milestone migrations fit `/teamwork`. Active `/swarm` sessions and workers (including forked workers) are isolated by hooks so board collaboration and prompt prefix caching stay intact. [Command matrix](skills/agy-cmd/references/desktop-commands-matrix.md) · [Multi-agent & Swarm playbooks](skills/agy-cmd/references/multi-agent-playbooks.md)\n- **Live web pages & interactive visuals**: launches the built-in browser or interactive UI renderer automatically.\n\n### 2. Never stop while tests are failing\n\nWhen you ask the agent to change code or fix a bug and verification fails, the `Stop` hook sends it back to investigate and fix until checks pass or your retry cap runs out.\n\nFor stricter enforcement, enable **Delivery Test Gate (run full tests before delivery)** in the panel (off by default, available on all tiers). Whenever a turn makes substantive source edits:\n\n- **Custom verification command or detected project tests**: the full check suite (single commands or `&&` chains like `npm run typecheck && npm test`) must pass *after* the final edit before delivery. Missing checks trigger a reminder; failing checks loop within your retry budget.\n- **No project tests and no custom command**: delivery is allowed conservatively without touching repo test setup, and the agent explicitly discloses missing test coverage at the end.\n- **One-turn bypass**: add `skip tests` or `这次跳过测试` in your prompt to skip the gate for that turn.\n\nIn free mode, implementing an approved plan with source edits and a missed project check can also trigger one check reminder within your existing retry budget. Documentation edits, cancellations, and pending approvals never trigger it.\n\nThe hook lets the agent stop right away when:\n\n- You only asked a question or ran read-only inspection (e.g., \"why did this fail?\" or \"run tests to see\").\n- The agent just presented a plan and is waiting for approval.\n- The agent stopped to ask for missing information.\n- You manually clicked Stop.\n\nTo override the retry budget for a single turn, include `这次最多重试 5 次`, `这次一直重试`, or `这次不用重试` in your prompt.\n\n### 3. Free-tier safety & stuck-loop recovery\n\n- **Plan and quota**: Google restricts `/boost` and `/teamwork` to paid tiers, while `/swarm` and `/run-workflow` are open on all App tiers. In free mode, `agy-cmd` runs sequentially by default to conserve weekly quota; you can still invoke the latter two explicitly in supported App sessions. In the IDE or unknown hosts, routing stays safely in the main session. [Boost and plan comparison](https://antigravity.google/docs/boost/) · [Dynamic Workflows](https://antigravity.google/docs/dynamic-workflows/)\n- **Optional independent review**: free users can enable a post-plan review in the panel (off by default). After editing and running checks, the main agent hands changed paths, key diffs, and test evidence to a read-only `cmd-verifier`; if that role is unavailable, the main agent reports that the review was skipped.\n- **Stuck-loop circuit breaker**: on free plans (or with Boost off), 3 consecutive command failures or 2 edit-fail cycles pause blind edits and switch to read-only root-cause diagnosis. With paid Boost enabled, explicit hard debugging tasks, 3 consecutive command failures, or 3 edit-fail cycles (leaving Orchestrator's native 2-failure planner hand-back room to self-heal) dispatch `DeepInvestigator` / `DeepCoder` while the main session verifies the fix.\n\nHooks and installers are verified locally; live free-tier reviewer dispatch in the App and IDE remains to be verified on real accounts. [Routing research](docs/research/multi-agent-routing-best-practices.md) · [Free-tier proposal](docs/proposals/free-tier-v2.3.md)\n\n### 4. Sidecar panel & verified self-updates\n\n- **Instant controls**: change retry caps, trigger scope, test gates, and plan tier in the right-hand **agy-cmd** panel with immediate effect.\n- **SHA-256 self-updates**: click **Check Update** in the panel header to pull GitHub Releases and update in place with SHA-256 verification and automatic rollback on failure. Startup auto-check is on by default and can be disabled in the panel, via `--auto-update-check off`, or via `AGY_CMD_DISABLE_AUTO_UPDATE_CHECK=1`. Silent auto-install is **off by default**; when turned on, it only installs same-major releases with verified SHA-256 digests and trips a per-version circuit breaker on failure.\n- **Restrained Star prompt**: click `★ Star` in the header anytime. After 3 successful auto-retry saves, a single dismissible reminder appears once and never returns once resolved.\n- **Chat commands**: ask directly in chat to set auto-retry to 5, enable Boost, or compare built-in Antigravity desktop slash commands.\n\n## CLI Management\n\nYou can inspect and configure `agy-cmd` from the terminal as well:\n\n```bash\n# Fast read-only query for plan tier, Boost flag, and configRev (no directory scan)\npython skills/agy-cmd/scripts/setup_auto_router.py --tier --json\n\n# Inspect plugin, panel, hook, and retry status\npython skills/agy-cmd/scripts/setup_auto_router.py --status\n\n# Configure auto-retry limit (off / 1..50 / infinite)\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-retry off\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-retry 5\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-retry infinite\n\n# Switch account tier and toggle post-plan Boost / fallbacks\npython skills/agy-cmd/scripts/setup_auto_router.py --plan-tier free\npython skills/agy-cmd/scripts/setup_auto_router.py --plan-tier paid --boost on\npython skills/agy-cmd/scripts/setup_auto_router.py --boost-after-plan-approval on\npython skills/agy-cmd/scripts/setup_auto_router.py --free-fallback on --plan-fallback on\n\n# Reset cumulative auto-retry statistics without altering tier or Boost\npython skills/agy-cmd/scripts/setup_auto_router.py --reset-stats\n\n# Toggle Delivery Test Gate (off by default) and optionally configure a custom command\npython skills/agy-cmd/scripts/setup_auto_router.py --delivery-test-gate on\npython skills/agy-cmd/scripts/setup_auto_router.py --delivery-test-cmd \"npm run typecheck && npm test\"\npython skills/agy-cmd/scripts/setup_auto_router.py --delivery-test-gate off\n\n# Enable one independent review after implementing an approved plan in free mode\npython skills/agy-cmd/scripts/setup_auto_router.py --free-plan-review on\n\n# Toggle automatic GitHub Releases check on panel open (on by default)\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-check off\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-check on\n\n# Opt in to silent same-major + SHA-256 auto-updates (off by default)\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-install on\npython skills/agy-cmd/scripts/setup_auto_router.py --auto-update-install off\n\n# Verify plugin bundle integrity and local sync\npython skills/agy-cmd/scripts/setup_auto_router.py --sync-check\n\n# Disable / remove plugin\npython skills/agy-cmd/scripts/setup_auto_router.py --remove\n```\n\nRun the test suite and strict plugin validation:\n\n```bash\nnpm test\npython3 -m unittest discover -s test -p \"test_*.py\" -v\nagy plugin validate --strict .\n```\n",
+  "latestReleaseNotes": "## 更新内容\n\n本版为 `v2.8.0` 之后的深度性能优化、并发收敛、面板可见度闭环与发版/安装体验加固更新；**零改动 `agents/cmd-verifier.md` frontmatter 与常驻规则字节**，存量 `v2.x` 用户可直接一键在线升级：\n\n### 一、热路径大幅减 I/O 提速\n- **`PostToolUse` 零 I/O 预过滤与轻量冷启动（`hooks/post-tool-use.mjs`、`hooks/lib/detector-facts.mjs`）**：新增 `isTrackableToolPayload()` 纯内存预判，只读/第三方 `call_mcp_tool`（如 `ctx_search`、`ctx_execute`）及 `apply_edits(dryRun: true)` 直接零磁盘读秒返 `{}`；`post-tool-use.mjs` 直接导入 Layer 1 `detector-facts.mjs`，不再加载策略与对账层代码。\n- **轨迹尾部单读复用（`hooks/lib/transcript.mjs`、`pre-invocation.mjs`、`stop.mjs`、`pre-tool-use.mjs`、`post-tool-use.mjs`）**：`resolveWorkerTranscriptIdentity()` 已读取 256 KiB 轨迹尾部时，透传快照给紧随其后的 `inspectTranscriptTail()` 与 `findTranscriptStep()`，消除超 64 KiB 轨迹下的二次读盘与重复 `JSON.parse`。\n- **普通会话短路 SHA-256（`hooks/lib/diagnostics.mjs`、`transcript.mjs`）**：新增 `hasPersistedWorkerIdentities()` 快速存在性判断，未运行过 Swarm 的普通会话免除每次 Hook 的 4 KiB 轨迹指纹读盘与 2 次 SHA-256。\n- **Sidecar 面板减读与模板缓存（`sidecars/panel/api-handler.mjs`、`server.mjs`、`hooks/lib/settings.mjs`）**：3 秒状态轮询从重复读 4 遍 `settings.json` 降为只读 1 遍；`renderPanelHtml()` 按 `mtimeMs` 缓存模板与版本号。\n\n### 二、轻量套餐查询、CLI 路径修复与面板运维闭环\n- **极速只读 `--tier --json` 查询（`skills/agy-cmd/scripts/setup_auto_router.py`、`SKILL.md`）**：仅读 `settings.json` 返回 `{ ok, mode, planTier, boostEnabled, configRev }`，跳过全目录同步扫盘，并在 `plugin` / `standalone` 模式保持一致；重型路由准入第 3 步切至 `--tier --json`，同时清理 `SKILL.md` 代码块内 `on|off` 管道占位写法。\n- **无面板环境绝对路径 CLI 提示（`hooks/lib/common.mjs`、`session-start.mjs`、`detector.mjs`）**：新增 `formatRouterCliCommand()`，在 IDE / CLI / SSH 场景输出带双引号的真实绝对脚本路径（按平台自动选用 `python` / `python3`），在任意业务仓可直接复制执行。\n- **Sidecar 面板异常恢复条与本地诊断清零（`sidecars/panel/index.html`、`api-handler.mjs`、`server.mjs`、`version-update.mjs`）**：补齐 `WATCHED_BACKEND_FILES` 热重载监听；平时零打扰隐藏，仅在更新中断待恢复时展示 `#recovery-banner`，仅在存在非零宿主兼容诊断计数时展示 `#row-host-diagnostics` 与「清零诊断」（`POST /api/reset-diagnostics`）；修复 `paid + boost=false` 点击会员按钮时 Toast 误报“已开启 Boost 接入”的问题。\n\n### 三、架构瘦身、并发收敛与安装/打包加固\n- **三合一底层文件锁与 Windows 原子写（新增 `hooks/lib/fs-atomic.mjs`）**：收敛 `settings.mjs`、`state.mjs`、`diagnostics.mjs` 中重复维护的 300+ 行文件锁与 Windows `EPERM`/`EBUSY`/`EACCES` 退避重试逻辑；`maybeGcStaleSessions()` 新增 `hook-bootstrap.log` 64 KiB 换行边界自动截断。\n- **弱化审计拆解与两处精准边界微调（新增 `hooks/lib/test-audit.mjs`、`hooks/lib/plan-verification.mjs`）**：将 650+ 行测试断言弱化软审计拆为无环叶模块并保持原导出 100% 兼容；补齐 Rust 嵌套测试路径 `tests/**/*.rs` 与 JS/TS 单行正则字面量词法遮蔽（不引入多语言 AST），并抽共用 `resolveToolWorkspaceContext()` / `extractToolCommandEntries()` 消除双账本重复提取逻辑。\n- **退役 `.tgz` / TAR-PAX 解析器（`sidecars/panel/update-archive.mjs`、`version-check.mjs`、`version-update.mjs`）**：移除不再使用的 170 行纯 JS TAR/PAX 解析代码，正式资产与解包器统一收敛为带 SHA-256 校验的 `.zip`。\n- **安装器与标准化发版打包加固（`install.ps1`、`install.sh`、新增 `scripts/pack-release.mjs`）**：安装脚本入口实测 `Node.js >= 20` 与 `Python >= 3.8` 并补齐下载超时与 16 MiB / HTTPS 保护；新增零依赖 `npm run pack:release` 自动保证目录范围、LF/CRLF 行尾、POSIX `0o100755` 权限与回环验签。\n\n### 验收与实包冒烟\n- **全量自动化基线**：Node **`115/115`** · Python **`21/21`** · `npm run version:check` **`8/8`** · `--sync-check --json` **零漂移** · `agy plugin validate --strict` **0 findings** · `git diff --check` 通过。\n- **三项实包冒烟全过**：\n  1. 真实 **`v2.8.0 → v2.8.1` 离线自更新实测**（由 `v2.8.0` 自带更新器执行：篡改字节报 `integrity` 拒装；正式包升级后新增模块 `fs-atomic.mjs` / `test-audit.mjs` 完整落位）。\n  2. 真实 **`install.ps1 --archive --checksums` 离线安装** + `--sync-check --json` + `--tier --json` 通过。\n  3. 解压后的 `agy-cmd-v2.8.1.zip` 目录内实跑全量 Node 单测 **`115/115`** 全部通过。\n\n### 资产校验（SHA-256）\n- `agy-cmd-v2.8.1.zip`（`327,174` 字节）：`1504a3598d5c19eb21a6aadbd29402587c675f2e50e835e1ef22010bf0cfddd8`\n",
   "securityReport": {
     "riskTier": "high",
     "capabilities": [
@@ -94,7 +94,7 @@
         "file": "hooks.json",
         "line": 1,
         "snippet": "node -e /\"x/;Promise.all([import(/node:fs/.source),import(/node:path/.source),import(/node:os/.source),import(/node:url/.source)]).then(function(mods,fs,p,os,url,env,name,s0,s1,gem",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks.json#L1"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks.json#L1"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -105,7 +105,7 @@
         "file": "hooks/lib/common.mjs",
         "line": 192,
         "snippet": "const match = RESUME_NORMAL_SESSION_ZH_RE.exec(clause) || RESUME_NORMAL_SESSION_EN_RE.exec(clause);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/common.mjs#L192"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/common.mjs#L192"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -116,7 +116,7 @@
         "file": "hooks/lib/common.mjs",
         "line": 410,
         "snippet": "while ((m = SLASH_CMD_RE.exec(text)) !== null) {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/common.mjs#L410"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/common.mjs#L410"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -127,7 +127,7 @@
         "file": "hooks/lib/detector-facts.mjs",
         "line": 43,
         "snippet": "const approval = /^(?:确认|同意|批准|通过|可以|好的?|没问题)(?:该?(?:方案|计划))?/.exec(text);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/detector-facts.mjs#L43"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/detector-facts.mjs#L43"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -138,7 +138,7 @@
         "file": "hooks/lib/detector-facts.mjs",
         "line": 62,
         "snippet": "const inputStep = /^step:(\\d+)$/.exec(transcriptTail?.latestUserInputKey || \"\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/detector-facts.mjs#L62"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/detector-facts.mjs#L62"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -149,7 +149,7 @@
         "file": "hooks/lib/detector-facts.mjs",
         "line": 151,
         "snippet": "const stepMatch = /^step:(\\d+)$/.exec(key);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/detector-facts.mjs#L151"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/detector-facts.mjs#L151"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -160,7 +160,7 @@
         "file": "hooks/lib/detector-facts.mjs",
         "line": 153,
         "snippet": "const byteMatch = /^byte:(\\d+)$/.exec(key);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/detector-facts.mjs#L153"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/detector-facts.mjs#L153"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -171,7 +171,7 @@
         "file": "hooks/lib/detector-facts.mjs",
         "line": 202,
         "snippet": "const migration = TEAMWORK_MIGRATION_RE.exec(text);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/detector-facts.mjs#L202"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/detector-facts.mjs#L202"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -182,7 +182,7 @@
         "file": "hooks/lib/detector-facts.mjs",
         "line": 532,
         "snippet": "const appliedHeader = /^Applied:\\s*$/im.exec(body);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/detector-facts.mjs#L532"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/detector-facts.mjs#L532"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -191,9 +191,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "hooks/lib/plan-verification.mjs",
-        "line": 264,
+        "line": 263,
         "snippet": "const pm = /^(pnpm|yarn|bun)@/.exec(json.packageManager)?.[1] ?? \"npm\";",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/plan-verification.mjs#L264"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/plan-verification.mjs#L263"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -202,9 +202,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "hooks/lib/plan-verification.mjs",
-        "line": 289,
+        "line": 288,
         "snippet": "const cargoMatch = /^cargo(?:\\.exe)?\\s+(check|clippy)$/i.exec(normalized);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/plan-verification.mjs#L289"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/plan-verification.mjs#L288"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -213,9 +213,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "hooks/lib/plan-verification.mjs",
-        "line": 291,
+        "line": 290,
         "snippet": "const scriptMatch = /^(?:npm|pnpm|yarn|bun)(?:\\.cmd|\\.exe)?\\s+(?:run\\s+)?(typecheck|lint|build|check|verify)$/i.exec(normalized);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/plan-verification.mjs#L291"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/plan-verification.mjs#L290"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -224,9 +224,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "hooks/lib/plan-verification.mjs",
-        "line": 722,
+        "line": 740,
         "snippet": "const m = CD_SEGMENT_RE.exec(segment.trim());",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/plan-verification.mjs#L722"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/plan-verification.mjs#L740"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -235,9 +235,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "hooks/lib/plan-verification.mjs",
-        "line": 924,
+        "line": 942,
         "snippet": "const fromField = /^(pnpm|yarn|bun)@/.exec(json?.packageManager)?.[1];",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/plan-verification.mjs#L924"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/plan-verification.mjs#L942"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -245,10 +245,10 @@
         "layer": "code",
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
-        "file": "hooks/lib/plan-verification.mjs",
-        "line": 1781,
+        "file": "hooks/lib/test-audit.mjs",
+        "line": 412,
         "snippet": "const charLit = /^'(?:[^'\\\\\\r\\n]|\\\\[^'\\r\\n]{1,6})'/.exec(text.slice(i));",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/plan-verification.mjs#L1781"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/test-audit.mjs#L412"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -257,9 +257,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "hooks/lib/transcript.mjs",
-        "line": 103,
+        "line": 104,
         "snippet": "const preamble = /^Comments on artifact URI: (file:\\/\\/[^\\r\\n]+)\\r?\\n\\s*The user has approved this document\\.\\s*<USER_REQUEST>/i.exec(input);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/transcript.mjs#L103"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/transcript.mjs#L104"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -270,7 +270,7 @@
         "file": "sidecars/panel/version-check.mjs",
         "line": 26,
         "snippet": "/^v?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?$/.exec( value.trim() );",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-check.mjs#L26"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-check.mjs#L26"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -279,9 +279,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/version-check.mjs",
-        "line": 122,
+        "line": 120,
         "snippet": "const match = /^sha256:([0-9a-f]{64})$/i.exec(digest);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-check.mjs#L122"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-check.mjs#L120"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -290,9 +290,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via subprocess or os.system.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 379,
+        "line": 380,
         "snippet": "res = subprocess.run([resolved_bin, *args], **run_kwargs)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L379"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L380"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -301,9 +301,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/lib/diagnostics.mjs",
-        "line": 27,
-        "snippet": "fs.writeFileSync(tmpPath, JSON.stringify(obj, null, 2) + \"\\n\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/diagnostics.mjs#L27"
+        "line": 143,
+        "snippet": "fs.unlinkSync(filePath);",
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/diagnostics.mjs#L143"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -311,21 +311,10 @@
         "layer": "code",
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/diagnostics.mjs",
-        "line": 32,
-        "snippet": "fs.unlinkSync(tmpPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/diagnostics.mjs#L32"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/settings.mjs",
-        "line": 256,
+        "file": "hooks/lib/fs-atomic.mjs",
+        "line": 76,
         "snippet": "fs.unlinkSync(lockPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/settings.mjs#L256"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/fs-atomic.mjs#L76"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -333,10 +322,10 @@
         "layer": "code",
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/settings.mjs",
-        "line": 282,
+        "file": "hooks/lib/fs-atomic.mjs",
+        "line": 129,
         "snippet": "fs.writeFileSync(lockFd, record, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/settings.mjs#L282"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/fs-atomic.mjs#L129"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -344,10 +333,10 @@
         "layer": "code",
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/settings.mjs",
-        "line": 312,
+        "file": "hooks/lib/fs-atomic.mjs",
+        "line": 161,
         "snippet": "fs.unlinkSync(lockPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/settings.mjs#L312"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/fs-atomic.mjs#L161"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -355,10 +344,10 @@
         "layer": "code",
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/settings.mjs",
-        "line": 323,
+        "file": "hooks/lib/fs-atomic.mjs",
+        "line": 180,
         "snippet": "fs.writeFileSync(tmpName, content, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/settings.mjs#L323"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/fs-atomic.mjs#L180"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -366,10 +355,10 @@
         "layer": "code",
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/settings.mjs",
-        "line": 351,
+        "file": "hooks/lib/fs-atomic.mjs",
+        "line": 208,
         "snippet": "fs.unlinkSync(tmpName);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/settings.mjs#L351"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/fs-atomic.mjs#L208"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -378,64 +367,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/lib/state.mjs",
-        "line": 95,
-        "snippet": "fs.unlinkSync(lockPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L95"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/state.mjs",
-        "line": 207,
-        "snippet": "fs.writeFileSync(lockFd, record, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L207"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/state.mjs",
-        "line": 239,
-        "snippet": "fs.unlinkSync(lockPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L239"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/state.mjs",
-        "line": 250,
-        "snippet": "fs.writeFileSync(tmpName, content, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L250"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/state.mjs",
-        "line": 278,
-        "snippet": "fs.unlinkSync(tmpName);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L278"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "hooks/lib/state.mjs",
-        "line": 326,
+        "line": 184,
         "snippet": "fs.appendFileSync(logPath, payload, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L326"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/state.mjs#L184"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -444,9 +378,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/lib/state.mjs",
-        "line": 365,
+        "line": 223,
         "snippet": "fs.unlinkSync(logPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L365"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/state.mjs#L223"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -455,9 +389,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/lib/state.mjs",
-        "line": 443,
+        "line": 331,
         "snippet": "fs.unlinkSync(fullPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L443"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/state.mjs#L331"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -466,9 +400,31 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "hooks/lib/state.mjs",
-        "line": 450,
+        "line": 340,
         "snippet": "fs.writeFileSync(stampPath, String(nowMs), \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/hooks/lib/state.mjs#L450"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/hooks/lib/state.mjs#L340"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pack-release.mjs",
+        "line": 200,
+        "snippet": "fs.writeFileSync(zipPath, zipBuf);",
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/scripts/pack-release.mjs#L200"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pack-release.mjs",
+        "line": 201,
+        "snippet": "fs.writeFileSync(sumsPath, `${sha256} ${assetName}\\n`, \"utf8\");",
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/scripts/pack-release.mjs#L201"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -479,7 +435,7 @@
         "file": "scripts/sync-version.mjs",
         "line": 24,
         "snippet": "fs.writeFileSync(path.join(REPO_ROOT, relPath), content, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/scripts/sync-version.mjs#L24"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/scripts/sync-version.mjs#L24"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -488,9 +444,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "sidecars/panel/update-archive.mjs",
-        "line": 74,
+        "line": 73,
         "snippet": "fetchImpl = (...args) => fetch(...args),",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/update-archive.mjs#L74"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/update-archive.mjs#L73"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -499,9 +455,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "sidecars/panel/version-check.mjs",
-        "line": 140,
+        "line": 138,
         "snippet": "fetchImpl = (...args) => fetch(...args),",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-check.mjs#L140"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-check.mjs#L138"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -510,9 +466,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 134,
+        "line": 136,
         "snippet": "await writeFile(markerPath, serialized, { flag: \"wx\" });",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L134"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L136"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -521,9 +477,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 139,
+        "line": 141,
         "snippet": "await writeFile(tmpPath, serialized, \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L139"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L141"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -532,9 +488,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 142,
+        "line": 144,
         "snippet": "await unlink(tmpPath).catch(() => {});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L142"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L144"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -543,9 +499,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 288,
+        "line": 298,
         "snippet": "await rm(workDir, { recursive: true, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L288"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L298"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -554,9 +510,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 290,
+        "line": 300,
         "snippet": "await unlink(markerPath).catch((err) => {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L290"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L300"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -565,9 +521,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 334,
+        "line": 344,
         "snippet": "await unlink(markerPath).catch((err) => {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L334"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L344"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -576,9 +532,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 337,
+        "line": 347,
         "snippet": "await rm(workDir, { recursive: true, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L337"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L347"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -587,9 +543,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 719,
+        "line": 729,
         "snippet": "await unlink(dirPath).catch(async () => {",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L719"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L729"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -598,9 +554,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 720,
+        "line": 730,
         "snippet": "await rm(dirPath, { recursive: false, force: true }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L720"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L730"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -609,9 +565,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 823,
+        "line": 833,
         "snippet": "await writeFile(journalPath, JSON.stringify(journalRecord, null, 2) + \"\\n\", \"utf8\");",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L823"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L833"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -620,9 +576,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 852,
+        "line": 862,
         "snippet": "await unlink(markerPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L852"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L862"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -631,9 +587,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 863,
+        "line": 873,
         "snippet": "await unlink(markerPath);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L863"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L873"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -642,9 +598,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 1033,
+        "line": 1043,
         "snippet": "await writeFile(destination, bytes, writeOpts);",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L1033"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L1043"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -653,9 +609,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "sidecars/panel/version-update.mjs",
-        "line": 1069,
+        "line": 1079,
         "snippet": "await rm(workDir, { recursive: true, force: true, maxRetries: 2 }).catch(() => {});",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/sidecars/panel/version-update.mjs#L1069"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/sidecars/panel/version-update.mjs#L1079"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -664,9 +620,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 324,
+        "line": 325,
         "snippet": "os.unlink(tmp_name)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L324"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L325"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -675,9 +631,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1159,
+        "line": 1165,
         "snippet": "shutil.rmtree(legacy_skill_dir)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1159"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1165"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -686,9 +642,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1184,
+        "line": 1190,
         "snippet": "shutil.rmtree(cache_dir, ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1184"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1190"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -697,9 +653,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1466,
+        "line": 1472,
         "snippet": "shutil.rmtree(work_dir, ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1466"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1472"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -708,9 +664,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1508,
+        "line": 1514,
         "snippet": "shutil.rmtree(work_dir, ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1508"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1514"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -719,9 +675,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1605,
+        "line": 1611,
         "snippet": "dst_fp.write_bytes(data)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1605"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1611"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -730,9 +686,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1607,
+        "line": 1613,
         "snippet": "with open(dst_fp, \"w\", encoding=\"utf-8\", newline=\"\\n\") as fh:",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1607"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1613"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -741,9 +697,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1722,
+        "line": 1728,
         "snippet": "shutil.rmtree(work_dir, ignore_errors=True)",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1722"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1728"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -752,9 +708,9 @@
         "capability": "prompt_mentions_shell",
         "message": "Prompt guides the agent to execute local shell commands or scripts.",
         "file": "skills/agy-cmd/SKILL.md",
-        "line": 55,
-        "snippet": "3. 主动路由取 `settings.planTier`；未知时仅调一次 `python3 scripts/setup_auto_router.py --status --json`（只读）。仅 `paid` 进主动重型路由，`free`/未知走顺序分批且不亮重型徽标。",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/SKILL.md#L55"
+        "line": 56,
+        "snippet": "3. 主动路由取 `settings.planTier`；未知时仅调一次 `python3 scripts/setup_auto_router.py --tier --json`（只读极速，按返回的 `configRev` 会话内缓存）。仅 `paid` 进主动重型路由，`free`/未知走顺序分批且不亮重型徽标。",
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/SKILL.md#L56"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -763,9 +719,9 @@
         "capability": "accesses_gemini_dir",
         "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1831,
+        "line": 1842,
         "snippet": "help=\"强制使用独立规则模式（~/.gemini/config/rules/agy-auto-router.md）\",",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1831"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1842"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -774,13 +730,27 @@
         "capability": "accesses_gemini_dir",
         "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
         "file": "skills/agy-cmd/scripts/setup_auto_router.py",
-        "line": 1836,
+        "line": 1847,
         "snippet": "help=\"可选：指定自定义配置根目录（默认使用 ~/.gemini/config）\",",
-        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/1a4572506bb80b4c937c72025caf49f5aaf0f7b6/skills/agy-cmd/scripts/setup_auto_router.py#L1836"
+        "githubBlobUrl": "https://github.com/zou172866/Antigravity-agy-cmd/blob/5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb/skills/agy-cmd/scripts/setup_auto_router.py#L1847"
       }
     ]
   },
   "history": [
+    {
+      "version": "2.8.1",
+      "sha": "5ace1da9c01e4ce00cafbfe3cea1a4b4c748f3cb",
+      "scannedAt": "2026-11-28T06:16:10.007Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "2.8.0",
       "sha": "1a4572506bb80b4c937c72025caf49f5aaf0f7b6",

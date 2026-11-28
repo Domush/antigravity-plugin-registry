@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "id": "Echoqili/agent-guard",
+  "sha": "89db349169a54f6cf9d4c9eed887ce26449e8dd3",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T06:16:20.745Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agent-guard",
+    "displayName": "Agent Guard",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "agent-guard-gate",
+        "enabledByDefault": true,
+        "event": "PreToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "node scripts/guard.mjs pre-tool",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "agent-guard",
+        "slashCommand": "/agent-guard",
+        "description": "Inspect and roll back the automatic per-turn git checkpoints taken by the agent-guard plugin, and explain its command blocks. Use when the user asks what the agent changed this turn, wants to undo or roll back agent edits, wants a manual sn",
+        "disableModelInvocation": false,
+        "file": "skills/agent-guard/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agent-guard"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PreInvocation",
+      "PreToolUse"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"84\" alt=\"Agent Guard logo\" />\n  <h1>Agent Guard</h1>\n  <p><b>Zero-dependency safety net & automatic per-turn git checkpoints for Google Antigravity</b></p>\n  <p>English · <a href=\"README.zh-CN.md\">简体中文</a></p>\n</div>\n\n---\n\n**Agent Guard** protects your workspace and host machine while coding with autonomous agents in **Google Antigravity** (Desktop 2.0, IDE, and CLI `agy`) — with **zero npm dependencies** and **zero modifications to `app.asar`**.\n\n## Features\n\n- **Catastrophic Command Gate (`PreToolUse`)**\n  - **Hard block (`deny`)**: Terminating `Antigravity` itself, wiping `/`, `~`, `$HOME`, system drives (`C:\\`, `C:\\Windows`, `$env:USERPROFILE`), `format`, `mkfs`, `diskpart`, `dd of=/dev/...`.\n  - **Mandatory confirmation (`force_ask`)**: `git push --force`, `git reset --hard`, `git clean -f`, `git checkout .`, `git branch -D`, `git stash clear`, `DROP TABLE` / `TRUNCATE`, `npm/cargo/twine publish`, OS registry/boot/power commands.\n  - **Standard confirmation (`ask`)**: Recursive directory deletes (`rm -rf`, `Remove-Item -Recurse`) and remote pipe-to-shell (`curl | sh`, `irm | iex`).\n  - **Sandbox-aware**: Preserves Antigravity's native `BypassSandbox` confirmation boundary while letting safe sandboxed commands run without friction.\n- **Invisible Per-Turn Checkpoints (`PreInvocation`)**\n  - Snapshots the full git working copy (tracked + untracked, excluding `.gitignore`) into `refs/agent-guard/<timestamp>` before the first model call of each turn.\n  - Never touches `HEAD`, your branch, staged index, or `git stash`. Deduplicates identical trees and retains the latest 50 checkpoints.\n- **Undoable Rollback (`agent-guard` Skill + CLI)**\n  - Every `restore` automatically saves a pre-restore backup ref so even a rollback can be undone.\n\n## Quick Install\n\n**Requirements:** Node.js >= 20, Git.\n\n**Windows (PowerShell):**\n```powershell\nirm https://raw.githubusercontent.com/Echoqili/agent-guard/main/install.ps1 | iex\n```\n\n**macOS / Linux:**\n```bash\ncurl -fsSL https://raw.githubusercontent.com/Echoqili/agent-guard/main/install.sh | sh\n```\n\n**Antigravity CLI (`agy`):**\n```bash\ngit clone https://github.com/Echoqili/agent-guard.git ~/.gemini/config/plugins/agent-guard\nagy plugin enable agent-guard\n```\n\n**npm / npx** (no Git required — installs into `~/.gemini/config/plugins` and runs self-tests):\n```bash\nnpx -y @echoqili/agent-guard\nagy plugin enable agent-guard\n```\n\n> **macOS note:** if you start Antigravity from Dock/Finder and Node.js was installed via Homebrew or NVM, the GUI process may not see `node` on its `PATH` and the hooks will silently do nothing. Launch Antigravity from a terminal (which has your shell `PATH`), or register the path globally:\n> `launchctl setenv PATH \"/opt/homebrew/bin:/usr/local/bin:$PATH\"` then restart the client.\n\n## Usage\n\nAsk the agent directly in chat:\n- *\"What files did you change in this turn?\"*\n- *\"Roll back all edits from the last turn\"*\n- *\"List all agent-guard checkpoints\"*\n\nOr run the CLI directly inside any git repository:\n```bash\nnode ~/.gemini/config/plugins/agent-guard/scripts/guard.mjs list\nnode ~/.gemini/config/plugins/agent-guard/scripts/guard.mjs diff 1\nnode ~/.gemini/config/plugins/agent-guard/scripts/guard.mjs restore 1\nnode ~/.gemini/config/plugins/agent-guard/scripts/guard.mjs snapshot \"before refactor\"\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "Initial release of **agent-guard**: a zero-dependency safety gate and per-turn git checkpoints for Google Antigravity.\n\n- `PreToolUse` command gate: hard-deny catastrophic commands (wiping roots/system drives, formatting, killing Antigravity); force-ask on history-destroying ops (force push, reset --hard, DROP TABLE, npm publish); ask on recursive deletes and curl|sh.\n- Sandbox-aware: preserves Antigravity's native BypassSandbox boundary.\n- `PreInvocation` per-turn checkpoints into `refs/agent-guard/`: never touches HEAD/index/stash, deduplicates, keeps latest 50.\n- Undoable rollback via the `agent-guard` skill + CLI.\n- Cross-platform (Windows/macOS/Linux), zero npm dependencies, no `app.asar` modification.\n- One-line installers (`install.ps1` / `install.sh`) with macOS GUI PATH fallback.\n\nValidated with `agy plugin validate --strict` — zero warnings. Full docs: README.md / README.zh-CN.md.",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "PROMPT_PIPE_TO_SHELL",
+        "severity": "critical",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt instructs the agent to download or decode and pipe content directly into a shell.",
+        "file": "skills/agent-guard/SKILL.md",
+        "line": 15,
+        "snippet": "deletes and `curl | sh` style remote scripts.",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/skills/agent-guard/SKILL.md#L15"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/install.mjs",
+        "line": 43,
+        "snippet": "const r = spawnSync(process.execPath, [join(scriptsDir, t)], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/bin/install.mjs#L43"
+      },
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"agent-guard-gate\" executes a shell command on PreToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 7,
+        "snippet": "node scripts/guard.mjs pre-tool",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/hooks.json#L7"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/guard.mjs",
+        "line": 63,
+        "snippet": "return execFileSync('git', args, { cwd, encoding: 'utf8', timeout: 15000, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'], env: env ? { ...process.env, ...env } : process.env,",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.mjs#L63"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/guard.test.mjs",
+        "line": 64,
+        "snippet": "const g = (...a) => execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { cwd: repo, encoding: 'utf8' });",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.mjs",
+        "line": 81,
+        "snippet": "try { fs.copyFileSync(path.join(gitDir, 'index'), tmpIndex); } catch { fs.rmSync(tmpIndex, { force: true }); }",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.mjs#L81"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.mjs",
+        "line": 142,
+        "snippet": "if (abs.startsWith(base)) fs.rmSync(abs, { force: true });",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.mjs",
+        "line": 168,
+        "snippet": "fs.writeFileSync(file, JSON.stringify(turns));",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.mjs#L168"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.test.mjs",
+        "line": 69,
+        "snippet": "fs.writeFileSync(file('a.txt'), 'v1');",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L69"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.test.mjs",
+        "line": 70,
+        "snippet": "fs.writeFileSync(file('.gitignore'), 'ignored.txt\\n');",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L70"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.test.mjs",
+        "line": 73,
+        "snippet": "fs.writeFileSync(file('ignored.txt'), 'keep');",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L73"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.test.mjs",
+        "line": 78,
+        "snippet": "fs.writeFileSync(file('a.txt'), 'v2');",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L78"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.test.mjs",
+        "line": 79,
+        "snippet": "fs.writeFileSync(file('new.txt'), 'x');",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L79"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/guard.test.mjs",
+        "line": 93,
+        "snippet": "fs.rmSync(repo, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/scripts/guard.test.mjs#L93"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "bin/install.mjs",
+        "line": 7,
+        "snippet": "* Copies the packaged plugin files into ~/.gemini/config/plugins/<name>,",
+        "githubBlobUrl": "https://github.com/Echoqili/agent-guard/blob/89db349169a54f6cf9d4c9eed887ce26449e8dd3/bin/install.mjs#L7"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "89db349169a54f6cf9d4c9eed887ce26449e8dd3",
+      "scannedAt": "2026-11-28T06:16:20.745Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

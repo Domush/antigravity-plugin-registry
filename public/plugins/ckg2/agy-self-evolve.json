@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "id": "ckg2/agy-self-evolve",
+  "sha": "9186008d1534c8eb11f76748d6184b5410ea65de",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T06:16:27.518Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-self-evolve",
+    "displayName": "Self-Evolve: Adaptive Memory & Skill Synthesizer",
+    "version": "2.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [
+      {
+        "group": "agy-self-evolve-hooks",
+        "enabledByDefault": true,
+        "event": "PostToolUse",
+        "matcher": "run_command",
+        "type": "command",
+        "command": "cd ./scripts && sh hook_entry.sh --event PostToolUse",
+        "prompt": null,
+        "timeout": 5
+      }
+    ],
+    "skills": [
+      {
+        "name": "evolve",
+        "slashCommand": "/evolve",
+        "description": "S09 Adaptive memory & skill synthesizer (/evolve): distill habits into rules, skills, tools, hooks, or JEV reviews.",
+        "disableModelInvocation": false,
+        "file": "skills/evolve/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/evolve"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "SessionStart",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-self-evolve (v2.0)\n\nEnglish | [简体中文](README.zh-CN.md)\n\nA **zero-daemon, git-clean, cross-platform self-evolving memory and skill synthesizer** plugin for **Google Antigravity**.\n\nUnlike static `AGENTS.md` / `CLAUDE.md` files that go stale—or heavy background auto-memories that suffer from context rot and `git pull` merge conflicts—`agy-self-evolve` starts completely blank for every user, passively learns your real coding style, recurring workflows, and CLI troubleshooting repairs, and hydrates confirmed patterns into gitignored `.local.md` multi-trigger rules (`always_on`, `glob`, `model_decision`), reusable `SKILL.md` skills, deterministic CLI tools, or staged safety hooks.\n\n---\n\n## Why `agy-self-evolve` v2.0?\n\n| Pain Point in Existing Solutions | How `agy-self-evolve` v2.0 Solves It |\n|---|---|\n| Editing tracked `AGENTS.md` or `hooks.json` breaks `git pull` | Stores your canonical rules in `${PLUGIN_DATA}/profile.json`, auto-hydrates gitignored `rules/*.local.md` (with `SessionStart` self-healing), and discovers Node across `PATH`, `nvm`, `fnm`, `Volta`, and Homebrew without dirtying git. |\n| Static `AGENTS.md` bloats endlessly | Enforces a hard **`4,000-byte` always-on cap** while allowing scoped rules to use `trigger: glob` or `trigger: model_decision` on demand. |\n| Auto-memory turns one-off hacks or trivia into permanent rules | Bilingual clause splitting + temporary exception filtering (`just this once`, `for now`, `一次性`, `先不要`) + action-verb workflow gate + deterministic `backtest` CLI. |\n| Paraphrased preferences fragment into orphan entries | Slot + polarity canonicalization merges synonyms (`always use pnpm instead of npm` / `prefer pnpm over npm`) and captures direct negative corrections (`Don't use emojis`). |\n| External web/tool output poisons memory or leaks API keys | Isolates `trust: \"user_utterance\"` from `trust: \"untrusted_tool_trace\"`, preserves bare env-var names (`GEMINI_API_KEY` in `.env`) while redacting live tokens (`AIzaSy...`, `sk-...`, `Bearer`), and exports sanitized bundles by default. |\n| GUI launches lack shell `PATH` or crash on bare relative paths | Zero-config `hook_entry.sh` / `hook_entry.cmd` launchers emit valid contract JSON even if Node is missing, and `SKILL.md` resolves `<plugin_dir>` absolutely from any workspace CWD. |\n\n---\n\n## Quick Install\n\nRequirements: **Node.js >= 18.18.0** and **Google Antigravity**.\n\n### Option A: Clone & Run One-Command Installer (Recommended)\n\nWorks on **macOS, Linux, and Windows** (automatically caches your exact Node binary path for GUI sessions and migrates any existing v1/custom rules losslessly):\n\n```bash\ngit clone https://github.com/ckg2/agy-self-evolve.git\ncd agy-self-evolve\nnode install.mjs\n```\n\n### Option B: Direct Clone into Antigravity Plugins Directory\n\n```bash\n# macOS / Linux\ngit clone https://github.com/ckg2/agy-self-evolve.git ~/.gemini/config/plugins/agy-self-evolve\nnode ~/.gemini/config/plugins/agy-self-evolve/scripts/evolve_cli.mjs doctor --cache-node\n```\n\n```powershell\n# Windows (PowerShell)\ngit clone https://github.com/ckg2/agy-self-evolve.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\agy-self-evolve\"\nnode \"$env:USERPROFILE\\.gemini\\config\\plugins\\agy-self-evolve\\scripts\\evolve_cli.mjs\" doctor --cache-node\n```\n\n### Verify Installation\n\n```bash\nnpm test          # 30-item functional, contract, concurrency & red-team regression suite\nnpm run backtest  # Negative/positive benchmark corpus check (0% false positive rate)\nnpm run doctor    # Runtime health & budget verification\n```\n\n---\n\n## Slash Commands & CLI Tools\n\n| Command | Purpose |\n|---|---|\n| `/evolve init` | Bootstrap from `~/.claude/CLAUDE.md` / `.cursorrules`, pick a starter preset (`minimal-concise`, `fullstack-rigorous`, `security-auditor`), or answer 3 short questions. |\n| `/evolve` | Review habits observed `>= 3` times across `>= 2` sessions and synthesize rules (`always_on` / `glob` / `model_decision`), skills, CLI tools, or staged hooks. |\n| `/evolve dashboard` | Render an inline interactive `<agent-embed>` budget, rule, and candidate widget in chat. |\n| `/evolve status` | Inspect `<4KB` always-on budget, hydrated `.local.md` counts, ledger stats, and optional local adapters. |\n| `/evolve boost-jev` | Run a structured First-Principles + Socratic + Adversarial / JEV decision review. |\n| `/evolve undo` | Restore the latest `profile.json` snapshot and re-hydrate `rules/*.local.md`. |\n| `/evolve export` / `import` | Export sanitized rules & marked keys to JSON (or `--include-observations`) for another machine. |\n\nDirect deterministic CLI usage:\n\n```bash\nnode scripts/evolve_cli.mjs --help\nnode scripts/evolve_cli.mjs presets\nnode scripts/evolve_cli.mjs apply-preset --name minimal-concise\nnode scripts/evolve_cli.mjs apply-rule --id R01 --text \"Always use pnpm over npm.\" --trigger always_on\nnode scripts/evolve_cli.mjs backtest\n```\n\n---\n\n## Architecture Overview\n\n1. **Cross-Platform Launcher (`scripts/hook_entry.sh` + `hook_entry.cmd`)**: Runs cleanly via `hooks.json` on both Unix `sh -c` and Windows `cmd /c`, resolving Node across `node_path.txt`, `PATH`, `nvm`, `fnm`, `Volta`, and Homebrew with valid JSON fallbacks.\n2. **Gated Slot Sensors (`scripts/run_hook.mjs`)**:\n   - `Stop`: Blocks slash-command self-triggers, normalizes relative/absolute paths and ASR homophones, gates workflow motifs on engineering action verbs, and clusters paraphrased preferences by polarity + entity slots.\n   - `PostToolUse[run_command]`: Strips PowerShell `&` / env wrappers, isolates subcommand multiplexers (`git:push` vs `git:status`), ignores identical TDD loops, and pairs true CLI repairs within 8 steps.\n   - `SessionStart`: Auto-heals missing `rules/*.local.md` from `${PLUGIN_DATA}/profile.json` and throttles `metadata.user_markdown` (`0` model tokens) via a 12-hour signature cooldown lock.\n3. **Deterministic Synthesizer (`scripts/evolve_cli.mjs` + `skills/evolve/SKILL.md`)**: Enforces human sign-off, `<4,000` byte always-on caps, multiline `--supersedes` replacement with zero orphan lines, negative-corpus backtesting, and optional local power-user adapters (`${PLUGIN_DATA}/config.json`).\n\n---\n\n## Privacy & Local Data\n\nAll observations, `profile.json` rules, and backups stay strictly on your local disk under:\n\n- `~/.gemini/antigravity/plugin_data/<plugin-dir>/` (or `.evolve-local/` when installed inside a project's `.agents/plugins/`).\n- Zero telemetry or external network calls.\n\n---\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "high",
+    "capabilities": [
+      "fs_write_workspace",
+      "runs_shell_hooks"
+    ],
+    "findings": [
+      {
+        "id": "HOOK_SHELL_COMMAND",
+        "severity": "high",
+        "layer": "manifest",
+        "capability": "runs_shell_hooks",
+        "message": "Lifecycle hook \"agy-self-evolve-hooks\" executes a shell command on PostToolUse (matcher: run_command).",
+        "file": "hooks.json",
+        "line": 17,
+        "snippet": "cd ./scripts && sh hook_entry.sh --event PostToolUse",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/hooks.json#L17"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "install.mjs",
+        "line": 295,
+        "snippet": "if (fs.existsSync(legacyHook)) fs.rmSync(legacyHook, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/install.mjs#L295"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "install.mjs",
+        "line": 297,
+        "snippet": "if (fs.existsSync(oldFile)) fs.rmSync(oldFile, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/install.mjs#L297"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 124,
+        "snippet": "fs.rmSync(path.join(paths.backupsDir, oldest), { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L124"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 682,
+        "snippet": "fs.rmSync(tmpRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L682"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 745,
+        "snippet": "fs.rmSync(latestPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L745"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 768,
+        "snippet": "fs.rmSync(paths.notifyStatePath, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L768"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 903,
+        "snippet": "fs.appendFileSync(paths.obsPath, sanitizedLines.join(\"\\n\") + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L903"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 937,
+        "snippet": "if (fs.existsSync(f)) fs.rmSync(f, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L937"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 967,
+        "snippet": "fs.writeFileSync(probe, \"1\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L967"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/evolve_cli.mjs",
+        "line": 968,
+        "snippet": "fs.rmSync(probe, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/evolve_cli.mjs#L968"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 347,
+        "snippet": "fs.writeFileSync(tmpPath, content, \"utf8\");",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L347"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 363,
+        "snippet": "fs.writeFileSync(filePath, content, \"utf8\");",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L363"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 368,
+        "snippet": "fs.rmSync(tmpPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L368"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 410,
+        "snippet": "fs.rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L410"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 428,
+        "snippet": "fs.rmSync(lockPath, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L428"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 815,
+        "snippet": "fs.rmSync(paths.alwaysLocalFile, { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L815"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 833,
+        "snippet": "fs.rmSync(path.join(paths.rulesDir, entry), { force: true });",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L833"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 872,
+        "snippet": "fs.appendFileSync(archivePath, oldChunk.join(\"\\n\") + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L872"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/run_hook.mjs",
+        "line": 879,
+        "snippet": "fs.appendFileSync(obsPath, JSON.stringify(record) + \"\\n\", \"utf8\");",
+        "githubBlobUrl": "https://github.com/ckg2/agy-self-evolve/blob/9186008d1534c8eb11f76748d6184b5410ea65de/scripts/run_hook.mjs#L879"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "2.0.0",
+      "sha": "9186008d1534c8eb11f76748d6184b5410ea65de",
+      "scannedAt": "2026-11-28T06:16:27.518Z",
+      "riskTier": "high",
+      "capabilities": [
+        "fs_write_workspace",
+        "runs_shell_hooks"
+      ]
+    }
+  ]
+}

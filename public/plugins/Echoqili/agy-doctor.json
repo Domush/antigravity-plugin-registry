@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "id": "Echoqili/agy-doctor",
+  "sha": "808fbd393099524cff90ea0f39eeda4c25321902",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T06:16:18.921Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-doctor",
+    "displayName": "AGY Doctor",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agy-doctor",
+        "slashCommand": "/agy-doctor",
+        "description": "Diagnose Antigravity problems on this machine — \"Agent terminated due to error\", the agent freezing inside a git repo, network or proxy failures (git clone, googleapis), Chinese localization lost after a client update, PowerShell profile er",
+        "disableModelInvocation": false,
+        "file": "skills/agy-doctor/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-doctor"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "SessionStart"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.svg\" width=\"84\" alt=\"AGY Doctor logo\" />\n  <h1>AGY Doctor</h1>\n  <p><b>One-command cross-platform diagnostics for Google Antigravity</b></p>\n  <p>English · <a href=\"README.zh-CN.md\">简体中文</a></p>\n</div>\n\n---\n\n**AGY Doctor** diagnoses the most common real-world failures in **Google Antigravity** (Desktop 2.0, IDE, and CLI `agy`) across Windows, macOS, and Linux — with **zero npm dependencies** and **zero modifications to `app.asar`**.\n\n## What It Catches\n\n| Check | Root Cause Caught |\n| :--- | :--- |\n| **Node.js Runtime** | Node `< 20` breaking modern MCP & hook plugins (`agy-fast`, `agent-guard`) |\n| **Node GUI PATH** | macOS Dock-launched client missing Homebrew/NVM `node`, so hooks silently no-op |\n| **Client Install Path** | Non-system-drive Windows installs that break background updates and trigger *\"Agent terminated due to error\"* |\n| **Chinese Localization** | Client auto-updates silently overwriting `app.asar` while leaving `app.asar.bak` behind (includes automatic `SessionStart` banner) |\n| **Git `worktreeConfig`** | `extensions.worktreeConfig=true` causing Antigravity's built-in git parser to drop workspace metadata or freeze |\n| **Direct Reachability** | Latency & reachability checks against `cloudcode-pa.googleapis.com`, `oauth2.googleapis.com`, `github.com`, and `npmjs.org` |\n| **Proxy Alignment** | Mismatch between OS proxy (`Internet Settings` / `scutil --proxy` / `gsettings`), local proxy ports (`7890`, `7897`, `10808`...), and `git http.proxy` |\n| **Shell Profile Noise** | Broken `conda` / shell startup lines polluting every `run_command` output and wasting tokens |\n| **Plugin Manifests** | Malformed `plugin.json` / `mcp_config.json` / `hooks.json` or duplicate plugin `name` collisions |\n\n## Quick Install\n\n**Requirements:** Node.js >= 20, Git.\n\n**Windows (PowerShell):**\n```powershell\nirm https://raw.githubusercontent.com/Echoqili/agy-doctor/main/install.ps1 | iex\n```\n\n**macOS / Linux:**\n```bash\ncurl -fsSL https://raw.githubusercontent.com/Echoqili/agy-doctor/main/install.sh | sh\n```\n\n**npm / npx** (no Git required — installs into `~/.gemini/config/plugins` and runs self-tests):\n```bash\nnpx -y @echoqili/agy-doctor\nagy plugin enable agy-doctor\n```\n\n> **macOS note:** if launched from Dock/Finder, the GUI process may not include Homebrew/NVM's `node` on its `PATH`, so hooks silently do nothing. Start Antigravity from a terminal, or run `launchctl setenv PATH \"/opt/homebrew/bin:/usr/local/bin:$PATH\"` and restart. `agy-doctor` reports this as \"Node.js GUI PATH\".\n\n## Usage\n\nAsk the agent directly in chat:\n- *\"Run a health check on Antigravity\"*\n- *\"Agent keeps saying terminated due to error, help me diagnose\"*\n- *\"git clone keeps failing, check my network and proxy\"*\n\nOr run from terminal:\n```bash\nnode ~/.gemini/config/plugins/agy-doctor/scripts/doctor.mjs --dir .\nnode ~/.gemini/config/plugins/agy-doctor/scripts/doctor.mjs --json\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "Initial release of **agy-doctor**: one-command, cross-platform health diagnostics for Google Antigravity.\n\n9 checks covering the most common real-world failures:\n- Node.js version (<20 breaks modern plugins) and Node GUI PATH visibility on macOS (Dock-launched clients missing Homebrew/NVM node).\n- Antigravity install path (non-system-drive updates) and app.asar version.\n- Chinese localization overwrite detection + automatic `SessionStart` banner.\n- `git extensions.worktreeConfig` incompatibility.\n- Direct reachability of Google API / OAuth / GitHub / npm endpoints.\n- System vs local proxy alignment (Windows registry / macOS scutil / Linux gsettings).\n- Shell profile stderr noise wasting tokens.\n- Plugin manifest parse errors and duplicate-name collisions.\n\nZero npm dependencies, no `app.asar` modification. One-line installers (`install.ps1` / `install.sh`) with macOS GUI PATH fallback.\n\nValidated with `agy plugin validate --strict` — zero warnings. Full docs: README.md / README.zh-CN.md.",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/install.mjs",
+        "line": 43,
+        "snippet": "const r = spawnSync(process.execPath, [join(scriptsDir, t)], { stdio: 'inherit' });",
+        "githubBlobUrl": "https://github.com/Echoqili/agy-doctor/blob/808fbd393099524cff90ea0f39eeda4c25321902/bin/install.mjs#L43"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/doctor.mjs",
+        "line": 27,
+        "snippet": "const r = spawnSync(cmd, args, { encoding: 'utf8', timeout, windowsHide: true });",
+        "githubBlobUrl": "https://github.com/Echoqili/agy-doctor/blob/808fbd393099524cff90ea0f39eeda4c25321902/scripts/doctor.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/doctor.mjs",
+        "line": 120,
+        "snippet": "const req = https.request(url, { method: 'HEAD', timeout }, (res) => { res.resume(); resolve({ ok: true, ms: Date.now() - t0 }); });",
+        "githubBlobUrl": "https://github.com/Echoqili/agy-doctor/blob/808fbd393099524cff90ea0f39eeda4c25321902/scripts/doctor.mjs#L120"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/doctor.mjs",
+        "line": 142,
+        "snippet": "const req = http.request({ host: '127.0.0.1', port, method: 'CONNECT', path: target, timeout });",
+        "githubBlobUrl": "https://github.com/Echoqili/agy-doctor/blob/808fbd393099524cff90ea0f39eeda4c25321902/scripts/doctor.mjs#L142"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "bin/install.mjs",
+        "line": 7,
+        "snippet": "* Copies the packaged plugin files into ~/.gemini/config/plugins/<name>,",
+        "githubBlobUrl": "https://github.com/Echoqili/agy-doctor/blob/808fbd393099524cff90ea0f39eeda4c25321902/bin/install.mjs#L7"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "808fbd393099524cff90ea0f39eeda4c25321902",
+      "scannedAt": "2026-11-28T06:16:18.921Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 1,
+  "id": "hhelibeb/pi-plugin-antigravity",
+  "sha": "7e1b425436aeffb382971cdb778cda68df9245b2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T06:15:45.814Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "pi",
+    "displayName": "Pi Coding Agent",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "pi-cli-runtime",
+        "slashCommand": "/pi-cli-runtime",
+        "description": "Runtime specification for invoking the bundled pi-runner.mjs CLI that drives the local Pi coding agent. Reference this contract when routing task, review, setup, or job commands.",
+        "disableModelInvocation": false,
+        "file": "skills/pi-cli-runtime/SKILL.md"
+      },
+      {
+        "name": "pi-delegate",
+        "slashCommand": "/pi-delegate",
+        "description": "Delegate a bounded coding, debugging, or research task to the local Pi coding agent CLI and return its result verbatim.",
+        "disableModelInvocation": false,
+        "file": "skills/pi-delegate/SKILL.md"
+      },
+      {
+        "name": "pi-jobs",
+        "slashCommand": "/pi-jobs",
+        "description": "Inspect, collect results from, tail logs for, or cancel Pi runs recorded by pi-runner.mjs.",
+        "disableModelInvocation": false,
+        "file": "skills/pi-jobs/SKILL.md"
+      },
+      {
+        "name": "pi-review",
+        "slashCommand": "/pi-review",
+        "description": "Run a read-only code review or adversarial design review with the local Pi coding agent for uncommitted changes or a branch diff.",
+        "disableModelInvocation": false,
+        "file": "skills/pi-review/SKILL.md"
+      },
+      {
+        "name": "pi-setup",
+        "slashCommand": "/pi-setup",
+        "description": "Check whether the local Pi coding agent CLI is installed, configured with a model, and authenticated, and report the setup diagnostics verbatim.",
+        "disableModelInvocation": false,
+        "file": "skills/pi-setup/SKILL.md"
+      },
+      {
+        "name": "pi",
+        "slashCommand": "/pi",
+        "description": "Delegate coding, debugging, code review, or research tasks to the local Pi coding agent CLI from Antigravity. Activate when the user asks to use Pi, review with Pi, get a second opinion from Pi, or delegate work to Pi.",
+        "disableModelInvocation": false,
+        "file": "skills/pi/SKILL.md"
+      }
+    ],
+    "agents": [
+      {
+        "name": "pi-rescue",
+        "description": "Delegate substantial debugging, diagnosis, or implementation tasks to the local Pi coding agent CLI. Use proactively when a second implementation pass, deeper root-cause investigation, or independent coding execution via Pi is needed.",
+        "mainAgent": false,
+        "subagent": true,
+        "file": "agents/pi-rescue.md"
+      }
+    ]
+  },
+  "collisions": {
+    "slashCommands": [
+      "/pi",
+      "/pi-cli-runtime",
+      "/pi-delegate",
+      "/pi-jobs",
+      "/pi-review",
+      "/pi-setup"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [
+      "pi-rescue"
+    ],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.svg\" alt=\"Pi Coding Agent\" width=\"84\" height=\"84\" />\n  <h1>Pi Plugin for Antigravity</h1>\n  <p>Delegate coding, code review, and root-cause investigation from <strong>Google Antigravity</strong> to your local <strong>Pi coding agent</strong> CLI with zero external dependencies and least-privilege tool allowlists.</p>\n  <p>\n    <a href=\"https://github.com/hhelibeb/pi-plugin-antigravity/actions/workflows/ci.yml\"><img src=\"https://github.com/hhelibeb/pi-plugin-antigravity/actions/workflows/ci.yml/badge.svg\" alt=\"CI\" /></a>\n    <img src=\"https://img.shields.io/badge/node-%3E%3D22.0.0-339933?logo=node.js&logoColor=white\" alt=\"Node.js >= 22.0.0\" />\n    <img src=\"https://img.shields.io/badge/dependencies-0-blue\" alt=\"Zero Dependencies\" />\n    <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-green\" alt=\"MIT License\" /></a>\n  </p>\n  <p><strong>English</strong> | <a href=\"README.zh-CN.md\">简体中文</a></p>\n</div>\n\n## Overview\n\n`pi-plugin-antigravity` connects **Google Antigravity** (the `agy` CLI, Antigravity 2.0 app, or Antigravity IDE) to your local **Pi coding agent** (`pi` CLI). You can trigger read-only code reviews, adversarial design reviews, or scoped coding tasks from natural language or slash commands without leaving your active workspace.\n\nThe plugin bundles:\n\n- **Skills** (`pi`, `pi-setup`, `pi-review`, `pi-delegate`, `pi-jobs`, `pi-cli-runtime`) loaded on demand through Antigravity progressive disclosure.\n- **A forwarding subagent** (`pi-rescue`) for delegating substantial debugging or implementation tasks via `invoke_subagent`.\n- **A zero-dependency Node.js runner** (`scripts/pi-runner.mjs`) that invokes `pi --mode json`, streams progress, enforces tool allowlists, and records session history.\n\nThis is an independent community project inspired by [`openai/codex-plugin-cc`](https://github.com/openai/codex-plugin-cc) and [`vacuityv/codex-plugin-antigravity`](https://github.com/vacuityv/codex-plugin-antigravity). It is not affiliated with Google or the Pi maintainers.\n\n## Architecture\n\nNo MCP server or private transport is required. `pi-runner.mjs` invokes your local `pi` binary directly over `--mode json` and can also be used standalone from any terminal or CI workflow.\n\n```mermaid\nflowchart LR\n  A[\"Antigravity Agent\"] -->|\"skill: pi / subagent: pi-rescue\"| B[\"pi-runner.mjs\"]\n  B -->|\"spawn\"| C[\"pi --mode json\"]\n  C -->|\"NDJSON events\"| B\n  B -->|\"progress (stderr)\"| A\n  B -->|\"final text (stdout)\"| A\n```\n\n## Requirements\n\n- **Pi coding agent** `1.7.0` or newer (requires `--mode json`)\n- **Configured provider credentials**: run `pi` once and sign in with `/login`, or run `pi auth login <provider>`\n- **Node.js** `22.0.0` or newer (active/maintenance LTS: 22, 24, 26)\n- **Google Antigravity**: `agy` CLI, Antigravity 2.0 app, or Antigravity IDE\n- **Git**: required for `review` and `adversarial-review`\n\n## Installation\n\nThis package is distributed directly through **GitHub** (no npmjs account or GitHub Packages token required).\n\n### Option 1: One-command install via `npx` (recommended)\n\n```bash\n# Latest default branch\nnpx github:hhelibeb/pi-plugin-antigravity\n\n# Pin a specific release tag or SemVer range\nnpx github:hhelibeb/pi-plugin-antigravity#v0.1.0\nnpx \"github:hhelibeb/pi-plugin-antigravity#semver:^0.1.0\"\n```\n\nThe installer automatically uses `agy plugin install` when the `agy` CLI is available, and falls back to copying a clean plugin bundle into `~/.gemini/config/plugins/pi`.\n\nUseful flags:\n\n```bash\n# Install into the current workspace only (.agents/plugins/pi)\nnpx github:hhelibeb/pi-plugin-antigravity --workspace\n\n# Skip `agy` CLI and copy directly to ~/.gemini/config/plugins/pi\nnpx github:hhelibeb/pi-plugin-antigravity --copy\n\n# Uninstall (add --workspace to remove from the current workspace)\nnpx github:hhelibeb/pi-plugin-antigravity uninstall\n```\n\nYou can also install globally with `npm` (or directly from a GitHub Release `.tgz` tarball without requiring Git):\n\n```bash\n# Install via GitHub shorthand (exposes both `pi-plugin-antigravity` and `pi-runner`)\nnpm install -g github:hhelibeb/pi-plugin-antigravity#v0.1.0\npi-plugin-antigravity\n\n# Or install directly from a GitHub Release tarball (no Git required)\nnpm install -g https://github.com/hhelibeb/pi-plugin-antigravity/releases/download/v0.1.0/pi-plugin-antigravity-0.1.0.tgz\npi-plugin-antigravity\n```\n\n### Option 2: `agy` CLI from a local clone\n\n```bash\ngit clone https://github.com/hhelibeb/pi-plugin-antigravity.git\nagy plugin install ./pi-plugin-antigravity\nagy plugin list\n```\n\n`agy plugin list` should show `pi` with 6 skills and 1 agent (`pi-rescue`). Update later by running `git pull` followed by `agy plugin install ./pi-plugin-antigravity`, or remove with `agy plugin uninstall pi`.\n\n### Option 3: Manual copy (global or single workspace)\n\n```bash\n# Global Antigravity plugins directory\ncp -r pi-plugin-antigravity ~/.gemini/config/plugins/pi\n\n# Or a single workspace\nmkdir -p path/to/project/.agents/plugins\ncp -r pi-plugin-antigravity path/to/project/.agents/plugins/pi\n```\n\nRestart Antigravity and run `/skills` to verify that `pi`, `pi-setup`, `pi-review`, `pi-delegate`, `pi-jobs`, and `pi-cli-runtime` are discovered.\n\n## Quick start\n\nIn Antigravity, ask **\"Is Pi set up?\"** (or run `/pi-setup`). This runs:\n\n```bash\nnode ~/.gemini/config/plugins/pi/scripts/pi-runner.mjs setup\n```\n\nOn Windows PowerShell:\n\n```powershell\nnode \"$env:USERPROFILE\\.gemini\\config\\plugins\\pi\\scripts\\pi-runner.mjs\" setup\n```\n\n`setup` reports the Pi CLI version, binary resolution method, default model and auth status, Git repository availability, and local job storage path.\n\n## Usage\n\n| Natural language prompt | Underlying command |\n| --- | --- |\n| \"Is Pi set up?\" | `pi-runner.mjs setup` |\n| \"Review my uncommitted changes with Pi\" | `review` (read-only) |\n| \"Review this branch against main with Pi\" | `review --base main` (read-only) |\n| \"Run an adversarial design review with Pi\" | `adversarial-review \"<focus>\"` (read-only) |\n| \"Ask Pi to investigate this issue\" | `task \"<prompt>\"` (read-only) |\n| \"Ask Pi to apply the fix\" | `task \"<prompt>\" --write` |\n| \"Ask Pi to fix the bug and run the tests\" | `task \"<prompt>\" --shell` |\n| \"Continue the last Pi session\" | `task \"<prompt>\" --resume-last` |\n| \"Check Pi run status / result / stop it\" | `status` / `result` / `cancel` |\n\nIn the `agy` CLI, companion skills are also directly invocable as slash commands: `/pi-setup`, `/pi-review`, `/pi-delegate`, and `/pi-jobs`.\n\n## Permission model\n\nBecause Pi does not include an OS-level sandbox, the runner enforces least-privilege boundaries through Pi's `--tools` allowlist:\n\n| Command / preset | Allowed Pi tools |\n| --- | --- |\n| `review`, `adversarial-review` | `read,grep,find,ls` (locked; `--write`, `--shell`, and `--tools` are ignored with a warning) |\n| `task` (default) | `read,grep,find,ls` |\n| `task --write` | `read,grep,find,ls,edit,write` (no shell execution) |\n| `task --shell` | `read,grep,find,ls,edit,write,bash,powershell` |\n| `task --tools a,b,c` | Exact custom allowlist, replacing the preset |\n\nKey safeguards:\n\n- `--shell` executes commands with your local OS user privileges. Only enable it when command execution (tests, builds, git operations) is intended.\n- Non-interactive runs pass `--approve` so project trust prompts do not hang; pass `--no-project-trust` to send `--no-approve` for untrusted repositories.\n- Unknown flags (long or short) and value flags missing a value exit with code `2` before spawning `pi`, preventing typos such as `--writ` from silently changing run behavior.\n- Review prompts wrap diffs and untracked files in dynamically sized Markdown backtick fences and mark repository contents as untrusted data.\n\nSee [SECURITY.md](SECURITY.md) for the full threat model and vulnerability reporting policy.\n\n## Execution and job management\n\n- **Recommended inside Antigravity (foreground)**: Run `pi-runner.mjs` in the foreground and let Antigravity's `run_command` manage asynchronous execution and completion notifications. Progress lines stream to `stderr` per tool call so long runs remain visible.\n- **Standalone terminals (`--background`)**: When invoking `pi-runner.mjs` from a standalone shell, `--background` detaches a worker process and returns a job ID immediately. Note that on Windows or inside managed tool shells (such as Antigravity `run_command`), closing the parent shell can terminate detached child processes via process-tree cleanup; use foreground mode there instead.\n- **Session continuity (`--resume-last`)**: Both foreground and background runs record their Pi `sessionId` in `${PI_CODING_AGENT_DIR:-~/.pi/agent}/antigravity-plugin/jobs/<job-id>/meta.json`, allowing `--resume-last` to continue the newest completed session in the same directory.\n\nStored job layout:\n\n```text\nmeta.json    status, mode, phase, prompt summary, pid, childPid, sessionId, usage, exitCode\nargv.json    exact pi argv for background runs (kept separate from meta.json)\npi.log       raw NDJSON event stream (background runs)\noutput.txt   final assistant output\n```\n\nUse `status [--all]`, `result [job-id]`, `log [job-id] --tail 40`, `cancel [job-id]`, and `prune [--days 14]` to inspect and maintain stored runs.\n\n## Large prompts\n\nOS command-line limits (32,767 characters on Windows; 128 KiB per arg on POSIX) can cause `ENAMETOOLONG` errors when inlining large diffs.\n\nWhen a prompt exceeds the byte budget (`24,000` bytes on Windows, `100,000` bytes on POSIX, configurable via `PI_SUBAGENT_MAX_ARG_BYTES`):\n\n1. The runner writes the full prompt to `${PI_SUBAGENT_PROMPTS:-<tmpdir>/pi-antigravity-prompts}/`.\n2. It passes a short pointer instructing Pi to read the file with its `read` tool.\n3. If a custom `--tools` list omits `read`, the runner automatically adds `read` with a warning.\n4. `prune` cleans up expired prompt files alongside finished jobs.\n\n## Configuration\n\n| Environment variable | Description |\n| --- | --- |\n| `PI_BIN` | Explicit path to the `pi` binary when not on `PATH` |\n| `PI_SUBAGENT_MODEL` | Explicit default model override for delegated runs |\n| `PI_SUBAGENT_JOBS` | Custom directory for stored run metadata and logs |\n| `PI_SUBAGENT_PROMPTS` | Custom directory for materialized oversized prompt files |\n| `PI_SUBAGENT_MAX_ARG_BYTES` | Byte budget threshold for prompt materialization |\n| `PI_CODING_AGENT_DIR` | Pi configuration directory (default: `~/.pi/agent`) |\n| `PI_SUBAGENT_RUNNER` | Explicit path to `pi-runner.mjs` (read by skills and `pi-rescue`) |\n\n## Troubleshooting\n\n- **`Pi CLI: not found`**: Verify `pi` is on `PATH`, or set `PI_BIN=/full/path/to/pi`.\n- **`Auth: unconfigured`**: Pi has no default model configured. Run `pi` and choose one with `/model`, or set `PI_SUBAGENT_MODEL=<provider>/<model>`.\n- **Exit code `2` (`unknown option` / `missing value`)**: Run `node scripts/pi-runner.mjs --help` to check valid flags. Both `--flag value` and `--flag=value` are supported.\n- **Background job failed with no log on Windows**: The parent tool shell terminated the detached worker on exit. Re-run without `--background` so Antigravity manages the run asynchronously.\n- **Inspecting a failed background job**: Run `node scripts/pi-runner.mjs log <job-id> --tail 40` or `node scripts/pi-runner.mjs result <job-id>` to view captured events or stderr.\n\n## Project structure\n\n```text\nplugin.json                      Antigravity plugin manifest\nassets/logo.svg                  Plugin icon\nagents/\n  pi-rescue.md                   Forwarding subagent for invoke_subagent\nskills/\n  pi/SKILL.md                    Main entry skill and command routing\n  pi-cli-runtime/SKILL.md        CLI runtime contract\n  pi-setup/SKILL.md              /pi-setup\n  pi-review/SKILL.md             /pi-review\n  pi-delegate/SKILL.md           /pi-delegate\n  pi-jobs/SKILL.md               /pi-jobs\nscripts/\n  install-plugin.mjs             Standalone `npx` / `npm` installer and uninstaller for Antigravity\n  pi-runner.mjs                  CLI entry point\n  validate-plugin.mjs            Offline manifest, skill/agent, and syntax validator\n  lib/proc.mjs                   Binary resolution, argv building, NDJSON parsing, process control\n  lib/git.mjs                    Git diff scoping, untracked file reading, review prompt builder\n  lib/jobs.mjs                   Atomic on-disk job store and reconciliation\n  lib/prompt.mjs                 Oversized prompt materialization and cleanup\n  lib/output.mjs                 Duration, usage, and table formatters\ntest/                            Unit and end-to-end CLI tests (node:test with a stub Pi binary)\n```\n\n## Development\n\n```bash\nnpm run check                  # Offline manifest, skill/agent frontmatter, and JS syntax check\nnpm test                       # Run unit and CLI end-to-end tests (node --test)\nagy plugin validate --strict . # Official Antigravity plugin validator\nnode scripts/pi-runner.mjs setup\n```\n\nSee [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md), and [LICENSE](LICENSE).\n\n## Limitations\n\n- **Skills instead of `commands/`**: Antigravity plugins load skills, agents, rules, hooks, and MCP servers rather than a separate `commands/` directory, so every user entry point is packaged as a skill.\n- **Model resolution**: The runner only passes `--model` when `--model` or `PI_SUBAGENT_MODEL` is set; otherwise Pi resolves its own default model and provider credentials from `settings.json`.\n- **Windows binary shims**: Node cannot directly spawn `.cmd`/`.ps1` shims safely without shell parsing, so the runner resolves the underlying Node.js entry point (managed install or npm global shim) and falls back to hardened escaping if needed.\n- **Review diff budgets**: Untracked files are embedded up to 20 files / 60 KB total (skipping symlinks and binaries). Diffs truncate on UTF-8 character boundaries at 200 KB; Pi can inspect any remaining files directly with its read-only tools.\n",
+  "latestReleaseNotes": "## Install\n\n### One-command Antigravity plugin install (via `npx` + GitHub)\n\n```bash\nnpx github:hhelibeb/pi-plugin-antigravity#v0.1.0\n```\n\nInstall into the current workspace only (`.agents/plugins/pi`):\n\n```bash\nnpx github:hhelibeb/pi-plugin-antigravity#v0.1.0 --workspace\n```\n\n### Direct `npm` tarball install (no Git required)\n\n```bash\nnpm install -g https://github.com/hhelibeb/pi-plugin-antigravity/releases/download/v0.1.0/pi-plugin-antigravity-0.1.0.tgz\npi-plugin-antigravity\n```\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install-plugin.mjs",
+        "line": 250,
+        "snippet": "return spawnSync(process.env.ComSpec || \"cmd.exe\", [\"/d\", \"/s\", \"/c\", `\"${quoted}\"`], { encoding: \"utf8\", windowsHide: true, windowsVerbatimArguments: true, });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L250"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/install-plugin.mjs",
+        "line": 256,
+        "snippet": "return spawnSync(resolved.cmd, [...resolved.prefix, ...args], { encoding: \"utf8\", windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L256"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/git.mjs",
+        "line": 17,
+        "snippet": "const result = spawnSync(\"git\", args, { cwd, encoding: \"utf8\", maxBuffer: 128 * 1024 * 1024, windowsHide: true, });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/git.mjs#L17"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/output.mjs",
+        "line": 37,
+        "snippet": "const match = /^(.*)-\\d{4}-\\d{2}-\\d{2}T[0-9A-Za-z-]+-([0-9a-f]{6})$/.exec(value);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/output.mjs#L37"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/proc.mjs",
+        "line": 99,
+        "snippet": "const match = /[\"']?(?:%dp0%|%~dp0)[\\\\/]+([^\"'\\r\\n]+?\\.(?:js|mjs|cjs))[\"']?/i.exec(content);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/proc.mjs#L99"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/proc.mjs",
+        "line": 468,
+        "snippet": "child = spawn(spec.cmd, spec.args, { cwd, detached: process.platform !== \"win32\", stdio: [\"ignore\", \"pipe\", \"pipe\"], windowsHide: true, windowsVerbatimArguments: spec.windowsVerbat",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/proc.mjs#L468"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/proc.mjs",
+        "line": 596,
+        "snippet": "return spawnSync(spec.cmd, spec.args, { encoding: \"utf8\", windowsHide: true, windowsVerbatimArguments: spec.windowsVerbatimArguments, timeout: PROBE_TIMEOUT_MS, });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/proc.mjs#L596"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/lib/proc.mjs",
+        "line": 692,
+        "snippet": "spawnSync(\"taskkill\", [\"/pid\", String(pid), \"/t\", \"/f\"], { windowsHide: true, stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/proc.mjs#L692"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/pi-runner.mjs",
+        "line": 422,
+        "snippet": "const child = spawn(process.execPath, [SELF, \"__run\", id], { cwd, detached: true, stdio: \"ignore\", windowsHide: true, env: { ...process.env }, });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/pi-runner.mjs#L422"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-plugin.mjs",
+        "line": 18,
+        "snippet": "const match = /^---\\r?\\n([\\s\\S]*?)\\r?\\n---/.exec(content);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/validate-plugin.mjs#L18"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-plugin.mjs",
+        "line": 23,
+        "snippet": "const listItem = /^\\s*-\\s+(.+)$/.exec(rawLine);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/validate-plugin.mjs#L23"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-plugin.mjs",
+        "line": 28,
+        "snippet": "const kv = /^([A-Za-z0-9_-]+):\\s*(.*)$/.exec(rawLine);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/validate-plugin.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/validate-plugin.mjs",
+        "line": 167,
+        "snippet": "const check = spawnSync(process.execPath, [\"--check\", file], { encoding: \"utf8\", windowsHide: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/validate-plugin.mjs#L167"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install-plugin.mjs",
+        "line": 297,
+        "snippet": "fs.rmSync(backup, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L297"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install-plugin.mjs",
+        "line": 309,
+        "snippet": "fs.rmSync(stage, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L309"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install-plugin.mjs",
+        "line": 362,
+        "snippet": "fs.rmSync(stageRoot, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L362"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/install-plugin.mjs",
+        "line": 476,
+        "snippet": "fs.rmSync(targetDir, { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L476"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/jobs.mjs",
+        "line": 72,
+        "snippet": "fs.writeFileSync(target.argv, JSON.stringify(args));",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/jobs.mjs#L72"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/jobs.mjs",
+        "line": 142,
+        "snippet": "fs.writeFileSync(tmp, JSON.stringify(meta, null, 2));",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/jobs.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/jobs.mjs",
+        "line": 146,
+        "snippet": "fs.rmSync(tmp, { force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/jobs.mjs#L146"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/jobs.mjs",
+        "line": 342,
+        "snippet": "fs.rmSync(path.join(root, name), { recursive: true, force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/jobs.mjs#L342"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/prompt.mjs",
+        "line": 45,
+        "snippet": "fs.writeFileSync(file, prompt);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/prompt.mjs#L45"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/lib/prompt.mjs",
+        "line": 74,
+        "snippet": "fs.rmSync(file, { force: true });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/lib/prompt.mjs#L74"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pi-runner.mjs",
+        "line": 317,
+        "snippet": "fs.writeFileSync(resolvedOutputFile, text);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/pi-runner.mjs#L317"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pi-runner.mjs",
+        "line": 346,
+        "snippet": "if (text) fs.writeFileSync(paths(id).output, text);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/pi-runner.mjs#L346"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pi-runner.mjs",
+        "line": 782,
+        "snippet": "const logStream = fs.createWriteStream(target.log, { flags: \"a\" });",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/pi-runner.mjs#L782"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pi-runner.mjs",
+        "line": 819,
+        "snippet": "fs.writeFileSync(target.output, text);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/pi-runner.mjs#L819"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/pi-runner.mjs",
+        "line": 822,
+        "snippet": "fs.writeFileSync(meta.outputFile, text);",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/pi-runner.mjs#L822"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/pi-rescue.md",
+        "line": 22,
+        "snippet": "- POSIX: `$HOME/.gemini/config/plugins/pi/scripts/pi-runner.mjs`, `.agents/plugins/pi/scripts/pi-runner.mjs`, `./plugins/pi/scripts/pi-runner.mjs`",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/agents/pi-rescue.md#L22"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "agents/pi-rescue.md",
+        "line": 40,
+        "snippet": "- `--shell`: add only when the caller expects Pi to run shell commands (git, tests, builds).",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/agents/pi-rescue.md#L40"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install-plugin.mjs",
+        "line": 138,
+        "snippet": "/** Resolve global Antigravity config root (~/.gemini/config unless overridden). */",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L138"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install-plugin.mjs",
+        "line": 510,
+        "snippet": "--global Install/uninstall globally (default; uses \\`agy plugin\\` when available, else ~/.gemini/config/plugins/${manifest.name})",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L510"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "scripts/install-plugin.mjs",
+        "line": 521,
+        "snippet": "ANTIGRAVITY_CONFIG_DIR Override global Antigravity config dir (default: ~/.gemini/config)",
+        "githubBlobUrl": "https://github.com/hhelibeb/pi-plugin-antigravity/blob/7e1b425436aeffb382971cdb778cda68df9245b2/scripts/install-plugin.mjs#L521"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "7e1b425436aeffb382971cdb778cda68df9245b2",
+      "scannedAt": "2026-11-28T06:15:45.814Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}
