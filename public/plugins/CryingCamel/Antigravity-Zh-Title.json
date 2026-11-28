@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "id": "CryingCamel/Antigravity-Zh-Title",
+  "sha": "e5fc9974eef369206615904d75d3281ec31e1e11",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:12:45.059Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-zh-title",
+    "displayName": "中文会话标题",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" width=\"84\" height=\"84\" alt=\"Antigravity 中文会话标题\" />\n\n# Antigravity 中文会话标题\n\n**让 Antigravity 新生成的英文会话标题自动变成干净、顺眼的简体中文**\n\n<p>\n  <a href=\"./LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-2563eb?style=flat-square\" alt=\"License: MIT\" /></a>\n  <img src=\"https://img.shields.io/badge/Antigravity-2.x-0ea5e9?style=flat-square\" alt=\"Antigravity 2.x\" />\n  <img src=\"https://img.shields.io/badge/Node.js-%3E%3D22-16a34a?style=flat-square\" alt=\"Node.js >= 22\" />\n  <img src=\"https://img.shields.io/badge/Zero_Dependencies-ESM-6366f1?style=flat-square\" alt=\"Zero Dependencies\" />\n</p>\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/preview-dark.png\" />\n  <source media=\"(prefers-color-scheme: light)\" srcset=\"assets/preview-light.png\" />\n  <img src=\"assets/preview-light.png\" width=\"100%\" alt=\"英文原自动标题与插件改写后的中文标题对比预览\" />\n</picture>\n\n<sub>示意图使用虚构示例会话绘制，GitHub 会随深浅色主题自动切换。</sub>\n\n</div>\n\n---\n\n平时拿中文跟 Antigravity 聊天，侧边栏的自动标题还是经常冒出一长串英文，或者干脆把 `/swarm` 这类内置命令错认成 `Docker Swarm Introduction`。全局规则只管主对话回复，管不到客户端自己的标题生成。\n\n先说清楚定位：**这就是一个很小很小的单功能插件。** 现在社区里已经有不少功能更全的 Antigravity 增强插件带有类似能力，如果你已经在用大而全的套件，没必要多装一个；它只适合**不想要别的花活、单纯就想把会话标题自动改成中文**的人。\n\n实现上也尽量克制：**不改客户端安装包、不打二进制补丁、也不往界面里硬塞 DOM 样式**，而是用 Antigravity 自己的 Sidecar 机制，在后台通过本机 CDP 调用前端原生重命名接口，把新冒出来的英文标题直接写回成干净的简体中文。\n\n---\n\n## 它会怎么命名\n\n- **直接写回原生标题**：改写的是 Antigravity 原生 `annotations.title`，重启客户端、全局搜索都能直接搜中文，不是表面盖一层前端译文。\n- **保留专业词不瞎翻**：内置专有名词保护表，`Antigravity` 不会翻成“反重力”，`GitHub`、`Codex`、`Docker`、`Skill`、`Token`、`MCP` 等词保持原样；还可以在配置文件里追加你自己的项目名。\n- **去掉首尾废话**：自动剥掉开头的“安装 / 下载 / 排查 / 如何 / 关于”以及结尾的“方案 / 分析 / 规划 / 说明 / 项目”等泛化尾巴，留最直接的主题名（比如 `Prompt Cache Hit Rate Analysis` → `提示缓存命中率`）。\n- **结合首轮对话内容纠偏**：会读本地 `transcript.jsonl`，碰到标题为空、只有单个文件名，或者把 `/swarm` 错认成 `Docker Swarm` 的情况，直接按真实提问意图起名。\n- **不乱动你的归档和手改标题**：常驻扫描默认只管活跃顶层会话，跳过子智能体（Subagent）和已归档会话；如果你自己手动把某条对话改回了英文，它不会反复覆盖回去。\n- **随时一键还原**：每次改写都会把原标题存在本地 `state.json`，后悔了跑一条命令就能全恢复。\n- **不塞多余 Skill**：纯后台运行，不会往你的全局 Skill 列表里多加任何条目。\n\n---\n\n## 安装前注意（重要）\n\n1. **环境要求**：本机已安装 **Node.js >= 22**（用到了内置 `fetch` 和 `WebSocket`，无需 `npm install`）。\n2. **需要客户端开启本机 CDP 调试端口（`DevToolsActivePort`）**：\n   - 如果你已经装了 [Agy Powertools](https://github.com/WhiteBr1ck/agy-powertools) 等带调试端口启动的插件，直接装上就能用，什么都不用额外配。\n   - 如果用的是纯原版 Antigravity，需要给启动快捷方式加上 `--remote-debugging-port=9222`（或其他空闲端口），让客户端生成 `DevToolsActivePort` 文件。\n3. **联网说明**：默认走微软 Edge 免费翻译，失败自动切 Google GTX，支持通过 `HTTP_PROXY` / `HTTPS_PROXY` 环境变量走代理（`sidecar.json` 已开启 `NODE_USE_ENV_PROXY=1`）。如果想完全用大模型结合对话上下文起名，也可以自己在 `config.json` 里填一个 OpenAI 兼容接口。\n\n---\n\n## 安装与卸载\n\n### Windows（PowerShell）\n\n下载仓库或 [Releases](https://github.com/CryingCamel/Antigravity-Zh-Title/releases) 压缩包解压后，在目录里运行：\n\n```powershell\n# 安装（覆盖安装会保留你的还原记录与配置）\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\Install.ps1\n\n# 卸载（默认保留还原记录；加 -PurgeData 连同日志与记录一起删）\npowershell -NoProfile -ExecutionPolicy Bypass -File .\\Uninstall.ps1\n```\n\n### macOS / Linux\n\n```sh\n# 安装\nsh ./install.sh\n\n# 卸载（加 --purge-data 连同数据一起删）\nsh ./uninstall.sh\n```\n\n装完后打开或重启 Antigravity，在侧栏「插件」页确认 **中文会话标题（`agy-zh-title`）** 处于开启状态即可。\n\n---\n\n## 常用维护命令\n\n数据与日志统一放在 `~/.gemini/antigravity/plugin_data/agy-zh-title/`（包含 `state.json`、`daemon.log`、`hook.log`、`config.json`）。\n\n下面几条命令在普通终端里直接跑就行（全部通过本机 CDP，无需任何 Token）：\n\n```powershell\n# 手动触发一次扫描（预览但不写入，加 --include-archived 可顺带看归档会话）\nnode \"$HOME\\.gemini\\config\\plugins\\agy-zh-title\\sidecars\\daemon\\main.mjs\" --once --dry-run\n\n# 一次性把所有未改名的历史会话（含已归档）也改成中文\nnode \"$HOME\\.gemini\\config\\plugins\\agy-zh-title\\sidecars\\daemon\\main.mjs\" --once --include-archived\n\n# 无损还原全部被本插件改写过的原始英文标题（可先加 --dry-run 预览）\nnode \"$HOME\\.gemini\\config\\plugins\\agy-zh-title\\sidecars\\daemon\\main.mjs\" --restore-all\n\n# 查看当前配置、已记录条数和最近运行日志\nnode \"$HOME\\.gemini\\config\\plugins\\agy-zh-title\\scripts\\translate-title.mjs\" --status\n```\n\n---\n\n## 可选自定义配置\n\n默认零配置即可运行。如果想改翻译引擎、追加不想被翻译的项目专有名词，或者接入自己的大模型直接总结标题，可以把 [`config.example.json`](./config.example.json) 复制为：\n\n```text\n~/.gemini/antigravity/plugin_data/agy-zh-title/config.json\n```\n\n示例：\n\n```json\n{\n  \"enabled\": true,\n  \"engine\": \"edge\",\n  \"targetLang\": \"zh-CN\",\n  \"pollIntervalMs\": 4000,\n  \"protectedTerms\": [\n    \"MyCustomApp\",\n    \"InternalSDK\"\n  ],\n  \"ai\": {\n    \"baseUrl\": \"https://api.openai.com/v1\",\n    \"apiKey\": \"sk-你的密钥\",\n    \"model\": \"gpt-4o-mini\"\n  }\n}\n```\n\n> `ai` 字段留 `null` 或省略即使用免费翻译引擎；若填写了 `ai`，日志会自动屏蔽 `apiKey`，不会落盘泄露。\n\n---\n\n## 致谢与说明\n\n- 本项目全部代码独立编写，零外部依赖，以 [MIT License](./LICENSE) 开源。\n- Sidecar + 本机 CDP 挂载的工程思路受到 Antigravity 社区生态（如 [Agy Powertools](https://github.com/WhiteBr1ck/agy-powertools) 等项目）的启发，在此一并致谢。\n",
+  "latestReleaseNotes": "首个公开版本 `v1.0.0`。\n\n这是一个很小的单功能 Antigravity 插件，只做一件事：通过官方 Sidecar + 本机 CDP 自动将新生成的英文会话标题改写为简洁明了的简体中文名词短语并写回原生标题。\n\n### 包含内容\n- 常驻后台 Sidecar（零第三方依赖、不改客户端安装包、不注入 DOM/CSS）与 `Stop` Hook 唤醒器\n- 专有名词保护（`Antigravity`、`GitHub`、`Codex`、`Docker`、`Skill`、`Token` 等，支持在 `config.json` 中自定义追加）\n- 结合 `transcript.jsonl` 首轮对话内容纠偏与首尾冗余词剥离\n- 零 Token 一键批量处理历史会话与无损还原（`--once` / `--restore-all`）\n- Windows（`Install.ps1` / `Uninstall.ps1`）与 macOS / Linux（`install.sh` / `uninstall.sh`）安装卸载脚本",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "scripts/on-stop.mjs",
+        "line": 59,
+        "snippet": "const child = spawn(process.execPath, workerArgs, { detached: true, stdio: 'ignore', windowsHide: true, env: process.env });",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/on-stop.mjs#L59"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/daemon/main.mjs",
+        "line": 75,
+        "snippet": "const m = /^(https?):\\/\\/(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::\\d+)?(\\/[^?#]*)?(?:[?#]|$)/i.exec(url);",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/sidecars/daemon/main.mjs#L75"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/storage.mjs",
+        "line": 65,
+        "snippet": "writeFileSync(tmpPath, JSON.stringify(data, null, 2) + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/storage.mjs#L65"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "scripts/storage.mjs",
+        "line": 203,
+        "snippet": "writeFileSync(tmpPath, lines.join('\\n') + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/storage.mjs#L203"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/translate-title.mjs",
+        "line": 41,
+        "snippet": "const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Connect-Protocol-Version': '1', 'x-antigravity-csrf-token': csrfToken }, body: JSON.s",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/translate-title.mjs#L41"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/translator.mjs",
+        "line": 320,
+        "snippet": "const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': DEFAULT_UA }, body: JSON.stringify([String(text || '')]), signal: AbortS",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/translator.mjs#L320"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/translator.mjs",
+        "line": 350,
+        "snippet": "const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'User-Agent': DEFAULT_UA }, body: `q=${encodeURICompone",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/translator.mjs#L350"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "scripts/translator.mjs",
+        "line": 466,
+        "snippet": "const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` }, body: JSON.stringify({ model, temperature: 0",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/scripts/translator.mjs#L466"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/daemon/main.mjs",
+        "line": 85,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(2500) });",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/sidecars/daemon/main.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/daemon/main.mjs",
+        "line": 131,
+        "snippet": "const ws = new WebSocket(wsUrl);",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/sidecars/daemon/main.mjs#L131"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/daemon/main.mjs",
+        "line": 323,
+        "snippet": "fs.writeFileSync(pidPath, `${process.pid}\\n`, 'utf8');",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/sidecars/daemon/main.mjs#L323"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/daemon/main.mjs",
+        "line": 327,
+        "snippet": "if (cur === process.pid) fs.unlinkSync(pidPath);",
+        "githubBlobUrl": "https://github.com/CryingCamel/Antigravity-Zh-Title/blob/e5fc9974eef369206615904d75d3281ec31e1e11/sidecars/daemon/main.mjs#L327"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "e5fc9974eef369206615904d75d3281ec31e1e11",
+      "scannedAt": "2026-11-28T18:12:45.059Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

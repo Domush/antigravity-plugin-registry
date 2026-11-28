@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "retailvest-com/antigravity-plugin",
-  "sha": "9b7f375d23c5379f8312596a5d9ed44eb3aad2ca",
+  "sha": "3d14160c620482b437b6078456a457105ae30987",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:19:39.366Z",
+  "scannedAt": "2026-11-28T18:12:31.406Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "retailvest",
@@ -36,7 +36,7 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "# RetailVest Smart Money for Antigravity\n\nAsk Antigravity what famous investors own and trade, straight from public SEC and CFTC filings.\n\n- **Investor portfolios:** the latest 13F of about 250 well-known investors and hedge funds (Berkshire Hathaway,\n  Pershing Square, Scion...), with last quarter's new, added, trimmed and sold positions.\n- **Who owns a stock:** which famous funds hold it, how much, and who bought or sold.\n- **Copy an investor:** what $10,000 copying an investor's 13F the day it became public would have earned against the\n  S&P 500 since 2016.\n- **Company briefs:** insider trades (Form 4), audited figures, auditor and largest holders of any US public company.\n- **5%+ stakes:** activist 13D and passive 13G filings.\n- **Futures positioning:** how speculators are positioned in gold, oil, corn, bonds and other markets (CFTC Commitments\n  of Traders), and how crowded each market is.\n\n## Install\n\n```\nagy plugin install https://github.com/retailvest-com/antigravity-plugin\n```\n\nThe first time a tool runs, Antigravity opens RetailVest's sign-in page. Sign in or create a free account and choose\nAllow; then paste the code back into Antigravity. A free account includes a monthly allowance of look-ups.\n\n## Try\n\n- \"What did Warren Buffett buy and sell last quarter?\"\n- \"Which hedge funds own Nvidia, and who added to it?\"\n- \"Would copying Bill Ackman's 13F have beaten the S&P 500?\"\n- \"Show recent insider trades at Apple.\"\n- \"How crowded are speculators in gold futures?\"\n\n## Notes\n\n13F filings are quarterly and arrive up to 45 days after the quarter; they show long US positions only. Data and\nresearch, not investment advice.\n\nPrivacy: https://www.retailvest.com/privacy · Terms: https://www.retailvest.com/terms · Support:\nhttps://www.retailvest.com/support\n\nRetailVest is a product of AVPMR Technologies Inc.\n",
+  "readmeMarkdown": "# RetailVest Smart Money for Antigravity\n\n[![M8ven Score](https://m8ven.ai/badge/mcp/retailvest-com-antigravity-plugin-tcutun?v=616eaa3597931e0a2c0e68ed467f1820&variant=verified)](https://m8ven.ai/mcp/retailvest-com-antigravity-plugin-tcutun?s=readme)\n\nAsk Antigravity what famous investors own and trade, straight from public SEC and CFTC filings.\n\n- **Investor portfolios:** the latest 13F of about 250 well-known investors and hedge funds (Berkshire Hathaway,\n  Pershing Square, Scion...), with last quarter's new, added, trimmed and sold positions.\n- **Who owns a stock:** which famous funds hold it, how much, and who bought or sold.\n- **Copy an investor:** what $10,000 copying an investor's 13F the day it became public would have earned against the\n  S&P 500 since 2016.\n- **Company briefs:** insider trades (Form 4), audited figures, auditor and largest holders of any US public company.\n- **5%+ stakes:** activist 13D and passive 13G filings.\n- **Futures positioning:** how speculators are positioned in gold, oil, corn, bonds and other markets (CFTC Commitments\n  of Traders), and how crowded each market is.\n\n## Install\n\n```\nagy plugin install https://github.com/retailvest-com/antigravity-plugin\n```\n\nThe first time a tool runs, Antigravity opens RetailVest's sign-in page. Sign in or create a free account and choose\nAllow; then paste the code back into Antigravity. A free account includes a monthly allowance of look-ups.\n\n## Try\n\n- \"What did Warren Buffett buy and sell last quarter?\"\n- \"Which hedge funds own Nvidia, and who added to it?\"\n- \"Would copying Bill Ackman's 13F have beaten the S&P 500?\"\n- \"Show recent insider trades at Apple.\"\n- \"How crowded are speculators in gold futures?\"\n\n## Notes\n\n13F filings are quarterly and arrive up to 45 days after the quarter; they show long US positions only. Data and\nresearch, not investment advice.\n\nPrivacy: https://www.retailvest.com/privacy · Terms: https://www.retailvest.com/terms · Support:\nhttps://www.retailvest.com/support\n\nRetailVest is a product of AVPMR Technologies Inc.\n",
   "latestReleaseNotes": "",
   "securityReport": {
     "riskTier": "elevated",
@@ -46,6 +46,15 @@
     "findings": []
   },
   "history": [
+    {
+      "version": "1.1.0",
+      "sha": "3d14160c620482b437b6078456a457105ae30987",
+      "scannedAt": "2026-11-28T18:12:31.406Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "network_external_mcp"
+      ]
+    },
     {
       "version": "1.1.0",
       "sha": "9b7f375d23c5379f8312596a5d9ed44eb3aad2ca",

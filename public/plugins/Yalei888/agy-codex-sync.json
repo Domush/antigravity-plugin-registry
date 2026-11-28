@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "id": "Yalei888/agy-codex-sync",
+  "sha": "8b319d3cac6cc5bbae4283bf25a4ff00fb80b436",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:13:06.772Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "agy-codex-sync",
+    "displayName": "反重力 ⇄ Codex 同步 (Codex Sync)",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "agy-codex-sync",
+        "slashCommand": "/agy-codex-sync",
+        "description": "Open the Antigravity ⇄ Codex Sync side panel on Windows to browse local Codex and Antigravity conversations, preview messages, and import conversations in either direction. Use when the user asks to sync or import conversations between Anti",
+        "disableModelInvocation": false,
+        "file": "skills/agy-codex-sync/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/agy-codex-sync"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# agy-codex-sync — Antigravity ⇄ Codex Session Sync Plugin for Windows\n\n> **反重力 (Google Antigravity) ⇄ OpenAI Codex 双向对话同步插件（Windows 原生适配版）**\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)\n[![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)](https://github.com/Yalei888/agy-codex-sync)\n[![Runtime: Node.js 22+](https://img.shields.io/badge/Node.js-22%2B%20(Zero%20Deps)-339933?logo=node.js)](https://nodejs.org/)\n\n在 **Google Antigravity（反重力）** 和 **OpenAI Codex Desktop** 之间来回切换时（比如额度用完、想换模型审查代码、或者接力继续同一个开发任务），不需要再手动复制粘贴聊天记录！\n\n**`agy-codex-sync`** 是一个专为 **Windows** 打造的 Antigravity Sidecar 侧栏插件，让你直接在反重力侧边栏中**可视化浏览、搜索、预览**本地两端的历史对话，并**一键选择双向导入**。\n\n---\n\n## 为什么做这个插件？ · Why This Exists\n\n在 Windows 平台上，现有的跨 Agent 同步工具存在明显空缺：\n- **`ccx`**（macOS 菜单栏工具）：仅支持 macOS 13+，依赖 Swift / `/Applications`，无法在 Windows 运行。\n- **`session-sync`**：只支持从 Claude Code 单向同步到 Codex，不支持 Antigravity，也没有可视化选择界面。\n- **各类 History Viewer**：仅支持只读查看，无法直接把历史会话导入对方侧边栏继续对话。\n\n**`agy-codex-sync`** 补齐了 **Windows + Antigravity ⇄ Codex 可视化双向导入** 这块拼图，并且**零外部 npm 依赖**（直接基于 Node.js 原生 `node:sqlite` 与 Antigravity Sidecar SDK）。\n\n---\n\n## 核心特性 · Features\n\n- **可视化侧边栏面板（Sidecar UI）**\n  - 在 Antigravity 侧栏直接查看本机所有 **Codex** 和 **Antigravity** 对话列表。\n  - 支持按标题 / 项目路径实时搜索，点击任意对话即可**预览最近对话内容**，避免选错会话。\n  - 自动过滤 Codex 后台 Subagent 记录，只展示顶层用户对话。\n- **Codex ➔ 一键导入反重力（Antigravity）**\n  - 自动读取 `~/.codex/sessions/**/rollout-*.jsonl` 与 `~/.codex/state_5.sqlite`（只读快照）。\n  - 自动清洗 `<environment_context>`、`<skills_instructions>`、`<tools>` 等系统注入噪声，只保留真实对话内容。\n  - 长对话自动按 Token 预算智能压缩（保留首轮需求、历史提问摘要和最近完整对话）。\n  - 直接调用 Antigravity 官方本地 `ConversationService/CreateConversation` 接口，在反重力左侧栏新建一条带上下文的对话（可选 Flash / Pro / Flash Lite 模型），也支持一键复制交接上下文手动粘贴到当前对话。\n- **反重力 ➔ 一键导入 Codex**\n  - 自动解析 Antigravity 的 `brain/<id>/.system_generated/logs/transcript.jsonl`（无需逆向 `.pb`）。\n  - 生成标准 **UUIDv7** 格式的 Codex Rollout JSONL 文件到 `~/.codex/sessions/YYYY/MM/DD/`。\n  - 自动以 UTF-8 追加索引到 `~/.codex/session_index.jsonl`（解决 Windows 中文标题乱码问题）。\n  - 自动读取本机 Codex 项目列表（`projects` / `project_roots`），支持自动按工作目录匹配或手动指定目标 Codex 项目，并安全注册到 `state_5.sqlite`（若 Codex 正在独占锁库则优雅跳过并提示，绝不损坏数据库）。\n- **关联记录追踪（Pairs）**\n  - 本地维护 `pairs.json` 记录已同步的 `Antigravity ⇄ Codex` 对话关联，清晰标示 `✓ 已关联` / `○ 未同步`，支持随时取消关联。\n- **100% 本地运行 · 安全无侵入**\n  - 无服务器、无账号、无遥测，所有数据仅在本机读写。\n  - 读取 `state_5.sqlite` 和 `conversation_summaries.db` 时均先拷贝临时快照（含 `-wal`/`-shm`），绝不与正在运行的 Codex 或 Antigravity 发生锁冲突。\n\n---\n\n## 工作原理 · How It Works\n\n```text\n  Antigravity (反重力)                                OpenAI Codex (Windows)\n  ├─ ConversationService (HTTP+JSON)                  ├─ ~/.codex/sessions/**/rollout-*.jsonl\n  ├─ conversation_summaries.db (只读快照)              ├─ ~/.codex/session_index.jsonl (UTF-8)\n  └─ brain/<id>/.system_generated/logs/transcript     └─ ~/.codex/state_5.sqlite (只读快照 / 安全注册)\n                 \\                                               /\n                  \\_____________________________________________/\n                                         |\n                           agy-codex-sync (Sidecar Plugin)\n                           ├─ lib/codex.mjs & lib/antigravity.mjs\n                           ├─ lib/sync-engine.mjs (智能压缩 + pairs.json)\n                           └─ index.html (侧栏可视化选择与一键双向导入)\n```\n\n---\n\n## 环境要求 · Requirements\n\n- **操作系统**：Windows 10 / 11\n- **运行时**：Node.js 22+（需要内置 `node:sqlite`，Antigravity 自带或系统已装均可）\n- **应用**：本地已安装 **Google Antigravity** 与 **OpenAI Codex**（支持 Windows Store 版与 CLI 版）\n\n---\n\n## 快速安装 · Installation\n\n### 方式一：克隆后一键安装（推荐）\n在 PowerShell 中运行：\n\n```powershell\ngit clone https://github.com/Yalei888/agy-codex-sync.git\ncd agy-codex-sync\npowershell -ExecutionPolicy Bypass -File .\\scripts\\install.ps1\n```\n\n安装脚本会自动将插件复制到：\n`%USERPROFILE%\\.gemini\\config\\plugins\\agy-codex-sync`\n\n安装完成后，**在 Antigravity 插件管理中启用/重载插件（或重启 Antigravity）**即可在侧边栏看到 **「反重力 ⇄ Codex 同步」** 面板；也可以在反重力聊天框中直接说：\n> “打开反重力 ⇄ Codex 同步面板”\n\n---\n\n## 使用说明 · Usage\n\n1. **把 Codex 对话导入反重力**：\n   - 切换到 **`Codex ➔ 导入反重力`** 标签页 → 搜索并点击一条 Codex 对话预览内容 → 可自定义标题与模型档位 → 点击 **「一键导入到反重力」**。\n2. **把反重力对话导入 Codex**：\n   - 切换到 **`反重力 ➔ 导入 Codex`** 标签页 → 点击一条反重力对话 → 选择目标 Codex 项目（或留空自动匹配原工作目录）→ 点击 **「一键导入到 Codex」** → 刷新或重开 Codex 即可在侧边栏看到导入的会话。\n3. **手动复制上下文兜底**：\n   - 两个方向均提供 **「复制上下文」** 按钮，随时一键复制整理好的 Markdown 交接文本，直接粘贴到任意已有对话中续聊。\n\n---\n\n## 目录结构 · Project Structure\n\n```text\nagy-codex-sync/\n├── plugin.json                         # Antigravity 插件清单\n├── logo.svg                            # 插件图标\n├── scripts/\n│   └── install.ps1                     # Windows 一键安装/更新脚本\n├── skills/\n│   └── agy-codex-sync/\n│       └── SKILL.md                    # 聊天内快捷唤起侧栏 Skill\n├── sidecars/\n│   └── codex_sync/\n│       ├── sidecar.json                # Sidecar 侧栏配置\n│       ├── server.mjs                  # Sidecar HTTP API 服务\n│       ├── index.html                  # 侧栏可视化双栏交互界面\n│       └── lib/\n│           ├── paths.mjs               # Windows 路径规范化 & SQLite 安全快照工具\n│           ├── codex.mjs               # Codex 会话读写与 UUIDv7 Rollout 生成器\n│           ├── antigravity.mjs         # Antigravity API 客户端 & Transcript 解析器\n│           └── sync-engine.mjs         # 智能上下文压缩 & pairs.json 关联管理\n└── tests/\n    └── sync.test.mjs                   # Node 原生单元测试\n```\n\n---\n\n## 运行测试 · Testing\n\n```powershell\nnode --test tests/sync.test.mjs\n```\n\n---\n\n## 常见问题 · FAQ\n\n**Q: 导入到 Codex 后，为什么侧边栏没有立刻出现？**  \nA: Codex 桌面版会缓存侧边栏列表。点击刷新或重启一下 Codex 即可看到新导入的对话。如果导入时提示 `state_5.sqlite` 被占用，关闭 Codex 后再点一次导入即可完成注册，Rollout 文件本身已安全写入磁盘。\n\n**Q: 会不会修改或删除我原有的聊天记录？**  \nA: 不会。本插件对源端会话只做只读操作；目标端始终以“新建会话”方式写入，不会覆盖或删除任何已有对话。\n\n**Q: 为什么读取 `session_index.jsonl` 在 Windows 下不会乱码？**  \nA: 所有文件读写均强制指定 `utf8` 编码，并自动处理 Windows 扩展路径前缀（`\\\\?\\C:\\...`）与 `file:///` URI 规范化。\n\n---\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/codex_sync/lib/codex.mjs",
+        "line": 440,
+        "snippet": "db.exec('PRAGMA busy_timeout = 3000');",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/codex.mjs#L440"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "sidecars/codex_sync/lib/antigravity.mjs",
+        "line": 22,
+        "snippet": "const res = await fetch(url, { method: 'POST', signal: AbortSignal.timeout(15000), headers: { 'Content-Type': 'application/json', 'Connect-Protocol-Version': '1', 'x-antigravity-cs",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/antigravity.mjs#L22"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_sync/lib/codex.mjs",
+        "line": 418,
+        "snippet": "writeFileSync(rolloutPath, lines.join('\\n') + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/codex.mjs#L418"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_sync/lib/codex.mjs",
+        "line": 428,
+        "snippet": "appendFileSync(CODEX_INDEX_FILE, indexEntry + '\\n', 'utf8');",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/codex.mjs#L428"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_sync/lib/paths.mjs",
+        "line": 85,
+        "snippet": "try { rmSync(snapDir, { recursive: true, force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/paths.mjs#L85"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_sync/lib/sync-engine.mjs",
+        "line": 27,
+        "snippet": "writeFileSync(fd, JSON.stringify(store, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/sync-engine.mjs#L27"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/codex_sync/lib/sync-engine.mjs",
+        "line": 35,
+        "snippet": "try { unlinkSync(tmp); } catch {}",
+        "githubBlobUrl": "https://github.com/Yalei888/agy-codex-sync/blob/8b319d3cac6cc5bbae4283bf25a4ff00fb80b436/sidecars/codex_sync/lib/sync-engine.mjs#L35"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "8b319d3cac6cc5bbae4283bf25a4ff00fb80b436",
+      "scannedAt": "2026-11-28T18:13:06.772Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

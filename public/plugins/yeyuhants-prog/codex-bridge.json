@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "yeyuhants-prog/codex-bridge",
-  "sha": "097c8791cd77a3eae7fd5e6c082e92470fc57bc0",
+  "sha": "9196b402058bdb668bc8b0051b4aa2d7531c4367",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-28T12:14:37.149Z",
+  "scannedAt": "2026-11-28T18:12:48.110Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "codex-bridge",
     "displayName": "Codex Bridge",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -48,7 +48,7 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.png\" alt=\"Codex Bridge Logo\" width=\"128\" height=\"128\" />\n\n# Codex Bridge\n\n**Just describe what you want in plain language — let Antigravity (Gemini) turn it into precise specs, dispatch your local OpenAI Codex (GPT) worker, and supervise every step until verified.**\n\n[![Version](https://img.shields.io/badge/version-1.7.0-7c3aed?style=flat-square)](./plugin.json)\n[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-22c55e?style=flat-square)](https://nodejs.org/)\n[![Dependencies](https://img.shields.io/badge/dependencies-zero-0ea5e9?style=flat-square)](#architecture)\n[![MCP](https://img.shields.io/badge/protocol-MCP%20Stdio-f59e0b?style=flat-square)](https://modelcontextprotocol.io/)\n[![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](./LICENSE)\n\n**English** · [简体中文](./README.zh-CN.md)\n\n</div>\n\n---\n\n## Why Codex Bridge?\n\n**OpenAI Codex (GPT) is an extraordinary coding & execution engine — but it depends heavily on crisp, detailed prompts to shine.**\n\nFor beginners — or anyone who doesn't want to spend 20 minutes writing an engineering spec — a casual instruction sent straight to Codex can easily drift, miss edge cases, or require manual babysitting. Meanwhile, **Google Antigravity (Gemini)** excels at understanding plain human intent, structuring complex ideas into clear requirements, and reviewing outcomes.\n\n**Codex Bridge combines the best of both worlds into one closed loop:** talk to Antigravity naturally, let it translate your goal into precise, unambiguous instructions for your local Codex CLI, and let Antigravity monitor progress, verify diffs/tests, and steer Codex back on track until the job is truly done.\n\n| Pain Point When Using Codex Alone | With Codex Bridge |\n| :--- | :--- |\n| **Prompt-sensitive & intimidating for beginners**: Vague requests cause Codex to drift; hand-writing detailed engineering specs takes effort | **Gemini as Translator & Tech Lead**: Speak in plain language — Antigravity gathers context, breaks down milestones, and writes crystal-clear specs Codex thrives on |\n| **No automated supervision**: When Codex finishes, you still have to inspect diffs, run tests, and paste errors back manually | **End-to-End Supervised Loop**: Codex runs in the background and automatically wakes Antigravity on completion to verify results — or dispatch a targeted fix |\n| **Long tasks stall silently on flaky networks**: One network hiccup can leave a terminal session stuck or looping for 20 minutes unnoticed | **Auto-Heal Watchdog + Periodic Inspection**: Distinguishes active local commands from hung API streams, auto-resumes stalled runs, and uses a lightweight sub-model for periodic health checks |\n| **Opaque CLI workflow & lost progress**: Switching models, timeouts, or permissions requires CLI flags; chat compaction wipes multi-step context | **Native Side-Pane Control Panel & Goal Board**: Click to switch models, reasoning effort, timeouts, sandbox & transport; goals and milestones persist on disk |\n\n---\n\n## How It Works in 4 Steps\n\n1. **You state your goal naturally** — e.g. *\"Find why `/api/login` returns 500 and add regression tests\"* or *\"Clean this dataset, run sensitivity analysis, and export the figures.\"*\n2. **Antigravity drafts an executable spec & dispatches Codex** — inspects key files, defines verifiable milestones, and launches your local Codex CLI in the background.\n3. **Codex builds & tests while Codex Bridge guards the run** — Codex edits files and runs shell/test commands; the L1 watchdog protects active commands while auto-healing hung API streams, and L2 periodic checks inspect progress via a lightweight sub-model.\n4. **Automatic wakeup, verification & progression** — as soon as Codex finishes, Antigravity wakes up automatically, reviews the diff/tests, reports clearly to you, or advances to the next milestone.\n\n---\n\n## Side-Pane Control Panel Preview\n\nNative dark UI embedded directly inside Antigravity's **Plugins** side pane, with live **English / 中文** switching:\n\n<table>\n  <tr>\n    <th align=\"center\">Controls — Model, Routing, Watchdog &amp; Permissions</th>\n    <th align=\"center\">Goals &amp; Jobs — Milestone Board, Live Phase &amp; History</th>\n  </tr>\n  <tr>\n    <td align=\"center\" valign=\"top\">\n      <img src=\"./assets/panel-controls-en.png\" alt=\"Codex Bridge Controls Panel (English)\" width=\"380\" />\n    </td>\n    <td align=\"center\" valign=\"top\">\n      <img src=\"./assets/panel-goals-en.png\" alt=\"Codex Bridge Goals and Jobs Panel (English)\" width=\"380\" />\n    </td>\n  </tr>\n</table>\n\n---\n\n## Key Highlights\n\n- **Mastermind + Worker Synergy (`orchestrator` / `flexible`)**\n  Antigravity focuses on understanding your intent, writing tight specifications, orchestrating plugins, and verifying results — while delegating heavy coding, backend debugging, and data/analysis pipelines to Codex.\n- **Flexible Model Routing & Per-Task Control**\n  Reads your local `~/.codex/models_cache.json` automatically. Use **Flexible per task** to say *\"run this with `gpt-6.2-sol`\"* on the fly, or switch to **Pinned model** to lock a single worker model.\n- **Three-Tier Monitoring & Stall Auto-Heal (`v1.7.0`)**\n  - **L1 Phase-Aware Watchdog**: Protects running local commands (`running_cmd`) from false kills, while automatically recovering stalled `waiting_api` / `reconnecting` streams via idempotent breakpoint resume.\n  - **L2 Periodic Sub-Model Inspection**: Sends configurable periodic check-ins (`Off / 3 / 5 / 10 min`) to the original conversation so Antigravity can delegate fast, read-only health checks to a lightweight `flash_lite` subagent without cluttering the main context.\n  - **Transport & Clean Exit Controls**: Switch between `Follow default`, `Prefer WebSocket`, and `HTTP SSE only`, disable desktop notify hooks on headless runs, and cleanly exit lingering post-completion streams after 5 seconds.\n- **Native Bilingual Side-Pane Control Panel (EN / 中文)**\n  Lives right inside Antigravity's **Plugins** menu with two clean tabs (**Controls** & **Goals & Jobs**):\n  - One-click controls for **Model**, **Reasoning effort** (`low` → `ultra`), **Progression mode** (`manual` / `notify` / `autonomous`), **Per-turn timeout** (`Unlimited` → `4 hr`), **Sandbox policy**, **Briefing workflow** (`direct` / `plan_first`), **Transport**, **Auto-heal**, and **Periodic check interval**.\n  - Persistent **Goal & Milestone board** surviving chat compaction and restarts, with **one-click archiving** for completed goals/records and ergonomic scrollable prompt expansion.\n- **Zero Dependencies & Automatic Codex Discovery**\n  Pure Node.js ESM (`>= 18`) — no `npm install`, no build step. Automatically finds your installed Codex CLI (including Codex Desktop's bundled `codex.exe` on Windows across auto-updates) and reuses your existing login.\n\n---\n\n> [!IMPORTANT]\n> **Network Stability Note**: **Google Antigravity itself** — as well as long-running OpenAI Codex CLI streaming sessions — has **high requirements for network stability**. On unstable networks or flaky proxy nodes, long connections can silently drop or stall (`idle timeout waiting for SSE` / `tls handshake eof`). For the smoothest experience:\n> - Use a stable, low-latency network or proxy node;\n> - Switch **Transport** in the side-pane panel to **Prefer WebSocket** if HTTP SSE stalls;\n> - Keep the built-in **L1 Auto-Heal Watchdog** and **Periodic Sub-Model Inspection** enabled so transient stalls recover automatically.\n\n---\n\n## Quick Start\n\n### Prerequisites\n\n- **Google Antigravity** (Desktop or CLI)\n- **Node.js `>= 18`**\n- **OpenAI Codex** (Codex Desktop app or `codex` CLI installed and signed in)\n\n### Install (30 seconds)\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/yeyuhants-prog/codex-bridge.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-bridge\"\n```\n\n**macOS / Linux:**\n```bash\ngit clone https://github.com/yeyuhants-prog/codex-bridge.git ~/.gemini/config/plugins/codex-bridge\n```\n\n### Enable & Open the Panel\n\n1. Open **Skills & Customizations** in Antigravity's left sidebar and toggle **Codex Bridge** **ON**.\n2. Open the control panel from the right-hand **Plugins** menu → **Codex Bridge**.\n3. Pick your preferred **model**, **reasoning effort**, **progression mode** (`notify` or `autonomous`), and **sandbox** — then just start talking to Antigravity in plain language.\n\n### Example Prompts\n\n- **Plain-language bug fix (no spec needed):**\n  > *\"Users are seeing a 500 error in `backend/auth`. Figure out the root cause, write a clear plan for Codex to fix it, and keep verifying until `pytest` is completely green.\"*\n- **Step-by-step data / research pipeline:**\n  > *\"Help me clean this dataset, check heterogeneity (I² / Q-test), run sensitivity analysis, and export forest plots. Break it into milestones, let Codex write and run the scripts, and verify every output table for me.\"*\n- **On-the-fly model routing:**\n  > *\"Use `gpt-6.2-sol` with `medium` reasoning effort to build a small calculator web app and unit tests, and monitor progress until it passes.\"*\n- **Git code review:**\n  > *\"Have Codex review my uncommitted Git changes in this repo and highlight real bugs or edge cases.\"*\n\n---\n\n## Architecture\n\n```mermaid\nflowchart LR\n  User[\"User in Antigravity\"] <--> Agent[\"Antigravity Mastermind (Gemini)\"]\n  User <--> Panel[\"Sidecar Control Panel & Goal Watcher<br/>(sidecars/codex_panel)\"]\n  Panel -->|Auto-Callback & Periodic Check-In| Agent\n  Panel <--> Store[\"Persistent State<br/>(settings.json / goals.json / jobs.json)\"]\n  Agent <-->|MCP Stdio JSON-RPC| Server[\"Codex MCP Bridge<br/>(server/mcp-server.js)\"]\n  Store <--> Server\n  Server <-->|JSONL Stream + UTF-8 stdin| Codex[\"Local OpenAI Codex CLI<br/>(codex exec / resume / review)\"]\n```\n\n## MCP Tools (9)\n\n| Tool | Description |\n| --- | --- |\n| `codex_goal` | Create, inspect, update milestones, pause/resume, archive/unarchive, or delete persistent multi-step Goals synced with the Sidecar goal board. |\n| `codex_run` | Run a task synchronously via `codex exec` using active panel settings (or per-call overrides). Supports `goal_id`, `milestone_id`, `force_model`, and `timeout_seconds` (`0` = unlimited). |\n| `codex_resume` | Continue by `resume_job_id` or an exact session UUID. Unknown sessions default to read-only. |\n| `codex_review` | Run Codex's built-in non-interactive Git code review (`uncommitted`, `base` branch, or `commit` SHA). |\n| `codex_start` | Launch a persistent background Codex worker and return `job_id` immediately; supports L1 auto-heal watchdog, periodic check-ins, and completion auto-callbacks. |\n| `codex_status` | Inspect live phase (`waiting_api` / `running_cmd` / `reconnecting`), progress events, auto-heal & periodic check counts, `Session ID`, or final output of a background job. |\n| `codex_cancel` | Terminate a running background Codex job along with its child process tree. |\n| `codex_config` | Read or update shared panel settings (`model`, `model_routing`, `reasoning_effort`, `sandbox`, `workflow_mode`, `progression_mode`, `task_timeout_seconds`, `transport`, `auto_heal_enabled`, `stall_threshold_seconds`, `max_auto_heals`, `monitor_interval_seconds`, `max_auto_iterations`) and list local Codex models. |\n| `codex_info` | Health check showing resolved Codex binary & version, active panel settings, watchdog/monitor configuration, active goal progress, and tracked jobs. |\n\n<details>\n<summary><strong>Advanced Reliability & Security Guarantees (click to expand)</strong></summary>\n\n- **Per-Job Locked Callbacks & Explicit Retry**: Callback targets (`conversationId` / `projectId`) are locked from trusted Antigravity host context at job dispatch time (`GET /api/state` is strictly read-only, preventing cross-conversation leaks). Conflicting request and host conversation IDs are rejected; failed deliveries remain visibly marked `failed` with one-click retry strictly to the original source conversation.\n- **Restart-Resilient Jobs & Cross-Process Session Locks**: Background jobs persist to `jobs.json` with atomic per-session file locks (`locks/`). If the MCP server restarts while a Codex process is still alive, the job transitions to `running_detached` (blocking duplicate spawns until it finishes or is explicitly stopped).\n- **Safe Structured Resumes**: Resuming via `resume_job_id` or panel **Resume Job** retains the parent working directory, `session_id`, `goal_id`, `milestone_id`, callback destination, and execution policy (placing `-C` / `-s` before `resume`). Milestone overrides must belong to the same goal. Cross-conversation panel resumes return HTTP `409` until the caller selects `keepOriginalCallback: true` or `transferCallback: true`; MCP transfers require `transfer_callback: true` (recorded in `transferredFrom`). Expanding writable directories or sandbox permissions requires boolean `allow_sandbox_escalation: true`.\n\n</details>\n\n## Environment Variables\n\n| Variable | Default | Purpose |\n| --- | --- | --- |\n| `CODEX_BIN` | Auto-discovered | Explicit path to the `codex` / `codex.exe` binary. |\n| `CODEX_HOME` | `~/.codex` | Directory containing Codex's `config.toml` and `models_cache.json`. |\n| `CODEX_BRIDGE_DATA_DIR` | `~/.gemini/antigravity/plugin_data/codex-bridge` | Directory storing `settings.json`, `goals.json`, `jobs.json`, and `history.json`. |\n\n## Testing\n\n```bash\n# Zero-token MCP protocol, settings & persistent goal board smoke test\nnpm test\n\n# Full automated unit, acceptance, and regression suites (v1.4 ~ v1.7)\nnode --test test/panel-ui.test.mjs\nnode test/acceptance-v14.mjs\nnode test/regression-v15.mjs\nnode test/regression-v16.mjs\nnode --test test/regression-v17.mjs\n\n# End-to-end live check against your local Codex CLI (read-only, ephemeral)\nnpm run test:live\n```\n\n## Project Structure\n\n```text\ncodex-bridge/\n├── plugin.json                 # Antigravity plugin manifest\n├── mcp_config.json             # Portable MCP server definition\n├── assets/\n│   └── logo.png                # Plugin icon (512×512 transparent PNG)\n├── server/\n│   ├── mcp-server.js           # Zero-dependency MCP Stdio JSON-RPC server\n│   ├── codex-runner.js         # Codex CLI auto-discovery, spawn & JSONL parser\n│   ├── goal-store.js           # Persistent Goal & Milestone state machine\n│   ├── job-manager.js          # Persistent async worker & process-tree manager\n│   └── settings-store.js       # Shared preferences, history & model catalog reader\n├── sidecars/\n│   └── codex_panel/            # Native Antigravity side-pane UI & callback watcher\n│       ├── sidecar.json\n│       ├── main.mjs\n│       ├── index.html\n│       ├── app.js\n│       └── styles.css\n├── skills/\n│   └── codex-worker/SKILL.md   # Orchestration skill for Antigravity\n├── rules/\n│   └── AGENTS.md               # Active rules while plugin is enabled\n└── test/                       # Smoke, unit, UI & regression test suites\n```\n\n## License\n\nReleased under the [MIT License](./LICENSE).\n",
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"./assets/logo.png\" alt=\"Codex Bridge Logo\" width=\"128\" height=\"128\" />\n\n# Codex Bridge\n\n**Just describe what you want in plain language — let Antigravity (Gemini) turn it into precise specs, dispatch your local OpenAI Codex (GPT) worker, and supervise every step until verified.**\n\n[![Version](https://img.shields.io/badge/version-1.8.0-7c3aed?style=flat-square)](./plugin.json)\n[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-22c55e?style=flat-square)](https://nodejs.org/)\n[![Dependencies](https://img.shields.io/badge/dependencies-zero-0ea5e9?style=flat-square)](#architecture)\n[![MCP](https://img.shields.io/badge/protocol-MCP%20Stdio-f59e0b?style=flat-square)](https://modelcontextprotocol.io/)\n[![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](./LICENSE)\n\n**English** · [简体中文](./README.zh-CN.md)\n\n</div>\n\n---\n\n## Why Codex Bridge?\n\n**OpenAI Codex (GPT) is an extraordinary coding & execution engine — but it depends heavily on crisp, detailed prompts to shine.**\n\nFor beginners — or anyone who doesn't want to spend 20 minutes writing an engineering spec — a casual instruction sent straight to Codex can easily drift, miss edge cases, or require manual babysitting. Meanwhile, **Google Antigravity (Gemini)** excels at understanding plain human intent, structuring complex ideas into clear requirements, and reviewing outcomes.\n\n**Codex Bridge combines the best of both worlds into one closed loop:** talk to Antigravity naturally, let it translate your goal into precise, unambiguous instructions for your local Codex CLI, and let Antigravity monitor progress, verify diffs/tests, and steer Codex back on track until the job is truly done.\n\n| Pain Point When Using Codex Alone | With Codex Bridge |\n| :--- | :--- |\n| **Prompt-sensitive & intimidating for beginners**: Vague requests cause Codex to drift; hand-writing detailed engineering specs takes effort | **Gemini as Translator & Tech Lead**: Speak in plain language — Antigravity gathers context, breaks down milestones, and writes crystal-clear specs Codex thrives on |\n| **No automated supervision**: When Codex finishes, you still have to inspect diffs, run tests, and paste errors back manually | **End-to-End Supervised Loop**: Codex runs in the background and automatically wakes Antigravity on completion to verify results — or dispatch a targeted fix |\n| **Long tasks stall silently on flaky networks**: One network hiccup can leave a terminal session stuck or looping for 20 minutes unnoticed | **Auto-Heal Watchdog + Periodic Inspection**: Distinguishes active local commands from hung API streams, auto-resumes stalled runs, and uses a lightweight sub-model for periodic health checks |\n| **Opaque CLI workflow & lost progress**: Switching models, timeouts, or permissions requires CLI flags; chat compaction wipes multi-step context | **Native Side-Pane Control Panel & Goal Board**: Click to switch models, reasoning effort, timeouts, sandbox & transport; goals and milestones persist on disk |\n\n---\n\n## How It Works in 4 Steps\n\n1. **You state your goal naturally** — e.g. *\"Find why `/api/login` returns 500 and add regression tests\"* or *\"Clean this dataset, run sensitivity analysis, and export the figures.\"*\n2. **Antigravity drafts an executable spec & dispatches Codex** — inspects key files, defines verifiable milestones, and launches your local Codex CLI in the background.\n3. **Codex builds & tests while Codex Bridge guards the run** — Codex edits files and runs shell/test commands; the L1 watchdog protects active commands while auto-healing hung API streams, and L2 periodic checks inspect progress via a lightweight sub-model.\n4. **Automatic wakeup, verification & progression** — as soon as Codex finishes, Antigravity wakes up automatically, reviews the diff/tests, reports clearly to you, or advances to the next milestone.\n\n---\n\n## Side-Pane Control Panel Preview\n\nNative dark UI embedded directly inside Antigravity's **Plugins** side pane, with live **English / 中文** switching:\n\n<table>\n  <tr>\n    <th align=\"center\">Controls — Model, Routing, Watchdog &amp; Permissions</th>\n    <th align=\"center\">Goals &amp; Jobs — Milestone Board, Live Phase &amp; History</th>\n  </tr>\n  <tr>\n    <td align=\"center\" valign=\"top\">\n      <img src=\"./assets/panel-controls-en.png\" alt=\"Codex Bridge Controls Panel (English)\" width=\"380\" />\n    </td>\n    <td align=\"center\" valign=\"top\">\n      <img src=\"./assets/panel-goals-en.png\" alt=\"Codex Bridge Goals and Jobs Panel (English)\" width=\"380\" />\n    </td>\n  </tr>\n</table>\n\n---\n\n## Key Highlights\n\n- **Mastermind + Worker Synergy (`orchestrator` / `flexible`)**\n  Antigravity focuses on understanding your intent, writing tight specifications, orchestrating plugins, and verifying results — while delegating heavy coding, backend debugging, and data/analysis pipelines to Codex.\n- **Flexible Model Routing & Per-Task Control**\n  Reads your local `~/.codex/models_cache.json` automatically. Use **Flexible per task** to say *\"run this with `gpt-6.2-sol`\"* on the fly, or switch to **Pinned model** to lock a single worker model.\n- **App Server and goal navigation in v1.8.0**\n  Choose Exec CLI or App Server for background work. App Server cards show the current turn, steering count and token budget. Native Goal continuation is experimental. Archived goals can reveal linked tasks across chats and pages, or open the owning chat. The tab badge distinguishes local jobs, open goals and activity elsewhere.\n- **Three-tier monitoring and recovery**\n  - **L1 Phase-Aware Watchdog**: The default `reconnect_only` warns during prolonged silence and recovers stuck reconnects. Choose `always` to stop on silence as well, or `off` to disable the watchdog.\n  - **L2 Periodic Sub-Model Inspection**: Sends configurable periodic check-ins (`Off / 3 / 5 / 10 min`) to the original conversation so Antigravity can delegate fast, read-only health checks to a lightweight `flash_lite` subagent without cluttering the main context.\n  - **Transport & Clean Exit Controls**: Switch between `Follow default`, `Prefer WebSocket`, and `HTTP SSE only`, disable desktop notify hooks on headless runs, and cleanly exit lingering post-completion streams after 5 seconds.\n- **Native Bilingual Side-Pane Control Panel (EN / 中文)**\n  Lives right inside Antigravity's **Plugins** menu with two clean tabs (**Controls** & **Goals & Jobs**):\n  - One-click controls for **Model**, **Reasoning effort** (`low` → `ultra`), **Progression mode** (`manual` / `notify` / `autonomous`), **Per-turn timeout** (`Unlimited` → `4 hr`), **Sandbox policy**, **Briefing workflow** (`direct` / `plan_first`), **Transport**, **Auto-heal**, and **Periodic check interval**.\n  - Persistent **Goal & Milestone board** surviving chat compaction and restarts, with **one-click archiving** for completed goals/records and ergonomic scrollable prompt expansion.\n- **Zero Dependencies & Automatic Codex Discovery**\n  Pure Node.js ESM (`>= 18`) — no `npm install`, no build step. Automatically finds your installed Codex CLI (including Codex Desktop's bundled `codex.exe` on Windows across auto-updates) and reuses your existing login.\n\n---\n\n> [!IMPORTANT]\n> **Network Stability Note**: **Google Antigravity itself** — as well as long-running OpenAI Codex CLI streaming sessions — has **high requirements for network stability**. On unstable networks or flaky proxy nodes, long connections can silently drop or stall (`idle timeout waiting for SSE` / `tls handshake eof`). For the smoothest experience:\n> - Use a stable, low-latency network or proxy node;\n> - Switch **Transport** in the side-pane panel to **Prefer WebSocket** if HTTP SSE stalls;\n> - Keep the built-in **L1 Auto-Heal Watchdog** and **Periodic Sub-Model Inspection** enabled so transient stalls recover automatically.\n\n---\n\n## Quick Start\n\n### Prerequisites\n\n- **Google Antigravity** (Desktop or CLI)\n- **Node.js `>= 18`**\n- **OpenAI Codex** (Codex Desktop app or `codex` CLI installed and signed in)\n\n### Install (30 seconds)\n\n**Windows (PowerShell):**\n```powershell\ngit clone https://github.com/yeyuhants-prog/codex-bridge.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\codex-bridge\"\n```\n\n**macOS / Linux:**\n```bash\ngit clone https://github.com/yeyuhants-prog/codex-bridge.git ~/.gemini/config/plugins/codex-bridge\n```\n\n### Enable & Open the Panel\n\n1. Open **Skills & Customizations** in Antigravity's left sidebar and toggle **Codex Bridge** **ON**.\n2. Open the control panel from the right-hand **Plugins** menu → **Codex Bridge**.\n3. Pick your preferred **model**, **reasoning effort**, **progression mode** (`notify` or `autonomous`), and **sandbox** — then just start talking to Antigravity in plain language.\n\n### Example Prompts\n\n- **Plain-language bug fix (no spec needed):**\n  > *\"Users are seeing a 500 error in `backend/auth`. Figure out the root cause, write a clear plan for Codex to fix it, and keep verifying until `pytest` is completely green.\"*\n- **Step-by-step data / research pipeline:**\n  > *\"Help me clean this dataset, check heterogeneity (I² / Q-test), run sensitivity analysis, and export forest plots. Break it into milestones, let Codex write and run the scripts, and verify every output table for me.\"*\n- **On-the-fly model routing:**\n  > *\"Use `gpt-6.2-sol` with `medium` reasoning effort to build a small calculator web app and unit tests, and monitor progress until it passes.\"*\n- **Git code review:**\n  > *\"Have Codex review my uncommitted Git changes in this repo and highlight real bugs or edge cases.\"*\n\n---\n\n## Architecture\n\n```mermaid\nflowchart LR\n  User[\"User in Antigravity\"] <--> Agent[\"Antigravity Mastermind (Gemini)\"]\n  User <--> Panel[\"Sidecar Control Panel & Goal Watcher<br/>(sidecars/codex_panel)\"]\n  Panel -->|Auto-Callback & Periodic Check-In| Agent\n  Panel <--> Store[\"Persistent State<br/>(settings.json / goals.json / jobs.json)\"]\n  Agent <-->|MCP Stdio JSON-RPC| Server[\"Codex MCP Bridge<br/>(server/mcp-server.js)\"]\n  Store <--> Server\n  Server <-->|JSONL Stream + UTF-8 stdin| Codex[\"Local OpenAI Codex CLI<br/>(codex exec / resume / review)\"]\n```\n\n## MCP Tools (10)\n\n| Tool | Description |\n| --- | --- |\n| `codex_goal` | Create, inspect, update milestones, pause/resume, archive/unarchive, or delete persistent multi-step Goals synced with the Sidecar goal board. |\n| `codex_run` | Run a task synchronously via `codex exec` using active panel settings (or per-call overrides). Supports `goal_id`, `milestone_id`, `force_model`, and `timeout_seconds` (`0` = unlimited). |\n| `codex_resume` | Continue by `resume_job_id` or an exact session UUID. Unknown sessions default to read-only. |\n| `codex_review` | Run Codex's built-in non-interactive Git code review (`uncommitted`, `base` branch, or `commit` SHA). |\n| `codex_start` | Launch a persistent background Codex worker and return `job_id` immediately; supports L1 auto-heal watchdog, periodic check-ins, and completion auto-callbacks. |\n| `codex_status` | Inspect live phase (`waiting_api` / `running_cmd` / `reconnecting`), progress events, auto-heal & periodic check counts, `Session ID`, or final output of a background job. |\n| `codex_steer` | Send a correction to a running App Server job. Pin `expected_turn_id` and check the accepted, rejected, queued or unknown receipt. |\n| `codex_cancel` | Terminate a running background Codex job along with its child process tree. |\n| `codex_config` | Read or update shared panel settings (`model`, `model_routing`, `reasoning_effort`, `sandbox`, `workflow_mode`, `progression_mode`, `task_timeout_seconds`, `transport`, `execution_engine`, `native_goal_sync`, `token_budget`, `auto_heal_enabled`, `stall_policy`, `reconnect_stall_seconds`, `stall_threshold_seconds`, `max_auto_heals`, `monitor_interval_seconds`, `max_auto_iterations`) and list local Codex models. |\n| `codex_info` | Health check showing resolved Codex binary & version, active panel settings, watchdog/monitor configuration, active goal progress, and tracked jobs. |\n\n<details>\n<summary><strong>Advanced Reliability & Security Guarantees (click to expand)</strong></summary>\n\n- **Per-Job Locked Callbacks & Explicit Retry**: Callback targets (`conversationId` / `projectId`) are locked from trusted Antigravity host context at job dispatch time (`GET /api/state` is strictly read-only, preventing cross-conversation leaks). Conflicting request and host conversation IDs are rejected; failed deliveries remain visibly marked `failed` with one-click retry strictly to the original source conversation.\n- **Restart-Resilient Jobs & Cross-Process Session Locks**: Background jobs persist to `jobs.json` with atomic per-session file locks (`locks/`). If the MCP server restarts while a Codex process is still alive, the job transitions to `running_detached` (blocking duplicate spawns until it finishes or is explicitly stopped).\n- **Safe Structured Resumes**: Resuming via `resume_job_id` or panel **Resume Job** retains the parent working directory, `session_id`, `goal_id`, `milestone_id`, callback destination, and execution policy (placing `-C` / `-s` before `resume`). Milestone overrides must belong to the same goal. Cross-conversation panel resumes return HTTP `409` until the caller selects `keepOriginalCallback: true` or `transferCallback: true`; MCP transfers require `transfer_callback: true` (recorded in `transferredFrom`). Expanding writable directories or sandbox permissions requires boolean `allow_sandbox_escalation: true`.\n\n</details>\n\n## Environment Variables\n\n| Variable | Default | Purpose |\n| --- | --- | --- |\n| `CODEX_BIN` | Auto-discovered | Explicit path to the `codex` / `codex.exe` binary. |\n| `CODEX_HOME` | `~/.codex` | Directory containing Codex's `config.toml` and `models_cache.json`. |\n| `CODEX_BRIDGE_DATA_DIR` | `~/.gemini/antigravity/plugin_data/codex-bridge` | Directory storing `settings.json`, `goals.json`, `jobs.json`, and `history.json`. |\n\n## Testing\n\n```bash\n# Smoke checks and regressions through v1.8, including Chromium panel interactions\nnpm test\nnode test/acceptance-v14.mjs\n\n# Repeat the 360px and 480px browser checks. Set CHROMIUM_PATH for a nonstandard installation.\nnode test/panel-browser.mjs\n\n# End-to-end live check against your local Codex CLI (read-only, ephemeral)\nnpm run test:live\n```\n\n## Project Structure\n\n```text\ncodex-bridge/\n├── plugin.json                 # Antigravity plugin manifest\n├── mcp_config.json             # Portable MCP server definition\n├── assets/\n│   └── logo.png                # Plugin icon (512×512 transparent PNG)\n├── server/\n│   ├── mcp-server.js           # Zero-dependency MCP Stdio JSON-RPC server\n│   ├── codex-runner.js         # Codex CLI auto-discovery, spawn & JSONL parser\n│   ├── goal-store.js           # Persistent Goal & Milestone state machine\n│   ├── job-manager.js          # Persistent async worker & process-tree manager\n│   └── settings-store.js       # Shared preferences, history & model catalog reader\n├── sidecars/\n│   └── codex_panel/            # Native Antigravity side-pane UI & callback watcher\n│       ├── sidecar.json\n│       ├── main.mjs\n│       ├── index.html\n│       ├── app.js\n│       └── styles.css\n├── skills/\n│   └── codex-worker/SKILL.md   # Orchestration skill for Antigravity\n├── rules/\n│   └── AGENTS.md               # Active rules while plugin is enabled\n└── test/                       # Smoke, unit, UI & regression test suites\n```\n\n## License\n\nReleased under the [MIT License](./LICENSE).\n",
   "latestReleaseNotes": "",
   "securityReport": {
     "riskTier": "elevated",
@@ -65,10 +65,32 @@
         "layer": "code",
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/app-server-runner.js",
+        "line": 33,
+        "snippet": "const key = typeof entry === \"string\" && /^\\s*([a-z_]+)\\s*=/.exec(entry)?.[1];",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/app-server-runner.js#L33"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/app-server-runner.js",
+        "line": 103,
+        "snippet": "const child = spawn(bin, argv, { cwd, stdio: [\"pipe\", \"pipe\", \"pipe\"], detached: process.platform !== \"win32\", windowsHide: true });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/app-server-runner.js#L103"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.js",
-        "line": 89,
+        "line": 90,
         "snippet": "const paths = execFileSync(IS_WINDOWS ? \"where.exe\" : \"which\", [\"codex\"], { encoding: \"utf8\", timeout: 2000, windowsHide: true, stdio: [\"ignore\",\"pipe\",\"ignore\"] });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/codex-runner.js#L89"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/codex-runner.js#L90"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -77,9 +99,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.js",
-        "line": 108,
+        "line": 109,
         "snippet": "return execFileSync(bin, argv, { encoding: \"utf8\", windowsHide: true, timeout: 3000, stdio: [\"ignore\", \"pipe\", \"ignore\"] }).trim();",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/codex-runner.js#L108"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/codex-runner.js#L109"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -88,9 +110,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.js",
-        "line": 141,
+        "line": 142,
         "snippet": "execFileSync(windowsPowerShell, [\"-NoProfile\",\"-NonInteractive\",\"-Command\",script], { stdio: \"ignore\", windowsHide: true, timeout: 5000, env: { ...process.env, BRIDGE_STOP_PID: Str",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/codex-runner.js#L141"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/codex-runner.js#L142"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -99,9 +121,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.js",
-        "line": 155,
+        "line": 156,
         "snippet": "try { execFileSync(path.join(process.env.SystemRoot || \"C:\\\\Windows\", \"System32\", \"taskkill.exe\"), [\"/pid\", String(child.pid), \"/T\", \"/F\"], { stdio: \"ignore\", windowsHide: true, ti",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/codex-runner.js#L155"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/codex-runner.js#L156"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -110,9 +132,20 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/codex-runner.js",
-        "line": 415,
+        "line": 171,
+        "snippet": "const match = typeof value === \"string\" && /^\\s*model_provider\\s*=\\s*[\"']?([\\w.-]+)[\"']?\\s*$/.exec(value);",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/codex-runner.js#L171"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/codex-runner.js",
+        "line": 506,
         "snippet": "const child = spawn(spawnCmd, spawnArgs, { cwd, env: { ...process.env }, detached: !IS_WINDOWS, stdio: [\"pipe\", \"pipe\", \"pipe\"], windowsHide: true });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/codex-runner.js#L415"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/codex-runner.js#L506"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -123,7 +156,18 @@
         "file": "server/file-store.js",
         "line": 75,
         "snippet": "const match = /^(\\d+)-(unknown|[\\da-f]{16})-[\\da-f-]+$/.exec(name);",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L75"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L75"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/job-control.js",
+        "line": 70,
+        "snippet": "const match = file && commandName.exec(file);",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/job-control.js#L70"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -134,7 +178,7 @@
         "file": "server/process-identity.js",
         "line": 19,
         "snippet": "const [name, started] = execFileSync(windowsPowerShell, [\"-NoProfile\", \"-NonInteractive\", \"-Command\", script], { encoding: \"utf8\", windowsHide: true, timeout: 3000, stdio: [\"ignore",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/process-identity.js#L19"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/process-identity.js#L19"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -145,7 +189,7 @@
         "file": "server/process-identity.js",
         "line": 28,
         "snippet": "const row = execFileSync(\"ps\", [\"-p\", String(pid), \"-o\", \"lstart=\", \"-o\", \"comm=\"], { encoding: \"utf8\", timeout: 2000 }).trim();",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/process-identity.js#L28"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/process-identity.js#L28"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -154,9 +198,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "server/settings-store.js",
-        "line": 228,
+        "line": 243,
         "snippet": "const m = /^([a-zA-Z0-9_]+)\\s*=\\s*\"([^\"]*)\"/.exec(line);",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/settings-store.js#L228"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/settings-store.js#L243"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -167,7 +211,7 @@
         "file": "server/file-store.js",
         "line": 41,
         "snippet": "try { fs.writeFileSync(backup, raw, { flag: \"wx\" }); }",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L41"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L41"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -178,7 +222,7 @@
         "file": "server/file-store.js",
         "line": 52,
         "snippet": "fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + \"\\n\", { flag: \"wx\" });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L52"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L52"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -189,7 +233,7 @@
         "file": "server/file-store.js",
         "line": 55,
         "snippet": "fs.rmSync(tmp, { force: true });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L55"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L55"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -200,7 +244,7 @@
         "file": "server/file-store.js",
         "line": 83,
         "snippet": "if (current !== \"unknown\" && current !== match[2]) { fs.rmSync(entry, { force: true }); continue; }",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L83"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L83"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -211,7 +255,7 @@
         "file": "server/file-store.js",
         "line": 87,
         "snippet": "if (err.code === \"ESRCH\") { fs.rmSync(entry, { force: true }); continue; }",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L87"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L87"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -222,7 +266,7 @@
         "file": "server/file-store.js",
         "line": 95,
         "snippet": "fs.writeFileSync(ticketPath, \"0\", { flag: \"wx\" });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L95"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L95"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -233,7 +277,29 @@
         "file": "server/file-store.js",
         "line": 109,
         "snippet": "fs.rmSync(ticketPath, { force: true });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/file-store.js#L109"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/file-store.js#L109"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/job-control.js",
+        "line": 82,
+        "snippet": "retryWindowsIo(() => fs.unlinkSync(source));",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/job-control.js#L82"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/job-control.js",
+        "line": 111,
+        "snippet": "fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5 });",
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/job-control.js#L111"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -244,7 +310,7 @@
         "file": "server/session-lock.js",
         "line": 84,
         "snippet": "return changeOwnedLock(sid, token, file => fs.unlinkSync(file));",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/server/session-lock.js#L84"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/server/session-lock.js#L84"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -253,13 +319,25 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "sidecars/codex_panel/app.js",
-        "line": 106,
+        "line": 111,
         "snippet": "return fetch(url, { ...options, headers: { \"Content-Type\": \"application/json\", ...(options.headers || {}) }, });",
-        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/097c8791cd77a3eae7fd5e6c082e92470fc57bc0/sidecars/codex_panel/app.js#L106"
+        "githubBlobUrl": "https://github.com/yeyuhants-prog/codex-bridge/blob/9196b402058bdb668bc8b0051b4aa2d7531c4367/sidecars/codex_panel/app.js#L111"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.8.0",
+      "sha": "9196b402058bdb668bc8b0051b4aa2d7531c4367",
+      "scannedAt": "2026-11-28T18:12:48.110Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.7.0",
       "sha": "097c8791cd77a3eae7fd5e6c082e92470fc57bc0",

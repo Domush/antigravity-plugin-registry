@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "Sierra0106/aegis-inquisitor",
+  "sha": "a4bd7fd748894cc9e6505e4a4b6b0922a86a3af2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:12:05.540Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "aegis-inquisitor",
+    "displayName": "aegis-inquisitor",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "blast-radius-audit",
+        "slashCommand": "/blast-radius-audit",
+        "description": "Inspect AST/grep caller signatures and cross-module dependencies (V3) before editing shared or high-in-degree modules. Use when refactoring shared helpers, changing function signatures, or assessing change blast radius.",
+        "disableModelInvocation": false,
+        "file": "skills/blast-radius-audit/SKILL.md"
+      },
+      {
+        "name": "highstakes-trading",
+        "slashCommand": "/highstakes-trading",
+        "description": "Optional G10 Open-Position Safety and Display-vs-Decision firewall (G8) for algorithmic trading, broker adapters, and risk-gate repositories. Use when editing exit paths, halts, locks, or dashboards in live financial systems.",
+        "disableModelInvocation": false,
+        "file": "skills/highstakes-trading/SKILL.md"
+      },
+      {
+        "name": "invariant-evolve",
+        "slashCommand": "/invariant-evolve",
+        "description": "Self-healing invariant logger — extract root causes and mandatory defenses into .agents/invariants/ledger.md after edge cases, sandbox denials, or regressions. Use when capturing lessons learned so future agent runs do not repeat the same b",
+        "disableModelInvocation": false,
+        "file": "skills/invariant-evolve/SKILL.md"
+      },
+      {
+        "name": "review-plan",
+        "slashCommand": "/review-plan",
+        "description": "Pre-flight G1/G2/G9 plan review and 4-point pre-mortem audit (V1-V6) before any non-trivial code or architecture change. Use when reviewing plans, checking dependency behaviour, preventing self-approval, or auditing runtime failure modes be",
+        "disableModelInvocation": false,
+        "file": "skills/review-plan/SKILL.md"
+      },
+      {
+        "name": "verification-gate",
+        "slashCommand": "/verification-gate",
+        "description": "Enforce G3/G5/G9 evidence-before-completion — require fresh post-edit test proof, eliminate silent fake telemetry defaults, and report failed calls. Use before claiming any task, bugfix, or refactor is complete or passing.",
+        "disableModelInvocation": false,
+        "file": "skills/verification-gate/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/blast-radius-audit",
+      "/highstakes-trading",
+      "/invariant-evolve",
+      "/review-plan",
+      "/verification-gate"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": [
+      "PostToolUse",
+      "PreToolUse",
+      "Stop"
+    ]
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<p align=\"center\">\n  <img src=\"https://raw.githubusercontent.com/Sierra0106/aegis-inquisitor/main/assets/logo.svg?v=3\" alt=\"AegisInquisitor Logo\" width=\"120\" height=\"120\" />\n</p>\n\n<h1 align=\"center\">AegisInquisitor</h1>\n\n<p align=\"center\">\n  <strong>Portable Google Antigravity reliability plugin: G1–G11 engineering rules, AegisInquisitor pre-mortem audits (V1–V6), modular Agent Skills, and warn-mode verification hooks.</strong>\n</p>\n\n<p align=\"center\">\n  <a href=\"https://skills.sh/Sierra0106/aegis-inquisitor\"><img src=\"https://skills.sh/b/Sierra0106/aegis-inquisitor\" alt=\"skills.sh\" /></a>\n  <a href=\"https://github.com/Sierra0106/aegis-inquisitor/actions/workflows/validate-plugin.yml\"><img src=\"https://github.com/Sierra0106/aegis-inquisitor/actions/workflows/validate-plugin.yml/badge.svg\" alt=\"Validate Plugin\" /></a>\n  <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/license-MIT-2563EB.svg?style=flat-square\" alt=\"MIT License\" /></a>\n  <img src=\"https://img.shields.io/badge/stop--gate-warn%20mode-F59E0B.svg?style=flat-square\" alt=\"Stop Gate: Warn Mode\" />\n</p>\n\n---\n\n## Why AegisInquisitor?\n\nAI coding agents often fail in predictable process ways: editing unread files, inventing fallback values, reporting stale test runs as green, or drifting outside the requested scope.\n\n**AegisInquisitor** packages battle-tested engineering discipline into a single portable **Antigravity Plugin** without requiring heavy lockouts:\n- **Lean `AGENTS.md` + On-Demand Skills** so your customization token budget stays small and never truncates.\n- **Warn-mode lifecycle hooks** (`pre_tool_guard.py`, `post_tool_tracker.py`, `stop_gate.py`) using `${PLUGIN_ROOT}` and `${PLUGIN_DATA}` — zero hardcoded paths.\n- **Opt-in high-stakes domain safety** (`skills/highstakes-trading`) separated from general software-engineering defaults.\n\n---\n\n## Installation\n\n> **Compatibility:** `skills/*/SKILL.md` and `rules/AGENTS.md` work across Antigravity, Claude Code, Cursor, and Codex. Automated Python lifecycle hooks (`hooks.json` / `stop_gate.py`) are Antigravity-specific.\n\n<details open>\n<summary><strong>Google Antigravity (Full Plugin: Rules + Skills + Hooks)</strong></summary>\n\n```bash\nagy plugin install https://github.com/Sierra0106/aegis-inquisitor.git\nagy plugin validate .\n```\n</details>\n\n<details>\n<summary><strong>Universal Skills CLI (<code>skills.sh</code> — All Agents)</strong></summary>\n\n```bash\nnpx skills@latest add Sierra0106/aegis-inquisitor\n```\n</details>\n\n<details>\n<summary><strong>Claude Code</strong></summary>\n\n```bash\nnpx skills@latest add Sierra0106/aegis-inquisitor --agent claude-code\n```\n</details>\n\n<details>\n<summary><strong>Cursor</strong></summary>\n\n```bash\nnpx skills@latest add Sierra0106/aegis-inquisitor --agent cursor\n```\n</details>\n\n<details>\n<summary><strong>Codex</strong></summary>\n\n```bash\nnpx skills@latest add Sierra0106/aegis-inquisitor --agent codex\n```\n</details>\n\n---\n\n## What's Inside\n\n### 1. Core Operating Rules (`rules/AGENTS.md`)\n| Rule | Summary |\n| :--- | :--- |\n| **G1** | **Self-Review, No Self-Approval** — 4-point pre-mortem (`Failure Mode / Trigger / Detection / Prevention`); never output `APPROVED` for your own work. |\n| **G2** | **Deterministic Impact Analysis** — List every touched file, symbol, config key, DB table, and UI element with verified callers. |\n| **G3** | **Evidence vs. Hypothesis** — Back runtime claims with empirical queries, logs, or test outputs; mark guesses `HYPOTHESIS`. |\n| **G4** | **Tool Failure = Hard Stop** — Stop and diagnose on non-zero exits or policy blocks; never bypass sandboxes; report `Failed calls`. |\n| **G5** | **Zero Fake Telemetry** — Never return silent synthetic defaults (e.g. `1.0` / `15.0`) as real measurements. |\n| **G6–G7** | **Context & Drift Check** — Load workspace invariants at start and verify docs against live source code. |\n| **G8** | **Display ≠ Decision** — Keep analytics/dashboards isolated from automated decision gates unless explicitly tested. |\n| **G9** | **Read Behaviour, Not Just Location** — Inspect dependency bodies, failure paths, and caller import resolution. |\n| **G11** | **Scope Lock & Git Safety** — Edit only approved targets; never run destructive git commands without explicit approval. |\n\n### 2. AegisInquisitor Pre-Mortem Vectors (`V1–V6`)\n- **V1:** Concurrency & DOM lifecycle safety (non-blocking async loops, layout reflow before CSS animation restarts)\n- **V2:** Stream liveness (decoupled SSE queues + keep-alive heartbeats)\n- **V3:** Blast radius & caller-signature verification before modifying shared modules\n- **V4:** Sandbox boundaries (workspace-relative / `${PLUGIN_ROOT}` paths only)\n- **V6:** Deterministic rollback & clean per-step commits\n\n### 3. Modular Skills (`skills/*/SKILL.md`)\n- `review-plan` — Pre-flight G1/G2/G9 plan review & pre-mortem\n- `verification-gate` — Fresh post-edit proof & zero-fake-telemetry check\n- `blast-radius-audit` — Caller signature & AST impact checks\n- `invariant-evolve` — Append root causes & defenses to `.agents/invariants/ledger.md`\n- `highstakes-trading` *(optional)* — G10 Open-Position Safety & G8 firewall for live trading repos\n\n### 4. Lifecycle Hooks (`hooks.json`)\n`stop_gate.py` runs in **`warn` mode by default** (`AEGIS_STOP_GATE_MODE=warn`):\n- `PreToolUse` (`pre_tool_guard.py`) — Warns on destructive git commands (`reset --hard`, `push`, `rebase`).\n- `PostToolUse` (`post_tool_tracker.py`) — Records mutated files and passing test/validator runs in `${PLUGIN_DATA}`.\n- `Stop` (`stop_gate.py`) — Emits a clear warning if files were modified after the last passing test run. Set `AEGIS_STOP_GATE_MODE=block` for strict exit-code-2 enforcement.\n- **Impact Bot (`scripts/aegis_report_bot.py`)** — Generates a Markdown discipline scorecard (`python3 scripts/aegis_report_bot.py`) showing mutated files and post-edit verification status.\n\n---\n\n## FAQ — Why Use AegisInquisitor?\n\n<details open>\n<summary><strong>1. Why do I need AegisInquisitor if my AI agent already has a system prompt?</strong></summary>\n\nLong system prompts bloat your token budget and get ignored or truncated in deep sessions. AegisInquisitor keeps `AGENTS.md` lean, loads heavy protocols (`review-plan`, `verification-gate`, `blast-radius-audit`) **on demand**, and backs them with real Python lifecycle hooks (`hooks.json`).\n</details>\n\n<details>\n<summary><strong>2. Will it block my workflow or slow me down?</strong></summary>\n\nNo. `stop_gate.py` ships in **`warn` mode by default** (`AEGIS_STOP_GATE_MODE=warn`). If files were modified without a fresh passing test run, it surfaces a clear warning instead of halting you. You can opt into strict enforcement anytime with `AEGIS_STOP_GATE_MODE=block`.\n</details>\n\n<details>\n<summary><strong>3. How does it stop hallucinated fixes and silent fake defaults?</strong></summary>\n\nRules **G3**, **G5**, and **G9** require empirical command output *after* the final edit, prohibit silent synthetic fallbacks (like hardcoded dummy values in `except` blocks), and require inspecting actual dependency bodies and failure paths before editing.\n</details>\n\n<details>\n<summary><strong>4. Is it safe for production or high-stakes repositories?</strong></summary>\n\nYes. **G11** enforces strict scope lock and `pre_tool_guard.py` warns on destructive git actions (`reset --hard`, `push`, `rebase`). For live financial or trading systems, the optional `highstakes-trading` skill adds **G8** (Display ≠ Decision firewall) and **G10** (Open-Position Safety).\n</details>\n\n<details>\n<summary><strong>5. How do I verify it is actually working in my session?</strong></summary>\n\nRun `python3 scripts/aegis_report_bot.py` to generate a Markdown discipline scorecard showing active guardrails, mutated files, and whether your session is `PASS (verified after last edit)`.\n</details>\n\n---\n\n## Local Development & Tests\n```bash\npytest -q tests/\n```\n\n## License\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "## AegisInquisitor v0.1.0\r\n\r\nPortable reliability plugin & engineering guardrails for **Google Antigravity**, plus cross-agent `SKILL.md` modules for **Claude Code**, **Cursor**, and **Codex**.\r\n\r\n### What's Included\r\n- **Lean Core Rules (`rules/AGENTS.md`):** `G1–G11` engineering discipline (no self-approval, deterministic impact analysis, empirical proof, zero fake telemetry, scope lock & git safety).\r\n- **Pre-Mortem Vectors (`V1–V6`):** Concurrency, stream liveness, blast-radius/caller verification, sandbox boundaries, and deterministic rollback.\r\n- **5 Modular Agent Skills (`skills/*/SKILL.md`):** `review-plan`, `verification-gate`, `blast-radius-audit`, `invariant-evolve`, and optional `highstakes-trading` (`G8` + `G10`).\r\n- **Warn-Mode Lifecycle Hooks (`hooks.json`):** `pre_tool_guard.py`, `post_tool_tracker.py`, and `stop_gate.py` (`AEGIS_STOP_GATE_MODE=warn` by default; `block` opt-in).\r\n- **Discipline Scorecard & AI Discovery:** `scripts/aegis_report_bot.py` and `llms.txt`.\r\n\r\n### Quick Install\r\n- **Antigravity Plugin:** `agy plugin install https://github.com/Sierra0106/aegis-inquisitor.git`\r\n- **Multi-Agent Skills:** `npx skills@latest add Sierra0106/aegis-inquisitor`",
+  "securityReport": {
+    "riskTier": "low",
+    "capabilities": [
+      "fs_write_workspace"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "scripts/post_tool_tracker.py",
+        "line": 46,
+        "snippet": "sp.write_text(json.dumps(state, indent=2), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Sierra0106/aegis-inquisitor/blob/a4bd7fd748894cc9e6505e4a4b6b0922a86a3af2/scripts/post_tool_tracker.py#L46"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "a4bd7fd748894cc9e6505e4a4b6b0922a86a3af2",
+      "scannedAt": "2026-11-28T18:12:05.540Z",
+      "riskTier": "low",
+      "capabilities": [
+        "fs_write_workspace"
+      ]
+    }
+  ]
+}

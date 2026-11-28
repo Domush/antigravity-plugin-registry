@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "Su-1003/file-dock",
+  "sha": "5c538d09db6ddc48c5ae908a078669a05d78eb9b",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:12:33.677Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "file-dock",
+    "displayName": "File Dock 文件坞",
+    "version": "1.0.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "dock",
+        "runtimeName": "file-dock_dock",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server/index.mjs",
+          "--data_dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "file-dock_dock"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n  <img src=\"assets/logo.png\" alt=\"File Dock Logo\" width=\"112\" />\n  <h1>File Dock</h1>\n  <p><strong>Codex / DSH-style right-click file actions &amp; local browser for Google Antigravity on Windows</strong></p>\n  <p>\n    <img src=\"https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?logo=windows&logoColor=white\" alt=\"Windows 10/11\" />\n    <img src=\"https://img.shields.io/badge/Node.js-%3E%3D%2018-339933?logo=nodedotjs&logoColor=white\" alt=\"Node.js >= 18\" />\n    <img src=\"https://img.shields.io/badge/Antigravity-2.0-4285F4?logo=google&logoColor=white\" alt=\"Google Antigravity 2.0\" />\n    <img src=\"https://img.shields.io/badge/MCP%20Apps-SEP--1865-6366F1\" alt=\"MCP Apps SEP-1865\" />\n  </p>\n  <p>\n    <a href=\"LICENSE\"><img src=\"https://img.shields.io/badge/License-MIT-F59E0B\" alt=\"MIT License\" /></a>\n    <img src=\"https://img.shields.io/badge/Zero%20Dependencies-Pure%20Node.js-10B981\" alt=\"Zero Dependencies\" />\n  </p>\n  <p>\n    <strong>English</strong> | <a href=\"README.zh-CN.md\">简体中文</a>\n  </p>\n</div>\n\n---\n\n## Why File Dock?\n\nIn **Google Antigravity 2.0**, right-clicking native `file://` chips inside chat messages only shows `Copy`, without direct Windows local actions like **Open File**, **Open in Side Pane**, **Open in VS Code**, **Open with...**, **Save as...**, or **Reveal in File Explorer**.\n\nBecause Antigravity plugins run in isolated MCP App iframes rather than patching the closed Electron shell, **File Dock** (`file-dock`) brings the full Codex / DSH experience cleanly via standard **MCP + MCP Apps (SEP-1865)**:\n\n- **Zero external dependencies**: Pure Node.js (`>=18`) stdio MCP server + self-contained single-file HTML UIs.\n- **Does not touch Antigravity installation files**: Lives solely in `~/.gemini/config/plugins/file-dock/`.\n- **Bilingual UI (`EN` / `中`)** with automatic locale detection and light/dark host theme sync.\n\n---\n\n## Previews\n\n### Inline Chat File Card (with Right-Click Context Menu)\n<p align=\"center\">\n  <img src=\"docs/preview-inline-en.png\" alt=\"File Dock Inline Card Preview\" width=\"660\" />\n</p>\n\n### Side-Pane &amp; Global File Browser\n<p align=\"center\">\n  <img src=\"docs/preview-browser-en.png\" alt=\"File Dock Side-Pane Browser Preview\" width=\"680\" />\n</p>\n\n---\n\n## Right-Click Menu Actions\n\nRight-clicking any row (or clicking `⋯`) opens the floating menu:\n\n| Action | Implementation |\n| --- | --- |\n| **Open File / Folder** | Opens with the Windows default application (`Start-Process -LiteralPath`) |\n| **Open in Side Pane** | Opens inside Antigravity's built-in side-pane `fileView` (`com.google.antigravity/toggle-aux-pane`) |\n| **Open in VS Code** | Launches VS Code (`Code.exe` / `code.cmd` detected from standard paths or `PATH`) |\n| **Open with ›** | Pops up the native Windows application chooser (`rundll32 shell32.dll,OpenAs_RunDLL`) |\n| **Save as...** | Opens a native Windows `SaveFileDialog` and copies the file safely |\n| **Copy Path** | Copies the full Windows path (with server-side `Clipboard.SetText` fallback) |\n| **Copy File Content** | Reads UTF-8 text files (up to 1 MiB, binary-guarded) into the clipboard |\n| **Reveal in File Explorer** | Opens Windows Explorer and highlights the file (`explorer.exe /select,<path>`) |\n\nDouble-clicking a file row reveals it directly in Windows File Explorer.\n\n---\n\n## Installation (Windows)\n\n### Prerequisites\n- Windows 10 / 11\n- Node.js `>=18` on `PATH`\n\n### Clone into Antigravity's plugin directory\n\nUsing PowerShell:\n\n```powershell\ngit clone https://github.com/Su-1003/file-dock.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\file-dock\"\n```\n\nAntigravity automatically discovers plugins in `%USERPROFILE%\\.gemini\\config\\plugins\\`. No manual registration or restart is needed (or toggle it from the Customizations page).\n\n---\n\n## Usage\n\n1. **Automatic Inline Cards**: With the bundled `rules/AGENTS.md` active, Antigravity automatically attaches a File Dock card (`show_files_inline`) after generating final deliverables.\n2. **On-Demand**: Ask `\"Show current workspace files in File Dock\"` in chat.\n3. **Side-Pane / Global Browser**: Click **`+`** in the right auxiliary pane → **File Dock 文件坞**, or open it from the left sidebar to browse local drives, pinned folders, and recent `~/.gemini/antigravity/brain` outputs.\n\n---\n\n## Project Structure\n\n```text\nfile-dock/\n├── plugin.json          # Plugin manifest\n├── mcp_config.json      # MCP server registration (node server/index.mjs)\n├── server/index.mjs     # Zero-dependency Windows MCP Server (tools + resources)\n├── dist/\n│   ├── inline.html      # Self-contained inline chat card UI\n│   └── app.html         # Self-contained side-pane & global browser UI\n├── rules/AGENTS.md      # Always-on rule to surface deliverable cards\n├── assets/logo.png      # App icon\n└── tests/verify.mjs     # Unit & stdio JSON-RPC integration tests\n```\n\n---\n\n## Verification\n\n```powershell\nnode tests/verify.mjs\n```\n\n---\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "mcp_local_exec"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/index.mjs",
+        "line": 66,
+        "snippet": "fs.writeFileSync(STATE_FILE, JSON.stringify(nextState, null, 2), 'utf8');",
+        "githubBlobUrl": "https://github.com/Su-1003/file-dock/blob/5c538d09db6ddc48c5ae908a078669a05d78eb9b/server/index.mjs#L66"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "server/index.mjs",
+        "line": 725,
+        "snippet": "description: '扫描 ~/.gemini/antigravity/brain 下的最近产出文件列表。',",
+        "githubBlobUrl": "https://github.com/Su-1003/file-dock/blob/5c538d09db6ddc48c5ae908a078669a05d78eb9b/server/index.mjs#L725"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "5c538d09db6ddc48c5ae908a078669a05d78eb9b",
+      "scannedAt": "2026-11-28T18:12:33.677Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "mcp_local_exec"
+      ]
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "nowledge-co/nowledge-mem-google-antigravity",
-  "sha": "5d22076ccee1d12693d0882c47915ecd45002253",
+  "sha": "492575d08dd85562420d21c1958fe1a5f9fa6478",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:15:20.587Z",
+  "scannedAt": "2026-11-28T18:12:52.913Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "nowledge-mem-google-antigravity",
     "displayName": "Nowledge Mem",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -162,8 +162,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "# Nowledge Mem -- Google Antigravity Plugin\n\n> Bring your Nowledge Mem knowledge base into Google Antigravity with persistent context, memory rules, and agent skills.\n\nThis package is the **Google Antigravity-native product surface** for Nowledge Mem.\n\nIt is deliberately **hybrid**:\n\n- Google Antigravity loads memory rules plus lifecycle hooks for Context Bundle / Working Memory startup context and session capture\n- the plugin exposes local Nowledge Mem MCP tools for lower-friction retrieval and memory writes\n- bundled skills teach Antigravity when to recall, distill, save threads, and create handoff summaries\n- Antigravity can still call `nmem` directly whenever it needs a more flexible path\n\nThe recommended setup is simple and stable: Google Antigravity on top, MCP for direct retrieval tools, and `nmem` for hooks, thread save, remote auth, and command fallback.\n\nThe bundled memory rule uses `trigger: always_on` so Antigravity applies its guidance throughout the conversation.\n\nOn Windows, the plugin uses HTTP first. If it needs the CLI, the native `nmem.exe` supports longer transcripts than the `nmem.cmd` launcher. If a transcript exceeds the Windows process command-line limit or its saved identity cannot be verified, it stays in the offline queue. Restore the original Mem connection to retry it over HTTP.\n\n## Requirements\n\n- [Google Antigravity 2.0](https://antigravity.google)\n- [Nowledge Mem](https://mem.nowledge.co) running locally, or a reachable remote Nowledge Mem server\n- `nmem` CLI in your `PATH` (or installed via standard Linux packages at `/usr/lib/nowledge-mem/nmem` / `/usr/lib64/nowledge-mem/nmem`)\n- Python 3.9 or newer as `python3` or `python` for the lifecycle hooks, with no extra packages. On macOS, the Python that comes with the Xcode Command Line Tools (`/usr/bin/python3`) is enough. On Windows, install Python 3.9+ so that `python3` or `python` runs it; the Microsoft Store alias stubs do not.\n\nYou can install the standalone `nmem` CLI via PyPI, Fedora COPR, or Arch AUR:\n```bash\n# PyPI\npip install nmem-cli\n\n# Fedora / RPM-based Linux (COPR)\nsudo dnf copr enable abn/nowledge-mem\nsudo dnf install nowledge-mem-cli\n\n# Arch Linux (AUR)\nyay -S nmem-cli\n```\n\nIf Nowledge Mem is already running on the same machine through the desktop app, install the bundled CLI from **Settings -> Preferences -> Developer Tools -> Install CLI**. That gives Antigravity direct access to the local Mem instance. The plugin automatically resolves system installation paths if sandboxed subshells restrict user `$PATH` symlinks.\n\nVerify connection and in-flight background tasks:\n\n```bash\nnmem status\nnmem tasks\n```\n\nFor the default same-machine setup, `nmem status` should show `http://127.0.0.1:14242 (default)`. Historical Antigravity conversation sessions can also be backfilled directly using `nmem t sync --from antigravity`.\n\n## Install\n\nFor local development or a repository checkout install, you can link the plugin folder to one of the locations scanned by Antigravity:\n\n### Option 1: Workspace Level (Active workspace only)\n\nPlace or symlink the plugin folder inside `.agents/plugins/` (or `_agents/plugins/`) at the root of your opened workspace:\n\n```bash\nmkdir -p .agents/plugins\nln -s /path/to/nowledge-mem-google-antigravity .agents/plugins/\n```\n\n### Option 2: Global Level (All workspaces)\n\nPlace or symlink the plugin folder inside `~/.gemini/config/plugins/` in your user home directory:\n\n```bash\nmkdir -p ~/.gemini/config/plugins\nln -s /path/to/nowledge-mem-google-antigravity ~/.gemini/config/plugins/\n```\n\nAlternatively, you can clone the repository directly into your global plugins directory:\n\n```bash\ngit clone https://github.com/nowledge-co/nowledge-mem-google-antigravity.git ~/.gemini/config/plugins/nowledge-mem\n```\n\nRestart Google Antigravity after linking or cloning.\n\nRelease packaging notes live in [`RELEASING.md`](./RELEASING.md).\n\n## What You Get\n\n**Automatic lifecycle hooks**\n\n- **SessionStart Hook**: Automatically loads Context Bundle when available, with Working Memory as the lightweight fallback, and injects it once as situational context when a conversation starts. It is injected as a system message, so it stays available after tool calls and on later turns. Prioritizes direct native HTTP REST transport (<30ms latency), falling back to CLI subprocess execution. Concurrently launches a non-blocking background thread to connect and sync active host skills (`nmem skills connect antigravity` and `nmem skills sync`).\n- **PostInvocation Hook**: Evaluates mid-session runtime state (such as pending offline sessions in `~/.nowledge-mem/plugins/antigravity/unsynced.json`), triggers asynchronous background synchronization, and throttles informational notifications to at most once per conversation session.\n- **Stop Hook**: Automatically imports conversation messages from Antigravity's `transcript.jsonl` log into Nowledge Mem under the current conversation ID when execution completes. Defers capture when background tasks are still running (`fullyIdle: false`), and prioritizes incremental tail reconciliation (`/threads/{id}/reconcile-tail`) to eliminate duplicate messages and reduce payload size. Prioritizes direct native HTTP REST transport, falling back to CLI execution and local offline buffer queuing (`~/.nowledge-mem/plugins/antigravity/unsynced.json`).\n- **Space Resolution & Verification**: Resolves the active space by prioritizing explicit environment overrides (`NMEM_SPACE`/`NMEM_SPACE_ID`), workspace/plugin config (`.config.json` / `~/.nowledge-mem/plugins/antigravity/config.json`), and project config (`.nmemspace`/`.nowledge/config.json`). Dynamically detected candidate spaces from workspace directory names are verified against existing backend spaces; if the space does not exist on the server, Antigravity safely falls back to `default`.\n\n**Bundled MCP**\n\n- Local same-machine installs expose `nowledge-mem` MCP tools at `http://127.0.0.1:14242/mcp` automatically.\n- The startup hook automatically synchronizes `mcp_config.json` with effective client settings (`~/.nowledge-mem/config.json` or `NMEM_API_URL`/`NMEM_API_KEY`). For remote Mem, `mcp_config.json` is updated dynamically with the remote server URL and authentication headers (`Authorization: Bearer` and `X-NMEM-API-Key`).\n\nIf the selected Space cannot be verified, startup removes the Mem connection from the generated MCP configuration and reports the lookup failure. Other MCP servers stay configured. Start a new session once the Space catalog is reachable to restore the verified connection.\n\n- The committed `mcp_config.json` is a local placeholder template. Do not commit a real `nmem_...` API key.\n\n**Persistent context rules**\n\n- `rules/nowledge-mem.md` tells Antigravity how to route recall across Context Bundle, Working Memory, distilled memories, conversation threads, handoff summaries, and positional CLI fallback signatures.\n\n**Agent skills**\n\n- `nmem-bridge-chat`\n- `nmem-fs-explore`\n- `nmem-graph-explore`\n- `nmem-memory-distill`\n- `nmem-memory-search`\n- `nmem-memory-working`\n- `nmem-skill-load`\n- `nmem-skill-manage`\n- `nmem-skill-propose`\n- `nmem-status`\n- `nmem-thread-handoff`\n- `nmem-thread-save`\n\n## Bridge\n\nUse `/nmem-bridge-chat` to discover an Agent, check an inbox, send a message, or reply through an approved Nowledge Cloud connection. Antigravity exchanges messages using the same Agent mailbox protocol as other Bridge-capable hosts in the authorized Space.\n\nFor a startup inbox check, launch Antigravity with `NMEM_BRIDGE_INBOX_ON_START=1` and `NMEM_AGENT_CONTEXT` set to the approved named Context. The hook asks the agent to use the CLI to verify that Context and check one page in its Space. You can also explicitly ask for the whole Agent inbox across authorized Spaces. Each reply goes back to the original message's Space. The bundled skill includes instructions for interactive Cloud MCP requests.\n\n## Local vs Remote & Configuration Precedence\n\nBy default, both `nmem` and the bundled MCP server point to the local Mem server at `http://127.0.0.1:14242`.\n\nNowledge Mem resolves connection and space settings in the following strict order of precedence:\n\n1. **Environment Variables**: `NMEM_API_URL`, `NMEM_API_KEY`, `NMEM_SPACE` (or `NMEM_SPACE_ID`)\n2. **Local Workspace Config (`.config.json`)**: Place a `.config.json` file at the root of the workspace. This file is git-ignored and allows configuring server endpoints, credentials, default space, and future settings locally for that specific workspace:\n   ```json\n   {\n     \"apiUrl\": \"https://mem.example.com\",\n     \"apiKey\": \"nmem_your_key\",\n     \"space\": \"my-project-space\"\n   }\n   ```\n3. **Explicit Workspace Space Files**: `.nmemspace` or `.nowledge/config.json` in the workspace root.\n4. **Plugin Root Config (`.config.json`)**: Place a `.config.json` in the plugin repository root for plugin-wide local testing defaults.\n5. **Plugin Storage Config**: `~/.nowledge-mem/plugins/antigravity/config.json` (persists Antigravity-specific plugin defaults across upgrades without polluting root files).\n6. **Global Client Config**: `~/.nowledge-mem/config.json` (managed via `nmem config client set ...`).\n7. **Local Defaults**: `http://127.0.0.1:14242` and `default` space.\n\nAntigravity's passive hooks read the active project from the hook payload's\n`workspacePaths`; they do not depend on the plugin process's working directory.\nThis routing is specific to the Antigravity integration. Set `NMEM_AGENT_ID` for\nan explicit agent identity, and use one of the workspace files above for a\nproject-specific Space. If a workspace file is malformed or names a Space that\nthe connected server does not expose, startup and status show the configuration\nerror instead of quietly reading from or writing to Default. When the server is\noffline, the explicit Space remains attached to queued session data for a safe\nretry later.\n\nFor global remote Mem setup via CLI, run:\n\n```bash\nnmem config client set url https://mem.example.com\nnmem config client set api-key nmem_your_key\n```\n\nIf you need a temporary override for one session, launch Antigravity from a shell where `NMEM_API_URL`, `NMEM_API_KEY`, or `NMEM_SPACE` are exported.\n\nFor MCP tools in remote mode, generate the host config:\n\n```bash\nnmem config mcp show --host google-antigravity\n```\n\nPaste the generated JSON into Antigravity's custom MCP config (`~/.gemini/config/mcp_config.json` or modified raw via the MCP Store).\n\n\nMCP connections use the resolved Space, just like startup context and automatic thread saving. Restart the Antigravity session after changing its Space so the MCP connection reloads.\n\n## Direct `nmem` Use Is Always Allowed\n\nThe bundled skills are convenience paths, not a cage. Antigravity should freely compose direct `nmem` commands when that is clearer or more flexible.\n\nExamples:\n\n```bash\nnmem --json wm read\nnmem --json m search \"auth token rotation\" --mode deep --importance 0.7\nnmem --json m search \"auth token rotation\" --mode deep --importance 0.7 --space \"Research Agent\"\nnmem --json m add \"JWT refresh failures came from clock skew between the gateway and API nodes.\" -t \"JWT refresh failures traced to clock skew\" -i 0.9 --unit-type learning -l auth -l backend -s google-antigravity\nnmem status\n```\n\n## Thread Save vs Handoff\n\nAntigravity supports two separate save paths:\n\n- **Thread Save** (`nmem-thread-save` skill / `/nmem-thread-save`): Imports the **real session messages** into Nowledge Mem. The Stop hook performs this import automatically at the end of the session, but the skill is available for manual mid-session triggers.\n- **Handoff Save** (`nmem-thread-handoff` skill / `/nmem-thread-handoff`): Creates a **compact resumable handoff summary** with Goal, Decisions, Files, Risks, and Next. Use this when you want a lightweight restart point rather than the full transcript.\n\nUse `nmem-memory-distill` for durable atomic knowledge, `nmem-thread-save` for the full session, and `nmem-thread-handoff` for a resumable handoff.\n\n## Workspace Skill Management\n\n- **Install/Update Skill** (`nmem-skill-manage` skill / `/nmem-skill-manage`): Evaluates the project context, lists active/archived/candidate skills from Nowledge Mem, and helps recommend and install them into `<workspace-root>/.agents/skills/<skill-folder>/`. Users can choose to commit these skills to git or keep them local-only (via git-exclude).\n- **On-Demand Skill Loader** (`nmem-skill-load` skill / `/nmem-skill-load <query>`): Dynamically searches candidate/compiled skills on Nowledge Mem and loads them into the active turn (Ephemeral Mode) or installs them locally (Persistent Mode). Triggered explicitly via `/nmem-skill-load <query>` or automatically when Antigravity detects an unhandled domain task with an available skill definition.\n\n## Development & Testing\n\nRun unit tests for lifecycle hooks:\n\n```bash\nmake test\n# or: npm run test\n```\n\nRun container integration test suite using `docker.io/nowledgelabs/mem:latest` published on a random host port:\n\n```bash\nmake test-integration\n# or: python3 -m pytest -v tests/integration/\n```\n\nRun full plugin validation:\n\n```bash\nmake validate\n# or: npm run validate\n```\n\n\n## Links\n\n- [Architecture Deep Dive](./ARCHITECTURE.md)\n- [Documentation](https://mem.nowledge.co/docs/integrations/google-antigravity)\n- [Nowledge Mem](https://mem.nowledge.co)\n- [Discord](https://nowled.ge/discord)\n- [GitHub](https://github.com/nowledge-co/nowledge-mem-google-antigravity)\n\nPending captures are tied to the Mem endpoint and credentials used by the Stop hook. Restore that connection to resume automatic retries. Older queue entries without a recorded connection remain on disk in the plugin storage directory (`unsynced.json`). Inspect their destination before manually importing them.\n\n### Active-session Bridge notices\n\nAfter you explicitly subscribe an approved Agent Context for this actual conversation, the first `PreInvocation` hook in a turn can add a local pending-mail hint to model context. It does not read or acknowledge mail or wake an idle conversation. Startup inbox opt-in alone does not subscribe. Native-session delivery and precise reply routing are separate capabilities.\n\nThere is no true session-end cleanup hook in this adapter. Before retiring a subscribed conversation, use `nmem bridge notices unsubscribe --host=antigravity --session-id=<conversationId> --ended`. Stop ends a turn, so it does not remove a live conversation subscription.\n",
-  "latestReleaseNotes": "# Nowledge Mem Google Antigravity Plugin v0.1.8\n\nBridge startup guidance includes the actual conversation ID for an approved Agent-mailbox subscription. The first model invocation of a normal user turn consumes fresh local hints without a network request. A compatible CLI is required to subscribe; older clients retain the existing explicit inbox check. This does not enable native sessions, precise reply routing or idle wakeup.\n",
+  "readmeMarkdown": "# Nowledge Mem -- Google Antigravity Plugin\n\n> Bring your Nowledge Mem knowledge base into Google Antigravity with persistent context, memory rules, and agent skills.\n\nThis package is the **Google Antigravity-native product surface** for Nowledge Mem.\n\nIt is deliberately **hybrid**:\n\n- Google Antigravity loads memory rules plus lifecycle hooks for Context Bundle / Working Memory startup context and session capture\n- the plugin exposes local Nowledge Mem MCP tools for lower-friction retrieval and memory writes\n- bundled skills teach Antigravity when to recall, distill, save threads, and create handoff summaries\n- Antigravity can still call `nmem` directly whenever it needs a more flexible path\n\nThe recommended setup is simple and stable: Google Antigravity on top, MCP for direct retrieval tools, and `nmem` for hooks, thread save, remote auth, and command fallback.\n\nThe bundled memory rule uses `trigger: always_on` so Antigravity applies its guidance throughout the conversation.\n\nOn Windows, the plugin uses HTTP first. If it needs the CLI, the native `nmem.exe` supports longer transcripts than the `nmem.cmd` launcher. If a transcript exceeds the Windows process command-line limit or its saved identity cannot be verified, it stays in the offline queue. Restore the original Mem connection to retry it over HTTP.\n\n## Requirements\n\n- [Google Antigravity 2.0](https://antigravity.google)\n- [Nowledge Mem](https://mem.nowledge.co) running locally, or a reachable remote Nowledge Mem server\n- `nmem` CLI in your `PATH` (or installed via standard Linux packages at `/usr/lib/nowledge-mem/nmem` / `/usr/lib64/nowledge-mem/nmem`)\n- Python 3.9 or newer as `python3` or `python` for the lifecycle hooks, with no extra packages. On macOS, the Python that comes with the Xcode Command Line Tools (`/usr/bin/python3`) is enough. On Windows, install Python 3.9+ so that `python3` or `python` runs it; the Microsoft Store alias stubs do not.\n\nYou can install the standalone `nmem` CLI via PyPI, Fedora COPR, or Arch AUR:\n```bash\n# PyPI\npip install nmem-cli\n\n# Fedora / RPM-based Linux (COPR)\nsudo dnf copr enable abn/nowledge-mem\nsudo dnf install nowledge-mem-cli\n\n# Arch Linux (AUR)\nyay -S nmem-cli\n```\n\nIf Nowledge Mem is already running on the same machine through the desktop app, install the bundled CLI from **Settings -> Preferences -> Developer Tools -> Install CLI**. That gives Antigravity direct access to the local Mem instance. The plugin automatically resolves system installation paths if sandboxed subshells restrict user `$PATH` symlinks.\n\nVerify connection and in-flight background tasks:\n\n```bash\nnmem status\nnmem tasks\n```\n\nFor the default same-machine setup, `nmem status` should show `http://127.0.0.1:14242 (default)`. Historical Antigravity conversation sessions can also be backfilled directly using `nmem t sync --from antigravity`.\n\n## Install\n\nFor local development or a repository checkout install, you can link the plugin folder to one of the locations scanned by Antigravity:\n\n### Option 1: Workspace Level (Active workspace only)\n\nPlace or symlink the plugin folder inside `.agents/plugins/` (or `_agents/plugins/`) at the root of your opened workspace:\n\n```bash\nmkdir -p .agents/plugins\nln -s /path/to/nowledge-mem-google-antigravity .agents/plugins/\n```\n\n### Option 2: Global Level (All workspaces)\n\nPlace or symlink the plugin folder inside `~/.gemini/config/plugins/` in your user home directory:\n\n```bash\nmkdir -p ~/.gemini/config/plugins\nln -s /path/to/nowledge-mem-google-antigravity ~/.gemini/config/plugins/\n```\n\nAlternatively, you can clone the repository directly into your global plugins directory:\n\n```bash\ngit clone https://github.com/nowledge-co/nowledge-mem-google-antigravity.git ~/.gemini/config/plugins/nowledge-mem\n```\n\nRestart Google Antigravity after linking or cloning.\n\nRelease packaging notes live in [`RELEASING.md`](./RELEASING.md).\n\n## What You Get\n\n**Automatic lifecycle hooks**\n\n- **SessionStart Hook**: Automatically loads Context Bundle when available, with Working Memory as the lightweight fallback, and injects it once as situational context when a conversation starts. It is injected as a system message, so it stays available after tool calls and on later turns. Prioritizes direct native HTTP REST transport (<30ms latency), falling back to CLI subprocess execution. Concurrently launches a non-blocking background thread to connect and sync active host skills (`nmem skills connect antigravity` and `nmem skills sync`).\n- **PostInvocation Hook**: Evaluates mid-session runtime state (such as pending offline sessions in `~/.nowledge-mem/plugins/antigravity/unsynced.json`), triggers asynchronous background synchronization only when queued sessions are past their exponential backoff window, and throttles informational notifications to at most once per conversation session.\n- **Stop Hook**: Automatically imports conversation messages from Antigravity's `transcript.jsonl` log into Nowledge Mem under the current conversation ID when execution completes. Thread titles use the first user prompt, including in T3 Code sessions. Defers capture when background tasks are still running (`fullyIdle: false`), verifies long threads via a local prefix-hash checkpoint + bounded tail anchor (`~/.nowledge-mem/plugins/antigravity/cache/thread_sync_checkpoints.json`) or bounded paginated forward comparison (`offset`/`limit` pages of 32 messages) for unknown histories, sends checkpointed idempotent appends (`/threads/{id}/append` with `expected_message_count` and `idempotency_key`), and uses `/threads/{id}/reconcile-tail` only when stored history diverges after a matching prefix. Prioritizes direct native HTTP REST transport, falling back to CLI execution and local offline buffer queuing (`~/.nowledge-mem/plugins/antigravity/unsynced.json`).\n- **Space Resolution & Verification**: Resolves the active space by prioritizing explicit environment overrides (`NMEM_SPACE`/`NMEM_SPACE_ID`), workspace/plugin config (`.config.json` / `~/.nowledge-mem/plugins/antigravity/config.json`), and project config (`.nmemspace`/`.nowledge/config.json`). Dynamically detected candidate spaces from workspace directory names are verified against existing backend spaces; if the space does not exist on the server, Antigravity safely falls back to `default`.\n\n**Bundled MCP**\n\n- Local same-machine installs expose `nowledge-mem` MCP tools at `http://127.0.0.1:14242/mcp` automatically.\n- The startup hook automatically synchronizes `mcp_config.json` with effective client settings (`~/.nowledge-mem/config.json` or `NMEM_API_URL`/`NMEM_API_KEY`). For remote Mem, `mcp_config.json` is updated dynamically with the remote server URL and authentication headers (`Authorization: Bearer` and `X-NMEM-API-Key`).\n- **Host MCP Avoidance**: When Antigravity's global `~/.gemini/config/mcp_config.json` or workspace `.agents/mcp_config.json` already defines a `nowledge-mem` server (for example, with custom `disabledTools`), `sync_mcp_config_file()` automatically defers to the host config: it does not recreate a missing plugin `mcp_config.json`, and removes any duplicate `nowledge-mem` entry from an existing plugin `mcp_config.json` while keeping other servers intact. Override this behavior with `NMEM_MCP_SYNC_MODE` or `mcpSyncMode` in `.config.json` / `~/.nowledge-mem/plugins/antigravity/config.json` (`auto` default, `managed` to always sync the plugin file, or `off` to disable plugin MCP sync completely).\n\nIf the selected Space cannot be verified, startup removes the Mem connection from the generated MCP configuration and reports the lookup failure. Other MCP servers stay configured. Start a new session once the Space catalog is reachable to restore the verified connection.\n\n- The committed `mcp_config.json` is a local placeholder template. Do not commit a real `nmem_...` API key.\n\n**Persistent context rules**\n\n- `rules/nowledge-mem.md` tells Antigravity how to route recall across Context Bundle, Working Memory, distilled memories, conversation threads, handoff summaries, and positional CLI fallback signatures.\n\n**Agent skills**\n\n- `nmem-bridge-chat`\n- `nmem-fs-explore`\n- `nmem-graph-explore`\n- `nmem-memory-distill`\n- `nmem-memory-search`\n- `nmem-memory-working`\n- `nmem-skill-load`\n- `nmem-skill-manage`\n- `nmem-skill-propose`\n- `nmem-status`\n- `nmem-thread-handoff`\n- `nmem-thread-save`\n\n## Bridge\n\nUse `/nmem-bridge-chat` to discover an Agent, check an inbox, send a message, or reply through an approved Nowledge Cloud connection. Antigravity exchanges messages using the same Agent mailbox protocol as other Bridge-capable hosts in the authorized Space.\n\nFor a startup inbox check, launch Antigravity with `NMEM_BRIDGE_INBOX_ON_START=1` and `NMEM_AGENT_CONTEXT` set to the approved named Context. The hook asks the agent to use the CLI to verify that Context and check one page in its Space. You can also explicitly ask for the whole Agent inbox across authorized Spaces. Each reply goes back to the original message's Space. The bundled skill includes instructions for interactive Cloud MCP requests.\n\n## Local vs Remote & Configuration Precedence\n\nBy default, both `nmem` and the bundled MCP server point to the local Mem server at `http://127.0.0.1:14242`.\n\nNowledge Mem resolves connection and space settings in the following strict order of precedence:\n\n1. **Environment Variables**: `NMEM_API_URL`, `NMEM_API_KEY`, `NMEM_SPACE` (or `NMEM_SPACE_ID`)\n2. **Local Workspace Config (`.config.json`)**: Place a `.config.json` file at the root of the workspace. This file is git-ignored and allows configuring server endpoints, credentials, default space, and future settings locally for that specific workspace:\n   ```json\n   {\n     \"apiUrl\": \"https://mem.example.com\",\n     \"apiKey\": \"nmem_your_key\",\n     \"space\": \"my-project-space\"\n   }\n   ```\n3. **Explicit Workspace Space Files**: `.nmemspace` or `.nowledge/config.json` in the workspace root.\n4. **Plugin Root Config (`.config.json`)**: Place a `.config.json` in the plugin repository root for plugin-wide local testing defaults.\n5. **Plugin Storage Config**: `~/.nowledge-mem/plugins/antigravity/config.json` (persists Antigravity-specific plugin defaults across upgrades without polluting root files).\n6. **Global Client Config**: `~/.nowledge-mem/config.json` (managed via `nmem config client set ...`).\n7. **Local Defaults**: `http://127.0.0.1:14242` and `default` space.\n\nAntigravity's passive hooks read the active project from the hook payload's\n`workspacePaths`; they do not depend on the plugin process's working directory.\nThis routing is specific to the Antigravity integration. Set `NMEM_AGENT_ID` for\nan explicit agent identity, and use one of the workspace files above for a\nproject-specific Space. If a workspace file is malformed or names a Space that\nthe connected server does not expose, startup and status show the configuration\nerror instead of quietly reading from or writing to Default. When the server is\noffline, the explicit Space remains attached to queued session data for a safe\nretry later.\n\nFor global remote Mem setup via CLI, run:\n\n```bash\nnmem config client set url https://mem.example.com\nnmem config client set api-key nmem_your_key\n```\n\nIf you need a temporary override for one session, launch Antigravity from a shell where `NMEM_API_URL`, `NMEM_API_KEY`, or `NMEM_SPACE` are exported.\n\nFor MCP tools in remote mode, generate the host config:\n\n```bash\nnmem config mcp show --host google-antigravity\n```\n\nPaste the generated JSON into Antigravity's custom MCP config (`~/.gemini/config/mcp_config.json` or modified raw via the MCP Store).\n\n\nMCP connections use the resolved Space, just like startup context and automatic thread saving. Restart the Antigravity session after changing its Space so the MCP connection reloads.\n\n## Direct `nmem` Use Is Always Allowed\n\nThe bundled skills are convenience paths, not a cage. Antigravity should freely compose direct `nmem` commands when that is clearer or more flexible.\n\nExamples:\n\n```bash\nnmem --json wm read\nnmem --json m search \"auth token rotation\" --mode deep --importance 0.7\nnmem --json m search \"auth token rotation\" --mode deep --importance 0.7 --space \"Research Agent\"\nnmem --json m add \"JWT refresh failures came from clock skew between the gateway and API nodes.\" -t \"JWT refresh failures traced to clock skew\" -i 0.9 --unit-type learning -l auth -l backend -s google-antigravity\nnmem status\n```\n\n## Thread Save vs Handoff\n\nAntigravity supports two separate save paths:\n\n- **Thread Save** (`nmem-thread-save` skill / `/nmem-thread-save`): Imports the **real session messages** into Nowledge Mem. The Stop hook performs this import automatically at the end of the session, but the skill is available for manual mid-session triggers.\n- **Handoff Save** (`nmem-thread-handoff` skill / `/nmem-thread-handoff`): Creates a **compact resumable handoff summary** with Goal, Decisions, Files, Risks, and Next. Use this when you want a lightweight restart point rather than the full transcript.\n\nUse `nmem-memory-distill` for durable atomic knowledge, `nmem-thread-save` for the full session, and `nmem-thread-handoff` for a resumable handoff.\n\n## Workspace Skill Management\n\n- **Install/Update Skill** (`nmem-skill-manage` skill / `/nmem-skill-manage`): Evaluates the project context, lists active/archived/candidate skills from Nowledge Mem, and helps recommend and install them into `<workspace-root>/.agents/skills/<skill-folder>/`. Users can choose to commit these skills to git or keep them local-only (via git-exclude).\n- **On-Demand Skill Loader** (`nmem-skill-load` skill / `/nmem-skill-load <query>`): Dynamically searches candidate/compiled skills on Nowledge Mem and loads them into the active turn (Ephemeral Mode) or installs them locally (Persistent Mode). Triggered explicitly via `/nmem-skill-load <query>` or automatically when Antigravity detects an unhandled domain task with an available skill definition.\n\n## Development & Testing\n\nRun unit tests for lifecycle hooks:\n\n```bash\nmake test\n# or: npm run test\n```\n\nRun container integration test suite using `docker.io/nowledgelabs/mem:latest` published on a random host port:\n\n```bash\nmake test-integration\n# or: python3 -m pytest -v tests/integration/\n```\n\nRun full plugin validation:\n\n```bash\nmake validate\n# or: npm run validate\n```\n\n\n## Links\n\n- [Architecture Deep Dive](./ARCHITECTURE.md)\n- [Documentation](https://mem.nowledge.co/docs/integrations/google-antigravity)\n- [Nowledge Mem](https://mem.nowledge.co)\n- [Discord](https://nowled.ge/discord)\n- [GitHub](https://github.com/nowledge-co/nowledge-mem-google-antigravity)\n\nPending captures are tied to the Mem endpoint and credentials used by the Stop hook. Restore that connection to resume automatic retries. Failed retries use exponential backoff (30s base, capped at 1 hour) and are isolated into `~/.nowledge-mem/plugins/antigravity/dead_letter.json` after reaching the retry limit or hitting a divergent thread history so they cannot loop indefinitely while keeping the full transcript recoverable. Older queue entries without a recorded connection remain on disk in the plugin storage directory (`unsynced.json`). Inspect their destination before manually importing them.\n\n### Active-session Bridge notices\n\nAfter you explicitly subscribe an approved Agent Context for this actual conversation, the first `PreInvocation` hook in a turn can add a local pending-mail hint to model context. It does not read or acknowledge mail or wake an idle conversation. Startup inbox opt-in alone does not subscribe. Native-session delivery and precise reply routing are separate capabilities.\n\nThere is no true session-end cleanup hook in this adapter. Before retiring a subscribed conversation, use `nmem bridge notices unsubscribe --host=antigravity --session-id=<conversationId> --ended`. Stop ends a turn, so it does not remove a live conversation subscription.\n",
+  "latestReleaseNotes": "Long conversations now use verified checkpoints for incremental sync. When history changes, the plugin checks bounded pages rather than assuming a matching tail means the whole thread matches.\n\nRepeated sync failures back off and remain recoverable. Existing host MCP settings, including disabled tools, take precedence over plugin defaults.\n\nCaptured ACP sessions use the first user prompt for the thread title, without T3 Code's metadata wrappers. Stored messages are unchanged.\n",
   "securityReport": {
     "riskTier": "high",
     "capabilities": [
@@ -185,7 +185,7 @@
         "file": "hooks.json",
         "line": 1,
         "snippet": "python3 hooks/nmem_entrypoint.py gate || python hooks/nmem_entrypoint.py gate || (read -r decision < hooks/force-ask.json && echo \"$decision\") || type hooks\\force-ask.json",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks.json#L1"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks.json#L1"
       },
       {
         "id": "HOOK_SHELL_COMMAND",
@@ -196,7 +196,7 @@
         "file": "hooks.json",
         "line": 42,
         "snippet": "python3 hooks/nmem_entrypoint.py post-tool-use || python hooks/nmem_entrypoint.py post-tool-use || echo {}",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks.json#L42"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks.json#L42"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -207,7 +207,7 @@
         "file": "hooks/agent_bridge_notices.py",
         "line": 62,
         "snippet": "subprocess.run( _cleanup_command(args, env), env=env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=0.5, check=False, **({\"creationflags\":",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/agent_bridge_notices.py#L62"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/agent_bridge_notices.py#L62"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -218,7 +218,7 @@
         "file": "hooks/nmem_shared.py",
         "line": 189,
         "snippet": "out = subprocess.check_output( [ \"powershell.exe\", \"-Command\", \"(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Cryptography').MachineGuid\", ], stderr=s",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L189"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L189"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -229,7 +229,7 @@
         "file": "hooks/nmem_shared.py",
         "line": 209,
         "snippet": "out = subprocess.check_output( [\"ioreg\", \"-rd1\", \"-c\", \"IOPlatformExpertDevice\"], stderr=subprocess.DEVNULL, text=True, timeout=2.0 )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L209"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L209"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -240,7 +240,7 @@
         "file": "hooks/nmem_shared.py",
         "line": 219,
         "snippet": "out = subprocess.check_output([\"sysctl\", \"-n\", \"kern.uuid\"], stderr=subprocess.DEVNULL, text=True, timeout=2.0)",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L219"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L219"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -249,9 +249,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via subprocess or os.system.",
         "file": "hooks/nmem_shared.py",
-        "line": 1074,
+        "line": 1268,
         "snippet": "proc = subprocess.run( [wslpath, \"-w\", path], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, encoding=\"utf-8\", errors=\"strict\", timeout=2, check=False, )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L1074"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L1268"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -260,9 +260,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via subprocess or os.system.",
         "file": "hooks/nmem_shared.py",
-        "line": 1176,
+        "line": 1370,
         "snippet": "proc = subprocess.run( cmd, input=input_str, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding=\"utf-8\", errors=\"replace\", env=run_env, cwd=cwd, timeout=timeout, *",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L1176"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L1370"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -271,9 +271,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via subprocess or os.system.",
         "file": "hooks/nmem_shared.py",
-        "line": 2065,
+        "line": 2981,
         "snippet": "proc = subprocess.Popen( [sys.executable, str(session_start_script), \"--retry-only\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, **_windows_no_wi",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2065"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L2981"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -284,7 +284,7 @@
         "file": "hooks/session-start.py",
         "line": 166,
         "snippet": "subprocess.Popen( [sys.executable, __file__, \"--retry-only\"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/session-start.py#L166"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/session-start.py#L166"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -295,7 +295,7 @@
         "file": "scripts/package-plugin.mjs",
         "line": 61,
         "snippet": "const result = spawnSync(command, args, { cwd, stdio: 'inherit', ...options });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/package-plugin.mjs#L61"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/package-plugin.mjs#L61"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -306,7 +306,7 @@
         "file": "scripts/package-plugin.mjs",
         "line": 74,
         "snippet": "const result = spawnSync('tar', ['-tzf', filePath], { cwd: pluginRoot, encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/package-plugin.mjs#L74"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/package-plugin.mjs#L74"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -317,7 +317,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 88,
         "snippet": "const gitShow = spawnSync('git', ['show', 'HEAD:mcp_config.json'], { cwd: pluginRoot, encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L88"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L88"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -328,7 +328,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 105,
         "snippet": "const gitRev = spawnSync('git', ['rev-parse', '--git-dir'], { cwd: pluginRoot, encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L105"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L105"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -339,7 +339,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 226,
         "snippet": "const agyCheck = spawnSync('agy', ['plugin', 'validate', '--json', '.'], { cwd: pluginRoot, encoding: 'utf8' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L226"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L226"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -350,7 +350,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 255,
         "snippet": "const precommitProc = spawnSync('uv', ['run', 'pre-commit', 'run', '--all-files'], { cwd: pluginRoot, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L255"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L255"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -361,7 +361,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 260,
         "snippet": "const ruffProc = spawnSync('uv', ['run', 'ruff', 'check', '.'], { cwd: pluginRoot, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L260"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L260"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -372,7 +372,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 271,
         "snippet": "const validatorTestProc = spawnSync(process.execPath, ['--test', 'tests/test_validate_plugin.mjs'], { cwd: pluginRoot, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L271"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L271"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -383,7 +383,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 281,
         "snippet": "const testProc = spawnSync('uv', ['run', 'pytest', 'tests/test_hooks.py'], { cwd: pluginRoot, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L281"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L281"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -394,7 +394,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 286,
         "snippet": "const testProcFallback = spawnSync('python3', ['-m', 'pytest', 'tests/test_hooks.py'], { cwd: pluginRoot, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L286"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L286"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -405,7 +405,7 @@
         "file": "scripts/validate-plugin.mjs",
         "line": 291,
         "snippet": "const testProcUnittest = spawnSync('python3', ['-m', 'unittest', 'discover', '-s', 'tests'], { cwd: pluginRoot, stdio: 'inherit' });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/validate-plugin.mjs#L291"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/validate-plugin.mjs#L291"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -416,7 +416,7 @@
         "file": "skills/nmem-skill-load/scripts/load_skill.py",
         "line": 115,
         "snippet": "result = subprocess.run( [\"nmem\", \"skills\", \"list\", \"--stage\", \"all\", \"--json\"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=10, )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-load/scripts/load_skill.py#L115"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-load/scripts/load_skill.py#L115"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -427,7 +427,7 @@
         "file": "skills/nmem-skill-load/scripts/load_skill.py",
         "line": 135,
         "snippet": "result = subprocess.run( [\"nmem\", \"skills\", \"show\", skill_id, \"--json\"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=10, )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-load/scripts/load_skill.py#L135"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-load/scripts/load_skill.py#L135"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -438,7 +438,7 @@
         "file": "skills/nmem-skill-manage/scripts/manage_skills.py",
         "line": 118,
         "snippet": "result = subprocess.run( [\"nmem\", \"skills\", \"list\", \"--stage\", \"all\", \"--json\"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=15, )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-manage/scripts/manage_skills.py#L118"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-manage/scripts/manage_skills.py#L118"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -449,7 +449,7 @@
         "file": "skills/nmem-skill-manage/scripts/manage_skills.py",
         "line": 138,
         "snippet": "result = subprocess.run( [\"nmem\", \"skills\", \"show\", skill_id, \"--json\"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=15, )",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-manage/scripts/manage_skills.py#L138"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-manage/scripts/manage_skills.py#L138"
       },
       {
         "id": "CODE_PY_PROCESS_SPAWN",
@@ -460,7 +460,7 @@
         "file": "skills/nmem-skill-propose/scripts/propose_skill.py",
         "line": 168,
         "snippet": "res = subprocess.run(cmd, capture_output=True, text=True, timeout=15)",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-propose/scripts/propose_skill.py#L168"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-propose/scripts/propose_skill.py#L168"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -471,7 +471,7 @@
         "file": "hooks/nmem_shared.py",
         "line": 540,
         "snippet": "write_cache_file.write_text(json.dumps({\"entries\": merged_entries}), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L540"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L540"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -480,9 +480,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "hooks/nmem_shared.py",
-        "line": 911,
+        "line": 1105,
         "snippet": "resp = httpx.request(method, url, json=payload, headers=headers, timeout=timeout)",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L911"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L1105"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -491,9 +491,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "hooks/nmem_shared.py",
-        "line": 926,
+        "line": 1120,
         "snippet": "resp = httpx.request(method, url, json=payload, headers=headers, timeout=timeout)",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L926"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L1120"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -502,9 +502,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "hooks/nmem_shared.py",
-        "line": 954,
+        "line": 1148,
         "snippet": "with urllib.request.urlopen(req, timeout=timeout) as resp:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L954"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L1148"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -513,9 +513,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "hooks/nmem_shared.py",
-        "line": 982,
+        "line": 1176,
         "snippet": "with urllib.request.urlopen(req, timeout=timeout) as resp:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L982"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L1176"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -524,9 +524,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 1928,
+        "line": 2844,
         "snippet": "temp_body_file.write_text(rule_content, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L1928"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L2844"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -535,9 +535,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 2006,
+        "line": 2922,
         "snippet": "synced_state_file.write_text(json.dumps(synced_hashes), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2006"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L2922"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -546,9 +546,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 2073,
+        "line": 2989,
         "snippet": "pid_file.write_text(f\"{proc.pid}:{now}\", encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2073"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L2989"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -557,9 +557,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 2128,
+        "line": 3044,
         "snippet": "warning_file.write_text(json.dumps(data, indent=2), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2128"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L3044"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -568,9 +568,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 2148,
+        "line": 3064,
         "snippet": "cache_file.write_text(json.dumps(data, indent=2), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2148"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L3064"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -579,9 +579,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 2227,
+        "line": 3143,
         "snippet": "session_file.write_text(json.dumps(data, indent=2), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2227"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L3143"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -590,9 +590,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes or deletes files on the local filesystem.",
         "file": "hooks/nmem_shared.py",
-        "line": 2246,
+        "line": 3162,
         "snippet": "cache_file.write_text(json.dumps(data, indent=2), encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2246"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L3162"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -603,7 +603,7 @@
         "file": "scripts/manage_rules.py",
         "line": 74,
         "snippet": "with urllib.request.urlopen(req, timeout=30) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/manage_rules.py#L74"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/manage_rules.py#L74"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -614,7 +614,7 @@
         "file": "scripts/package-plugin.mjs",
         "line": 136,
         "snippet": "await rm(distDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/package-plugin.mjs#L136"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/package-plugin.mjs#L136"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -625,7 +625,7 @@
         "file": "scripts/package-plugin.mjs",
         "line": 160,
         "snippet": "await writeFile( path.join(distDir, `${archiveName}.sha256`), `${checksum} ${archiveName}\\n`, 'utf8' );",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/package-plugin.mjs#L160"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/package-plugin.mjs#L160"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -636,7 +636,7 @@
         "file": "scripts/update_artifact.py",
         "line": 96,
         "snippet": "with urllib.request.urlopen(req, timeout=30) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/update_artifact.py#L96"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/update_artifact.py#L96"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -647,7 +647,7 @@
         "file": "scripts/update_artifact.py",
         "line": 117,
         "snippet": "with urllib.request.urlopen(req, timeout=15) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/update_artifact.py#L117"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/update_artifact.py#L117"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -658,7 +658,7 @@
         "file": "scripts/update_artifact.py",
         "line": 139,
         "snippet": "with urllib.request.urlopen(req, timeout=15) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/update_artifact.py#L139"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/update_artifact.py#L139"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -669,7 +669,7 @@
         "file": "scripts/update_working_memory.py",
         "line": 81,
         "snippet": "with urllib.request.urlopen(req, timeout=30) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/scripts/update_working_memory.py#L81"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/scripts/update_working_memory.py#L81"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -680,7 +680,7 @@
         "file": "skills/nmem-skill-load/scripts/load_skill.py",
         "line": 80,
         "snippet": "with urllib.request.urlopen(req, timeout=10) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-load/scripts/load_skill.py#L80"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-load/scripts/load_skill.py#L80"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -691,7 +691,7 @@
         "file": "skills/nmem-skill-load/scripts/load_skill.py",
         "line": 94,
         "snippet": "with urllib.request.urlopen(req, timeout=10) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-load/scripts/load_skill.py#L94"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-load/scripts/load_skill.py#L94"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -702,7 +702,7 @@
         "file": "skills/nmem-skill-load/scripts/load_skill.py",
         "line": 252,
         "snippet": "target_file.write_text(body, encoding=\"utf-8\")",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-load/scripts/load_skill.py#L252"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-load/scripts/load_skill.py#L252"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -713,7 +713,7 @@
         "file": "skills/nmem-skill-load/scripts/load_skill.py",
         "line": 267,
         "snippet": "with open(exclude_file, \"a\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-load/scripts/load_skill.py#L267"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-load/scripts/load_skill.py#L267"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -724,7 +724,7 @@
         "file": "skills/nmem-skill-manage/scripts/manage_skills.py",
         "line": 82,
         "snippet": "with urllib.request.urlopen(req, timeout=15) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-manage/scripts/manage_skills.py#L82"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-manage/scripts/manage_skills.py#L82"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -735,7 +735,7 @@
         "file": "skills/nmem-skill-manage/scripts/manage_skills.py",
         "line": 95,
         "snippet": "with urllib.request.urlopen(req, timeout=15) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-manage/scripts/manage_skills.py#L95"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-manage/scripts/manage_skills.py#L95"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -746,7 +746,7 @@
         "file": "skills/nmem-skill-manage/scripts/manage_skills.py",
         "line": 422,
         "snippet": "with open(target_file, \"w\", encoding=\"utf-8\") as f:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-manage/scripts/manage_skills.py#L422"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-manage/scripts/manage_skills.py#L422"
       },
       {
         "id": "CODE_PY_FS_WRITE",
@@ -757,7 +757,7 @@
         "file": "skills/nmem-skill-manage/scripts/manage_skills.py",
         "line": 444,
         "snippet": "with open(exclude_path, \"a\", encoding=\"utf-8\") as ef:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-manage/scripts/manage_skills.py#L444"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-manage/scripts/manage_skills.py#L444"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -768,7 +768,7 @@
         "file": "skills/nmem-skill-propose/scripts/propose_skill.py",
         "line": 108,
         "snippet": "with urllib.request.urlopen(req, timeout=30) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-propose/scripts/propose_skill.py#L108"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-propose/scripts/propose_skill.py#L108"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -779,7 +779,7 @@
         "file": "skills/nmem-skill-propose/scripts/propose_skill.py",
         "line": 125,
         "snippet": "with urllib.request.urlopen(req, timeout=15) as res:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-propose/scripts/propose_skill.py#L125"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-propose/scripts/propose_skill.py#L125"
       },
       {
         "id": "CODE_PY_NETWORK",
@@ -790,7 +790,7 @@
         "file": "skills/nmem-skill-propose/scripts/propose_skill.py",
         "line": 268,
         "snippet": "with urllib.request.urlopen(req_apply, timeout=30) as res_apply:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-skill-propose/scripts/propose_skill.py#L268"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-skill-propose/scripts/propose_skill.py#L268"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -801,7 +801,7 @@
         "file": "AGENTS.md",
         "line": 22,
         "snippet": "* **POSIX Path Safety**: Do NOT use dynamic path variables (such as `${extensionPath}`) inside `hooks.json`. They are not supported by the Antigravity hook runner. Keep invocations",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/AGENTS.md#L22"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/AGENTS.md#L22"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -810,9 +810,9 @@
         "capability": "prompt_mentions_shell",
         "message": "Prompt guides the agent to execute local shell commands or scripts.",
         "file": "AGENTS.md",
-        "line": 171,
+        "line": 172,
         "snippet": "- Run `npm run validate` or `make validate` to verify that all documentation and code assets pass validation cleanly before completing the turn.",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/AGENTS.md#L171"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/AGENTS.md#L172"
       },
       {
         "id": "CODE_GEMINI_DATA_ACCESS",
@@ -821,9 +821,31 @@
         "capability": "accesses_gemini_dir",
         "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
         "file": "hooks/nmem_shared.py",
-        "line": 2031,
+        "line": 902,
+        "snippet": "candidates.append(Path(\"~/.gemini/config/mcp_config.json\").expanduser())",
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L902"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "hooks/nmem_shared.py",
+        "line": 937,
+        "snippet": "(`~/.gemini/config/mcp_config.json`) or workspace (`.agents/mcp_config.json`)",
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L937"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "hooks/nmem_shared.py",
+        "line": 2947,
         "snippet": "brain_path = Path(\"~/.gemini/antigravity/brain\").expanduser() / conversation_id",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/hooks/nmem_shared.py#L2031"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/hooks/nmem_shared.py#L2947"
       },
       {
         "id": "PROMPT_SHELL_TOOL_HINT",
@@ -834,11 +856,26 @@
         "file": "skills/nmem-thread-save/SKILL.md",
         "line": 23,
         "snippet": "4. Run the script by passing the metadata as a JSON payload on `stdin`:",
-        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/5d22076ccee1d12693d0882c47915ecd45002253/skills/nmem-thread-save/SKILL.md#L23"
+        "githubBlobUrl": "https://github.com/nowledge-co/nowledge-mem-google-antigravity/blob/492575d08dd85562420d21c1958fe1a5f9fa6478/skills/nmem-thread-save/SKILL.md#L23"
       }
     ]
   },
   "history": [
+    {
+      "version": "0.1.9",
+      "sha": "492575d08dd85562420d21c1958fe1a5f9fa6478",
+      "scannedAt": "2026-11-28T18:12:52.913Z",
+      "riskTier": "high",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_external_mcp",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell",
+        "runs_shell_hooks"
+      ]
+    },
     {
       "version": "0.1.8",
       "sha": "5d22076ccee1d12693d0882c47915ecd45002253",

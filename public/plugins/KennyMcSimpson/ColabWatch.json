@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "id": "KennyMcSimpson/ColabWatch",
+  "sha": "be538529c754c87bba7a18d3952751c27a113892",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:12:01.444Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "colab-watch",
+    "displayName": "ColabWatch",
+    "version": "0.1.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "colab-watch",
+        "slashCommand": "/colab-watch",
+        "description": "Priority-queue Google Colab GPU/TPU watcher and handover controller backed by the locally authorized official google-colab-cli environment. Activate when the user invokes /colab-watch or asks to watch, queue, grab, check status, probe Compu",
+        "disableModelInvocation": false,
+        "file": "skills/colab-watch/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/colab-watch"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" alt=\"ColabWatch logo\" width=\"92\" />\n\n# ColabWatch\n\n**Zero-UI, zero-idle-overhead priority-queue watcher for official Google Colab CLI runtimes — rejects silent GPU downgrades instantly, guards Compute Units, and alerts on handover.**\n\n[![CI](https://img.shields.io/github/actions/workflow/status/KennyMcSimpson/ColabWatch/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/KennyMcSimpson/ColabWatch/actions/workflows/ci.yml)\n[![Version](https://img.shields.io/badge/version-0.1.0-f59e0b?style=flat-square)](CHANGELOG.md)\n[![Node](https://img.shields.io/badge/node-%3E%3D20-16a34a?style=flat-square)](package.json)\n[![Zero JS Dependencies](https://img.shields.io/badge/js%20dependencies-0-10b981?style=flat-square)](package.json)\n[![Tests](https://img.shields.io/badge/tests-15%2F15%20passing-10b981?style=flat-square)](test/colab-watch.test.mjs)\n[![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](LICENSE)\n\n[Why ColabWatch](#why-colabwatch) · [30-Second Quick Start](#30-second-quick-start) · [Why Not Loop `colab new`](#why-not-just-loop-colab-new) · [Priority & Handover](#priority-modes--mode-a-handover) · [Antigravity Plugin](#antigravity-zero-daemon-plugin) · [CLI Reference](#cli-reference) · [Safety](#safety--responsible-use)\n\n</div>\n\n---\n\n## Why ColabWatch\n\nHigh-tier Google Colab accelerators (`G4` RTX PRO 6000 96GB, `H100`, `A100`) fluctuate continuously across capacity windows. Waiting manually wastes hours, while naive retry scripts silently accept downgraded T4 VMs, corrupt `sessions.json`, or hammer your account into `429` cooldowns.\n\n**ColabWatch** pairs a zero-dependency Node.js ESM controller with a thin Python bridge directly over your locally authorized official `google-colab-cli` environment — **no browser automation, no MCP server, no lifecycle hooks, and zero idle token tax**.\n\n| Pain Point | Manual / Naive Scripts | ColabWatch (`0` idle processes) |\n|---|---|---|\n| **Silent GPU downgrade** | `colab new --gpu G4` ignores the real granted GPU and saves `\"G4\"` for a T4 | Verifies granted hardware via `colab_cli.client.Client`; immediately calls `unassign()` on mismatch with **zero `sessions.json` pollution** |\n| **Priority fallback** | Manual re-runs for each GPU tier | Priority list (`G4,A100,L4`) with optional `--hold-top <min>` progressive tier unlocking |\n| **Rate-limit & auth safety** | Tight loops trip `429`; expired OAuth blocks on `input()` | Hard `>=15s` floor + `±20%` jitter, `>=300s` `429` cooldown (`3x` breaker), non-interactive keyring check, instant stop on Auth / CAPTCHA |\n| **Compute Unit protection** | Accidental double sessions or overnight idle burn | Pre-checks active sessions & `--min-cu` balance floor; optional opt-in `--auto-release-after` with conservative activity check |\n| **Agent / Editor overhead** | Always-on sidecars or global MCP servers | Pure Antigravity Skill + CLI (`/colab-watch`), `0` hooks, `0` MCP servers, `0` background processes when idle |\n\n<p align=\"center\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/workflow-dark.svg\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"assets/workflow-light.svg\" />\n    <img src=\"assets/workflow-dark.svg\" alt=\"ColabWatch 4-stage runtime pipeline\" width=\"100%\" />\n  </picture>\n</p>\n\n---\n\n## 30-Second Quick Start\n\n### Prerequisites\n\n- **Node.js `>= 20.0.0`** (zero `npm install` runtime dependencies)\n- Official **`google-colab-cli`** installed and authenticated in a local Python virtual environment (credentials already stored in your OS keyring)\n\n### Run Immediately\n\n```bash\n# 1. Verify Python bridge, official colab-cli keyring state, and local config\nnode bin/colab-watch.mjs doctor\n\n# 2. Read-only account probe (0 Compute Units consumed): CU balance, eligible GPUs, active sessions\nnode bin/colab-watch.mjs probe\n\n# 3. Start priority-queue watcher in background (Mode-A handover)\nnode bin/colab-watch.mjs start --gpus G4,A100,L4 --session pro6000\n\n# 4. Monitor progress, inspect bounded logs, claim handover, or stop cleanly\nnode bin/colab-watch.mjs status\nnode bin/colab-watch.mjs logs --lines 40\nnode bin/colab-watch.mjs claim\nnode bin/colab-watch.mjs stop\n```\n\n<details open>\n<summary><strong>Sample Read-Only Probe &amp; Status Output</strong></summary>\n\n```text\nColabWatch Read-Only Probe (0 CU):\n  Balance        : 73.14 CU (rate: 0 CU/h)\n  Eligible GPUs  : G4, A100, L4, T4\n  Active Sessions: None\n\nColabWatch Status: ACQUIRED (NOT RUNNING)\n  Priority : G4 > A100 > L4 | Session: pro6000\n  Progress : round=3, attempts=4, downgradesRejected=1, 412=2, 429=0\n  CU       : 73.14\n  Event    : Acquired G4 (RTX PRO 6000 96GB) as session \"pro6000\"\n  Acquired : G4 (RTX PRO 6000 96GB) as \"pro6000\"\n  URL      : https://colab.research.google.com/notebooks/empty.ipynb?dbu=%2Ftun%2Fm%2Fm-s-...\n```\n\n</details>\n\nOnce acquired, the session is atomically registered inside official `colab-cli`'s `sessions.json` (`filelock` protected), so you can immediately attach from any terminal or coding agent:\n\n```bash\ncolab exec -s pro6000 -f train.py\ncolab url -s pro6000\ncolab stop -s pro6000\n```\n\n---\n\n## Why Not Just Loop `colab new`?\n\nCalling `colab new --gpu G4` in a shell loop looks tempting, but inspecting `google-colab-cli` reveals several critical failure modes for unattended operation:\n\n<p align=\"center\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/safety-matrix-dark.svg\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"assets/safety-matrix-light.svg\" />\n    <img src=\"assets/safety-matrix-dark.svg\" alt=\"Naive colab new loop vs ColabWatch safety guarantees\" width=\"100%\" />\n  </picture>\n</p>\n\n1. **Silent Downgrade Blind Spot**: `colab new` writes the *requested* accelerator string into `sessions.json` without verifying `PostAssignmentResponse.accelerator`. ColabWatch calls `colab_cli.client.Client.assign()` directly (with internal retries disabled via `COLAB_CLI_ASSIGN_RETRIES=0`), inspects the actual granted hardware (including `list_assignments()` fallback if an `Assignment` object is returned), and immediately calls `unassign()` with retry on any mismatch without touching `sessions.json`.\n2. **Orphan VM Protection**: Any post-`assign()` parsing or verification exception triggers automatic `unassign()` cleanup; if saving `sessions.json` fails *after* a valid target GPU is allocated, ColabWatch surfaces `STATE_SAVE_FAILED_VM_LIVE` with the exact `endpoint` and `connectUrl` plus a high-priority alert instead of silently crashing and abandoning a live billing VM.\n3. **Non-Interactive Auth**: Instead of falling into `input(\"Enter the authorization code: \")` when OAuth tokens expire, `scripts/colab_bridge.py` reads the OS keyring directly, refreshes silently when possible, and immediately stops with `BLOCKED_AUTH` otherwise.\n\n---\n\n## Priority Modes & Mode-A Handover\n\n### Priority Scheduling\n\n- **Immediate Scan (default `--hold-top 0`)**: Each round checks your priority list in strict order (e.g. `G4` -> `A100` -> `L4`, spaced by `--step-delay 3s`) and locks the highest-priority genuine GPU available. Accelerators explicitly absent from your account's `eligibleGpus` or rejected with HTTP `400` are skipped automatically.\n- **Progressive Hold (`--hold-top 20`)**: Stays strictly on tier 1 (`G4`) for the first 20 minutes before unlocking tier 2 (`A100`), and another 20 minutes before unlocking tier 3 (`L4`).\n\n### Mode-A Handover (Zero-Surprise-Kill Default)\n\n- **Default (`--auto-release-after 0`)**: Upon acquiring a verified target GPU, ColabWatch persists `state.json`, registers the session in `sessions.json`, sends a non-blocking Windows WinRT Toast notification (with audio), prints the offline browser `connectUrl` and `colab` commands, and exits cleanly. **It never terminates an acquired VM behind your back.**\n- **Opt-in Idle Guard (`--auto-release-after 45`)**: For overnight runs, explicitly specify an idle timeout in minutes. After acquisition, the watcher enters `ACQUIRED_GUARDING`:\n  - Run `colab-watch claim` (or start using the session via `colab exec`) -> transitions to `HANDED_OVER` and exits without touching the VM.\n  - Unclaimed past the deadline -> verifies local session activity first (never blindly kills if activity verification fails!), then safely releases only the matching `endpoint` and notifies you honestly (`AUTO_RELEASED_IDLE` or `AUTO_RELEASE_FAILED`).\n\n---\n\n## Antigravity Zero-Daemon Plugin\n\nColabWatch ships as a native zero-daemon **Google Antigravity** plugin (`plugin.json` + `skills/colab-watch/SKILL.md` + `assets/logo.svg`, zero `hooks.json`, zero `mcp_config.json`):\n\n```bash\nnode bin/colab-watch.mjs --install-ag \\\n  --colab-python \"/path/to/colab-cli/.venv/Scripts/python.exe\" \\\n  --data-dir \"/path/to/ColabWatch/.local-data\" \\\n  --json\n```\n\n- Pure-copy deployment (`0` symlinks/junctions, byte-verified per file, `touchedHostConfigJson: false`)\n- Machine-specific paths live solely in git-ignored `.local-config.json`\n- Exposes a single clean slash command: **`/colab-watch`**\n\n---\n\n## CLI Reference\n\n| Command | Description |\n|---|---|\n| `doctor [--json]` | Check plugin manifest, configured Python `.venv`, keyring OAuth status (redacted), and watcher liveness |\n| `probe [--json]` | Read-only check of Compute Units balance, hourly rate, `eligibleGpus`/`eligibleTpus`, and active sessions (`0 CU`) |\n| `start [options]` | Run synchronous preflight, then launch singleton detached background watcher (or `--foreground`) |\n| `status [--json]` | Inspect live watcher state, round/attempt counts, downgrades rejected, CU balance, `connectUrl`, and handover commands |\n| `logs [--lines N]` | Read tail (`1..500`) across bounded 2-slot rotating logs (`watch.log` + `watch.prev.log`) |\n| `claim [--json]` | Acknowledge handover during `ACQUIRED_GUARDING` and disarm opt-in auto-release |\n| `stop [--json]` | Gracefully signal watcher to exit after finishing any in-flight API call (prevents orphan VMs) |\n| `release --session <name> --confirm` | Explicitly unassign a remote runtime and remove matching local `sessions.json` entry |\n| `--install-ag [options]` | Pure-copy install into `~/.gemini/config/plugins/colab-watch` with strict preflight & Windows path defenses |\n\n<details>\n<summary><strong>All <code>start</code> Options &amp; Hard Safety Limits</strong></summary>\n\n| Flag | Default | Bounds / Notes |\n|---|---|---|\n| `--gpus <list>` | `G4,H100,A100` | Comma/`>`-separated priority order from `G4, H100, A100, L4, T4, V6E1, V5E1` |\n| `--session <name>` | `pro6000` | `[A-Za-z0-9][A-Za-z0-9._-]{0,63}`; auto-suffixed if another live remote VM owns that name |\n| `--interval <sec>` | `45` | Hard floor `15s`, ceiling `600s` (`±20%` jitter; gentle `1.5x` relaxation after 10 empty rounds) |\n| `--step-delay <sec>` | `3` | Hard floor `2s`, ceiling `60s` between distinct GPUs in one scan round |\n| `--hold-top <min>` | `0` | `0..720` min per top tier before unlocking next candidate (`0` = scan all each round) |\n| `--max-wait <min>` | `240` | `1..720` min hard total wait cap |\n| `--min-cu <num>` | `5` | Minimum CU balance floor required to poll (`0` disables floor) |\n| `--high-mem` | `false` | Request High-RAM shape where supported |\n| `--allow-existing` | `false` | Permit watching while another assignment is active (never hijacks pre-existing endpoints) |\n| `--auto-release-after <min>` | `0` | `0..240` min opt-in idle guard after acquisition (`0` = off) |\n| `--no-notify` | `false` | Disable Windows desktop Toast notifications |\n| `--foreground` | `false` | Run watcher attached to current process instead of detaching |\n\n</details>\n\n---\n\n## Safety & Responsible Use\n\n- **Official API & Account Only**: Uses your own locally authorized `google-colab-cli` OAuth session. Never automates web UIs, never rotates multiple accounts, and **never bypasses CAPTCHAs, rate limits, or quota policies** — any challenge or `401`/`403` triggers an immediate hard stop.\n- **Zero-Deletion, Zero-Shell Architecture**: All production code uses `{ shell: false, windowsHide: true }`, passes Windows Toast text exclusively via environment variables (zero PowerShell switch injection), persists state via 8-slot atomic renames + kernel `openSync('wx')` cross-process locks, and contains **zero** file-deletion APIs.\n- **Secret Redaction**: Strips OAuth tokens (`ya29.*`), refresh tokens (`1//*`), Google client secrets (`GOCSPX-*`), Bearer headers, multi-value & RFC 6265 quoted `Cookie`/`Set-Cookie` headers, `X-Goog-Colab-Token`, proxy tokens, and JWTs before writing logs or state.\n- **Verification**: Run the full hygiene scan and test suite locally:\n\n```bash\nnpm run check\n# With your local Python binary to include live bridge & detached-daemon E2E suites:\nCOLAB_WATCH_TEST_PYTHON=/path/to/python npm run check\n```\n\n## License\n\n[MIT](LICENSE)\n",
+  "latestReleaseNotes": "## ColabWatch v0.1.0\n\nInitial public release of **ColabWatch** — a zero-UI, zero-idle-overhead priority-queue watcher and Antigravity plugin for official `google-colab-cli` runtimes.\n\n### Highlights\n\n- **Silent-Downgrade Shield**: Calls official `colab_cli.client.Client` directly (`COLAB_CLI_ASSIGN_RETRIES=0`), verifies the actual granted accelerator across both `PostAssignmentResponse` and `Assignment` fallback paths, and immediately invokes `unassign()` on mismatch with zero `sessions.json` pollution.\n- **Priority-Queue Scheduling**: Ordered GPU/TPU targets (`G4, H100, A100, L4, T4, V6E1, V5E1`) with optional progressive `--hold-top <min>` tier unlocking and automatic skipping of account-ineligible accelerators.\n- **Polite Throttling & Circuit Breakers**: Hard `>=15s` base interval floor with `±20%` jitter, `>=300s` HTTP `429` cooldown (`3x` circuit breaker), transient `5xx`/timeout exponential backoff, non-interactive OS keyring auth, and immediate stops on auth expiry, CAPTCHA, low Compute Units balance (`--min-cu`), or active-session conflicts.\n- **Mode-A Handover**: Atomically registers acquired sessions into official `sessions.json`, persists state before dispatching non-blocking Windows WinRT Toast alerts (via environment variables — zero CLI switch injection), emits offline browser `connectUrl`, defaults to zero-surprise-kill (`--auto-release-after 0`), and supports opt-in idle auto-release with local-first activity checks.\n- **Zero-Daemon Antigravity Plugin**: Pure Skill + CLI bundle (`/colab-watch`), zero `hooks.json`, zero `mcp_config.json`, zero JS runtime dependencies, zero deletion APIs, zero shell execution (`shell: false`), and pure-copy installation with Windows path defenses.\n\n### Verification\n\n- `PUBLIC_SCAN_OK files=28 violations=0`\n- `node --test test/colab-watch.test.mjs` — `15/15` passing (`0` skipped)\n- Cross-platform GitHub Actions CI (`ubuntu-latest` + `windows-latest` × Node `20/22/24`)\n",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "bin/colab-watch.mjs",
+        "line": 419,
+        "snippet": "const child = spawn( process.execPath, [selfScript, '_daemon', '--run-id', runId, '--data-dir', cfg.dataDir], { detached: true, stdio: 'ignore', shell: false, windowsHide: true, en",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ColabWatch/blob/be538529c754c87bba7a18d3952751c27a113892/bin/colab-watch.mjs#L419"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/bridge.mjs",
+        "line": 62,
+        "snippet": "const res = spawnSync(colabPython, [bridgeScript, subcommand, ...args], { shell: false, windowsHide: true, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: timeoutMs, ",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ColabWatch/blob/be538529c754c87bba7a18d3952751c27a113892/core/bridge.mjs#L62"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "core/notify.mjs",
+        "line": 30,
+        "snippet": "const res = spawnSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-ExecutionPolicy', 'Bypass', '-File', notifyScript, ], { shell: false, window",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ColabWatch/blob/be538529c754c87bba7a18d3952751c27a113892/core/notify.mjs#L30"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "core/fs-utils.mjs",
+        "line": 142,
+        "snippet": "fs.writeFileSync(tmpPath, buf, { mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ColabWatch/blob/be538529c754c87bba7a18d3952751c27a113892/core/fs-utils.mjs#L142"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "core/fs-utils.mjs",
+        "line": 374,
+        "snippet": "fs.appendFileSync(logPath, entry, { encoding: 'utf8', mode: 0o600 });",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ColabWatch/blob/be538529c754c87bba7a18d3952751c27a113892/core/fs-utils.mjs#L374"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/colab-watch/SKILL.md",
+        "line": 13,
+        "snippet": "Derive `<pluginRoot>` dynamically as two directories above this file (`../..`).",
+        "githubBlobUrl": "https://github.com/KennyMcSimpson/ColabWatch/blob/be538529c754c87bba7a18d3952751c27a113892/skills/colab-watch/SKILL.md#L13"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "0.1.0",
+      "sha": "be538529c754c87bba7a18d3952751c27a113892",
+      "scannedAt": "2026-11-28T18:12:01.444Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

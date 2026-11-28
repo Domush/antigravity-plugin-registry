@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "yuhuan-dev/antigravity-usage-monitor",
-  "sha": "15ca28144c5ca314049e531b09d1befa75474a9f",
+  "sha": "17d25b4167a10cdf3c69a274eb1a0941d42a2d73",
   "scannerVersion": "1.2.0",
-  "scannedAt": "2026-11-27T18:13:53.147Z",
+  "scannedAt": "2026-11-28T18:11:47.320Z",
   "manifest": {
     "manifestPath": "plugin.json",
     "name": "usage-monitor",
     "displayName": "Usage & Speed Monitor",
-    "version": "1.5.6",
+    "version": "1.5.7",
     "minAppVersion": null,
     "mcpServers": [
       {
@@ -38,8 +38,8 @@
     "envVars": [],
     "oauthProviders": []
   },
-  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" alt=\"Antigravity Usage & Speed Monitor Logo\" width=\"84\" />\n\n# Antigravity Usage & Speed Monitor\n\nLocal usage, speed, context, and quota monitor for Google Antigravity 2.0, Antigravity IDE, and Antigravity CLI, with no external npm dependencies.\n\n[![Release](https://img.shields.io/github/v/release/yuhuan-dev/antigravity-usage-monitor?style=flat-square&color=2A5E76&label=release)](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest)\n[![Downloads](https://img.shields.io/github/downloads/yuhuan-dev/antigravity-usage-monitor/total?style=flat-square&color=0ea5e9)](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases)\n[![Stars](https://img.shields.io/github/stars/yuhuan-dev/antigravity-usage-monitor?style=flat-square&color=f59e0b)](https://github.com/yuhuan-dev/antigravity-usage-monitor/stargazers)\n[![License](https://img.shields.io/github/license/yuhuan-dev/antigravity-usage-monitor?style=flat-square&color=3b82f6)](LICENSE)\n[![Zero Dependencies](https://img.shields.io/badge/dependencies-0%20npm%20packages-10b981?style=flat-square)](#local-development)\n[![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-6366f1?style=flat-square)](#client-support)\n\nEnglish · [简体中文](README.zh-CN.md)\n\n[Features](#features) · [Screenshots](#screenshots) · [Client Support](#client-support) · [Installation](#installation) · [Usage](#usage) · [Development](#local-development)\n\n<br />\n\n<img src=\"assets/preview.png\" alt=\"Antigravity Usage Monitor Preview\" width=\"100%\" />\n\n<br />\n\n[Latest Release](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest) · [Download ZIP (`usage-monitor.zip`)](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest/download/usage-monitor.zip)\n\n</div>\n\n---\n\n## Features\n\n- **Live Metrics & Customizable Layout**: Tracks output speed (`tok/s`), time-to-first-token (`TTFT`), session average speed, step/session USD cost, cache hit rate, tightest remaining quota, and session tokens. You can choose and reorder the overview metric cards (4 shown by default out of 9 options) and section blocks.\n- **10-Category Context Breakdown**: Shows the token breakdown of the latest request across assistant replies, tool results, user messages, subagent notifications, checkpoints, system prompts, system tools, MCP tools, skills, and user rules, with a switcher between the main agent and spawned subagents.\n- **Quota Pool Tracking, Lease Reservation & Burn-Rate Reference**: Reads 5-hour and weekly quotas, reset timers, and cycle consumption across `Gemini`, `Gemini 4 Argon`, `Gemini 4 Carbon`, and `Claude & GPT` pools (plus Ultra `5x / 20x` tier badges), renders an in-flight lease reservation segment with an account-isolated per-model burn-rate & equivalent full-pool cost popover (`?`), and preserves cached quota data with a stale notice when upstream is temporarily unavailable.\n- **Account Sign-in and Switching on Windows**: Choose Sign in with Google under Preferences → Account. Browser authorization automatically adds the account and loads its quota. Existing refresh tokens and OAuth JSON can also be imported. Switch and restart closes and reopens the App and newer IDE sharing its sign-in. Save your work before switching.\n- **Main Agent, Subagents, Swarm & SSH Isolation**: Merges main agent, subagent, and Native Swarm worker steps in chronological order (or filters by individual agent), renders optional turn rails, expands running tasks inline, and isolates per-window caches and quotas across multiple SSH Remote windows (`endpointId`).\n- **Call Details, Timing Tooltips & Anomaly Chips**: Includes **By Step** and **By Model** tabs (with multi-model LOESS throughput/TTFT fit charts), clickable column sorting, hover TTFT/duration stage breakdowns, accent-highlighted compaction rows with diagnostic tooltips, and an optional live search & 9-category anomaly/compaction/low-cache/slow-TTFT filter toolbar. Supports 2–14 configurable columns and custom token DSL strings such as `context:in:cache`.\n- **Historical Usage, Project Attribution & Heatmap**: Summarizes tokens, uncached input vs. cache-read savings, thinking/output split, smooth hourly/daily trend curves (switching automatically to a GitHub-style daily calendar heatmap over `>90` days), **Model / Project (Workspace) / Session** rankings, client attribution (`Desktop App` / `IDE` / `CLI`), and monthly bar charts with pointer-following breakdown popovers across `Today`, `1d`, `7d`, `14d`, `30d`, `All`, or custom date/time ranges.\n- **Native `.xlsx` / Markdown Exports & Settings Backup**: Exports multi-sheet localized Excel (`.xlsx`) workbooks and Markdown summaries for both Usage Statistics and Call Details directly to `~/Downloads` with an in-app reveal toast, plus portable JSON preference backup/import.\n- **Cross-Client Session Migration**: Built-in opt-in session migrator (`Preferences → Other`) moves or clones conversations across `Antigravity CLI` ↔ `Desktop App / IDE` and `Legacy IDE (.db)` with isolated UUID rewriting to prevent cross-client mirror collisions or double billing.\n- **Multi-Client Capsules & CLI `statusLine` Modes**: Integrates as a titlebar or composer capsule (with ring quota gauges and main-agent context lock) and auxiliary sidebar in Antigravity 2.0, a titlebar/composer capsule in Antigravity IDE, a single-line 24-bit ANSI `statusLine` in Antigravity CLI (`--style pill|bar|compact`, `--preset compact|balanced|full`, `--json`), and a standalone local web UI.\n- **No `app.asar` Modification & Desktop 2.33.0+ Auto-Provisioning**: Titlebar/composer injection and context hooks run in memory over local CDP (`DevToolsActivePort`). Automatically provisions Desktop `2.33.0+` user shortcuts/launchers (with one-click out-of-job host relaunch) and `~/.antigravity-ide/argv.json` without touching installation binaries or `app.asar`.\n- **Per-Model Context Windows (Main & Subagent/Swarm)**: Sets context window limits per model series or follows host defaults, with independent toggles for the main agent (CDP request hook), spawned subagents / Swarm workers (local loopback CloudCode proxy), and CLI (`AGY_CLI_AUTO_COMPACT_OVERRIDE`).\n- **Appearance, Offline Storage & Cloud Updates**: Supports `zh-CN` / `en-US` / host language, borderless Modern UI, `sm / md / lg / xl` font scaling, 6 theme accents plus host matching, offline reading from CLI SQLite + WAL, `annotations/*.pbtxt`, `transcript.jsonl`, and `.deep_stats_cache.json`, GitHub [`pricing-catalog.json`](pricing-catalog.json) sync, and in-panel release updates (`manual` / `auto` / `off`).\n\n---\n\n## Screenshots\n\n### IDE & CLI\n\n<table>\n  <tr>\n    <td align=\"center\">\n      <img src=\"assets/ide-preview.png\" alt=\"Antigravity IDE Titlebar Capsule and Hover Overview\" width=\"100%\" />\n      <br />\n      <b>Antigravity IDE</b>\n      <br />\n      <sub>Titlebar capsule and hover popover showing step cost, context usage, and pool quotas</sub>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\">\n      <img src=\"assets/cli-preview.png\" alt=\"Antigravity CLI Native statusLine Capsule\" width=\"100%\" />\n      <br />\n      <b>Antigravity CLI (<code>agy</code>)</b>\n      <br />\n      <sub>Single-line 24-bit ANSI bottom <code>statusLine</code> with active count, TPS, TTFT, step cost, and color-coded quota/context pill gauges</sub>\n    </td>\n  </tr>\n</table>\n\n### Panel Tabs\n\n<table>\n  <tr>\n    <td align=\"center\" width=\"33.3%\">\n      <img src=\"assets/context.png\" alt=\"Live Overview and Quotas\" />\n      <br />\n      <b>Live Overview</b>\n      <br />\n      <sub>TPS, TTFT, 10-category context bar, quota pools with lease reservation, and live Swarm/subagent tasks</sub>\n    </td>\n    <td align=\"center\" width=\"33.3%\">\n      <img src=\"assets/analytics.png\" alt=\"Usage Statistics\" />\n      <br />\n      <b>Usage Statistics</b>\n      <br />\n      <sub>Token totals, cache hit rate, smooth trend chart, and Model / Project / Session rankings</sub>\n    </td>\n    <td align=\"center\" width=\"33.3%\">\n      <img src=\"assets/subagents.png\" alt=\"Call Details and Subagents\" />\n      <br />\n      <b>Call Details</b>\n      <br />\n      <sub>Sortable main, Swarm, and subagent step rows with turn rail, compaction highlight, tokens, and cost</sub>\n    </td>\n  </tr>\n</table>\n\n---\n\n## Client Support\n\n| Client | Status Capsule / Bar | Panel UI | Offline SQLite &amp; Logs | Per-Model Context Limit | Modifies `app.asar` |\n| :--- | :---: | :---: | :---: | :---: | :---: |\n| **Antigravity 2.0 (Desktop)** | Titlebar / Composer | Popover + Right Sidebar | Yes | CDP Hook + Local CloudCode Proxy | No |\n| **Antigravity IDE** | Titlebar / Composer | Capsule Popover | Yes | CDP Hook + Local CloudCode Proxy | No |\n| **Antigravity CLI (`agy`)** | Native ANSI `statusLine` | Standalone Web (`--port`) | Yes (`node:sqlite` + `.pbtxt`) | `AGY_CLI_AUTO_COMPACT_OVERRIDE` | No |\n| **SSH Remote / Headless Linux** | Per-Endpoint Capsule / ANSI `statusLine` | SSH Overlay / `--token` Web | Yes | Per-Endpoint Hook / Env | No |\n\n> [!NOTE]\n> On **Antigravity Desktop 2.33.0+** and **Antigravity IDE**, enabling the plugin automatically provisions user launch shortcuts / `~/.antigravity-ide/argv.json` with `\"remote-debugging-port\": \"0\"` via a zero-tool MCP keep-alive entry (`0` context tokens). On Desktop `2.33.0+` you can click **One-Click Relaunch** directly inside the panel banner; on IDE, restart once after first activation so the titlebar capsule can attach.\n\n---\n\n## Installation\n\nKeep the folder name as `usage-monitor`. **No `npm install` is needed.**\n\n### Option 1: Release ZIP\n\nDownload [`usage-monitor.zip`](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest/download/usage-monitor.zip) and extract it into `~/.gemini/config/plugins/` so the directory path is `~/.gemini/config/plugins/usage-monitor`.\n\n<details>\n<summary>Windows PowerShell command for ZIP installation</summary>\n\n```powershell\n$pluginsDir = \"$env:USERPROFILE\\.gemini\\config\\plugins\"\nNew-Item -ItemType Directory -Path $pluginsDir -Force | Out-Null\nInvoke-WebRequest -Uri \"https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest/download/usage-monitor.zip\" -OutFile \"$env:TEMP\\usage-monitor.zip\"\nExpand-Archive -Path \"$env:TEMP\\usage-monitor.zip\" -DestinationPath $pluginsDir -Force\n```\n\n</details>\n\n### Option 2: Git Clone\n\n```powershell\n# Windows (PowerShell)\ngit clone --filter=blob:none --single-branch https://github.com/yuhuan-dev/antigravity-usage-monitor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\usage-monitor\"\n```\n\n```bash\n# macOS / Linux\ngit clone --filter=blob:none --single-branch https://github.com/yuhuan-dev/antigravity-usage-monitor.git ~/.gemini/config/plugins/usage-monitor\n```\n\nOr ask Antigravity directly:\n\n```text\nClone https://github.com/yuhuan-dev/antigravity-usage-monitor with --filter=blob:none --single-branch to ~/.gemini/config/plugins/usage-monitor and enable the plugin\n```\n\n---\n\n## Usage\n\n1. Open **Customizations → Installed** in the left sidebar and enable `usage-monitor`.\n2. **Antigravity 2.0 (Desktop)**:\n   - Mounts a capsule in the top-right titlebar (**hover** for summary, **click** for the 4-tab popover, **right-click** to refresh), alongside the right auxiliary sidebar pane.\n3. **Antigravity IDE**:\n   - **Restart Antigravity IDE once** after enabling for the first time. Keep **Mount Mode** on **Dual-mount** and click the top-bar capsule to open the panel.\n4. **Antigravity CLI (`agy`)**:\n   - When `~/.gemini/antigravity-cli` exists, `statusLine` in `settings.json` is configured automatically (existing third-party `statusLine.command` entries are left untouched) to render a single-line ANSI bar (`● 1 active   38.1 t/s | 0.85s | ◎ 17%`).\n   - Toggle via `/statusline` in `agy` or **Preferences → Structure → Mount & Capsule Bar**.\n5. **Standalone Web Server (Headless / Remote)**:\n\n```bash\n# 1. Start on the host (listens on 127.0.0.1:8787 by default)\nnode ~/.gemini/config/plugins/usage-monitor/sidecars/panel/standalone.mjs --port 8787\n\n# 2. Forward the port locally and open http://localhost:8787\nssh -L 8787:127.0.0.1:8787 user@your-server\n```\n\n<details>\n<summary>Standalone CLI flags, background auto-start, and non-loopback token auth</summary>\n\n- **Auto-start with `agy`**: Set `USAGE_MONITOR_STANDALONE_PORT=8787` or `\"standalonePort\": 8787` in `~/.gemini/antigravity-cli/sidecar_data/usage-monitor/panel/data/settings.json` to start the web UI together with the MCP sidecar supervisor.\n- **Non-loopback auth**: Binding to `0.0.0.0` or a LAN address requires `--token <secret>` (or `USAGE_MONITOR_STANDALONE_TOKEN`); starting on a non-loopback address without a token is rejected.\n- **Overrides**: Supports `--data-dir`, `--app-data-dir`, `--gemini-dir`, `--ls-addr`, and `--csrf-token`.\n- **Offline fallback**: When `agy` is not running, the backend reads `~/.gemini/antigravity-cli` (`conversation_summaries.db`, `conversations/*.db`, `annotations/*.pbtxt`, and `transcript.jsonl`) and switches to live RPC once `agy` starts.\n\n</details>\n\n---\n\n## Configuration & Calculation Notes\n\n<details>\n<summary>UI options: mount mode, capsule slots, token formats, model IDs, and context limits</summary>\n\n- **Mount Mode & Width**: Switch between **Dual-mount (Top Bar + Sidebar)**, **Composer**, and **Sidebar only**. Popover width defaults to **Auto Fit** (expands within window bounds for wide tables) or a fixed width (`440–1080 px`).\n- **Capsule Slots**: Choose 1–5 metric slots and reorder them (default: Output Speed, TTFT, Context Usage), plus an optional toggle for the active-session indicator.\n- **Call Details Table & Token Format**: Toggle agent badges, turn rail (off by default), and speed color grading (off by default). Choose `Ctx / Think / Reply`, `In / Out / Cache` (with per-item USD tooltips), or custom format strings like `context:new:cache` or `in:out:cache`.\n- **Model Name Format**: Choose **Compact short alias** (`argon-4-high`), **Full raw ID**, or **Trimmed raw ID** (strips `gemini-` / `claude-` / `gpt-` prefixes while keeping `·compact` suffixes intact).\n- **Per-Model Context Limits**: Configure limits per model across thinking levels or follow host defaults under **Preferences → Other → Model Context Settings**. App/IDE applies saved rules at startup; CLI sets `AGY_CLI_AUTO_COMPACT_OVERRIDE`.\n\n</details>\n\n<details>\n<summary>Model identification, compaction inference, and cost estimation rules</summary>\n\n- **Model Resolution**: Read from each step's raw usage payload or matching generator metadata; explicit models are never overwritten. When an automatic compaction step omits the model field, it is inferred from adjacent steps in the same conversation (checking prior steps first, then following steps, preferring the same provider) for display and estimation, or shown as unknown compaction if none exist.\n- **Cost Calculation**: If a model or price entry cannot be resolved, step cost is shown as pending while tokens still count toward totals; session totals sum all resolved steps. USD numbers are estimated from public per-million-token API pricing in [`pricing-catalog.json`](pricing-catalog.json) for reference only and do **not** reflect subscription quota consumption.\n- **Cache & Speed Averages**: Upgrading re-checks cached entries against raw trajectory data while preserving token counts and valid timings. Compaction steps display request TPS in step tables but are excluded from session speed and TTFT averages.\n\n</details>\n\n<details>\n<summary>Updating and data directory</summary>\n\n- **In-Panel Update**: When a new GitHub release is available, a version badge appears next to the capsule and in the panel header. Update mode (`Manual` / `Auto` / `Off`) and price catalog sync can be configured under **Preferences → Other**.\n- **Manual Git Update**:\n  - Windows: `git -C \"$env:USERPROFILE\\.gemini\\config\\plugins\\usage-monitor\" pull --ff-only`\n  - macOS / Linux: `git -C ~/.gemini/config/plugins/usage-monitor pull --ff-only`\n  - Toggle the plugin off and back on in **Customizations → Installed**.\n- **Data Persistence**: Settings and parsed caches live in `~/.gemini/antigravity/sidecar_data/usage-monitor/` (or `sidecars/panel/.data/` in standalone mode), so updates keep existing history intact.\n\n</details>\n\n---\n\n## Local Development\n\nAll backend and frontend modules use pure Node.js ESM and a lightweight custom reactive component & incremental DOM patch engine (`defineComponent` + `domPatch`, with Shadow DOM isolation for host overlays) and **no external npm dependencies** (Node.js 22.5+ is recommended for built-in `node:sqlite`).\n\n```bash\ncd sidecars/panel\n\n# Rebuild app.js and styles.css after modifying src/\nnpm run build\n\n# Run unit and integration tests\nnpm test\n```\n\n## Contributing & License\n\nIssues and pull requests are welcome. If you modify files under `sidecars/panel/src/`, please rebuild via `npm run build` and make sure `npm test` passes.\n\nLicensed under the [GNU General Public License v3.0](LICENSE).\n\n## Star History\n\n<a href=\"https://www.star-history.com/#yuhuan-dev/antigravity-usage-monitor&Date\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://api.star-history.com/svg?repos=yuhuan-dev/antigravity-usage-monitor&type=Date&theme=dark\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://api.star-history.com/svg?repos=yuhuan-dev/antigravity-usage-monitor&type=Date\" />\n    <img alt=\"Star History Chart\" src=\"https://api.star-history.com/svg?repos=yuhuan-dev/antigravity-usage-monitor&type=Date\" />\n  </picture>\n</a>\n",
-  "latestReleaseNotes": "## v1.5.6 更新内容\n\n### 新增功能\n- **七语种全栈本地化**：新增繁体中文、日语、韩语、德语、法语，现共支持 7 套完整语言，覆盖监控面板、CLI 状态栏、独立浏览器页面、报表导出及 Antigravity 宿主界面语言包。\n- **实时多币种消费换算（#50）**：在「控制中心 → 常规」支持选择 20 种显示货币（默认随界面语言自动切换人民币、台币、日元、韩元、欧元），免配置拉取实时汇率并在消费统计总额及拆解中同步展示。\n- **本地三端会话管理及大容量迁移**：「控制中心」新增「会话」页签，集中检索、排行及批量删除三端会话（支持在线删除和离线深度清理）；「跨端迁移」上限提至 5000 条并支持分页分批。\n- **macOS / Linux / WSL2 跨平台多账号切换**：多账号登录、凭证保险箱及切号能力扩展至全平台，自动适配 macOS 钥匙串、Linux 系统密钥环（无桌面密钥环时降级为口令加密）及 WSL2 宿主凭据。\n- **大尺寸趋势指标卡及额度剩余显示（#55）**：实时监控和悬浮窗支持自适应宽度的大尺寸趋势卡；「控制中心 → 结构 → 实时监控布局」新增「额度显示（已用 / 剩余）」切换并联动悬浮窗。\n- **开发者选项及高风险功能双层开关（#52）**：在「控制中心 → 其他 → 开发者选项」新增两级保护开关，默认隐藏「账号」页签和「模型上下文设置」入口，关闭后立即停用相关本地代理和注入。\n- **Antigravity IDE Remote-SSH 远程监控**：支持自动探测并监控 Antigravity IDE 的 Remote-SSH 远程会话，同时隔离 Desktop 和 IDE 的启动参数配置及重启操作。\n\n### 体验优化\n- **结构页全画布直接拖拽排序**：挂载胶囊、悬浮窗、实时监控和调用明细预览区均支持直接拖动槽位、模块、指标卡和列头排序，列表拖拽更流畅跟手，支持按 `Esc` 取消。\n- **非阻塞渐进式缓存重建**：重建历史缓存时优先立即恢复当前活跃会话及子代理，历史记录在后台分片回填并展示实时进度，不再阻塞面板操作。\n- **回退对话保留历史消耗统计**：撤销对话到早期节点后，历史 Token、费用、额度和模型汇总不再回缩，并在调用明细中以灰底淡字标识已回退步骤。\n- **更清爽的配置布局及排版细节**：桌面/IDE 和 CLI 挂载胶囊拆分为独立配置卡片，统一界面等宽数字排版，并精简设置说明文案、单行步骤表及配额燃速浮窗显示。\n\n### 问题修复\n- **修复宿主界面翻译误翻对话正文、公式及代码区（#54）**：完整豁免 AI 回复正文、数学公式、代码/Diff 视图、终端及常见英文小写词，避免正文内容被误译，并更新内置简体中文语言包至 `1.0.3`。\n- **修复非中文环境下的残留中文及页面标题错位（#44、#49）**：非中文宿主下侧边栏标签标题、独立 Web 首屏、Token 验证页、未知配额池标签及导出报表全面跟随当前语言，不再残留硬编码中文。\n- **修复无头 CLI 并发运行导致桌面顶栏胶囊误卸载（#46）**：一次性无头 CLI 调用（如 `-p` / `--print`）不再抢占桥接租约，多窗口或副进程退出时不再误卸载运行中桌面的顶栏胶囊。\n- **修复混用多思考档位时模型简称锁死（#45）**：同一基础模型混用多种思考档位时，模型汇总和趋势图改为展示调用次数最多的主导简称，不再固定显示首个档位。\n- **修复重启后宿主主题色丢失及侧边栏字体不同步**：缓存宿主原生主题色和字体变量，消除重启侧边栏时的短瞬闪白，并同步响应缩放比例。\n- **修复家庭组 / 其他设备消耗检测过度敏感的问题**：优化配额预占及外部消耗判定逻辑，不再因本地账单落盘延迟、5h 单桶预占租约、冷启动或微小副本抖动频繁误报，且历史误报状态可自动自愈。\n- **修复已删除的本地会话仍显示在最近会话列表中的问题（#39）**：本地文件和宿主摘要均消失的同账号会话会自动从顶栏会话下拉框中隐藏，同时完整保留历史用量、费用及额度统计，恢复副本后重新显示且不重复计费。\n- **修复表格列宽、连接误报、登录提示及迁移时间戳问题**：修正步骤表列宽锁定和浮层宽度偏移、瞬时超时误报连接不可达、登录完成提示残留，以及空伴生文件干扰会话迁移时间的问题。\n\n### 升级说明\n- 「设置」更名为「控制中心」，原「跨端迁移」入口移至新增的「会话」页签。\n- 「账号」页签和「模型上下文设置」默认收纳于「控制中心 → 其他 → 开发者选项」（默认关闭）；此前启用多账号切换或自定义上下文上限的用户，升级后需依次开启两项开关并重新确认风险提示。\n\nThanks to @mikessslxxx (#39), @eclectice (#44, #45, #49, #50), @ffreedomfree (#46), @Aevisen (#52), @AdenXie (#54), @SHLE1 (#55)\n\n## 安装 / 更新\n\n1. 下载下方 `usage-monitor.zip`。\n2. 解压到 `~/.gemini/config/plugins/`，保持 `usage-monitor` 目录结构；已安装用户直接覆盖同名插件目录即可。\n3. 在 **Customizations → Installed** 中重新开关插件，或重启 Antigravity。\n\n也可直接在面板内通过版本更新功能在线升级；通过 Git 安装的用户在 `main` 分支执行 `git pull --ff-only` 后重新开启插件即可。\n\n无需运行 `npm install`。在 Antigravity 宿主内运行时，历史缓存及设置存放于插件目录之外，覆盖安装不会清除它们。SHA-256 校验值见附件 `usage-monitor.zip.sha256`。\n",
+  "readmeMarkdown": "<div align=\"center\">\n\n<img src=\"assets/logo.svg\" alt=\"Antigravity Usage & Speed Monitor Logo\" width=\"84\" />\n\n# Antigravity Usage & Speed Monitor\n\nLocal usage, speed, context, and quota monitor for Google Antigravity 2.0, Antigravity IDE, VS Code (official extension), and Antigravity CLI, with no external npm dependencies.\n\n[![Release](https://img.shields.io/github/v/release/yuhuan-dev/antigravity-usage-monitor?style=flat-square&color=2A5E76&label=release)](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest)\n[![Downloads](https://img.shields.io/github/downloads/yuhuan-dev/antigravity-usage-monitor/total?style=flat-square&color=0ea5e9)](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases)\n[![Stars](https://img.shields.io/github/stars/yuhuan-dev/antigravity-usage-monitor?style=flat-square&color=f59e0b)](https://github.com/yuhuan-dev/antigravity-usage-monitor/stargazers)\n[![License](https://img.shields.io/github/license/yuhuan-dev/antigravity-usage-monitor?style=flat-square&color=3b82f6)](LICENSE)\n[![Zero Dependencies](https://img.shields.io/badge/dependencies-0%20npm%20packages-10b981?style=flat-square)](#local-development)\n[![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-6366f1?style=flat-square)](#client-support)\n\nEnglish · [简体中文](README.zh-CN.md)\n\n[Features](#features) · [Screenshots](#screenshots) · [Client Support](#client-support) · [Installation](#installation) · [Usage](#usage) · [Development](#local-development)\n\n<br />\n\n<img src=\"assets/preview.png\" alt=\"Antigravity Usage Monitor Preview\" width=\"100%\" />\n\n<br />\n\n[Latest Release](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest) · [Download ZIP (`usage-monitor.zip`)](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest/download/usage-monitor.zip)\n\n</div>\n\n---\n\n## Features\n\n- **Live Metrics & Customizable Layout**: Tracks output speed (`tok/s`), time-to-first-token (`TTFT`), session average speed, step/session USD cost, cache hit rate, tightest remaining quota, and session tokens. You can choose and reorder the overview metric cards (4 shown by default out of 9 options) and section blocks.\n- **10-Category Context Breakdown**: Shows the token breakdown of the latest request across assistant replies, tool results, user messages, subagent notifications, checkpoints, system prompts, system tools, MCP tools, skills, and user rules, with a switcher between the main agent and spawned subagents.\n- **Quota Pool Tracking, Lease Reservation & Burn-Rate Reference**: Reads 5-hour and weekly quotas, reset timers, and cycle consumption across `Gemini`, `Gemini 4 Argon`, `Gemini 4 Carbon`, and `Claude & GPT` pools (plus Ultra `5x / 20x` tier badges), renders an in-flight lease reservation segment with an account-isolated per-model burn-rate & equivalent full-pool cost popover (`?`), and preserves cached quota data with a stale notice when upstream is temporarily unavailable.\n- **Account Sign-in and Switching on Windows**: Choose Sign in with Google under Preferences → Account. Browser authorization automatically adds the account and loads its quota. Existing refresh tokens and OAuth JSON can also be imported. Switch and restart closes and reopens the App and newer IDE sharing its sign-in. Save your work before switching.\n- **Main Agent, Subagents, Swarm & SSH Isolation**: Merges main agent, subagent, and Native Swarm worker steps in chronological order (or filters by individual agent), renders optional turn rails, expands running tasks inline, and isolates per-window caches and quotas across multiple SSH Remote windows (`endpointId`).\n- **Call Details, Timing Tooltips & Anomaly Chips**: Includes **By Step** and **By Model** tabs (with multi-model LOESS throughput/TTFT fit charts), clickable column sorting, hover TTFT/duration stage breakdowns, accent-highlighted compaction rows with diagnostic tooltips, and an optional live search & 9-category anomaly/compaction/low-cache/slow-TTFT filter toolbar. Supports 2–14 configurable columns and custom token DSL strings such as `context:in:cache`.\n- **Historical Usage, Project Attribution & Heatmap**: Summarizes tokens, uncached input vs. cache-read savings, thinking/output split, smooth hourly/daily trend curves (switching automatically to a GitHub-style daily calendar heatmap over `>90` days), **Model / Project (Workspace) / Session** rankings, client attribution (`Desktop App` / `IDE` / `CLI`), and monthly bar charts with pointer-following breakdown popovers across `Today`, `1d`, `7d`, `14d`, `30d`, `All`, or custom date/time ranges.\n- **Native `.xlsx` / Markdown Exports & Settings Backup**: Exports multi-sheet localized Excel (`.xlsx`) workbooks and Markdown summaries for both Usage Statistics and Call Details directly to `~/Downloads` with an in-app reveal toast, plus portable JSON preference backup/import.\n- **Cross-Client Session Migration**: Built-in opt-in session migrator (`Preferences → Other`) moves or clones conversations across `Antigravity CLI` ↔ `Desktop App / IDE` and `Legacy IDE (.db)` with isolated UUID rewriting to prevent cross-client mirror collisions or double billing.\n- **Multi-Client Capsules & CLI `statusLine` Modes**: Integrates as a titlebar or composer capsule (with ring quota gauges and main-agent context lock) and auxiliary sidebar in Antigravity 2.0, a titlebar/composer capsule in Antigravity IDE, a single-line 24-bit ANSI `statusLine` in Antigravity CLI (`--style pill|bar|compact`, `--preset compact|balanced|full`, `--json`), and a standalone local web UI.\n- **VS Code Extension & Remote-SSH Support**: Auto-provisions `~/.vscode/argv.json` (respecting `autoConfigureLaunch`) and mounts inside the chat input box by default via an independent `vsCodeMountMode` setting (switchable to Top Bar, without Sidebar Only); supports local and Remote-SSH endpoint isolation, instant conversation following, and remote `agy` CLI plugin fallback on the Top Bar while skipping hosts without Antigravity plugins.\n- **No `app.asar` Modification & Desktop 2.33.0+ Auto-Provisioning**: Titlebar/composer injection and context hooks run in memory over local CDP (`DevToolsActivePort`). Automatically provisions Desktop `2.33.0+` user shortcuts/launchers (with one-click out-of-job host relaunch) and `~/.antigravity-ide/argv.json` without touching installation binaries or `app.asar`.\n- **Per-Model Context Windows (Main & Subagent/Swarm)**: Sets context window limits per model series or follows host defaults, with independent toggles for the main agent (CDP request hook), spawned subagents / Swarm workers (local loopback CloudCode proxy), and CLI (`AGY_CLI_AUTO_COMPACT_OVERRIDE`).\n- **Appearance, Offline Storage & Cloud Updates**: Supports `zh-CN` / `en-US` / host language, borderless Modern UI, `sm / md / lg / xl` font scaling, 6 theme accents plus host matching, offline reading from CLI SQLite + WAL, `annotations/*.pbtxt`, `transcript.jsonl`, and `.deep_stats_cache.json`, GitHub [`pricing-catalog.json`](pricing-catalog.json) sync, and in-panel release updates (`manual` / `auto` / `off`).\n\n---\n\n## Screenshots\n\n### IDE & CLI\n\n<table>\n  <tr>\n    <td align=\"center\">\n      <img src=\"assets/ide-preview.png\" alt=\"Antigravity IDE Titlebar Capsule and Hover Overview\" width=\"100%\" />\n      <br />\n      <b>Antigravity IDE</b>\n      <br />\n      <sub>Titlebar capsule and hover popover showing step cost, context usage, and pool quotas</sub>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\">\n      <img src=\"assets/cli-preview.png\" alt=\"Antigravity CLI Native statusLine Capsule\" width=\"100%\" />\n      <br />\n      <b>Antigravity CLI (<code>agy</code>)</b>\n      <br />\n      <sub>Single-line 24-bit ANSI bottom <code>statusLine</code> with active count, TPS, TTFT, step cost, and color-coded quota/context pill gauges</sub>\n    </td>\n  </tr>\n</table>\n\n### Panel Tabs\n\n<table>\n  <tr>\n    <td align=\"center\" width=\"33.3%\">\n      <img src=\"assets/context.png\" alt=\"Live Overview and Quotas\" />\n      <br />\n      <b>Live Overview</b>\n      <br />\n      <sub>TPS, TTFT, 10-category context bar, quota pools with lease reservation, and live Swarm/subagent tasks</sub>\n    </td>\n    <td align=\"center\" width=\"33.3%\">\n      <img src=\"assets/analytics.png\" alt=\"Usage Statistics\" />\n      <br />\n      <b>Usage Statistics</b>\n      <br />\n      <sub>Token totals, cache hit rate, smooth trend chart, and Model / Project / Session rankings</sub>\n    </td>\n    <td align=\"center\" width=\"33.3%\">\n      <img src=\"assets/subagents.png\" alt=\"Call Details and Subagents\" />\n      <br />\n      <b>Call Details</b>\n      <br />\n      <sub>Sortable main, Swarm, and subagent step rows with turn rail, compaction highlight, tokens, and cost</sub>\n    </td>\n  </tr>\n</table>\n\n---\n\n## Client Support\n\n| Client | Status Capsule / Bar | Panel UI | Offline SQLite &amp; Logs | Per-Model Context Limit | Modifies `app.asar` |\n| :--- | :---: | :---: | :---: | :---: | :---: |\n| **Antigravity 2.0 (Desktop)** | Titlebar / Composer | Popover + Right Sidebar | Yes | CDP Hook + Local CloudCode Proxy | No |\n| **Antigravity IDE** | Titlebar / Composer | Capsule Popover | Yes | CDP Hook + Local CloudCode Proxy | No |\n| **VS Code (Extension / Remote-SSH)** | Input Box (Default) / Top Bar | Capsule Popover | Yes | Per-Host / Endpoint | No |\n| **Antigravity CLI (`agy`)** | Native ANSI `statusLine` | Standalone Web (`--port`) | Yes (`node:sqlite` + `.pbtxt`) | `AGY_CLI_AUTO_COMPACT_OVERRIDE` | No |\n| **SSH Remote / Headless Linux** | Per-Endpoint Capsule / ANSI `statusLine` | SSH Overlay / `--token` Web | Yes | Per-Endpoint Hook / Env | No |\n\n> [!NOTE]\n> On **Antigravity Desktop 2.33.0+** and **Antigravity IDE**, enabling the plugin automatically provisions user launch shortcuts / `~/.antigravity-ide/argv.json` with `\"remote-debugging-port\": \"0\"` via a zero-tool MCP keep-alive entry (`0` context tokens). On Desktop `2.33.0+` you can click **One-Click Relaunch** directly inside the panel banner; on IDE, restart once after first activation so the titlebar capsule can attach.\n\n---\n\n## Installation\n\nKeep the folder name as `usage-monitor`. **No `npm install` is needed.**\n\n### Option 1: Release ZIP\n\nDownload [`usage-monitor.zip`](https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest/download/usage-monitor.zip) and extract it into `~/.gemini/config/plugins/` so the directory path is `~/.gemini/config/plugins/usage-monitor`.\n\n<details>\n<summary>Windows PowerShell command for ZIP installation</summary>\n\n```powershell\n$pluginsDir = \"$env:USERPROFILE\\.gemini\\config\\plugins\"\nNew-Item -ItemType Directory -Path $pluginsDir -Force | Out-Null\nInvoke-WebRequest -Uri \"https://github.com/yuhuan-dev/antigravity-usage-monitor/releases/latest/download/usage-monitor.zip\" -OutFile \"$env:TEMP\\usage-monitor.zip\"\nExpand-Archive -Path \"$env:TEMP\\usage-monitor.zip\" -DestinationPath $pluginsDir -Force\n```\n\n</details>\n\n### Option 2: Git Clone\n\n```powershell\n# Windows (PowerShell)\ngit clone --filter=blob:none --single-branch https://github.com/yuhuan-dev/antigravity-usage-monitor.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\usage-monitor\"\n```\n\n```bash\n# macOS / Linux\ngit clone --filter=blob:none --single-branch https://github.com/yuhuan-dev/antigravity-usage-monitor.git ~/.gemini/config/plugins/usage-monitor\n```\n\nOr ask Antigravity directly:\n\n```text\nClone https://github.com/yuhuan-dev/antigravity-usage-monitor with --filter=blob:none --single-branch to ~/.gemini/config/plugins/usage-monitor and enable the plugin\n```\n\n---\n\n## Usage\n\n1. Open **Customizations → Installed** in the left sidebar and enable `usage-monitor`.\n2. **Antigravity 2.0 (Desktop)**:\n   - Mounts a capsule in the top-right titlebar (**hover** for summary, **click** for the 4-tab popover, **right-click** to refresh), alongside the right auxiliary sidebar pane.\n3. **Antigravity IDE**:\n   - **Restart Antigravity IDE once** after enabling for the first time. Keep **Mount Mode** on **Dual-mount** and click the top-bar capsule to open the panel.\n4. **VS Code (Extension / Remote-SSH)**:\n   - **Restart VS Code once** after first activation (`~/.vscode/argv.json` is auto-configured when `autoConfigureLaunch` is enabled). Mounts inside the chat **Input Box** by default (switchable to **Top Bar**, independent of Desktop's mount setting). Remote-SSH windows isolate endpoints per host and follow conversations automatically; hosts with only the `agy` CLI `usage-monitor` plugin mount on the Top Bar automatically, while hosts with neither plugin are skipped.\n5. **Antigravity CLI (`agy`)**:\n   - When `~/.gemini/antigravity-cli` exists, `statusLine` in `settings.json` is configured automatically (existing third-party `statusLine.command` entries are left untouched) to render a single-line ANSI bar (`● 1 active   38.1 t/s | 0.85s | ◎ 17%`).\n   - Toggle via `/statusline` in `agy` or **Preferences → Structure → Mount & Capsule Bar**.\n6. **Standalone Web Server (Headless / Remote)**:\n\n```bash\n# 1. Start on the host (listens on 127.0.0.1:8787 by default)\nnode ~/.gemini/config/plugins/usage-monitor/sidecars/panel/standalone.mjs --port 8787\n\n# 2. Forward the port locally and open http://localhost:8787\nssh -L 8787:127.0.0.1:8787 user@your-server\n```\n\n<details>\n<summary>Standalone CLI flags, background auto-start, and non-loopback token auth</summary>\n\n- **Auto-start with `agy`**: Set `USAGE_MONITOR_STANDALONE_PORT=8787` or `\"standalonePort\": 8787` in `~/.gemini/antigravity-cli/sidecar_data/usage-monitor/panel/data/settings.json` to start the web UI together with the MCP sidecar supervisor.\n- **Non-loopback auth**: Binding to `0.0.0.0` or a LAN address requires `--token <secret>` (or `USAGE_MONITOR_STANDALONE_TOKEN`); starting on a non-loopback address without a token is rejected.\n- **Overrides**: Supports `--data-dir`, `--app-data-dir`, `--gemini-dir`, `--ls-addr`, and `--csrf-token`.\n- **Offline fallback**: When `agy` is not running, the backend reads `~/.gemini/antigravity-cli` (`conversation_summaries.db`, `conversations/*.db`, `annotations/*.pbtxt`, and `transcript.jsonl`) and switches to live RPC once `agy` starts.\n\n</details>\n\n---\n\n## Configuration & Calculation Notes\n\n<details>\n<summary>UI options: mount mode, capsule slots, token formats, model IDs, and context limits</summary>\n\n- **Mount Mode & Width**: Switch between **Dual-mount (Top Bar + Sidebar)**, **Composer**, and **Sidebar only**. Popover width defaults to **Auto Fit** (expands within window bounds for wide tables) or a fixed width (`440–1080 px`).\n- **Capsule Slots**: Choose 1–5 metric slots and reorder them (default: Output Speed, TTFT, Context Usage), plus an optional toggle for the active-session indicator.\n- **Call Details Table & Token Format**: Toggle agent badges, turn rail (off by default), and speed color grading (off by default). Choose `Ctx / Think / Reply`, `In / Out / Cache` (with per-item USD tooltips), or custom format strings like `context:new:cache` or `in:out:cache`.\n- **Model Name Format**: Choose **Compact short alias** (`argon-4-high`), **Full raw ID**, or **Trimmed raw ID** (strips `gemini-` / `claude-` / `gpt-` prefixes while keeping `·compact` suffixes intact).\n- **Per-Model Context Limits**: Configure limits per model across thinking levels or follow host defaults under **Preferences → Other → Model Context Settings**. App/IDE applies saved rules at startup; CLI sets `AGY_CLI_AUTO_COMPACT_OVERRIDE`.\n\n</details>\n\n<details>\n<summary>Model identification, compaction inference, and cost estimation rules</summary>\n\n- **Model Resolution**: Read from each step's raw usage payload or matching generator metadata; explicit models are never overwritten. When an automatic compaction step omits the model field, it is inferred from adjacent steps in the same conversation (checking prior steps first, then following steps, preferring the same provider) for display and estimation, or shown as unknown compaction if none exist.\n- **Cost Calculation**: If a model or price entry cannot be resolved, step cost is shown as pending while tokens still count toward totals; session totals sum all resolved steps. USD numbers are estimated from public per-million-token API pricing in [`pricing-catalog.json`](pricing-catalog.json) for reference only and do **not** reflect subscription quota consumption.\n- **Cache & Speed Averages**: Upgrading re-checks cached entries against raw trajectory data while preserving token counts and valid timings. Compaction steps display request TPS in step tables but are excluded from session speed and TTFT averages.\n\n</details>\n\n<details>\n<summary>Updating and data directory</summary>\n\n- **In-Panel Update**: When a new GitHub release is available, a version badge appears next to the capsule and in the panel header. Update mode (`Manual` / `Auto` / `Off`) and price catalog sync can be configured under **Preferences → Other**.\n- **Manual Git Update**:\n  - Windows: `git -C \"$env:USERPROFILE\\.gemini\\config\\plugins\\usage-monitor\" pull --ff-only`\n  - macOS / Linux: `git -C ~/.gemini/config/plugins/usage-monitor pull --ff-only`\n  - Toggle the plugin off and back on in **Customizations → Installed**.\n- **Data Persistence**: Settings and parsed caches live in `~/.gemini/antigravity/sidecar_data/usage-monitor/` (or `sidecars/panel/.data/` in standalone mode), so updates keep existing history intact.\n\n</details>\n\n---\n\n## Local Development\n\nAll backend and frontend modules use pure Node.js ESM and a lightweight custom reactive component & incremental DOM patch engine (`defineComponent` + `domPatch`, with Shadow DOM isolation for host overlays) and **no external npm dependencies** (Node.js 22.5+ is recommended for built-in `node:sqlite`).\n\n```bash\ncd sidecars/panel\n\n# Rebuild app.js and styles.css after modifying src/\nnpm run build\n\n# Run unit and integration tests\nnpm test\n```\n\n## Contributing & License\n\nIssues and pull requests are welcome. If you modify files under `sidecars/panel/src/`, please rebuild via `npm run build` and make sure `npm test` passes.\n\nLicensed under the [GNU General Public License v3.0](LICENSE).\n\n## Star History\n\n<a href=\"https://www.star-history.com/#yuhuan-dev/antigravity-usage-monitor&Date\">\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://api.star-history.com/svg?repos=yuhuan-dev/antigravity-usage-monitor&type=Date&theme=dark\" />\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://api.star-history.com/svg?repos=yuhuan-dev/antigravity-usage-monitor&type=Date\" />\n    <img alt=\"Star History Chart\" src=\"https://api.star-history.com/svg?repos=yuhuan-dev/antigravity-usage-monitor&type=Date\" />\n  </picture>\n</a>\n",
+  "latestReleaseNotes": "## v1.5.7 更新内容\n\n### 新增功能\n- **VS Code 官方 Antigravity 扩展支持（#51）**：自动发现本机 VS Code / VS Code Insiders 扩展及 Remote-SSH 窗口，支持在输入框悬浮和双栖悬浮条之间切换，多端各自独立统计账号及额度且完整保留用户原有调试端口配置。\n- **12 列 5 尺寸 Bento 指标网格**：实时监控和悬浮窗升级为可切换单双层的 12 列网格，支持 5 种卡片尺寸、编辑态边角拖拽缩放、4 种精简文本模式及底部全宽趋势折线。\n- **后台安全审查监测及非自用分段条（#60）**：可用额度进度条新增虚线「非自用」分段及明细提示；在「控制中心 → 其他」新增默认关闭的后台安全审查监测开关，开启后可在「用量统计」底部查看隐藏审查调用占比、阻塞时长及估算消耗，避免单人使用时误报非自用。\n- **新增越南语界面支持（#56）**：面板、CLI 状态栏、独立浏览器页面及导出报表全面支持越南语并默认映射越南盾参考货币，现共提供 8 套完整界面语言。\n- **Swarm 协作面板汉化**：为 Antigravity 内置 Swarm 协作面板提供无损宿主界面翻译并覆盖全部 6 套宿主语言包，严格隔离不误译消息内容、不叠加悬浮组件。\n- **账号配额自动刷新支持关闭（#62）**：在「控制中心 → 账号」的自动刷新周期中新增「关闭」档位，关闭后停止对已保存备用账号的后台自动轮询，仍保留单张卡片手动刷新能力。\n- **会话磁盘占用体积统计**：在「控制中心 → 会话」列表项及页头实时展示各会话及隐藏子代理占用的磁盘空间，勾选清理时可直接预览预计释放容量。\n- **运行中会话三态控制及任务清单追踪**：顶栏运行中会话支持「始终显示 / 仅运行时显示 / 隐藏」三态切换，实时状态区可展开查看当前任务的步骤清单及执行进度。\n\n### 体验优化\n- **大幅降低内存、磁盘及待机资源占用**：全面优化历史记录增量读取、事件驱动文件监听及内存回收机制，空闲时自动降低轮询频率并在切回窗口时即时唤醒，同时精简前端包体并自动休眠冗余后台守护进程。\n- **调用明细排版更紧凑清爽**：收紧调用明细筛选栏、异常提示条及摘要页签顶部多余留白，窄屏下不再折行撑高。\n\n### 问题修复\n- **修复 Antigravity 2.36.0 顶栏胶囊反复闪烁的问题（#67）**：统一跨进程桥接租约和配置目录，解决宿主更新后侧边栏和后台进程互抢顶栏胶囊导致每隔数秒闪烁重绘的问题。\n- **修复 Antigravity 2.36.0 宿主界面多处漏译错译的问题（#68）**：恢复折叠步骤展开后的思考/执行文案翻译并继续保护 AI 回复正文，修复多节点空态提示被拆词错译的问题，全部 6 套宿主语言包同步适配 2.36.0 新词条及配额说明（简体中文升级至 `1.0.5`）。\n- **修复宿主字体回退及浅色现代化 UI 底色贴合问题（#64、#65、#66）**：补全宿主正文字体和等宽字体回退链路，浅色现代化 UI 卡片及轨道全面跟随宿主底色衍生，不再出现突兀的固定冷蓝灰。\n- **修复后台任务运行期间丢失实时追踪的问题**：本轮对话结束后若仍有后台任务在执行，面板和顶栏继续保持运行态追踪及步骤展示，同时忽略常驻服务进程并避免重复预占额度。\n- **修复 macOS 顶栏悬停速览卡残留不收起的问题（#58、#59）**：鼠标掠过顶栏胶囊进入系统菜单栏后，移出窗口、点击外部或按 `Esc` 均可可靠自动隐藏速览卡。\n- **修复 Windows 管理员环境下安全软件拦截一键重启的问题（#57）**：自动校验重启回执并在安全软件拦截 WMI 时无感切换备用拉起通道，避免点击重启无响应。\n- **修复账号切换套餐后额度预估沿用旧档位的问题**：Ultra / Pro / Free 跨档切换时自动重置旧档位实测倍率和基线，同时改善 5h 配额桶在大步长场景下的倍率收敛准确度。\n\nThanks to @lWolvesl (#51), @TakaLuong-design (#56), @NicholasLea (#59), @zou172866 (#60), @wang93wei (#62), @chenqianyu486-sys (#64, #65, #66), @Yuufang (#67), @pigzzz104 (#68), @mikessslxxx (#71, #72, #73)\n\n## 安装 / 更新\n\n1. 下载下方 `usage-monitor.zip`。\n2. 解压到 `~/.gemini/config/plugins/`，保持 `usage-monitor` 目录结构；已安装用户直接覆盖同名插件目录即可。\n3. 在 **Customizations → Installed** 中重新开关插件，或重启 Antigravity。\n\n也可直接在面板内通过版本更新功能在线升级；通过 Git 安装的用户在 `main` 分支执行 `git pull --ff-only` 后重新开启插件即可。\n\n无需运行 `npm install`。在 Antigravity 宿主内运行时，历史缓存及设置存放于插件目录之外，覆盖安装不会清除它们。SHA-256 校验值见附件 `usage-monitor.zip.sha256`。\n",
   "securityReport": {
     "riskTier": "elevated",
     "capabilities": [
@@ -60,7 +60,7 @@
         "file": "sidecars/panel/backend/account-oauth.mjs",
         "line": 211,
         "snippet": "while ((m = PACKED_CLIENT_ID_RE.exec(asciiText)) !== null) {",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-oauth.mjs#L211"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-oauth.mjs#L211"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -71,7 +71,7 @@
         "file": "sidecars/panel/backend/account-oauth.mjs",
         "line": 225,
         "snippet": "while ((m = PACKED_CLIENT_SECRET_RE.exec(asciiText)) !== null) {",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-oauth.mjs#L225"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-oauth.mjs#L225"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -82,7 +82,7 @@
         "file": "sidecars/panel/backend/account-oauth.mjs",
         "line": 799,
         "snippet": "const cmdRes = spawnSync('cmd.exe', ['/d', '/c', 'echo %LOCALAPPDATA%'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 3000, });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-oauth.mjs#L799"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-oauth.mjs#L799"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -93,7 +93,7 @@
         "file": "sidecars/panel/backend/account-oauth.mjs",
         "line": 861,
         "snippet": "execFile('/bin/ps', ['-axo', 'comm='], { timeout: 3000, encoding: 'utf8' }, (err, stdout) => { if (err || !stdout) { resolve([]); return; } const paths = [ ...new Set( String(stdou",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-oauth.mjs#L861"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-oauth.mjs#L861"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -104,7 +104,7 @@
         "file": "sidecars/panel/backend/account-oauth.mjs",
         "line": 893,
         "snippet": "execFile( shell, ['-NoProfile', '-NonInteractive', '-Command', cmd], { windowsHide: true, timeout: 3000, encoding: 'utf8' }, (err, stdout) => { if (err || !stdout) { resolve([]); r",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-oauth.mjs#L893"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-oauth.mjs#L893"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -115,7 +115,7 @@
         "file": "sidecars/panel/backend/account-switch-posix-worker.mjs",
         "line": 349,
         "snippet": "const res = spawnSync( 'powershell.exe', ['-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-ExecutionPolicy', 'Bypass', '-Command', script], { encoding: 'utf8', windowsH",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-switch-posix-worker.mjs#L349"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-switch-posix-worker.mjs#L349"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -126,7 +126,7 @@
         "file": "sidecars/panel/backend/account-switch-posix-worker.mjs",
         "line": 365,
         "snippet": "const res = spawnSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-WindowStyle', 'Hidden', '-ExecutionPolicy', 'Bypass', '-Command', '$ErrorActionPreference = \"Stop\"; $w",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-switch-posix-worker.mjs#L365"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-switch-posix-worker.mjs#L365"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -137,7 +137,7 @@
         "file": "sidecars/panel/backend/account-switch-posix-worker.mjs",
         "line": 390,
         "snippet": "child = spawn(cmd, args, opts);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-switch-posix-worker.mjs#L390"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-switch-posix-worker.mjs#L390"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -148,7 +148,7 @@
         "file": "sidecars/panel/backend/account-switch.mjs",
         "line": 202,
         "snippet": "const child = spawn( shell, ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', scriptPath], { windowsHide: true, stdio: ['pipe', 'pipe', 'ignore'] } );",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-switch.mjs#L202"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-switch.mjs#L202"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -159,7 +159,7 @@
         "file": "sidecars/panel/backend/desktop-launcher-config.mjs",
         "line": 249,
         "snippet": "while ((m = re.exec(cmdBody)) !== null) {",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/desktop-launcher-config.mjs#L249"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/desktop-launcher-config.mjs#L249"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -170,7 +170,84 @@
         "file": "sidecars/panel/backend/plugin-updater.mjs",
         "line": 64,
         "snippet": "execFile(cmd, args, { windowsHide: true, timeout: 25000, ...opts }, (err, stdout, stderr) => { if (err) { const detail = String(stderr || stdout || err.message || '').trim(); rejec",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L64"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/plugin-updater.mjs#L64"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 540,
+        "snippet": "const m = SM_GLOG_HEADER_RE.exec(record);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L540"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 557,
+        "snippet": "const mStart = SM_START_EVAL_RE.exec(msg);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L557"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 571,
+        "snippet": "const mTraj = SM_TRAJ_LEN_RE.exec(msg);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L571"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 591,
+        "snippet": "const mCall = SM_CALLING_LLM_RE.exec(msg);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L591"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 623,
+        "snippet": "const mDone = SM_EVAL_COMPLETE_RE.exec(msg);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L623"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 675,
+        "snippet": "const mFb = SM_RUNNER_FALLBACK_RE.exec(msg);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L675"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/safety-monitor-scanner.mjs",
+        "line": 683,
+        "snippet": "const mFin = SM_RUNNER_FINISHED_RE.exec(msg);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/safety-monitor-scanner.mjs#L683"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -181,7 +258,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 755,
         "snippet": "db.exec('PRAGMA secure_delete = ON;');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L755"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L755"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -192,7 +269,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 756,
         "snippet": "db.exec('VACUUM;');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L756"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L756"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -203,7 +280,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 757,
         "snippet": "db.exec('PRAGMA wal_checkpoint(TRUNCATE);');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L757"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L757"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -214,7 +291,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 1223,
         "snippet": "db.exec('PRAGMA secure_delete = ON;');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1223"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L1223"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -225,7 +302,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 1224,
         "snippet": "db.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1224"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L1224"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -236,7 +313,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 1226,
         "snippet": "db.exec( 'CREATE TABLE IF NOT EXISTS um_cleanup_commits (stage TEXT PRIMARY KEY, committed_at_ms INTEGER NOT NULL)' );",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1226"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L1226"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -247,7 +324,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 1244,
         "snippet": "db.exec(\"INSERT INTO conversations_fts(conversations_fts) VALUES ('rebuild')\");",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1244"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L1244"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -258,7 +335,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 1253,
         "snippet": "db.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1253"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L1253"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -269,7 +346,7 @@
         "file": "sidecars/panel/backend/session-cleaner.mjs",
         "line": 1256,
         "snippet": "db.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1256"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-cleaner.mjs#L1256"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -278,9 +355,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 978,
+        "line": 1006,
         "snippet": "srcSumDb.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L978"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1006"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -289,9 +366,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 987,
+        "line": 1015,
         "snippet": "srcSumDb.exec(\"INSERT INTO conversations_fts(conversations_fts) VALUES ('rebuild')\");",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L987"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1015"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -300,9 +377,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 992,
+        "line": 1020,
         "snippet": "srcSumDb.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L992"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1020"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -311,9 +388,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 995,
+        "line": 1023,
         "snippet": "srcSumDb.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L995"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1023"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -322,9 +399,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1412,
+        "line": 1440,
         "snippet": "srcDb.exec(`VACUUM INTO '${escapedArchive}'`);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1412"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1440"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -333,9 +410,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1415,
+        "line": 1443,
         "snippet": "srcDb.exec(`VACUUM INTO '${escapedDst}'`);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1415"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1443"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -344,9 +421,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1426,
+        "line": 1454,
         "snippet": "dstDb.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1426"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1454"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -355,9 +432,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1488,
+        "line": 1516,
         "snippet": "dstDb.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1488"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1516"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -366,9 +443,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1491,
+        "line": 1519,
         "snippet": "dstDb.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1491"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1519"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -377,9 +454,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1696,
+        "line": 1724,
         "snippet": "dstSumDb.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1696"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1724"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -388,9 +465,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1701,
+        "line": 1729,
         "snippet": "dstSumDb.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1701"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1729"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -399,9 +476,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/session-migrator.mjs",
-        "line": 1704,
+        "line": 1732,
         "snippet": "dstSumDb.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-migrator.mjs#L1704"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-migrator.mjs#L1732"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -412,7 +489,7 @@
         "file": "sidecars/panel/backend/session-store.mjs",
         "line": 363,
         "snippet": "db.exec(`PRAGMA busy_timeout = ${Math.max(200, Math.floor(Number(busyTimeoutMs) || 3000))};`);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-store.mjs#L363"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-store.mjs#L363"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -423,7 +500,7 @@
         "file": "sidecars/panel/backend/session-store.mjs",
         "line": 835,
         "snippet": "const raw = execFileSync('powershell.exe', WIN_WMI_ARGS, { encoding: 'utf8', timeout: 3500, maxBuffer: 4 * 1024 * 1024, windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'], });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-store.mjs#L835"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-store.mjs#L835"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -434,7 +511,7 @@
         "file": "sidecars/panel/backend/session-store.mjs",
         "line": 858,
         "snippet": "const csv = execFileSync('tasklist', ['/FO', 'CSV', '/NH'], { encoding: 'utf8', timeout: 2500, maxBuffer: 4 * 1024 * 1024, windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'], }",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-store.mjs#L858"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-store.mjs#L858"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -445,7 +522,7 @@
         "file": "sidecars/panel/backend/session-store.mjs",
         "line": 885,
         "snippet": "const raw = execFileSync( 'powershell.exe', [ '-NoProfile', '-NonInteractive', '-Command', 'Get-CimInstance Win32_Process | Select-Object Name,ExecutablePath,CommandLine | ConvertT",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-store.mjs#L885"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-store.mjs#L885"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -456,7 +533,7 @@
         "file": "sidecars/panel/backend/session-store.mjs",
         "line": 968,
         "snippet": "const raw = execFileSync('ps', ['-axo', 'comm=,args='], { encoding: 'utf8', timeout: 3500, maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'], });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-store.mjs#L968"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/session-store.mjs#L968"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -465,9 +542,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/sqlite-client.mjs",
-        "line": 244,
+        "line": 245,
         "snippet": "db.exec(`PRAGMA busy_timeout = ${timeout};`);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/sqlite-client.mjs#L244"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/sqlite-client.mjs#L245"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -476,9 +553,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 461,
+        "line": 498,
         "snippet": "db.exec(`PRAGMA busy_timeout = ${TSL_BUSY_TIMEOUT_READ_MS};`);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L461"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L498"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -487,9 +564,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 463,
+        "line": 500,
         "snippet": "db.exec( `PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL; PRAGMA busy_timeout = ${TSL_BUSY_TIMEOUT_WRITE_MS};` );",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L463"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L500"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -498,9 +575,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 487,
+        "line": 524,
         "snippet": "db.exec(` CREATE TABLE IF NOT EXISTS ledger_meta ( key TEXT PRIMARY KEY, value TEXT NOT NULL ); CREATE TABLE IF NOT EXISTS conversations ( cascade_id TEXT PRIMARY KEY, lower_id TEX",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L487"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L524"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -509,9 +586,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 628,
+        "line": 665,
         "snippet": "db.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L628"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L665"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -520,9 +597,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 678,
+        "line": 715,
         "snippet": "db.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L678"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L715"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -531,9 +608,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 681,
+        "line": 718,
         "snippet": "db.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L681"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L718"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -542,9 +619,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 865,
+        "line": 918,
         "snippet": "db.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L865"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L918"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -553,9 +630,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 883,
+        "line": 936,
         "snippet": "db.exec('DELETE FROM steps; DELETE FROM conversations;');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L883"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L936"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -564,9 +641,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 886,
+        "line": 939,
         "snippet": "db.exec(` DELETE FROM steps WHERE cascade_id NOT IN ( SELECT cascade_id FROM conversations WHERE is_archived = 1 ); DELETE FROM conversations WHERE is_archived = 0; `);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L886"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L939"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -575,9 +652,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1081,
+        "line": 1134,
         "snippet": "db.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1081"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1134"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -586,9 +663,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1086,
+        "line": 1139,
         "snippet": "db.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1086"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1139"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -597,9 +674,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1219,
+        "line": 1272,
         "snippet": "db.exec('PRAGMA secure_delete = ON;');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1219"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1272"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -608,9 +685,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1220,
+        "line": 1273,
         "snippet": "db.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1220"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1273"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -619,9 +696,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1297,
+        "line": 1350,
         "snippet": "db.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1297"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1350"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -630,9 +707,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1302,
+        "line": 1355,
         "snippet": "db.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1302"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1355"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -641,9 +718,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1311,
+        "line": 1364,
         "snippet": "db.exec('PRAGMA wal_checkpoint(TRUNCATE);');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1311"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1364"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -652,9 +729,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1354,
+        "line": 1407,
         "snippet": "db.exec('BEGIN IMMEDIATE');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1354"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1407"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -663,9 +740,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1445,
+        "line": 1498,
         "snippet": "db.exec('COMMIT');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1445"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1498"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -674,9 +751,53 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/backend/trajectory-sqlite-ledger.mjs",
-        "line": 1450,
+        "line": 1503,
         "snippet": "db.exec('ROLLBACK');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1450"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/trajectory-sqlite-ledger.mjs#L1503"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/window-bridge.mjs",
+        "line": 638,
+        "snippet": "const numericComment = managedVsCode ? VSCODE_ARGV_NUMERIC_COMMENT_RE.exec(keySuffix) : null;",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/window-bridge.mjs#L638"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/window-bridge.mjs",
+        "line": 3375,
+        "snippet": "const defaultHubPort = Number(LOOPBACK_HUB_ORIGIN_RE.exec(lsRuntimeEndpoint.baseUrl)?.[1]);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/window-bridge.mjs#L3375"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/window-bridge.mjs",
+        "line": 3392,
+        "snippet": "const port = Number(LOOPBACK_HUB_ORIGIN_RE.exec(chat.origin)?.[1]);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/window-bridge.mjs#L3392"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/backend/window-bridge.mjs",
+        "line": 3828,
+        "snippet": "const hubPort = Number(LOOPBACK_HUB_ORIGIN_RE.exec(origin)?.[1]);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/window-bridge.mjs#L3828"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -685,9 +806,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/mcp-entry.mjs",
-        "line": 279,
-        "snippet": "const child = spawn(process.execPath, [DAEMON_SCRIPT_PATH], { cwd: PANEL_DIR, windowsHide: true, stdio: ['pipe', 'ignore', 'pipe'], env: { ...process.env, USAGE_MONITOR_HOST_PPID: ",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/mcp-entry.mjs#L279"
+        "line": 509,
+        "snippet": "const child = spawn(process.execPath, buildDaemonSpawnArgs(DAEMON_SCRIPT_PATH, process.env), { cwd: PANEL_DIR, windowsHide: true, stdio: ['pipe', 'ignore', 'pipe'], env: { ...proce",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/mcp-entry.mjs#L509"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -696,9 +817,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/scripts/build-bundle.mjs",
-        "line": 179,
+        "line": 181,
         "snippet": "/^([$_\\p{ID_Start}][$\\u200c\\u200d\\p{ID_Continue}]*)\\s+as\\s+([$_\\p{ID_Start}][$\\u200c\\u200d\\p{ID_Continue}]*)$/u.exec( tok );",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/scripts/build-bundle.mjs#L179"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/scripts/build-bundle.mjs#L181"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -707,9 +828,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/scripts/build-bundle.mjs",
-        "line": 203,
+        "line": 205,
         "snippet": "/^([$_\\p{ID_Start}][$\\u200c\\u200d\\p{ID_Continue}]*)\\s+as\\s+([$_\\p{ID_Start}][$\\u200c\\u200d\\p{ID_Continue}]*)$/u.exec( tok );",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/scripts/build-bundle.mjs#L203"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/scripts/build-bundle.mjs#L205"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -718,9 +839,9 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/scripts/build-bundle.mjs",
-        "line": 535,
+        "line": 564,
         "snippet": "const named = /^\\{([^}]*)\\}\\s*from$/.exec(binding);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/scripts/build-bundle.mjs#L535"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/scripts/build-bundle.mjs#L564"
       },
       {
         "id": "CODE_JS_PROCESS_SPAWN",
@@ -729,9 +850,20 @@
         "capability": "process_spawn",
         "message": "Spawns an external OS process via node:child_process.",
         "file": "sidecars/panel/scripts/build-bundle.mjs",
-        "line": 545,
+        "line": 574,
         "snippet": "const asMatch = aliasPattern.exec(name);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/scripts/build-bundle.mjs#L545"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/scripts/build-bundle.mjs#L574"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "sidecars/panel/trajectory-metrics.mjs",
+        "line": 2332,
+        "snippet": "while ((match = objRe.exec(rawArgsStr)) !== null && items.length < MAX_EXTRACTED_TASK_STEPS) {",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/trajectory-metrics.mjs#L2332"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -740,9 +872,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "host-i18n/scripts/audit-host-i18n.mjs",
-        "line": 297,
+        "line": 300,
         "snippet": "const res = await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(2000), });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/audit-host-i18n.mjs#L297"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/audit-host-i18n.mjs#L300"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -751,9 +883,9 @@
         "capability": "fs_write_workspace",
         "message": "Writes, appends, or deletes files on the local filesystem.",
         "file": "host-i18n/scripts/audit-host-i18n.mjs",
-        "line": 455,
+        "line": 468,
         "snippet": "writeFileSync( cli.emitMissing, JSON.stringify( { generatedAt: new Date().toISOString(), locale: report.locale, version: report.version, missingExact: report.missingExact, missingT",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/audit-host-i18n.mjs#L455"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/audit-host-i18n.mjs#L468"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -764,7 +896,7 @@
         "file": "host-i18n/scripts/build-packs.mjs",
         "line": 371,
         "snippet": "rmSync(join(packsOutDir, existing), { force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/build-packs.mjs#L371"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/build-packs.mjs#L371"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -775,7 +907,7 @@
         "file": "host-i18n/scripts/build-packs.mjs",
         "line": 375,
         "snippet": "writeFileSync(join(packsOutDir, `${item.locale}.json`), item.jsonText, 'utf8');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/build-packs.mjs#L375"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/build-packs.mjs#L375"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -786,7 +918,7 @@
         "file": "host-i18n/scripts/build-packs.mjs",
         "line": 377,
         "snippet": "writeFileSync(join(distDir, 'manifest.json'), manifestText, 'utf8');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/build-packs.mjs#L377"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/build-packs.mjs#L377"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -797,7 +929,7 @@
         "file": "host-i18n/scripts/extract-host-strings.mjs",
         "line": 1495,
         "snippet": "writeFileSync(outPath, JSON.stringify(catalog, null, 2) + '\\n', 'utf8');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/extract-host-strings.mjs#L1495"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/extract-host-strings.mjs#L1495"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -808,7 +940,7 @@
         "file": "host-i18n/scripts/merge-translations.mjs",
         "line": 51,
         "snippet": "writeFileSync(filePath, JSON.stringify(data, null, 2) + '\\n', 'utf8');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/host-i18n/scripts/merge-translations.mjs#L51"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/host-i18n/scripts/merge-translations.mjs#L51"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -819,7 +951,7 @@
         "file": "sidecars/panel/backend/account-http.mjs",
         "line": 42,
         "snippet": "const request = https.request(target, { method, headers: requestHeaders, signal, ...(agent ? { agent } : {}) }, (response) => { const chunks = []; let bytes = 0; response.on('data'",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-http.mjs#L42"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-http.mjs#L42"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -830,7 +962,40 @@
         "file": "sidecars/panel/backend/account-switch-posix-worker.mjs",
         "line": 417,
         "snippet": "unlinkSync(fp);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/account-switch-posix-worker.mjs#L417"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/account-switch-posix-worker.mjs#L417"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/backend/config.mjs",
+        "line": 668,
+        "snippet": "rmSync(DEEP_STATS_COVERAGE_MEMO_FILE, { force: true });",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/config.mjs#L668"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/backend/desktop-launcher-config.mjs",
+        "line": 2401,
+        "snippet": "unlinkSync(relaunchPs1Path);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/desktop-launcher-config.mjs#L2401"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "sidecars/panel/backend/desktop-launcher-config.mjs",
+        "line": 2406,
+        "snippet": "unlinkSync(`${relaunchPs1Path}.ack`);",
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/desktop-launcher-config.mjs#L2406"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -839,9 +1004,9 @@
         "capability": "network_outbound",
         "message": "Performs an outbound network request.",
         "file": "sidecars/panel/backend/devtools-port-probe.mjs",
-        "line": 132,
+        "line": 138,
         "snippet": "const req = http.get( { hostname: '127.0.0.1', port, path: urlPath, timeout: timeoutMs, }, (res) => { res.on('error', (err) => finish(err)); if (res.statusCode !== 200) { res.resum",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/devtools-port-probe.mjs#L132"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/devtools-port-probe.mjs#L138"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -852,7 +1017,7 @@
         "file": "sidecars/panel/backend/file-exporter.mjs",
         "line": 160,
         "snippet": "writeFileSync(candidatePath, writeData, { flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/file-exporter.mjs#L160"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/file-exporter.mjs#L160"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -863,7 +1028,7 @@
         "file": "sidecars/panel/backend/file-exporter.mjs",
         "line": 162,
         "snippet": "writeFileSync(candidatePath, writeData, { encoding: 'utf8', flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/file-exporter.mjs#L162"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/file-exporter.mjs#L162"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -874,7 +1039,7 @@
         "file": "sidecars/panel/backend/file-exporter.mjs",
         "line": 182,
         "snippet": "writeFileSync(fallbackPath, writeData, { flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/file-exporter.mjs#L182"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/file-exporter.mjs#L182"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -885,7 +1050,7 @@
         "file": "sidecars/panel/backend/file-exporter.mjs",
         "line": 184,
         "snippet": "writeFileSync(fallbackPath, writeData, { encoding: 'utf8', flag: 'wx' });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/file-exporter.mjs#L184"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/file-exporter.mjs#L184"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -896,7 +1061,7 @@
         "file": "sidecars/panel/backend/host-i18n/http-fetch.mjs",
         "line": 123,
         "snippet": "const req = https.request( target, { method: 'GET', headers: { Accept: 'application/json, text/plain;q=0.9', 'Cache-Control': 'no-cache', 'User-Agent': 'antigravity-usage-monitor-h",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/host-i18n/http-fetch.mjs#L123"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/host-i18n/http-fetch.mjs#L123"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -907,7 +1072,7 @@
         "file": "sidecars/panel/backend/host-i18n/pack-manager.mjs",
         "line": 721,
         "snippet": "rmSync(targetPath, { force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/host-i18n/pack-manager.mjs#L721"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/host-i18n/pack-manager.mjs#L721"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -918,7 +1083,7 @@
         "file": "sidecars/panel/backend/ls-rpc.mjs",
         "line": 84,
         "snippet": "return fetch(urlStr, { method: 'POST', headers: baseHeaders, body: bodyText, signal: AbortSignal.timeout(timeoutMs), });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/ls-rpc.mjs#L84"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/ls-rpc.mjs#L84"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -929,7 +1094,7 @@
         "file": "sidecars/panel/backend/ls-rpc.mjs",
         "line": 216,
         "snippet": "return fetch(`${baseUrl}/exa.language_server_pb.LanguageServerService/${method}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-codeium-csrf-token': csrfToken",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/ls-rpc.mjs#L216"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/ls-rpc.mjs#L216"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -940,7 +1105,7 @@
         "file": "sidecars/panel/backend/plugin-updater.mjs",
         "line": 179,
         "snippet": "rmSync(targetChild, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L179"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/plugin-updater.mjs#L179"
       },
       {
         "id": "CODE_JS_NETWORK",
@@ -951,7 +1116,7 @@
         "file": "sidecars/panel/backend/plugin-updater.mjs",
         "line": 478,
         "snippet": "const res = await fetch(zipUrl, { method: 'GET', signal: AbortSignal.timeout(25000), });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L478"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/plugin-updater.mjs#L478"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -962,7 +1127,7 @@
         "file": "sidecars/panel/backend/plugin-updater.mjs",
         "line": 490,
         "snippet": "writeFileSync(zipFile, buf);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L490"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/plugin-updater.mjs#L490"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -973,7 +1138,7 @@
         "file": "sidecars/panel/backend/plugin-updater.mjs",
         "line": 564,
         "snippet": "rmSync(stagingDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L564"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/plugin-updater.mjs#L564"
       },
       {
         "id": "CODE_JS_FS_WRITE",
@@ -984,176 +1149,25 @@
         "file": "sidecars/panel/backend/plugin-updater.mjs",
         "line": 586,
         "snippet": "rmSync(stagingDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L586"
-      },
-      {
-        "id": "CODE_JS_NETWORK",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "network_outbound",
-        "message": "Performs an outbound network request.",
-        "file": "sidecars/panel/backend/plugin-updater.mjs",
-        "line": 645,
-        "snippet": "const res = await fetch(reqUrl, { method: 'GET', headers: { Accept: 'application/json', 'Cache-Control': 'no-cache', }, signal: AbortSignal.timeout(4500), });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/plugin-updater.mjs#L645"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 110,
-        "snippet": "unlinkSync(lockPath);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L110"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 129,
-        "snippet": "unlinkSync(lockPath);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L129"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 653,
-        "snippet": "rmSync(check.path, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L653"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 809,
-        "snippet": "rmSync(targetCheck.path, { force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L809"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 814,
-        "snippet": "rmSync(nextPath, { force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L814"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 897,
-        "snippet": "rmSync(entryCheck.path, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L897"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 910,
-        "snippet": "rmSync(entryCheck.path, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L910"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 925,
-        "snippet": "rmSync(entryCheck.path, { force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L925"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 956,
-        "snippet": "rmSync(purgeDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L956"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 968,
-        "snippet": "rmSync(entryCheck.path, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L968"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 1135,
-        "snippet": "writeFileSync(join(prepareDir, nextName), res.buffer);",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1135"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 1186,
-        "snippet": "writeFileSync(join(prepareDir, 'plan.json'), JSON.stringify(plan, null, 2), 'utf8');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1186"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 1264,
-        "snippet": "writeFileSync(join(activeDir, 'committed'), `${Date.now()}\\n`, 'utf8');",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1264"
-      },
-      {
-        "id": "CODE_JS_FS_WRITE",
-        "severity": "medium",
-        "layer": "code",
-        "capability": "fs_write_workspace",
-        "message": "Writes, appends, or deletes files on the local filesystem.",
-        "file": "sidecars/panel/backend/session-cleaner.mjs",
-        "line": 1300,
-        "snippet": "rmSync(purgeDir, { recursive: true, force: true });",
-        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/15ca28144c5ca314049e531b09d1befa75474a9f/sidecars/panel/backend/session-cleaner.mjs#L1300"
+        "githubBlobUrl": "https://github.com/yuhuan-dev/antigravity-usage-monitor/blob/17d25b4167a10cdf3c69a274eb1a0941d42a2d73/sidecars/panel/backend/plugin-updater.mjs#L586"
       }
     ]
   },
   "history": [
+    {
+      "version": "1.5.7",
+      "sha": "17d25b4167a10cdf3c69a274eb1a0941d42a2d73",
+      "scannedAt": "2026-11-28T18:11:47.320Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "network_outbound",
+        "process_spawn"
+      ]
+    },
     {
       "version": "1.5.6",
       "sha": "15ca28144c5ca314049e531b09d1befa75474a9f",

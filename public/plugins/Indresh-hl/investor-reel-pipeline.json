@@ -1,0 +1,410 @@
+{
+  "schemaVersion": 1,
+  "id": "Indresh-hl/investor-reel-pipeline",
+  "sha": "b8aa766e50780459fd7c61890bb3aec7d31758eb",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:15:55.654Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "investor-reel-pipeline",
+    "displayName": "Investor Reel Pipeline",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "gemini-tts-voiceover-director",
+        "slashCommand": "/gemini-tts-voiceover-director",
+        "description": "Master voiceover engineering and performance direction skill for Google AI Studio Gemini 3.8 Flash TTS (`gemini-3.8-flash-tts`) and Gemini 3.8 Flash-Lite TTS (`gemini-3.8-flash-lite-tts`). Converts normal human-written short-form scripts (f",
+        "disableModelInvocation": false,
+        "file": "skills/gemini-tts-voiceover-director/SKILL.md"
+      },
+      {
+        "name": "reel-pipeline",
+        "slashCommand": "/reel-pipeline",
+        "description": "End-to-end 5-step orchestrator workflow for creating Investor-character trading Reels/Shorts (1080x1920 @ 30fps MP4). Self-contained and cross-platform (Windows, macOS, Linux, Cloud; Antigravity and Codex). Coordinates short-form-scriptwrit",
+        "disableModelInvocation": false,
+        "file": "skills/reel-pipeline/SKILL.md"
+      },
+      {
+        "name": "short-form-scriptwriter",
+        "slashCommand": "/short-form-scriptwriter",
+        "description": "Universal, niche-agnostic master short-form video scriptwriter for Instagram Reels, YouTube Shorts, and TikTok. Combines core hook engineering, causal retention science, cognitive & trust psychology, and a strict 10-checkpoint self-verifica",
+        "disableModelInvocation": false,
+        "file": "skills/short-form-scriptwriter/SKILL.md"
+      },
+      {
+        "name": "trading-character-reel-director",
+        "slashCommand": "/trading-character-reel-director",
+        "description": "Companion visual direction and production scripting skill for short-form trading reels (Day Trading NQ/ES, Forex/Prop EURUSD/XAUUSD, Crypto BTC/SOL) starring the illustrated Investor character. Layers on top of `short-form-scriptwriter` wit",
+        "disableModelInvocation": false,
+        "file": "skills/trading-character-reel-director/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/gemini-tts-voiceover-director",
+      "/reel-pipeline",
+      "/short-form-scriptwriter",
+      "/trading-character-reel-director"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Investor Reel Pipeline (`1080x1920 @ 30fps`)\n\nA self-contained, cross-platform (`Windows / macOS / Linux / Cloud`) **Antigravity Plugin + Codex Skill Bundle** for producing short-form trading & finance Reels/Shorts (`NQ/ES`, `EURUSD/XAUUSD`, `BTC/SOL`) starring the illustrated **Investor** character on editorial cream grid paper (`#F6F2E9`) mixed with adaptive dark/crimson `B-ROLL-FULL` cutaways and progressive Evidence Cards.\n\n## 5-Step Production Workflow (`reel-pipeline`)\n\n1. **Step 1 — Topic & Style Alignment:** Selects Video `#N` from the 20-video matrix or ingests research notes, grounded in the bundled Niche & Visual Research Digest and Camera Grammar.\n2. **Step 2A — Spoken Script + Mandatory Approval Gate:** Drafts and audits the retention script via `short-form-scriptwriter` (`10/10` checklist, `>= 26/30` scorecard), then **stops** for your review before any visual direction or TTS formatting begins.\n3. **Step 2B + Step 3 — Creative Direction + Gemini 3.8 TTS Sheet + Audio Gate:** Produces the `Phase A` Creative Director shot list (no premature JSON) and converts the approved lines into copy-paste `gemini-3.8-flash-tts` blocks, then **stops** for your `.wav` recording.\n4. **Step 4 — Audio Inspection & Frame Locking (`AUDIO_LOCKED`):** Normalizes audio (`analyze_audio.py`), measures exact duration (`round(D * 30)` frames) and `>= 4f` silence pauses, builds `video_<NN>_episode_schema.json` once, and runs `validate_schema.py`.\n5. **Step 5 — Preview QA, Code Render & Loudness Verification:** Runs `doctor.py`, inspects `--preview` PNGs across camera modes, renders full `1080x1920 @ 30fps` H.264/AAC MP4 (`render_reel.mjs`), and verifies `-14` to `-16 LUFS` loudness.\n\n## How Videos Are Generated (Tools & Rendering Methodology)\n\nNo external video editor (Premiere/After Effects/CapCut) and **zero `npm` or `pip` packages** are required. Every reel is produced deterministically with these tools:\n\n| Stage | Tool(s) Used | Role in Production |\n| :--- | :--- | :--- |\n| **1. Character & Custom Art** | `image-generator` + `FFmpeg` + HTML5 Canvas | Bundled `14` Investor sprites (`assets/investor/`) plus optional custom sprites (`assets/impulse/`, registered via `schema.extra_sprites`) generated on pure `#FFFFFF`, converted to PNG, and auto-keyed transparent by `stripOuterWhiteBg` in `stage.html`. |\n| **2. Script & Direction** | `short-form-scriptwriter` + `02_Niche_&_Style_Research_Digest.md` + `trading-character-reel-director` | Writes `~115–135w` grounded trading scripts (`~45–55s`), observable chart/moment hooks, 1 clear hypothetical contrast, non-duplicate `3–6w` cues, and complete natural endings. |\n| **3. Voiceover** | Google AI Studio (`gemini-3.8-flash-tts`) | Human generates `24 kHz` mono PCM WAV using default preset **`Mako`**, temp **`0.9`**, style **`conversational, candid, sharp`** (single block, spelled-out numbers, `2–4` `<short pause>` tags). |\n| **4. Audio & Pause Analysis** | `Python 3` (`analyze_audio.py`) | Stdlib `wave`/`struct`/`math` measures exact frames (`round(D * 30)`) and silence windows (`>= 4f`). |\n| **5. Word-Locked Schema** | `Python 3` + `validate_schema.py` | Syllable-weighted (or `faster-whisper`) alignment maps words to silence-bounded clauses (`AUDIO_LOCKED` JSON), locking `rest_mouth_frames`, `blink_frames`, `captions` (`clean_subtle`), and slow `word_frames` (`revealWordsSlow`). |\n| **6. Visemes, SFX & Loudness** | `Python 3` (`prepare_render_data.py`) + `FFmpeg` | Stepped 3-frame visemes + synthesized WAV SFX + `FFmpeg` `loudnorm=I=-15:TP=-1.0:LRA=7` stereo mix (`audio_master.wav`). |\n| **7. Frame Render & MP4 Mux** | `Node.js` (`render_reel.mjs`) + Headless `Edge/Chromium` (CDP) + `stage.html` + `FFmpeg` | `Node.js` serves `stage.html` & sprites on localhost, steps `window.renderFrame(f)` via native WebSocket CDP, captures PNGs, and pipes directly to `FFmpeg` (`libx264`, `-crf 18`, `yuv420p`, `1080x1920 @ 30fps`, `aac 192k`, `-movflags +faststart`). |\n| **8. Visual QA** | `render_reel.mjs --preview` + `FFmpeg` (`tile=4x3`) | Inspects `--preview` PNGs before full export and stitches a 12-frame `4x3` contact sheet from the final MP4. |\n\n## What Is Included\n\n- **All 4 Pipeline Skills (`skills/`):**\n  - `reel-pipeline` — Step 1 to Step 5 orchestrator\n  - `short-form-scriptwriter` — Core retention & hook rules (untouched standalone copy)\n  - `trading-character-reel-director` — 4 dynamic camera modes (`A-ROLL-CENTER`, `HYBRID-CORNER`, `B-ROLL-CIRCLE`, `B-ROLL-FULL`), `extra_sprites` contrast scenes, `revealWordsSlow` speech-synced text, and sprite choreography\n  - `gemini-tts-voiceover-director` — Google AI Studio `gemini-3.8-flash-tts` voiceover formatter\n- **Bundled Character Sprites (`assets/`):**\n  - `assets/investor/` (`14` `1200x896` base, poses `07`–`11`, mouth visemes `01`–`05`, eye blinks `06A/B`)\n  - `assets/impulse/` (`impulse_lunge.png`, `impulse_point.png` secondary character cutouts)\n- **Zero-NPM Cross-Platform Code Renderer (`skills/reel-pipeline/scripts/`):**\n  - `doctor.py` — Auto-discovers `Python 3`, `Node.js >= 18`, `FFmpeg`, headless Chromium/Chrome/Edge, and the 14 sprites (`--install` attempts OS package install)\n  - `install_bundle.py` — Installs into `--target antigravity`, `--target codex`, or `--target both`\n  - `analyze_audio.py` — Step 4 audio normalizer + frame-level speech/pause detector\n  - `validate_schema.py` — Pre-render QA validator (contiguous frames, sprites, blinks, safe areas, SFX cues)\n  - `prepare_render_data.py` — Viseme analyzer + procedural UI SFX + `-15 LUFS` audio master + `extra_sprites` staging\n  - `stage.html` — Animated HTML5/SVG compositor with exterior white-border flood-fill keying, `revealWordsSlow`, live candlestick/cursor contrast, and Evidence Card templates\n  - `render_reel.mjs` — Headless browser CDP -> FFmpeg H.264/AAC exporter (`--preview` & full MP4)\n- **Research & Reference Pack (`skills/reel-pipeline/references/`):** Visual grammar, 20-video series matrix, distilled niche/style & scriptwriting digest, visual QA postmortem learnings, and working Video #1 schema.\n\n## Quick Setup on Any New Computer\n\n1. **Clone the repository:**\n   ```bash\n   git clone https://github.com/indresh-hl/investor-reel-pipeline.git\n   cd investor-reel-pipeline\n   ```\n2. **Check (or install) runtime tools (`Python 3.9+`, `Node.js 18+`, `FFmpeg`, `Chrome/Edge/Chromium`):**\n   ```bash\n   python3 skills/reel-pipeline/scripts/doctor.py\n   ```\n   *(Pass `--install` on a local machine to auto-install missing tools via `winget`, `brew`, or `apt-get`.)*\n3. **Install for Antigravity and/or Codex:**\n   ```bash\n   python3 skills/reel-pipeline/scripts/install_bundle.py --target both\n   ```\n   - **Antigravity:** Installs into `~/.gemini/config/plugins/investor-reel-pipeline` — type `/reel-pipeline` in chat.\n   - **Codex / Agent Skills:** Installs into `~/.agents/skills/` + `~/.agents/assets/investor/` (or simply open this repo in Codex where [AGENTS.md](AGENTS.md) routes everything automatically).\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "accesses_gemini_dir",
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn",
+      "prompt_mentions_shell"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/analyze_audio.py",
+        "line": 39,
+        "snippet": "subprocess.run( [ffmpeg_bin, \"-y\", \"-i\", str(src), \"-ar\", \"24000\", \"-ac\", \"1\", \"-c:a\", \"pcm_s16le\", str(out_wav)], check=True, )",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/analyze_audio.py#L39"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/doctor.py",
+        "line": 40,
+        "snippet": "out = subprocess.check_output([node_bin, \"-v\"], text=True, timeout=5).strip().lstrip(\"v\")",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/doctor.py#L40"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/doctor.py",
+        "line": 145,
+        "snippet": "subprocess.run([\"winget\", \"install\", \"-e\", \"--id\", pkg, \"--accept-package-agreements\", \"--accept-source-agreements\"], check=True)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/doctor.py#L145"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/doctor.py",
+        "line": 158,
+        "snippet": "subprocess.run(cmd, check=True)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/doctor.py#L158"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/doctor.py",
+        "line": 173,
+        "snippet": "subprocess.run(prefix + [\"apt-get\", \"update\"], check=True)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/doctor.py#L173"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/doctor.py",
+        "line": 174,
+        "snippet": "subprocess.run(prefix + [\"apt-get\", \"install\", \"-y\"] + apt_pkgs, check=True)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/doctor.py#L174"
+      },
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/reel-pipeline/scripts/prepare_render_data.py",
+        "line": 186,
+        "snippet": "subprocess.run(cmd, check=True)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/prepare_render_data.py#L186"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 18,
+        "snippet": "const res = spawnSync(cmd, [\"--version\"], { stdio: \"pipe\" });",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L18"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 26,
+        "snippet": "const res = spawnSync(pythonBin, [docPath, \"--json\"], { encoding: \"utf-8\" });",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L26"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 112,
+        "snippet": "const val = spawnSync( pythonBin, [path.join(__dirname, \"validate_schema.py\"), schemaPath, \"--assets-dir\", envReport.assets_dir], { stdio: \"inherit\" } );",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L112"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 122,
+        "snippet": "const prep = spawnSync( pythonBin, [path.join(__dirname, \"prepare_render_data.py\"), schemaPath, buildDir, ffmpegBin], { stdio: \"inherit\" } );",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L122"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 198,
+        "snippet": "const browser = spawn(browserBin, browserArgs, { stdio: \"ignore\" });",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L198"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 242,
+        "snippet": "const ffmpeg = spawn( ffmpegBin, [ \"-y\", \"-f\", \"image2pipe\", \"-vcodec\", \"png\", \"-framerate\", String(fps), \"-i\", \"-\", \"-i\", bundle.audio_master, \"-c:v\", \"libx264\", \"-pix_fmt\", \"yuv4",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L242"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/reel-pipeline/scripts/install_bundle.py",
+        "line": 11,
+        "snippet": "shutil.rmtree(dst)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/install_bundle.py#L11"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/reel-pipeline/scripts/prepare_render_data.py",
+        "line": 264,
+        "snippet": "bundle_path.write_text(json.dumps(bundle), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/prepare_render_data.py#L264"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 37,
+        "snippet": "this.ws = new WebSocket(wsUrl);",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L37"
+      },
+      {
+        "id": "CODE_JS_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 72,
+        "snippet": "const res = await fetch(`http://127.0.0.1:${port}/json/list`);",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L72"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 235,
+        "snippet": "fs.writeFileSync(outPng, Buffer.from(shot.data, \"base64\"));",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L235"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "skills/reel-pipeline/scripts/render_reel.mjs",
+        "line": 293,
+        "snippet": "try { fs.rmSync(buildDir, { recursive: true, force: true }); } catch {}",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/render_reel.mjs#L293"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "AGENTS.md",
+        "line": 16,
+        "snippet": "- **Bundled Sprites & Zero-Dependency Renderer:** `assets/investor/` (`14` PNGs), `assets/impulse/` (`2` secondary contrast PNGs), and `skills/reel-pipeline/scripts/` (`doctor.py`,",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/AGENTS.md#L16"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/reel-pipeline/SKILL.md",
+        "line": 29,
+        "snippet": "Let `<SKILL_DIR>` be this skill folder and `<BUNDLE_ROOT>` be `../..` from `<SKILL_DIR>`:",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/SKILL.md#L29"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/reel-pipeline/SKILL.md",
+        "line": 41,
+        "snippet": "- `../../assets/investor/` — `14` Investor PNGs (`1200x896`, automatically discovered by `scripts/doctor.py`)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/SKILL.md#L41"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/reel-pipeline/SKILL.md",
+        "line": 42,
+        "snippet": "- `../../assets/impulse/` — Secondary flat-ink Impulse Trader PNGs (`impulse_lunge.png`, `impulse_point.png`) loaded via `schema.extra_sprites`",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/SKILL.md#L42"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/reel-pipeline/SKILL.md",
+        "line": 59,
+        "snippet": "3. **Silence & Duration Extraction (`Python 3` `analyze_audio.py`):** Uses stdlib `wave`, `struct`, `math` to measure exact frames (`round(D * 30)`) and silence intervals (`>= 4f`)",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/SKILL.md#L59"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/reel-pipeline/SKILL.md",
+        "line": 60,
+        "snippet": "4. **Word Alignment & Schema Lock (`Python 3` + `validate_schema.py`):** Aligns spoken clauses to measured silence boundaries (syllable-weighted or `faster-whisper` word onset fram",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/SKILL.md#L60"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/reel-pipeline/SKILL.md",
+        "line": 61,
+        "snippet": "5. **Visemes, Procedural SFX & Loudness (`Python 3` `prepare_render_data.py` + `FFmpeg`):** Stepped 3-frame visemes + synthesized WAV SFX + `FFmpeg` `loudnorm=I=-15:TP=-1.0:LRA=7` ",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/SKILL.md#L61"
+      },
+      {
+        "id": "CODE_GEMINI_DATA_ACCESS",
+        "severity": "low",
+        "layer": "code",
+        "capability": "accesses_gemini_dir",
+        "message": "Reads or writes files under ~/.gemini/ (Antigravity plugin data, settings, or telemetry).",
+        "file": "skills/reel-pipeline/scripts/install_bundle.py",
+        "line": 2,
+        "snippet": "\"\"\"Install this portable bundle into Antigravity (~/.gemini/config/plugins) and/or Codex (~/.agents/skills).\"\"\"",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/reel-pipeline/scripts/install_bundle.py#L2"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/trading-character-reel-director/SKILL.md",
+        "line": 39,
+        "snippet": "- Preserve core retention craft from `short-form-scriptwriter` (`<= 10w` scenario/mechanism hook, `BUT / THEREFORE` causal flow, Grade 4–6 readability, single non-bait CTA) while a",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/trading-character-reel-director/SKILL.md#L39"
+      },
+      {
+        "id": "PROMPT_SHELL_TOOL_HINT",
+        "severity": "low",
+        "layer": "prompt",
+        "capability": "prompt_mentions_shell",
+        "message": "Prompt guides the agent to execute local shell commands or scripts.",
+        "file": "skills/trading-character-reel-director/SKILL.md",
+        "line": 102,
+        "snippet": "All 14 assets are `1200 × 896` PNGs bundled in `../../assets/investor/` (relative to this skill directory inside `investor-reel-pipeline`, or discovered automatically by `../reel-p",
+        "githubBlobUrl": "https://github.com/Indresh-hl/investor-reel-pipeline/blob/b8aa766e50780459fd7c61890bb3aec7d31758eb/skills/trading-character-reel-director/SKILL.md#L102"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "b8aa766e50780459fd7c61890bb3aec7d31758eb",
+      "scannedAt": "2026-11-28T18:15:55.654Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "accesses_gemini_dir",
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn",
+        "prompt_mentions_shell"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "id": "kuangre123/antigravity-chat-importer",
+  "sha": "9f6f7be5e2c552800138451d039a9378eac016b2",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:12:58.722Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "antigravity-chat-importer",
+    "displayName": "Antigravity Chat Importer",
+    "version": "1.0.0",
+    "minAppVersion": null,
+    "mcpServers": [],
+    "hooks": [],
+    "skills": [
+      {
+        "name": "import-chats",
+        "slashCommand": "/import-chats",
+        "description": "Import local Claude Code / Claude Desktop (Code tab) and Codex CLI / Desktop conversations into Google Antigravity with 4-tier smart project matching, deduplication, Markdown archives, and ready-to-resume handoff context. Use when the user ",
+        "disableModelInvocation": false,
+        "file": "skills/import-chats/SKILL.md"
+      }
+    ],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [
+      "/import-chats"
+    ],
+    "mcpServerNames": [],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# Antigravity Chat Importer\n\n> Seamlessly import local **Claude Code** and **Codex** conversations into **Google Antigravity** — with 4-tier smart project matching, automatic deduplication, full Markdown archives, and ready-to-resume handoff context.\n\n[中文文档](./README.zh-CN.md) · MIT License · Python 3.10+ (zero third-party dependencies)\n\n---\n\n## Why This Exists\n\nSwitching between **Claude Code / Claude Desktop (Code tab)**, **Codex CLI / Desktop**, and **Google Antigravity** usually means leaving long debugging sessions and architectural context behind.\n\n**Antigravity Chat Importer** is an Antigravity Plugin + Skill (`/import-chats`) that:\n\n- Reads your local Claude & Codex JSONL transcripts **read-only** (never modifies source logs).\n- Filters out automated noise (Claude security-review hooks, Codex Guardian reviews, internal subagent rollouts).\n- Matches each conversation's original working directory to your **Antigravity Projects** using a **4-tier smart matcher**.\n- Exports clean, readable Markdown transcripts (`transcript.md`) and high-signal continuation briefings (`handoff.md`) — including prior compaction summaries and modified file lists.\n- Uses Antigravity's official `ConversationService` API (`CreateConversation`) to spin up ready-to-resume Antigravity conversations in chronological order so your latest work sits right at the top of the sidebar.\n\n---\n\n## Features\n\n- **Dual-source unified parser**: Supports both Claude (`~/.claude/projects/` + Claude Desktop `claude-code-sessions/`) and Codex (`~/.codex/sessions/` + `session_index.jsonl`, plus optional `--include-archived`).\n- **4-tier smart project matching**:\n  1. **Exact path match** (supports both plain local folders and Git repository projects in Antigravity).\n  2. **Git worktree & remote URL resolution** (automatically maps `.claude/worktrees/...`, linked `.git` worktrees, and matching `origin` remotes back to the main project).\n  3. **Deepest ancestor directory match** (e.g., `~/Documents/Codex/2026-11-26/task-a` automatically binds to an Antigravity project rooted at `~/Documents/Codex`).\n  4. **Moved-folder fallback & custom aliases** (matches moved directories by unique project basename or via `~/.antigravity-chat-importer/aliases.json`).\n- **Missing-project preflight**: Always previews which local folders are not yet added to Antigravity Projects before creating conversations (since a conversation's `projectId` is immutable once created).\n- **Idempotent deduplication**: Tracks imported `source:session_id` pairs in `~/.antigravity-chat-importer/state.json` so re-running never creates duplicate conversations.\n- **Three import modes**:\n  - `handoff` *(default)*: Injects a concise continuation briefing (using `flash_lite` by default to save quota) so every imported thread is immediately resumable.\n  - `empty`: Creates titled conversations under the right projects with zero model token usage + local Markdown archives.\n  - `archive-only`: Exports Markdown transcripts and handoff docs offline (works in any terminal, even outside Antigravity).\n\n---\n\n## Quick Start\n\n### Option 1: One-command install (recommended)\n\n```bash\ngit clone https://github.com/kuangre123/antigravity-chat-importer.git \\\n  ~/.gemini/config/plugins/antigravity-chat-importer\n```\n\n### Option 2: Clone anywhere and symlink with `install.sh`\n\n```bash\ngit clone https://github.com/kuangre123/antigravity-chat-importer.git\ncd antigravity-chat-importer\n./install.sh\n```\n\nAntigravity automatically discovers plugins in `~/.gemini/config/plugins/`. No restart required — `/import-chats` is available on your very next turn.\n\n---\n\n## Usage Inside Antigravity\n\nIn any Antigravity conversation, invoke `/import-chats` or ask in plain language:\n\n```text\n/import-chats scan all --limit 20\n/import-chats codex 15\n/import-chats claude 30\n/import-chats codex://threads/01a21ad3-730a-7493-83af-064189d159c1\n/import-chats all --project my-app\n/import-chats all --since 7d\n```\n\n### Scheduled Incremental Sync (Optional)\n\nIf you continue using Claude Code or Codex alongside Antigravity, you can use Antigravity's built-in `/schedule` command to sync newly active chats daily:\n\n```text\n/schedule every day at 23:00 run /import-chats all --since 24h --only-matched\n```\n\n### Offline Markdown Export (Any Terminal)\n\nOutside Antigravity, you can still scan histories or export clean Markdown archives without calling Antigravity's local API:\n\n```bash\npython3 skills/import-chats/scripts/import_chats.py scan --source all --limit 30\npython3 skills/import-chats/scripts/import_chats.py import --source all --limit 30 --mode archive-only\n```\n\n---\n\n## Custom Path Aliases (Optional)\n\nIf you moved or renamed old project directories, create `~/.antigravity-chat-importer/aliases.json`:\n\n```json\n{\n  \"/Users/you/old-folder/my-app\": \"/Users/you/projects/my-app\",\n  \"/Users/you/Documents/legacy-notes\": \"notes-project\"\n}\n```\n\nValues can be either a new filesystem path (prefix-matched) or an existing Antigravity project name.\n\n---\n\n## CLI Reference\n\n```text\npython3 skills/import-chats/scripts/import_chats.py <scan|import|status> [options]\n```\n\n| Flag | Default | Description |\n| :--- | :--- | :--- |\n| `--source {claude,codex,all}` | `all` | Which tool histories to read |\n| `--limit N` | `20` | Max most recent sessions (`0` = unlimited) |\n| `--project QUERY` | — | Filter by project name or path substring |\n| `--id ID` | — | Target a specific UUID, prefix, or `codex://threads/<uuid>` |\n| `--since WINDOW` | — | Filter by recency (`24h`, `7d`, `2w`, `2026-11-01`) |\n| `--include-archived` | `false` | Also scan `~/.codex/archived_sessions` |\n| `--only-matched` | `false` | Only include sessions matching an existing Antigravity project |\n| `--mode {handoff,empty,archive-only}` | `handoff` | Import strategy (`import` subcommand) |\n| `--model ALIAS` | `flash_lite` | Model alias/ID for handoff ingestion (`flash_lite`, `flash`, `pro`) |\n| `--batch-size N` | `3` | Conversations created per batch before waiting for `RUN_STATE_IDLE` |\n| `--no-prefix-unmatched` | `false` | Don't prepend `[projectName]` when falling back to default area |\n| `--no-dedup` | `false` | Re-import even if already recorded in `state.json` |\n\n### Environment Variables\n\n| Variable | Default | Purpose |\n| :--- | :--- | :--- |\n| `AGY_IMPORTER_DATA_DIR` | `~/.antigravity-chat-importer` | Where `state.json`, `aliases.json`, `INDEX.md`, and `archives/` are stored |\n| `CLAUDE_CONFIG_DIR` | `~/.claude` | Override Claude Code config directory |\n| `CODEX_HOME` | `~/.codex` | Override Codex home directory |\n| `AGY_PROJECTS_DIR` | `~/.gemini/config/projects` | Override Antigravity projects directory (read-only) |\n\n---\n\n## Safety & Limitations\n\n- **Strictly read-only on source histories and project configs**: Never modifies `~/.claude/`, `~/.codex/`, or `~/.gemini/config/projects/`.\n- **Why doesn't it auto-create Antigravity Projects?** Antigravity currently exposes a documented `ConversationService` API for conversations, not a public project-creation API (project files also hold directory permission boundaries). Instead, `scan` tells you the exact missing folders so you can add them in seconds via the sidebar **`+`** button — once added, future imports bind automatically forever.\n- **Local only**: Everything runs locally on your machine; no data is sent to any third-party service.\n\n---\n\n## Development & Tests\n\n```bash\npython3 -m unittest discover -s tests -v\n```\n\n## Author\n\n狂热AI (X: [@CrazyAIAgent](https://x.com/CrazyAIAgent))\n\n## License\n\n[MIT](./LICENSE)\n",
+  "latestReleaseNotes": "## Highlights / 亮点\n\n- **Dual-source unified importer (Claude + Codex)**: Scans local Claude Code / Claude Desktop (Code tab) and Codex CLI / Desktop JSONL logs read-only.\n- **Automatic noise filtering**: Skips Claude security-review hook sessions, Codex Guardian reviews, and internal subagent rollouts.\n- **4-tier smart project matching**: Exact path, Git worktree / remote URL, deepest ancestor directory, and moved-folder basename + custom aliases.\n- **Idempotent deduplication & Markdown archives**: Tracks imported IDs in `~/.antigravity-chat-importer/state.json` and writes readable `transcript.md`, `handoff.md`, and `INDEX.md`.\n- **Zero third-party dependencies**: Pure Python 3.10+ stdlib; ships as a native Antigravity Plugin (`/import-chats`).\n\n## Quick Install / 快速安装\n\n```bash\ngit clone https://github.com/kuangre123/antigravity-chat-importer.git \\\n  ~/.gemini/config/plugins/antigravity-chat-importer\n```",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "fs_write_workspace",
+      "network_outbound",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_PY_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via subprocess or os.system.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 272,
+        "snippet": "out = subprocess.check_output( [\"git\", \"-C\", folder, \"config\", \"--get\", \"remote.origin.url\"], stderr=subprocess.DEVNULL, timeout=2, text=True, ).strip()",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L272"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 703,
+        "snippet": "with open(jsonl_path, \"r\", encoding=\"utf-8\", errors=\"ignore\") as fh:",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L703"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 981,
+        "snippet": "with open(jsonl_path, \"r\", encoding=\"utf-8\", errors=\"ignore\") as fh:",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L981"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 1144,
+        "snippet": "path.write_text(\"\\n\".join(lines), encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L1144"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 1254,
+        "snippet": "(data_dir / \"state.json\").write_text( json.dumps(state, ensure_ascii=False, indent=2), encoding=\"utf-8\" )",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L1254"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 1292,
+        "snippet": "idx_path.write_text(\"\\n\".join(lines) + \"\\n\", encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L1292"
+      },
+      {
+        "id": "CODE_PY_NETWORK",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "network_outbound",
+        "message": "Performs an outbound network request.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 1317,
+        "snippet": "with urllib.request.urlopen(req, timeout=30) as resp:",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L1317"
+      },
+      {
+        "id": "CODE_PY_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes or deletes files on the local filesystem.",
+        "file": "skills/import-chats/scripts/import_chats.py",
+        "line": 1587,
+        "snippet": "handoff_path.write_text(handoff_text, encoding=\"utf-8\")",
+        "githubBlobUrl": "https://github.com/kuangre123/antigravity-chat-importer/blob/9f6f7be5e2c552800138451d039a9378eac016b2/skills/import-chats/scripts/import_chats.py#L1587"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.0.0",
+      "sha": "9f6f7be5e2c552800138451d039a9378eac016b2",
+      "scannedAt": "2026-11-28T18:12:58.722Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "fs_write_workspace",
+        "network_outbound",
+        "process_spawn"
+      ]
+    }
+  ]
+}

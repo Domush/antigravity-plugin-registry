@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "id": "Leosheepzhz/task-progress",
+  "sha": "f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd",
+  "scannerVersion": "1.2.0",
+  "scannedAt": "2026-11-28T18:12:56.531Z",
+  "manifest": {
+    "manifestPath": "plugin.json",
+    "name": "task-progress",
+    "displayName": "实时任务进度",
+    "version": "1.4.0",
+    "minAppVersion": "2.34.0",
+    "mcpServers": [
+      {
+        "name": "task_progress",
+        "runtimeName": "task-progress_task_progress",
+        "transport": "stdio",
+        "command": "node",
+        "args": [
+          "${PLUGIN_ROOT}/server/dist/server.mjs",
+          "--data-dir=${PLUGIN_DATA}"
+        ],
+        "url": null
+      }
+    ],
+    "hooks": [],
+    "skills": [],
+    "agents": []
+  },
+  "collisions": {
+    "slashCommands": [],
+    "mcpServerNames": [
+      "task-progress_task_progress"
+    ],
+    "agentNames": [],
+    "hookEvents": []
+  },
+  "credentials": {
+    "envVars": [],
+    "oauthProviders": []
+  },
+  "readmeMarkdown": "# 实时任务进度（`task-progress`）\n\n适用于 **Google Antigravity**（Windows / macOS / Linux）的本地可视化实时任务清单与多会话进度总控台插件，基于 **MCP Apps（SEP-1865 + Antigravity 扩展）** 构建，支持开箱即用零依赖启动。\n\n## 核心特性\n\n- **按会话严格隔离（右侧辅助栏 `aux_pane`）**：\n  - 每个对话独立绑定专属 `boardId`（`Conversation ID`），空参打开绝不跨窗口泄漏隔壁会话内容；\n  - 支持通过拖拽手柄同组/跨阶段排序与 `↑`/`↓`（键盘 `Alt+↑`/`Alt+↓`）微调，同时保持标题与备注文本自由划选复制；\n  - 支持原地编辑标题/阶段/状态/备注/关联文件、阶段头 `+` 就地插单（插最前/插末尾）、`Ctrl/Cmd+Enter` 快捷保存与 `Esc` 取消；\n  - 表单编辑保护：AI 后台推送与定时同步绝不打断或冲毁正在输入的表单和中文 IME 拼写。\n- **用户插单防冲掉 + AI 自动知晓闭环**：\n  - 用户手动添加的未完成步骤在 AI 重建清单时自动保留；\n  - AI 下次调用 `task_progress` 时回执自动附带用户改动提醒，并同步清除「待 AI 知晓」状态；也支持一键将变更挂载到下一条消息上下文。\n- **多会话全局总控台（左侧边栏 `global`）**：\n  - 静默自动同步、支持看板置顶、中文友好的实时关键词检索、工作区与状态筛选、批量清理全部 100% 已完成旧板；\n  - 自动感知宿主能力，在不支持侧栏文件视图的全局视图中自动将文件标签降级为「一键复制路径」。\n- **安全与工程底座**：\n  - 严格本地路径白名单：拒绝 UNC/SMB 远程路径（防 Windows Net-NTLM 泄漏）、设备路径、`..` 穿越与非法协议，统一跨平台编码构造安全 `file:///` URI；\n  - 跨进程排他文件锁 + 原子临时文件替换（`0o700` 目录 / `0o600` 文件）+ 区分瞬态 IO 错误与真 JSON 损坏（绝不因锁冲突误清全库）+ 原型污染防护；\n  - 显式声明最小权限 CSP（零外联）与 `permissions: {}`，内建 1 MiB trajectory 体积预算守卫与间接 Prompt Injection 数据边界隔离；\n  - 完整接入 Antigravity 宿主主题语义变量（`--color-*` / `--font-sans`），亮/暗双模式均达 WCAG AA 对比度，内置极窄侧栏响应式布局与 `prefers-reduced-motion` 无障碍支持。\n\n## 快速安装（跨平台零依赖开箱即用）\n\n本仓库已预构建跨平台单文件服务端（`server/dist/server.mjs`）与单文件 UI（`server/dist/app.html`），需本机安装 **Node.js >= 18.18.0**。\n\n### Windows (PowerShell)\n```powershell\ngit clone https://github.com/Leosheepzhz/task-progress.git \"$env:USERPROFILE\\.gemini\\config\\plugins\\task-progress\"\n```\n\n### macOS / Linux\n```bash\ngit clone https://github.com/Leosheepzhz/task-progress.git \"$HOME/.gemini/config/plugins/task-progress\"\n```\n\n克隆完成后，Antigravity 会自动发现插件（无需额外执行 `npm install`）：\n- 在 Antigravity **Customizations（自定义 → 插件）** 中确认 `task-progress` 已开启；\n- 点击对话右侧辅助栏 `+` 菜单选择 **任务进度**，或在左侧边栏打开全局 **任务进度** 总控台。\n\n## 常见问题与排障\n\n- **macOS / Linux 从桌面图标启动时提示找不到 `node`**：GUI 应用有时不加载 nvm/fnm/volta 的 shell `PATH`。请在终端运行 `which node` 获取绝对路径，并在本地 `mcp_config.json` 中将 `\"command\": \"node\"` 替换为该绝对路径。\n- **更新插件后刷新 MCP 服务**：在 Antigravity **MCP Servers** 设置中重启 `task-progress_task_progress` 即可加载新版本。\n- **数据存储位置**：默认持久化在 Antigravity 分配的 `${PLUGIN_DATA}/boards.json`（回退为 `~/.gemini/config/plugin-data/task-progress/boards.json`），纯本地存储，绝不上传任何数据。\n- **卸载**：在 Antigravity **Customizations** 页面停用或卸载，或直接删除上述插件目录。\n\n## 开发、构建与测试\n\n如需修改源码并重新打包：\n\n```bash\ncd server\nnpm ci\nnpm run build\nnpm test\n```\n\n## License\n\n[MIT](./LICENSE) © 2026 [Leosheepzhz](https://github.com/Leosheepzhz)\n",
+  "latestReleaseNotes": "",
+  "securityReport": {
+    "riskTier": "elevated",
+    "capabilities": [
+      "contains_minified",
+      "fs_write_workspace",
+      "mcp_local_exec",
+      "process_spawn"
+    ],
+    "findings": [
+      {
+        "id": "CODE_OBFUSCATED_ESCAPES",
+        "severity": "high",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Contains dense hex/Unicode escape sequences typical of obfuscated payloads.",
+        "file": "server/dist/server.mjs",
+        "line": 3606,
+        "snippet": "\\u041D\\u0435\\u0440\\u0430\\u0441\\u043F\\u0430\\u0437\\u043D\\u0430\\u043D\\u044B",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/dist/server.mjs#L3606"
+      },
+      {
+        "id": "CODE_JS_PROCESS_SPAWN",
+        "severity": "high",
+        "layer": "code",
+        "capability": "process_spawn",
+        "message": "Spawns an external OS process via node:child_process.",
+        "file": "server/path-safety.mjs",
+        "line": 302,
+        "snippet": "while ((m = NOTE_PATH_EXTRACT_RE.exec(note)) !== null) {",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/path-safety.mjs#L302"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/build-ui.mjs",
+        "line": 28,
+        "snippet": "fs.writeFileSync(tmpPath, content, 'utf8');",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/build-ui.mjs#L28"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/build-ui.mjs",
+        "line": 33,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/build-ui.mjs#L33"
+      },
+      {
+        "id": "CODE_MINIFIED_BLOB",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "contains_minified",
+        "message": "Source file appears minified or bundled, which reduces static-analysis visibility.",
+        "file": "server/dist/server.mjs",
+        "line": 30359,
+        "snippet": "var QQ = external_exports.union([external_exports.literal(\"--color-background-primary\"), external_exports.literal(\"--color-background-second",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/dist/server.mjs#L30359"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 345,
+        "snippet": "fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, token: lockToken, ts: Date.now() }), 'utf8');",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L345"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 372,
+        "snippet": "fs.unlinkSync(staleClaim);",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L372"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 404,
+        "snippet": "fs.unlinkSync(this.lockPath);",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L404"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 496,
+        "snippet": "fs.unlinkSync(path.join(this.dataDir, old));",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L496"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 528,
+        "snippet": "fs.writeFileSync(backup, raw, { encoding: 'utf8', mode: 0o600, flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L528"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 530,
+        "snippet": "fs.unlinkSync(this.filePath);",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L530"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 723,
+        "snippet": "fs.writeFileSync(tmpPath, payload, { encoding: 'utf8', mode: 0o600, flag: 'wx' });",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L723"
+      },
+      {
+        "id": "CODE_JS_FS_WRITE",
+        "severity": "medium",
+        "layer": "code",
+        "capability": "fs_write_workspace",
+        "message": "Writes, appends, or deletes files on the local filesystem.",
+        "file": "server/store.mjs",
+        "line": 745,
+        "snippet": "fs.unlinkSync(tmpPath);",
+        "githubBlobUrl": "https://github.com/Leosheepzhz/task-progress/blob/f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd/server/store.mjs#L745"
+      }
+    ]
+  },
+  "history": [
+    {
+      "version": "1.4.0",
+      "sha": "f5fe1902ab4ae16c72b0ddbff0f39a6c2580cafd",
+      "scannedAt": "2026-11-28T18:12:56.531Z",
+      "riskTier": "elevated",
+      "capabilities": [
+        "contains_minified",
+        "fs_write_workspace",
+        "mcp_local_exec",
+        "process_spawn"
+      ]
+    }
+  ]
+}
